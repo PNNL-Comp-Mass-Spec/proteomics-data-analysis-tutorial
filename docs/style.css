@@ -1,0 +1,33 @@
+p.caption {
+  color: #777;
+  margin-top: 10px;
+}
+p code {
+  white-space: inherit;
+}
+pre {
+  word-break: normal;
+  word-wrap: normal;
+}
+pre code {
+  white-space: inherit;
+}
+
+/*
+body {
+  counter-reset: reference;
+}
+*/
+
+.csl-entry {
+  padding-left: 2em;
+  text-indent: -2em;
+  margin-bottom: 0.25em;
+}
+
+/*
+.csl-entry::before {
+  counter-increment: reference;
+  content: counter(reference) ". ";
+}
+*/

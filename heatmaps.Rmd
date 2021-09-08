@@ -1,0 +1,68 @@
+# Heatmaps
+
+```{r heatmap_chunk_opts, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+                      fig.align='center', out.width='75%')
+```
+
+```{r heatmap_setup, warning=FALSE, message=FALSE}
+library(pheatmap)
+library(dplyr)
+library(MSnSet.utils)
+
+# Load the MSnSet
+data("cptac_oca")
+```
+
+```{r}
+m1 <- oca.set
+
+# Filter
+m1 <- m1[rowMeans(!is.na(exprs(m1))) >= 0.5, ]
+```
+
+
+
+## Expression Data Heatmap
+
+Sometimes, it is useful to create a heatmap of the entire expression data to detect overall patterns. When doing so, I recommend setting `show_rownames` to `FALSE` and the `border_color` to `NA`. The row names are only useful when the expression data has been subset to a few features; otherwise, the heatmap would have to be extremely long to be able to read the labels. This is doable, but not recommended. As for the border color, this is the color of the border around each cell in the heatmap. Removing it by setting it to `NULL` or `NA` makes it easier to see the actual colors of the cells in such a dense heatmap like the one below.
+
+For this first heatmap, we will use the expression data as-is (`scale = "none"`) and apply average linkage hierarchical clustering of the Euclidean distances to both the rows and columns.
+
+```{r}
+# Base heatmap using pheatmap
+pheatmap(exprs(m1),
+         scale = "none",
+         clustering_distance_rows = "euclidean",
+         clustering_distance_cols = "euclidean",
+         clustering_method = "average",
+         show_rownames = FALSE, 
+         border_color = NULL)
+```
+
+Notice that the default heatmap is almost 
+
+
+```{r}
+heatmap_data <- exprs(m1)
+
+# Create breaks that are centered on 0.
+# There are 101 breaks (same as the number of colors)
+heatmap_breaks <- c(seq(min(heatmap_data, na.rm = TRUE), 0, 
+                        length.out = 51), 
+                    seq(0, max(heatmap_data, na.rm = TRUE), 
+                        length.out = 51)[-1])
+
+pheatmap(heatmap_data,
+         scale = "none",
+         clustering_distance_rows = "euclidean",
+         clustering_distance_cols = "euclidean",
+         clustering_method = "average",
+         color = gplots::bluered(n = 101),
+         breaks = heatmap_breaks,
+         show_rownames = FALSE)
+```
+
+
+## Sample Correlation Heatmap
+

@@ -1,0 +1,13 @@
+book_filename: "protDATutorial"
+delete_merged_file: true
+output_dir: "docs"
+language:
+  label:
+    fig: "Figure "
+    tab: "Table "
+  ui:
+    chapter_name: "Section "
+new_session: yes
+rmd_files:
+  ["index.Rmd", "EDA.Rmd", "DEA.Rmd", "enrichment_analysis.Rmd",
+  "references.Rmd"]

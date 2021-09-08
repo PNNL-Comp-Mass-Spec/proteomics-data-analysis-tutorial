@@ -1,0 +1,13 @@
+bookdown::gitbook:
+  css: "style.css"
+  split_by: section
+  config:
+    toc:
+      collapse: section
+      before: |
+           <li><a href=".">A Tutorial for Proteomics Data Analysis in R/Bioconductor</a></li>
+    sharing:
+      github: yes
+      facebook: no
+      twitter: yes
+      all: no
