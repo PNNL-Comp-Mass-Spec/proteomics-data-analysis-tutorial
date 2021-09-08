@@ -1,4 +1,4 @@
-book_filename: "protDATutorial"
+book_filename: "proteomics-data-analysis-tutorial"
 delete_merged_file: true
 output_dir: "docs"
 language:
