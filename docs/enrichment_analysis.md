@@ -11,13 +11,17 @@ Enrichment analysis approaches can be classified into three groups: singular enr
 
 Singular Enrichment Analysis (SEA) is used to determine which gene sets are over-represented in a subset of "interesting" genes taken from a set of background genes. For each gene set, an enrichment p-value is calculated using the Binomial distribution, Hypergeometric distribution, the Fisher exact test, or the Chi-square test. Although this list is not all-encompassing, these are the most popular statistical methods [@huang_bioinformatics_2009]. Below is the formula for calculating the enrichment p-value for a particular gene set using the Hypergeometric distribution.
 
-$$P(X\geq x) = 1 - P(X \leq x-1) = 1 - \sum \limits_{i=0}^{x-1}\frac{{M \choose i}{N - M \choose n-i}}{N \choose n}$$
+\[
+P(X\geq x) = 1 - P(X \leq x-1) = 1 - \displaystyle\sum\limits_{i=0}^{x-1}\frac{{M \choose i}{N - M \choose n-i}}{N \choose n}
+\]
 
 In this formula, $N$ is the number of background genes, $n$ is the number of "interesting" (i.e. statistically-significant) genes, $M$ is the number of genes that are annotated to a particular gene set $G_i$, and $x$ is the number of "interesting" genes that are annotated to $G_i$ (i.e. $x = M \bigcap n$).
 
 For example, suppose we have a list of 8000 genes, of which 400 are differentially expressed. Also suppose that 100 of the 8000 genes are annotated to a particular gene set $G_i$. Of these 100 genes, 20 are differentially expressed. The probability that 20 or more (up to 100) genes annotated to $G_i$ are differentially expressed by chance is given by
 
-$$P(X\geq 20) = 1 - P(X \leq 20 - 1) = 1-\sum \limits_{i=0}^{20-1}\frac{{100 \choose i}{8000 - 100 \choose 400-i}}{8000 \choose 400} = 7.88 \times 10^{-8}$$
+\[
+P(X\geq 20) = 1 - P(X \leq 20 - 1) = 1-\sum \limits_{i=0}^{20-1}\frac{{100 \choose i}{8000 - 100 \choose 400-i}}{8000 \choose 400} = 7.88 \times 10^{-8}
+\]
 
 That is, it is unlikely that $G_i$ is enriched by chance. The code to calculate this p-value is
 
