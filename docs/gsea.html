@@ -24,7 +24,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2021-09-07" />
+<meta name="date" content="2021-09-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -220,7 +220,33 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="gsea" class="section level2" number="4.2">
 <h2><span class="header-section-number">4.2</span> GSEA</h2>
-<p>Gene Set Enrichment Analysis (GSEA)</p>
+<!---
+Gene Set Enrichment Analysis (GSEA) employs a "no-cutoff" strategy that utilizes some "quantitative biological value (such as fold change or degree of differential expression)" to rank a list $L$ of genes [@tipney_introduction_2010; @subramanian_gene_2005]. After ranking $L$, an enrichment score (ES) is calculated for a particular gene set $S$. This is done by 1) "walking down the list $L$, increasing a running-sum statistic when we encounter a gene in $S$ and decreasing it when we encounter genes not in $S$"; and then 2) determining the "maximum deviation from zero encountered in the random walk." This maximum deviation is the ES for a particular gene set. Once the ES has been obtained, the statistical significance is estimated by permuting (randomizing) the "phenotype labels and recomput[ing] the ES of the gene set for the permuted data, which generates a null distribution for the ES" [@subramanian_gene_2005]. Finally, adjustment for multiple hypothesis testing is performed.
+--->
+<p>Gene Set Enrichment Analysis (GSEA) employs a “no-cutoff” strategy that utilizes some “quantitative biological value (such as fold change or degree of differential expression)” to rank a list of <span class="math inline">\(N\)</span> genes in descending order <span class="citation">(<a href="#ref-tipney_introduction_2010" role="doc-biblioref">Tipney et al., 2010</a>)</span>. Using this ranked list <span class="math inline">\(L\)</span>, the values of the ranking metric, and an <em>a priori</em> defined gene set <span class="math inline">\(S\)</span>, we can calculate an enrichment score. This is done by “walking down the list <span class="math inline">\(L\)</span>, increasing a running-sum statistic when we encounter a gene in <span class="math inline">\(S\)</span> and decreasing it when we encounter genes not in <span class="math inline">\(S\)</span>.” The “maximum deviation from zero” of this running-sum statistic is the enrichment score for <span class="math inline">\(S\)</span>, denoted by <span class="math inline">\(ES(S)\)</span>. If the genes in <span class="math inline">\(S\)</span> are randomly distributed throughout <span class="math inline">\(L\)</span> (this is the null hypothesis), <span class="math inline">\(ES(S)\)</span> will be relatively small; however, if they are not randomly distributed (i.e. primarily located near the top or bottom of <span class="math inline">\(L\)</span>), then <span class="math inline">\(ES(S)\)</span> will be relatively large <span class="citation">(<a href="#ref-subramanian_gene_2005" role="doc-biblioref">Subramanian et al., 2005</a>)</span>.</p>
+<p>To assess the statistical significance of <span class="math inline">\(ES(S)\)</span>, we randomize the phenotype labels in the original expression data, re-compute the ranking metric values, reorder <span class="math inline">\(L\)</span> using these new values, and re-compute the enrichment score <span class="math inline">\(ES_{\text{NULL}}\)</span>. This process is repeated hundreds or thousands of times until we have a distribution of enrichment scores. We then define the nominal p-value as the proportion of these enrichment scores that are greater than or equal to <span class="math inline">\(ES(S)\)</span>. Once a p-value has been calculated for each gene set, they are adjusted for multiply hypothesis testing <span class="citation">(<a href="#ref-subramanian_gene_2005" role="doc-biblioref">Subramanian et al., 2005</a>)</span>.</p>
+<!---
+We will now elaborate on how $ES(S)$ is derived. Given a ranked list of genes $L = \{g_1, \dots, g_N \}$, a gene set $S$ consisting of $M$ genes, and the values of the ranking metric ($X = \{ x_1, \dots, x_N \}$ used to generate $L$, we define
+
+\[
+P_{\text{hit}}(S, i) = \sum \limits_{g_j \in S \\ j \leq i} \frac{|x_j|^p}{N_R} \quad \text{and} \quad P_{\text{miss}}(S, i) = \sum \limits_{g_j \in S \\ j \leq i} \frac{1}{N - M}
+\]
+
+where $N_R = \sum \limits_{g_j \in S} |x_j|^p$
+--->
+<!---
+TODO:
+Talk about benefits of GSEA over SEA (i.e. reduced variability in "non-statistical layers" and usable when few or no genes pass the threshold for statistical significance.)
+--->
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-subramanian_gene_2005" class="csl-entry">
+Subramanian, A., Tamayo, P., Mootha, V. K., Mukherjee, S., Ebert, B. L., Gillette, M. A., Paulovich, A., et al., Gene Set Enrichment Analysis: <span>A</span> Knowledge-Based Approach for Interpreting Genome-Wide Expression Profiles, <em>Proceedings of the National Academy of Sciences of the United States of America</em>, vol. <strong>102</strong>, no. 43, pp. 15545–50, accessed September 7, 2021, from <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1239896/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1239896/</a>, October 2005. DOI: <a href="https://doi.org/10.1073/pnas.0506580102">10.1073/pnas.0506580102</a>
+</div>
+<div id="ref-tipney_introduction_2010" class="csl-entry">
+Tipney, H. and Hunter, L., An Introduction to Effective Use of Enrichment Analysis Software, <em>Human Genomics</em>, vol. <strong>4</strong>, no. 3, p. 202, accessed September 10, 2021, from <a href="https://doi.org/10.1186/1479-7364-4-3-202">https://doi.org/10.1186/1479-7364-4-3-202</a>, February 2010. DOI: <a href="https://doi.org/10.1186/1479-7364-4-3-202">10.1186/1479-7364-4-3-202</a>
+</div>
 </div>
             </section>
 
@@ -273,7 +299,7 @@ gitbook.start({
 },
 "download": null,
 "toc": {
-"collapse": "section"
+"collapse": "subsection"
 }
 });
 });
