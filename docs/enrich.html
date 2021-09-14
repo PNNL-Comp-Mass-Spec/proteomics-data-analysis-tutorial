@@ -24,7 +24,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2021-09-07" />
+<meta name="date" content="2021-09-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -220,9 +220,17 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="enrich" class="section level1" number="4">
 <h1><span class="header-section-number">Section 4</span> Enrichment Analysis</h1>
+<!---
+TODO
+* Explain why I am talking about genes instead of proteins.
+* Create a better hook for this chapter. The transition feels too abrupt.
+--->
 <p>While single-gene analysis (Section <a href="DEA.html#DEA">3</a>) is a useful tool, it is not without its own set of shortcomings. For instance, there may be no genes that pass the significance threshold after correcting for multiple hypothesis testing. Alternatively, there may be many genes that are statistically significant, and interpreting this list can be tedious and “prone to investigator bias toward a hypothesis of interest” <span class="citation">(<a href="#ref-maleki_gene_2020" role="doc-biblioref">Maleki et al., 2020</a>)</span>. Another issue is that single-gene analysis fails “to detect biological processes…that are distributed across an entire network of genes and subtle at the level of individual genes.” That is, it is liable to miss effects that are the result of small changes in many related genes. In order to address these and other issues, enrichment analysis (also called over-representation analysis) analyzes <strong>gene sets</strong>—“groups of genes that share [a] common biological function, chromosomal location,” involvement in a pathway, etc.—rather than individual genes <span class="citation">(<a href="#ref-subramanian_gene_2005" role="doc-biblioref">Subramanian et al., 2005</a>)</span>.</p>
-<p>[General principle of enrichment analysis]</p>
-<p>Enrichment analysis approaches can be classified into three groups: singular enrichment analysis (SEA), gene set enrichment analysis (GSEA), and modular enrichment analysis (MEA) <span class="citation">(<a href="#ref-huang_bioinformatics_2009" role="doc-biblioref">Huang et al., 2009</a>)</span>.</p>
+<!---
+TODO:
+* Talk about "General principle of enrichment analysis"
+--->
+<p><span class="citation"><a href="#ref-huang_bioinformatics_2009" role="doc-biblioref">Huang et al.</a> (<a href="#ref-huang_bioinformatics_2009" role="doc-biblioref">2009</a>)</span> classifies enrichment analysis algorithms into three groups: singular enrichment analysis (SEA), gene set enrichment analysis (GSEA), and modular enrichment analysis (MEA).</p>
 </div>
 <h3>References</h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
@@ -287,7 +295,7 @@ gitbook.start({
 },
 "download": null,
 "toc": {
-"collapse": "section"
+"collapse": "subsection"
 }
 });
 });

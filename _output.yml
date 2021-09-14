@@ -3,7 +3,7 @@ bookdown::gitbook:
   split_by: section
   config:
     toc:
-      collapse: section
+      collapse: subsection
       before: |
            <li><a href=".">A Tutorial for Proteomics Data Analysis in R/Bioconductor</a></li>
     sharing:

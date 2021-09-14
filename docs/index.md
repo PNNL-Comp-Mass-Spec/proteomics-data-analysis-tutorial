@@ -1,7 +1,7 @@
 --- 
 title: "A Tutorial for Proteomics Data Analysis with R/Bioconductor"
 author: "Tyler Sagendorf"
-date: "September 07, 2021"
+date: "September 14, 2021"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: references.bib

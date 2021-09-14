@@ -1,29 +1,37 @@
 # Enrichment Analysis {#enrich}
 
+<!---
+TODO
+* Explain why I am talking about genes instead of proteins.
+* Create a better hook for this chapter. The transition feels too abrupt.
+--->
+
 While single-gene analysis (Section \@ref(DEA)) is a useful tool, it is not without its own set of shortcomings. For instance, there may be no genes that pass the significance threshold after correcting for multiple hypothesis testing. Alternatively, there may be many genes that are statistically significant, and interpreting this list can be tedious and "prone to investigator bias toward a hypothesis of interest" [@maleki_gene_2020]. Another issue is that single-gene analysis fails "to detect biological processes...that are distributed across an entire network of genes and subtle at the level of individual genes." That is, it is liable to miss effects that are the result of small changes in many related genes. In order to address these and other issues, enrichment analysis (also called over-representation analysis) analyzes **gene sets**—"groups of genes that share [a] common biological function, chromosomal location," involvement in a pathway, etc.—rather than individual genes [@subramanian_gene_2005].
 
-[General principle of enrichment analysis]
-
-Enrichment analysis approaches can be classified into three groups: singular enrichment analysis (SEA), gene set enrichment analysis (GSEA), and modular enrichment analysis (MEA) [@huang_bioinformatics_2009].
+<!---
+TODO:
+* Talk about "General principle of enrichment analysis"
+--->
+@huang_bioinformatics_2009 classifies enrichment analysis algorithms into three groups: singular enrichment analysis (SEA), gene set enrichment analysis (GSEA), and modular enrichment analysis (MEA).
 
 
 ## SEA
 
-Singular Enrichment Analysis (SEA) is used to determine which gene sets are over-represented in a subset of "interesting" genes taken from a set of background genes. For each gene set, an enrichment p-value is calculated using the Binomial distribution, Hypergeometric distribution, the Fisher exact test, or the Chi-square test. Although this list is not all-encompassing, these are the most popular statistical methods [@huang_bioinformatics_2009]. Below is the formula for calculating the enrichment p-value for a particular gene set using the Hypergeometric distribution.
+Singular Enrichment Analysis (SEA) is used to determine which gene sets are over-represented in a set of "interesting" genes compared to a set of background genes. For each gene set, an enrichment p-value is calculated using the Binomial distribution, Hypergeometric distribution, the Fisher exact test, or the Chi-square test. Although this list is not all-encompassing, these are the most popular statistical methods [@huang_bioinformatics_2009]. Below is the formula for calculating the enrichment p-value for a particular gene set using the Hypergeometric distribution.
 
 \[
 P(X\geq x) = 1 - P(X \leq x-1) = 1 - \sum\limits_{i=0}^{x-1}\frac{\hphantom{}{M \choose i }{N - M \choose n-i}}{N \choose n}
 \]
 
-In this formula, $N$ is the number of background genes, $n$ is the number of "interesting" (i.e. statistically-significant) genes, $M$ is the number of genes that are annotated to a particular gene set $G_i$, and $x$ is the number of "interesting" genes that are annotated to $G_i$ (i.e. $x = M \bigcap n$).
+In this equation, $N$ is the number of background genes, $n$ is the number of "interesting" (i.e. statistically-significant) genes, $M$ is the number of genes that are annotated to a particular gene set $S$, and $x$ is the number of "interesting" genes that are annotated to $S$ (i.e. $x = M \bigcap n$). The numerator of the sum is the number of samples of $n$ genes that can be taken where exactly $i$ of the genes are annotated to $S$ and $n-i$ are not annotated to $S$. The denominator of the sum is the number of samples of size $n$ that can be taken from a population of size $N$.
 
-For example, suppose we have a list of 8000 genes, of which 400 are differentially expressed. Also suppose that 100 of the 8000 genes are annotated to a particular gene set $G_i$. Of these 100 genes, 20 are differentially expressed. The probability that 20 or more (up to 100) genes annotated to $G_i$ are differentially expressed by chance is given by
+For example, suppose we have a list of 8000 genes, of which 400 are differentially expressed. Also suppose that 100 of the 8000 genes are annotated to a particular gene set $S$. Of these 100 genes, 20 are differentially expressed. The probability that 20 or more (up to 100) genes annotated to $S$ are differentially expressed by chance is given by
 
 \[
-P(X\geq 20) = 1 - P(X \leq 19) = 1-\sum \limits_{i=0}^{19}\frac{\\{100 \choose i}{8000 - 100 \choose 400-i}}{8000 \choose 400} = 7.88 \times 10^{-8}
+P(X\geq 20) = 1 - P(X \leq 19) = 1-\sum \limits_{i=0}^{19}\frac{\hphantom{}{100 \choose i}{8000 - 100 \choose 400-i}}{8000 \choose 400} = 7.88 \times 10^{-8}
 \]
 
-That is, it is unlikely that $G_i$ is enriched by chance. The code to calculate this p-value is
+That is, it is unlikely that $S$ is enriched by chance. The code to calculate this p-value is
 
 
 ```r
@@ -32,7 +40,29 @@ phyper(q = 20 - 1, m = 400, n = 8000 - 400, k = 100, lower.tail = FALSE)
 
 ## GSEA
 
-Gene Set Enrichment Analysis (GSEA)
+<!---
+Gene Set Enrichment Analysis (GSEA) employs a "no-cutoff" strategy that utilizes some "quantitative biological value (such as fold change or degree of differential expression)" to rank a list $L$ of genes [@tipney_introduction_2010; @subramanian_gene_2005]. After ranking $L$, an enrichment score (ES) is calculated for a particular gene set $S$. This is done by 1) "walking down the list $L$, increasing a running-sum statistic when we encounter a gene in $S$ and decreasing it when we encounter genes not in $S$"; and then 2) determining the "maximum deviation from zero encountered in the random walk." This maximum deviation is the ES for a particular gene set. Once the ES has been obtained, the statistical significance is estimated by permuting (randomizing) the "phenotype labels and recomput[ing] the ES of the gene set for the permuted data, which generates a null distribution for the ES" [@subramanian_gene_2005]. Finally, adjustment for multiple hypothesis testing is performed.
+--->
+
+
+Gene Set Enrichment Analysis (GSEA) employs a "no-cutoff" strategy that utilizes some "quantitative biological value (such as fold change or degree of differential expression)" to rank a list of $N$ genes in descending order [@tipney_introduction_2010]. Using this ranked list $L$, the values of the ranking metric, and an *a priori* defined gene set $S$, we can calculate an enrichment score. This is done by "walking down the list $L$, increasing a running-sum statistic when we encounter a gene in $S$ and decreasing it when we encounter genes not in $S$." The "maximum deviation from zero" of this running-sum statistic is the enrichment score for $S$, denoted by $ES(S)$. If the genes in $S$ are randomly distributed throughout $L$ (this is the null hypothesis), $ES(S)$ will be relatively small; however, if they are not randomly distributed (i.e. primarily located near the top or bottom of $L$), then $ES(S)$ will be relatively large [@subramanian_gene_2005].
+
+To assess the statistical significance of $ES(S)$, we randomize the phenotype labels in the original expression data, re-compute the ranking metric values, reorder $L$ using these new values, and re-compute the enrichment score $ES_{\text{NULL}}$. This process is repeated hundreds or thousands of times until we have a distribution of enrichment scores. We then define the nominal p-value as the proportion of these enrichment scores that are greater than or equal to $ES(S)$. Once a p-value has been calculated for each gene set, they are adjusted for multiply hypothesis testing [@subramanian_gene_2005].
+
+<!---
+We will now elaborate on how $ES(S)$ is derived. Given a ranked list of genes $L = \{g_1, \dots, g_N \}$, a gene set $S$ consisting of $M$ genes, and the values of the ranking metric ($X = \{ x_1, \dots, x_N \}$ used to generate $L$, we define
+
+\[
+P_{\text{hit}}(S, i) = \sum \limits_{g_j \in S \\ j \leq i} \frac{|x_j|^p}{N_R} \quad \text{and} \quad P_{\text{miss}}(S, i) = \sum \limits_{g_j \in S \\ j \leq i} \frac{1}{N - M}
+\]
+
+where $N_R = \sum \limits_{g_j \in S} |x_j|^p$
+--->
+
+<!---
+TODO:
+Talk about benefits of GSEA over SEA (i.e. reduced variability in "non-statistical layers" and usable when few or no genes pass the threshold for statistical significance.)
+--->
 
 
 ## Databases

@@ -24,7 +24,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2021-09-07" />
+<meta name="date" content="2021-09-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -220,16 +220,16 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="sea" class="section level2" number="4.1">
 <h2><span class="header-section-number">4.1</span> SEA</h2>
-<p>Singular Enrichment Analysis (SEA) is used to determine which gene sets are over-represented in a subset of “interesting” genes taken from a set of background genes. For each gene set, an enrichment p-value is calculated using the Binomial distribution, Hypergeometric distribution, the Fisher exact test, or the Chi-square test. Although this list is not all-encompassing, these are the most popular statistical methods <span class="citation">(<a href="#ref-huang_bioinformatics_2009" role="doc-biblioref">Huang et al., 2009</a>)</span>. Below is the formula for calculating the enrichment p-value for a particular gene set using the Hypergeometric distribution.</p>
+<p>Singular Enrichment Analysis (SEA) is used to determine which gene sets are over-represented in a set of “interesting” genes compared to a set of background genes. For each gene set, an enrichment p-value is calculated using the Binomial distribution, Hypergeometric distribution, the Fisher exact test, or the Chi-square test. Although this list is not all-encompassing, these are the most popular statistical methods <span class="citation">(<a href="#ref-huang_bioinformatics_2009" role="doc-biblioref">Huang et al., 2009</a>)</span>. Below is the formula for calculating the enrichment p-value for a particular gene set using the Hypergeometric distribution.</p>
 <p><span class="math display">\[
 P(X\geq x) = 1 - P(X \leq x-1) = 1 - \sum\limits_{i=0}^{x-1}\frac{\hphantom{}{M \choose i }{N - M \choose n-i}}{N \choose n}
 \]</span></p>
-<p>In this formula, <span class="math inline">\(N\)</span> is the number of background genes, <span class="math inline">\(n\)</span> is the number of “interesting” (i.e. statistically-significant) genes, <span class="math inline">\(M\)</span> is the number of genes that are annotated to a particular gene set <span class="math inline">\(G_i\)</span>, and <span class="math inline">\(x\)</span> is the number of “interesting” genes that are annotated to <span class="math inline">\(G_i\)</span> (i.e. <span class="math inline">\(x = M \bigcap n\)</span>).</p>
-<p>For example, suppose we have a list of 8000 genes, of which 400 are differentially expressed. Also suppose that 100 of the 8000 genes are annotated to a particular gene set <span class="math inline">\(G_i\)</span>. Of these 100 genes, 20 are differentially expressed. The probability that 20 or more (up to 100) genes annotated to <span class="math inline">\(G_i\)</span> are differentially expressed by chance is given by</p>
+<p>In this equation, <span class="math inline">\(N\)</span> is the number of background genes, <span class="math inline">\(n\)</span> is the number of “interesting” (i.e. statistically-significant) genes, <span class="math inline">\(M\)</span> is the number of genes that are annotated to a particular gene set <span class="math inline">\(S\)</span>, and <span class="math inline">\(x\)</span> is the number of “interesting” genes that are annotated to <span class="math inline">\(S\)</span> (i.e. <span class="math inline">\(x = M \bigcap n\)</span>). The numerator of the sum is the number of samples of <span class="math inline">\(n\)</span> genes that can be taken where exactly <span class="math inline">\(i\)</span> of the genes are annotated to <span class="math inline">\(S\)</span> and <span class="math inline">\(n-i\)</span> are not annotated to <span class="math inline">\(S\)</span>. The denominator of the sum is the number of samples of size <span class="math inline">\(n\)</span> that can be taken from a population of size <span class="math inline">\(N\)</span>.</p>
+<p>For example, suppose we have a list of 8000 genes, of which 400 are differentially expressed. Also suppose that 100 of the 8000 genes are annotated to a particular gene set <span class="math inline">\(S\)</span>. Of these 100 genes, 20 are differentially expressed. The probability that 20 or more (up to 100) genes annotated to <span class="math inline">\(S\)</span> are differentially expressed by chance is given by</p>
 <p><span class="math display">\[
-P(X\geq 20) = 1 - P(X \leq 19) = 1-\sum \limits_{i=0}^{19}\frac{\\{100 \choose i}{8000 - 100 \choose 400-i}}{8000 \choose 400} = 7.88 \times 10^{-8}
+P(X\geq 20) = 1 - P(X \leq 19) = 1-\sum \limits_{i=0}^{19}\frac{\hphantom{}{100 \choose i}{8000 - 100 \choose 400-i}}{8000 \choose 400} = 7.88 \times 10^{-8}
 \]</span></p>
-<p>That is, it is unlikely that <span class="math inline">\(G_i\)</span> is enriched by chance. The code to calculate this p-value is</p>
+<p>That is, it is unlikely that <span class="math inline">\(S\)</span> is enriched by chance. The code to calculate this p-value is</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="sea.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">phyper</span>(<span class="at">q =</span> <span class="dv">20</span> <span class="sc">-</span> <span class="dv">1</span>, <span class="at">m =</span> <span class="dv">400</span>, <span class="at">n =</span> <span class="dv">8000</span> <span class="sc">-</span> <span class="dv">400</span>, <span class="at">k =</span> <span class="dv">100</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 </div>
 <h3>References</h3>
@@ -289,7 +289,7 @@ gitbook.start({
 },
 "download": null,
 "toc": {
-"collapse": "section"
+"collapse": "subsection"
 }
 });
 });
