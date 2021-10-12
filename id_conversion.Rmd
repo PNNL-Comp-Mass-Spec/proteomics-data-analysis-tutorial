@@ -1,0 +1,21 @@
+# ID Conversion {id-conv}
+
+## ID Conversion with `biomaRt`
+
+```{r}
+library(biomaRt)
+
+mart <- useMart(biomart = "ENSEMBL_MART_ENSEMBL",
+                dataset = "hsapiens_gene_ensembl")
+
+View(listAttributes(mart))
+
+ENTREZ2PFAM <- getBM(filters = "entrezgene_id",
+                  attributes = c("entrezgene_id", 
+                                 "pfam"),
+                  values = all_genes,
+                  mart = mart)
+```
+
+
+## ID Conversion with OrgDb

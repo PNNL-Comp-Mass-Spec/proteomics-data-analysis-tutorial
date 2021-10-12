@@ -4,7 +4,9 @@ author: "Tyler Sagendorf"
 date: "`r format(Sys.Date(), '%B %d, %Y')`"
 site: bookdown::bookdown_site
 documentclass: book
-bibliography: references.bib
+bibliography: 
+  - references.bib
+  - r-packages.bib
 csl: begell-house-chicago-author-date.csl
 link-citations: yes
 nocite: '@*'
@@ -13,7 +15,14 @@ description: "This is a comprehensive tutorial for proteomics data analysis in R
 
 # Welcome!
 
-This tutorial is very much a work-in progress. Even sections that appear finished are likely to be changed. I will try to update this weekly, or when significant progress has been made. Thank you for your patience.
+This tutorial is very much a work-in progress. Even sections that appear finished are likely to be changed. I will update this when significant progress is made. Thank you for your patience.
 
 
-
+```{r include=FALSE}
+# Cite R packages
+knitr::write_bib(
+  c("bookdown", "knitr", "rmarkdown", "clusterProfiler", "ReactomePA", 
+    "GOstats", "GOSemSim", "org.Hs.eg.db", "PFAM.db", "kableExtra", 
+    "limma", "ggplot2", "dplyr", "tibble", "scales", "biomaRt"), 
+  "r-packages.bib")
+```
