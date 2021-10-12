@@ -1,0 +1,627 @@
+# Pathway Analysis {#patha}
+
+<!---
+TODO
+* Explain why I am talking about genes instead of proteins.
+* Instead talk about DEA and then talk about making it gene-centric.
+* Create a better hook for this chapter. The transition feels too abrupt.
+--->
+
+In the previous section (Section \@ref(DEA)), we covered analysis at the individual feature level (protein, peptide, phosphoprotein, etc.). While DEA is useful, it is not without its own set of shortcomings. For instance, there may be no features that pass the significance threshold after correcting for multiple hypothesis testing. Alternatively, there may be many features that are statistically significant, and interpreting this list can be tedious and "prone to investigator bias toward a hypothesis of interest" [@maleki_gene_2020]. Another issue is that single-feature analysis fails to detect subtle, yet coordinated changes in groups of related features [@subramanian_gene_2005]. 
+
+In order to address these, and other, issues, pathway analysis instead examines *a priori* defined **gene sets**—groups of genes that participate in the same biological pathway, share the same cellular location, etc. In this section, we will explore some common annotation databases, as well as two pathway analysis methods: Over-Representation Analysis (ORA) and Gene Set Enrichment Analysis (GSEA).
+
+<!---
+TODO:
+* Talk about "General principle of enrichment analysis"
+* Transition into databases before the methods
+--->
+
+
+## Annotation Databases {#enrichdb}
+
+In this section, we will explore some of the common annotation databases used for pathway analysis.
+
+### Gene Ontology
+
+The Gene Ontology (GO) database is divided into three separate domains: Biological Process, Cellular Component, and Molecular Function (see the <a href="http://geneontology.org/docs/ontology-documentation/" title = "Gene Ontology overview">Gene Ontology overview</a> for more details regarding each domain). Each domain is structured as a directed acyclic graph (DAG) where nodes are terms and edges are the <a href="http://geneontology.org/docs/ontology-relations/#:~:text=Main%20relations%20used%20in%20GO" title = "Main relations used in GO">relations</a> between the terms (part of, is a, has part, regulates). Nodes can be connected to multiple child and parent nodes, where the group of genes annotated to a child node is a subset of those that are annotated to its parent node(s) [@noauthor_relations_2021; @goeman_multiple_2008].
+
+#### Semantic Similarity {-}
+
+Due to the DAG structure of each domain, there is often redundancy in pathway analysis results. For example, suppose terms <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a>, <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a>, and  <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0046034" title = "ATP metabolic process">GO:0046034</a> are significantly over-represented biological processes. <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a> and  <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0046034" title = "ATP metabolic process">GO:0046034</a> are the parent terms of <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a>. Due to this relationship, the terms likely provide much of the same information, so the inclusion of all three terms in the output is unnecessary. In order to resolve this redundancy, we can calculate the **semantic similarity** between pairs of GO terms, which "assesses the likeness in meaning of two concepts" [@pesquita_semantic_2017]. Basically, if two terms are highly related, we can use some other criteria (such as adjusted p-value or level in the DAG) to retain only one of the terms. Below, we use the `GOSemSim` package to calculate the semantic similarity between the terms.
+
+```{r sem-sim, message=FALSE}
+## Calculate semantic similarity between GO terms
+library(GOSemSim)
+library(org.Hs.eg.db)
+
+# GO DATA for measuring semantic similarity.
+# keytype is "ENTREZID" by default and 
+# information criteria is calculated (computeIC = TRUE)
+semData <- godata(OrgDb = "org.Hs.eg.db", ont = "BP")
+terms <- c("GO:0006119", "GO:0009060", "GO:0046034")
+# measure = "Rel" is the default for clusterProfiler::simplify
+# See code for clusterProfiler:::simplify_internal
+sim <- mgoSim(GO1 = terms, GO2 = terms, semData = semData, 
+              measure = "Rel", combine = NULL) 
+```
+
+```{r sem-sim-table, message=FALSE, echo=FALSE, fig.alt="Table displaying semantic similarity of select GO terms"}
+library(kableExtra)
+
+kable(sim, caption = "Semantic Similarity of select GO terms") %>% 
+  kable_styling(full_width = FALSE)
+```
+
+
+If `measure` is `"Lin"`, `"Jiang"`, or `"Wang"`, the semantic similarity of a term with itself will be 1. This is not true for the other methods.
+
+We can see from Table \@ref(tab:sem-sim-table) that <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a> and  <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0046034" title = "ATP metabolic process">GO:0046034</a> have low semantic similarity, while <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a> is highly similar to its parent terms. This makes sense because the parent terms are not related/connected in the DAG. 
+
+Now that we have the semantic similarities, we can remove redundant terms. `clusterProfiler` has a function called `simplify` that will calculate semantic similarity and remove terms. By default, if there are two terms with a semantic similarity greater than 0.7, `simplify` retains the term with the lowest adjusted p-value. See <a href="https://guangchuangyu.github.io/2015/10/use-simplify-to-remove-redundancy-of-enriched-go-terms/" title = "use simplify to remove redundancy of enriched GO terms">this post</a> by Guangchuang Yu for more details on `clusterProfiler::simplify`.
+
+
+#### GO Subsets/Slims {-}
+
+Another way to handle the redundancy of GO terms is to use a <a href="http://geneontology.org/docs/go-subset-guide/" title = "Guide to GO subsets">GO slim</a>, which is a subset of more generic or research-relevant terms from the GO. GO slims can be <a href="http://geneontology.org/docs/download-ontology/#subsets" title = "Download the ontology">downloaded</a> or accessed with the `biomaRt` package as shown below.
+
+```{r go-slim, message=FALSE}
+## Create human GO slim
+library(biomaRt)
+library(clusterProfiler) # gcSample data
+library(dplyr)
+
+mart <- useMart(biomart = "ENSEMBL_MART_ENSEMBL",
+                dataset = "hsapiens_gene_ensembl")
+# Uncomment to determine which attributes to select in getBM()
+# View(listAttributes(mart)) 
+
+# The GO slim columns are goslim_goa_accession and goslim_goa_description.
+# We will map from the Entrez IDs in gcSample to these attributes.
+data(gcSample)
+universe <- unique(unlist(gcSample))
+GO_slim <- getBM(filters = "entrezgene_id",
+                 attributes = c("entrezgene_id",
+                                "goslim_goa_accession",
+                                "goslim_goa_description"),
+                 values = universe, # Subset to these Entrez IDs
+                 mart = mart) %>% 
+  # Convert entrezgene_id from integer to character
+  mutate_all(as.character)
+```
+
+```{r message=FALSE, echo=FALSE, fig.alt="First 6 rows of an Entrez ID to GO slim accession and description conversion table"}
+library(kableExtra)
+
+GO_slim <- GO_slim %>% 
+  mutate(goslim_goa_accession = cell_spec(
+    goslim_goa_accession,
+    link = sprintf("https://www.ebi.ac.uk/QuickGO/term/%s", 
+                   goslim_goa_accession)
+  ))
+
+kable(head(GO_slim), escape = FALSE) %>%  # Nice table
+  kable_styling(full_width = FALSE, font_size = 12,
+                bootstrap_options = c("hover", "condensed"))
+```
+
+
+Unfortunately, not every GO accession maps to a domain when we use `biomaRt` (unsure why this is the case), so we won't be able to separate the terms. However, there are two ways that we can still use these GO slim accessions. Either follow the steps for using `clusterProfiler::enricher` (shown in the Pfam subsection of Section \@ref(ora-examples)) with conversion tables created from `org.Hs.eg.db` that have been subset to the GO slim accessions, or remove any non GO slim accessions from the final results and readjust the remaining p-values (the easier approach).
+
+
+### Reactome
+
+[Home - Reactome Pathway Database](https://reactome.org/)
+
+### KEGG
+
+[KEGG: Kyoto Encyclopedia of Genes and Genomes](https://www.genome.jp/kegg/)
+
+### Pfam
+
+[Pfam: Home page](http://pfam.xfam.org/)
+[Pfam Documentation](https://pfam-docs.readthedocs.io/en/latest/)
+[profile Hidden Markov Models](https://watermark.silverchair.com/140755.pdf?token=AQECAHi208BE49Ooan9kkhW_Ercy7Dm3ZL_9Cf3qfKAc485ysgAAAvYwggLyBgkqhkiG9w0BBwagggLjMIIC3wIBADCCAtgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM8AYKH-bv0m2nHfTQAgEQgIICqYjz7XAVxAREVHGvJofH3peUmhTifphKa4BaiK7Xw4XUV41B2Eolc7IBL6Q9Oh0MAVCD0yHlxqBSwJ3cETaSRp60T6Bk9Cl6nUyjTUpq-4f8YW1pUgOxvd7OCLkE11Twa60Y9T6JFyIUuCxHs6UgbRBAbwNZ-6HG9-WRHxiWzCSf6SbrH74ouzlsabLh1OZMSoJ3dfbNrBYRz-bkonlmHUBASLKee1YA6Eg4EavR1Qa07g5FwDJhGVUgDw4IyhkyGAucfJTwl5_FxFGrs8-FEQ01LZqQDzZLsL0zcH7NsD8dB6PaWcP-lrH0TQpRK-WHhSC2WmL6rEoV_zwzUE9faUkLRzbg82siXNFUhgR9cwpe_ycHF-ffmIVMjpPWYvmMzrk4YfMfp_A0OsNbu0S7vSL7gqJ-uD2HyeJ8XkAZ1HXDjBKGHyQmQX6otAHfdNHbHUMl8GaFmgUPDkfj9swuUeQ0udhKRRssJNF8cqrs-xDzNQnB3-cGhi0bfV7PT1CZxGBMhlC4UsTu0hLZUfMxozxXfDjLY0kZEu66lTJL7CYGru4JCx7qFHvaQZg3icjHLOAiwov7v9-CimdXepQrZxZQ588N2ZlgsZ5f0xiZ5qdGkGwDyhdFmLPj2f_RFXRe5TuCWLU1DTkX5NyIUYGwGJECn6n_qSsA37n73ek--_eBPV-F6GBYQe1oRWP2S5SQTxP0r3yPyh7dIlqcqQxWozlsew1fGCMjRoUv1e3SFU7LZ0j8bUSXXEAgOxjjOBSxWu1QzgjLa-MRV0IQ61tDXfGdJhSuuZSxRwlxTbpZKQWfaS3s1jFU9Hm-B-9CvhmJQgb7elOeD0cbpVMeM03ebaK-NgPA0dX5slcIe1--BtOdKoKjepE7--RS4Z4Bls4ZI0d0valj-zsHiw)
+
+
+## Over-Representation Analysis {#ora}
+
+### Overview {#ora-overview}
+
+Over-Representation Analysis (ORA) is used to determine which *a priori* defined gene sets are more present (over-represented) in a subset of "interesting" genes than what would be expected by chance [@huang_bioinformatics_2009]. Essentially, it identifies the gene sets—rather than the individual genes—that are significantly different between two conditions.
+
+For each gene set, an enrichment p-value is calculated using the Binomial distribution, Hypergeometric distribution, the Fisher exact test, or the Chi-square test. Although this list is not all-encompassing, these are the most popular statistical methods [@huang_bioinformatics_2009]. Below is the formula for calculating the enrichment p-value for a particular gene set using the Hypergeometric distribution.
+
+\[
+P(X\geq x) = 1 - P(X \leq x-1) = 1 - \sum\limits_{i=0}^{x-1}\frac{\hphantom{}{M \choose i }{N - M \choose n-i}}{N \choose n}
+\]
+
+In this equation, $N$ is the number of background genes, $n$ is the number of "interesting" (i.e. statistically-significant) genes, $M$ is the number of genes that are annotated to a particular gene set $S$, and $x$ is the number of "interesting" genes that are annotated to $S$. The numerator of the sum is the number of samples of $n$ genes that can be taken from a population of $N$ genes where exactly $i$ of the genes are annotated to $S$ and $n-i$ are not annotated to $S$. The denominator of the sum is the total number of samples of size $n$ that can be taken from a population of size $N$.
+
+For example, suppose we have a list of 8000 genes, of which 400 are differentially expressed. Also suppose that 100 of the 8000 genes are annotated to a particular gene set $S$. Of these 100 genes, 20 are differentially expressed. The probability that 20 or more (up to 100) genes annotated to $S$ are differentially expressed by chance is given by
+
+\[
+P(X\geq 20) = 1 - P(X \leq 19) = 1-\sum \limits_{i=0}^{19}\frac{\hphantom{}{100 \choose i}{8000 - 100 \choose 400-i}}{8000 \choose 400} = 7.88 \times 10^{-8}
+\]
+
+That is, it is extremely unlikely that 20 of the 100 genes from this set are significantly differentially expressed by chance (at least, prior to adjustment for multiple comparisons). The code to calculate this p-value is
+
+```{r eval = FALSE}
+phyper(q = 20 - 1, m = 400, n = 8000 - 400, k = 100, lower.tail = FALSE)
+```
+
+After a p-value has been calculated for each of the applicable gene sets, a multiple comparison adjustment should be performed.
+
+### Examples {#ora-examples}
+
+For these examples, we will show how to perform ORA with the GOstats, clusterProfiler, and ReactomePA packages. The databases that we will cover are Gene Ontology, Reactome, and Pfam. For details on these different annotation databases, please see Section \@ref(enrichdb). 
+
+```{r ora-setup, message = FALSE}
+## Setup
+# Required packages
+library(clusterProfiler) # GO, KEGG, and custom ORA
+library(ReactomePA) # Reactome ORA
+library(GOstats) # GO, KEGG, and Pfam ORA
+library(PFAM.db) # Map Pfam IDs to descriptions
+library(org.Hs.eg.db) # Human annotation database
+library(kableExtra)
+library(dplyr)
+```
+
+Normally, we would use a DEA table to create two character vectors: one for the significantly expressed genes and the other for all genes that were tested (referred to as the "background" or "universe"); instead, we will use the `gcSample` data that comes with clusterProfiler and treat the eighth cluster as our vector of significant genes and the entire list as the gene universe. Each gene is represented by a human Entrez gene ID, which is the default keytype used by the clusterProfiler functions and the only keytype compatible with `ReactomePA::enrichPathway`.
+
+```{r ora-data}
+data("gcSample") # Data for examples
+sig_genes <- gcSample[[8]] # significant genes
+universe <- unique(unlist(gcSample)) # universe
+```
+
+It is important to note that the genes should be unique from the start. The terms between any two clusters of `gcSample` may overlap, so we must use `unique` for the sake of these examples. *If your DEA results are not gene-centric, do NOT use ORA. Instead, switch to GSEA and summarize the ranking metric in some way to make it gene-centric (i.e. take the average, min, max, etc. of the metrics for each gene group)*.
+
+```{r cp-table-format, include=FALSE}
+# Function to format the result table of an enrichResult object
+format_cp_ora <- function(x, caption, link, n = 10) {
+  head(x@result, n) %>%
+    # Reduce the number of gene IDs displayed.
+    # Select the first three genes from each term and 
+    # replace the rest with an ellipsis.
+    mutate(
+      geneID = lapply(strsplit(geneID, "/"), function(genes) {
+        paste0(paste(genes[1:min(3, length(genes))], collapse = "/"), 
+               ifelse(length(genes) > 3, "...", ""))
+      }),
+      ID = cell_spec(
+        ID, link = sprintf(link, ID))
+    ) %>% 
+    # Remove unnecessary columns
+    select(-qvalue, -Count) %>% 
+    # Nice table.
+    kable(digits = 4, row.names = FALSE, caption = caption,
+          escape = FALSE) %>% 
+    kable_styling(full_width = FALSE, font_size = 12,
+                  bootstrap_options = c("hover", "condensed")) %>% 
+    # column_spec(2, width_max = "15em") %>% 
+    scroll_box(height = "20em")
+}
+```
+
+#### Gene Ontology {-}
+
+We will first use the clusterProfiler package to test which biological processes are over-represented in the set of interesting genes. For this example, we will only consider gene sets of size 20 to 500. In order to test either molecular functions, cellular components, or all three ontologies at once, set `ont` to `"MF"`, `"CC"`, or `"ALL"`, respectively.
+
+```{r cp-ora-go}
+## GO BP ORA with clusterProfiler
+# This takes a while
+cp_ora_go <- enrichGO(
+  gene = sig_genes, 
+  OrgDb = "org.Hs.eg.db", 
+  keyType = "ENTREZID", 
+  ont = "BP", # BP, CC, MF, or ALL for all ontologies
+  pvalueCutoff = 0.05,
+  qvalueCutoff = 1, # Do not filter by q-value
+  pAdjustMethod = "BH", 
+  universe = universe, 
+  minGSSize = 20, 
+  maxGSSize = 500, 
+  readable = TRUE # Convert Entrez ID to gene symbol
+)
+```
+
+```{r cp-ora-go-table, echo=FALSE, fig.alt="Top significantly over-represented biological processes from enrichGO output."}
+# Top 10 terms
+format_cp_ora(cp_ora_go, 
+              caption = paste("Top significantly over-represented biological",
+                              "processes from enrichGO output."),
+              link = "https://www.ebi.ac.uk/QuickGO/term/%s")
+```
+
+</br>
+
+There were `r length(cp_ora_go@geneSets)` biological processes that were tested. Of these, `r nrow(cp_ora_go@result)` passed the size filter, and only `r sum(cp_ora_go@result$p.adjust < 0.05)` were significantly over-represented after multiple testing correction. The top 10 are shown in Table \@ref(tab:cp-ora-go-table).
+
+**Remove Redundant GO Terms**
+
+By default, if two terms have a semantic similarity above 0.7, `clusterProfiler::simplify` retains the more significantly over-represented term.
+
+```{r simplify-cp-ora-bp}
+# Remove redundant GO terms with simplify
+cp_ora_go_sim <- simplify(cp_ora_go)
+```
+
+```{r simplify-cp-ora-bp-table, echo=FALSE, fig.alt="Simplified top significantly over-represented biological processes from enrichGO output."}
+format_cp_ora(cp_ora_go_sim, 
+              caption = paste("Simplified top significantly over-represented", 
+                              "biological processes from enrichGO output."),
+              link = "https://www.ebi.ac.uk/QuickGO/term/%s")
+```
+
+</br>
+
+Notice that <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a> is not present in Table \@ref(tab:simplify-cp-ora-bp-table) anymore, since it was highly similar to <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a>, and the latter was more significant. After removing redundant GO terms, `r sum(cp_ora_go_sim@result$p.adjust < 0.05)` pass the significance threshold.
+
+Instead of retaining terms based on adjusted p-value, we could ignore significance and instead retain either parent or child terms (`select_fun = min` and `select_fun = max`, respectively). The code to do so is provided <a href="https://github.com/YuLab-SMU/clusterProfiler/issues/372" title = "New feature: simplify to parent GO terms #372">here</a>.
+
+Another alternative would be to use a gene ID to <a href="http://geneontology.org/docs/go-subset-guide/" title = "Guide to GO subsets">GO slim</a> ID conversion table. See the Semantic Similarity subsection of Section \@ref(enrichdb) for more details.
+
+Now, we will perform GO ORA with the GOstats package. We begin by creating an object of class `GOHyperGParams` and passing it to `hyperGTest` for calculation of Hypergeometric p-values. We do not filter by p-value, since adjusted p-values are not provided and we must calculate them ourselves.
+
+```{r gostats-go-ora, message=FALSE}
+## GO BP ORA with GOstats
+hyperg_ora_go <- new(
+  Class = "GOHyperGParams",
+  ontology = "BP",
+  geneIds = sig_genes,
+  universeGeneIds = universe,
+  annotation = "org.Hs.eg.db",
+  pvalueCutoff = 1, # Do not filter by p-value
+  testDirection = "over",
+  conditional = FALSE
+) %>%
+  hyperGTest() # Hypergeometric testing
+```
+
+Now, we need to filter by gene set size (limit 20 to 500), adjust the p-values, and filter based on the adjusted p-values.
+
+```{r hyperg-go-ora-res}
+res_go_ora <- summary(hyperg_ora_go) %>%
+  # Filter by size
+  filter(Size >= 20, Size <= 500) %>%
+  # Adjust p-values
+  mutate(p.adjust = p.adjust(Pvalue, method = "BH")) %>%
+  # Filter and sort by adjusted p-values
+  arrange(p.adjust) %>% 
+  filter(p.adjust < 0.05)
+```
+
+```{r include=FALSE}
+n1 <- summary(hyperg_ora_go)
+n2 <- filter(n1, Size >= 20, Size <= 500) %>% nrow()
+```
+
+```{r cp-go-ora-table, echo=FALSE, fig.alt="Over-represented biological processes obtained using the GOstats package."}
+res_go_ora[, c("GOBPID", "Term", "OddsRatio", "ExpCount", 
+               "Count", "Size", "Pvalue", "p.adjust")] %>%
+  head(10) %>%
+  # Add links to terms
+  mutate(GOBPID = cell_spec(
+    GOBPID, 
+    link = sprintf("https://www.ebi.ac.uk/QuickGO/term/%s", GOBPID))) %>%
+  kable(digits = 4, row.names = FALSE, escape = FALSE,
+        caption = paste("Over-represented biological processes", 
+                        "obtained using the GOstats package.")) %>% 
+  kable_styling(full_width = FALSE, font_size = 12,
+                bootstrap_options = c("hover", "condensed")) %>% 
+  scroll_box(height = "20em")
+```
+
+</br>
+
+There were `r nrow(n1)` biological processes that were tested. Of these, `r n2` passed the size filter, and only `r nrow(res_go_ora)` were significantly over-represented after multiple testing correction. The top 10 are shown in Table \@ref(tab:cp-go-ora-table). The total number of biological processes that were tested is 1 less than the number reported from the `enrichGO` results. This is because `enrichGO` includes the "biological_process" root <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0008150" title = "biological process">GO:0008150</a>.
+
+**Remove Redundant GO Terms**
+
+While there is no function akin to `clusterProfiler::simplify` to process results, there is an argument called `conditional`. Setting `conditional` to `TRUE` tells `hyperGTest` to use the term-term relationships when calculating p-values [@falcon_how_2021]. This approach is actually more akin to Modular Enrichment Analysis (MEA) than Over-Representation Analysis (also called Singular Enrichment Analysis; @huang_bioinformatics_2009).
+
+```{r gostats-go-ora-simple, message=FALSE}
+## Conditional GO BP ORA with GOstats
+hyperg_ora_go_sim <- new(
+  Class = "GOHyperGParams",
+  ontology = "BP",
+  geneIds = sig_genes,
+  universeGeneIds = universe,
+  annotation = "org.Hs.eg.db",
+  pvalueCutoff = 1, # Do not filter by p-value
+  testDirection = "over",
+  conditional = TRUE # Use structure of GO graph
+) %>%
+  hyperGTest() # Hypergeometric testing
+```
+
+We will process the results the same as before and compare.
+
+```{r hyperg-go-ora-res-simple, echo=FALSE}
+res_go_ora_sim <- summary(hyperg_ora_go_sim) %>%
+  # Filter by size
+  filter(Size >= 20, Size <= 500) %>%
+  # Adjust p-values
+  mutate(p.adjust = p.adjust(Pvalue, method = "BH")) %>%
+  # Filter and sort by adjusted p-values
+  arrange(p.adjust) %>% 
+  filter(p.adjust < 0.05)
+```
+
+```{r include=FALSE}
+n3 <- summary(hyperg_ora_go_sim)
+n4 <- filter(n3, Size >= 20, Size <= 500) %>% nrow()
+```
+
+```{r cp-go-ora-simple-table, echo=FALSE, fig.alt="Simplified over-represented biological processes obtained using the GOstats package."}
+res_go_ora_sim[, c("GOBPID", "Term", "OddsRatio", "ExpCount", 
+                   "Count", "Size", "Pvalue", "p.adjust")] %>%
+  head(10) %>%
+  # Add links to terms
+  mutate(GOBPID = cell_spec(
+    GOBPID, 
+    link = sprintf("https://www.ebi.ac.uk/QuickGO/term/%s", GOBPID))) %>%
+  kable(digits = 4, row.names = FALSE, escape = FALSE,
+        caption = paste("Simplified over-represented biological processes", 
+                        "obtained using the GOstats package.")) %>% 
+  kable_styling(full_width = FALSE, font_size = 12,
+                bootstrap_options = c("hover", "condensed")) %>% 
+  scroll_box(height = "20em")
+```
+
+</br>
+
+Now, only `r nrow(n3)` terms showed up in the summary. Of these, `r n4` passed the size filter, and `r nrow(res_go_ora_sim)` were significantly over-represented after multiple testing correction. The top 10 are shown in Table \@ref(tab:cp-go-ora-simple-table). The major difference between these results and the ones from `enrichGO` after using `simplify` is that p-value adjustment is not affected by `simplify`, as redundant GO terms are removed after. The conditional method is actually more akin to performing modular enrichment analysis (MEA) than ORA (also called singular enrichment analysis)
+
+
+#### Reactome {-}
+
+GOstats does not have a dedicated class to test for Reactome pathway over-representation, but we can use ReactomePA. For this example, we will only consider pathways of size 20 to 500. `enrichPathway` only accepts Entrez gene IDs as input. In cases where the Entrez ID is not readily available, we must convert to them. Alternatively, we could use the custom ORA function `enricher`, which allows us to use any ID type (use demonstrated in Pfam example).
+
+```{r cp-ora-react}
+## Reactome ORA with ReactomePA
+cp_ora_reactome <- enrichPathway(
+  gene = sig_genes, 
+  organism = "human", 
+  pvalueCutoff = 0.05, 
+  pAdjustMethod = "BH", 
+  qvalueCutoff = 1, # Do not filter by q-value
+  universe = universe, 
+  minGSSize = 20, 
+  maxGSSize = 500,
+  readable = TRUE # Convert Entrez ID to gene symbol
+)
+```
+
+```{r cp-ora-react-table, echo=FALSE, fig.alt="Top significantly over-represented Reactome pathways from enrichPathway output."}
+format_cp_ora(cp_ora_reactome, 
+              caption = paste("Top significantly over-represented", 
+                              "Reactome pathways from enrichPathway output."),
+              link = "https://reactome.org/content/detail/%s")
+```
+
+</br>
+
+There were `r length(cp_ora_reactome@geneSets)` Reactome pathways that were tested. Of these, `r nrow(cp_ora_reactome@result)` passed the size filter, and `r sum(cp_ora_reactome@result$p.adjust < 0.05)` were significantly over-represented after multiple testing correction. The top 10 are shown in Table \@ref(tab:cp-ora-react-table).
+
+<!---
+#### KEGG {#ora-kegg}
+
+```{r cp-ora-kegg, eval=FALSE}
+## KEGG ORA with clusterProfiler
+cp_ora_kegg <- enrichKEGG(
+gene = sig_genes,
+organism = "rno", # Rattus norvegicus
+keyType = "ncbi-proteinid",
+pvalueCutoff = 0.05,
+pAdjustMethod = "BH",
+universe = universe,
+minGSSize = 20,
+maxGSSize = 500,
+qvalueCutoff = 1,
+use_internal_data = FALSE
+)
+```
+--->
+
+#### Pfam {-}
+
+<!---
+First, we will perform Pfam ORA with the GOstats package using the org.Hs.eg.db human annotation database; however, it is a good idea to check the number of Pfam entries that are provided by this database before doing so. Ideally, it should be close to the number shown at the top of the <a href="http://pfam.xfam.org">main Pfam page</a>. We can accomplish this with functions in AnnotationDbi.
+
+```{r entrez-to-pfam, message=FALSE}
+# Map from Entrez gene to Pfam ID
+ENTREZ2PFAM <- AnnotationDbi::select(
+org.Hs.eg.db, keys = keys(org.Hs.eg.db, keytype = "ENTREZID"),
+columns = c("ENTREZID", "PFAM"), keytype = "ENTREZID"
+)
+
+# Nice table
+kable(head(ENTREZ2PFAM)) %>% 
+kable_styling(full_width = FALSE, font_size = 12)
+```
+
+In this data frame, there are only `r length(unique(ENTREZ2PFAM$PFAM))` Pfam entries. This is not even close to the most up-to-date number. We will continue for the sake of demonstration, but the results are unlikely to be reliable. 
+--->
+
+While there is no dedicated ORA function for Pfam entries in clusterProfiler, there is a general ORA function called `enricher` that can be used with any term to gene conversion table. This function is also much faster than the dedicated `enrichGO` and `enrichPathway` functions, so it may be preferred if running many separate over-representation analyses. The conversion table is generated with the biomaRt package as follows.
+
+```{r eval=FALSE}
+# NOT RUN ---
+library(biomaRt)
+
+mart <- useMart(biomart = "ENSEMBL_MART_ENSEMBL",
+                dataset = "hsapiens_gene_ensembl")
+View(listAttributes(mart)) # Determine which columns to return
+
+conv_tbl <- getBM(filters = "entrezgene_id",
+                  attributes = c("entrezgene_id",
+                                 "pfam"),
+                  values = universe,
+                  mart = mart) %>%
+  mutate_all(as.character)
+saveRDS(conv_tbl, file = "data/pfam_conv_tbl.rds")
+```
+
+In addition to the term to gene conversion table, we can supply a term to name table that maps Pfam IDs to human-readable descriptions. While org.Hs.eg.db does not provide Pfam descriptions, the <a href="https://doi.org/doi:10.18129/B9.bioc.PFAM.db" title = "PFAM.db: A set of protein ID mappings for PFAM">PFAM.db</a> annotation data package has a Bimap with this information. Now that we have the two conversion tables, we will perform ORA and limit the output to Pfam entries of size 15 to 500.
+
+```{r cp-ora-pfam}
+# Entrez to Pfam ID mapping file created with biomaRt package
+TERM2GENE <- readRDS("data/pfam_conv_tbl.rds") %>% 
+  # Remove blank terms
+  filter(pfam != "") %>% 
+  # Reorder and rename columns. 
+  # ! These specific column names must be used in this exact order
+  dplyr::select(term = pfam, gene = entrezgene_id)
+
+# Pfam IDs to descriptions
+library(PFAM.db)
+TERM2NAME <- as.data.frame.Bimap(PFAMDE)
+# ! These specific column names must be used in this exact order
+colnames(TERM2NAME) <- c("term", "name")
+
+## Pfam ORA with clusterProfiler
+cp_ora_pfam <- enricher(
+  gene = sig_genes,
+  pvalueCutoff = 0.05,
+  pAdjustMethod = "BH",
+  universe = universe,
+  minGSSize = 15,
+  maxGSSize = 500,
+  qvalueCutoff = 1,
+  TERM2GENE = TERM2GENE,
+  TERM2NAME = TERM2NAME
+)
+```
+
+```{r cp-ora-pfam-table, echo=FALSE, fig.alt="Top Pfam entries from enricher output."}
+format_cp_ora(
+  cp_ora_pfam, 
+  caption = "Top Pfam entries from enricher output.",
+  link = "http://pfam.xfam.org/family/%s", 
+  n = 10
+)
+```
+
+</br>
+
+There were `r length(cp_ora_pfam@geneSets)` Pfam entries that were tested. Of these, `r nrow(cp_ora_pfam@result)` passed the size filter, and `r sum(cp_ora_pfam@result$p.adjust < 0.05)` were significantly over-represented after multiple testing correction. While none were significant, the top 10 are shown in Table \@ref(tab:cp-ora-pfam-table) so that we can compare it to the results from `hyperGTest`.
+
+Now, we will perform Pfam ORA with the GOstats package. We begin by constructing a new object of class `PFAMHyperGParams` and then passing it to `hyperGTest` for calculation of Hypergeometric p-values. We do not filter by p-value, since adjusted p-values are not provided and we must calculate them ourselves.
+
+```{r gostats-pfam-ora, message=FALSE}
+## Pfam ORA with GOstats
+hyperg_pfam_ora <- new(
+  Class = "PFAMHyperGParams",
+  geneIds = sig_genes,
+  universeGeneIds = universe,
+  annotation = "org.Hs.eg.db",
+  pvalueCutoff = 1,
+  testDirection = "over"
+) %>%
+  hyperGTest() # Hypergeometric testing
+```
+
+Now, we need to filter by gene set size (limit 15 to 500) and adjust the p-values. Normally, we would also filter based on the adjusted p-values, but we will skip this step so that we can compare the output with that of `clusterProfiler::enricher`.
+
+```{r include=FALSE}
+n5 <- summary(hyperg_pfam_ora)
+n6 <- filter(n5, Size >= 20, Size <= 500) %>% nrow()
+```
+
+```{r res-pfam-ora}
+res_pfam_ora <- summary(hyperg_pfam_ora) %>%
+  # Filter by Pfam entry size
+  filter(Size >= 15, Size <= 500) %>%
+  # Adjust p-values
+  mutate(p.adjust = p.adjust(Pvalue, method = "BH")) %>%
+  # Sort by adjusted p-values
+  arrange(p.adjust)
+```
+
+The last step is to add the human-readable Pfam descriptions. We will use the `TERM2NAME` data frame from before and just change the column names for easy joining.
+
+```{r process-pfam-gostats, message=FALSE}
+# Pfam entries to descriptions
+colnames(TERM2NAME) <- c("PFAMID", "Description")
+res_pfam_ora <- left_join(res_pfam_ora, TERM2NAME)
+```
+
+```{r gostats-pfam-ora-table, echo=FALSE, fig.alt="Top Pfam entries obtained using the GOstats package."}
+res_pfam_ora[, c("PFAMID", "Description", "OddsRatio", "ExpCount", 
+                 "Count", "Size", "Pvalue", "p.adjust")] %>%
+  head(10) %>% 
+  mutate(
+    PFAMID = cell_spec(
+      PFAMID, 
+      link = sprintf("http://pfam.xfam.org/family/%s", PFAMID))
+  ) %>%
+  kable(digits = 4, row.names = FALSE, escape = FALSE,
+        caption = "Top Pfam entries obtained using the GOstats package.") %>% 
+  kable_styling(full_width = FALSE, font_size = 12,
+                bootstrap_options = c("hover", "condensed")) %>% 
+  scroll_box(height = "20em")
+```
+
+</br>
+
+`r nrow(n5)` Pfam entries were tested. Of these, `r n6` passed the size filter, and none were significantly over-represented after multiple testing correction. The top 10 are shown in Table \@ref(tab:gostats-pfam-ora-table).
+
+
+Notice that this table and Table \@ref(tab:cp-ora-pfam-table) are different. For one, the sizes of the entries are not always the same. For example, <a href="http://pfam.xfam.org/family/PF01391" title = "Collagen triple helix repeat (20 copies)">PF01391</a> has size 31 according to the mapping file created from the `biomaRt` package, but only size 30 according to `org.Hs.eg.db`. This leads to differences in the number of total Pfam entries that remain after filtering by size and, subsequently, differences in the adjusted p-values.
+
+
+### Considerations
+
+1. The choice of the threshold for statistical significance and the multiple comparison adjustment method can greatly impact the analysis [@huang_bioinformatics_2009].
+2. ORA fails to incorporate direction of gene regulation. (Are the genes in a given set mainly up or down-regulated?). It is not a good idea to split DEA results by the sign of the logFC and apply ORA to the two sets. Use GSEA instead.
+<!--- 
+TODO:
+Fact-check #3
+--->
+3. If few genes are differentially expressed, ORA is unlikely to yield useful or reliable results. For example, suppose 30 out of 8000 genes are significant. 100 of the genes are annotated to a particular gene set, of which 3 are significant. The associated Hypergeometric p-value is `r round(phyper(3-1, 30, 8000- 30, 100, lower.tail = FALSE), 4)`, and this set would be considered significantly over-represented at the 0.01 level (at least, prior to adjustment for multiple comparisons); however, if only 2 of the genes in this set are significant, this p-value increases 10-fold to `r round(phyper(2-1, 30, 8000- 30, 100, lower.tail = FALSE), 4)` and is no longer significant even at the 0.05 level.
+4. If the DEA results are not gene-centric (i.e. DEA was performed at the protein or phosphosite level), then there may be cases where two proteins are associated with the same gene, but only one is significantly differentially abundant. In this case, there is no way to categorize the gene as significant or not, so ORA should not be used. The other problem that could arise if the DEA results are not gene-centric is that the same gene may be counted as significant multiple times, which leads to artificial over-representation.
+
+
+## Gene Set Enrichment Analysis {#gsea}
+
+### Overview {#gsea-overview}
+
+Gene Set Enrichment Analysis (GSEA) employs a "no-cutoff" strategy that utilizes some experimental value (such as fold change, the moderated t-statistic, or Z-Score) to rank a list of $N$ genes in descending order. Using this ranked list $L$, the values of the ranking metric, and an *a priori* defined gene set $S$, we can calculate an enrichment score. This is done by "walking down the list $L$, increasing a running-sum statistic when we encounter a gene in $S$ and decreasing it when we encounter genes not in $S$." The maximum deviation from zero of this running-sum statistic is the enrichment score for $S$, denoted by $ES(S)$. If the genes in $S$ are randomly distributed throughout $L$, $ES(S)$ will be relatively small; however, if they are not randomly distributed (i.e. primarily located near either end of $L$), then $ES(S)$ will be relatively large [@mootha_pgc-1-responsive_2003; @subramanian_gene_2005].
+
+To assess the statistical significance of each $ES(S)$, we permute the phenotype labels in the expression data and recalculate the ranking metric and subsequent enrichment score $ES_{\text{NULL}}$. Alternatively, we could permute the genes: for a given $S$ of size $k$, we randomly select $k$ genes from the list $L$ and calculate an enrichment score $ES_{\text{NULL}}$. This is the method implemented by <a href="https://doi.org/doi:10.18129/B9.bioc.fgsea" title = "fgsea: Fast Gene Set Enrichment Analysis">fgsea</a> and, consequently, <a href="https://doi.org/doi:10.18129/B9.bioc.clusterProfiler" title = "clusterProfiler: A universal enrichment tool for interpreting omics data">clusterProfiler</a>, though it is "not strictly accurate" because it does not preserve the correlations between genes [@subramanian_gene_2005]. Regardless of the permutation approach, it is repeated one thousand to tens of thousands of times to produce an empirical null distribution. Then, we define the nominal p-value as the proportion of $ES_{\text{NULL}}$ that are more extreme than $ES(S)$. Once a p-value has been obtained for every gene set, we apply an appropriate adjustment for multiple hypothesis testing. The phenotype randomization approach is summarized in <a href="https://www.nature.com/articles/ng1180/figures/1" title = "Figure 1: Schematic overview of GSEA.">Figure 1: Schematic overview of GSEA</a> in the paper by @mootha_pgc-1-responsive_2003. The mathematical details of GSEA are provided below.
+
+Let $x = \{x_1, ..., x_N : x_i > x_j \ \forall i < j\}$ be the vector of ranking metric values. Also let $S$ be a particular gene set of size $k$ and $NS = \sum\limits_{i \in S}|x_i|$. We define the value of the running sum at gene $i$ as
+
+\[
+r_i = \begin{cases}
+0 & \text{if } i = 0, \\
+r_{i-1} + \frac{1}{NS}|x_i| & \text{if } 1 \leq i \leq N \text{ and } i \in S, \\
+r_{i-1} - \frac{1}{N-k} & \text{if } 1 \leq i \leq N \text{ and } i \not\in S
+\end{cases}
+\]
+
+$ES(S)$ is the largest (in terms of absolute value) element of $r_N$. This notation is a slightly modified version of what is presented in the paper by @korotkevich_fast_2016.
+
+### Examples
+
+#### Gene Ontology
+
+#### Reactome
+
+#### Pfam
+
+
+### Considerations
+
+1. GSEA is not influenced by an arbitrary cutoff for statistical significance. This is especially useful when only a few features pass this threshold after adjustment for multiple testing, and it also means that it does not depend on the choice of p-value adjustment.
+2. All genes in an experiment are allowed to "contribute to the enrichment analysis in differing degrees" [@huang_bioinformatics_2009]. This addresses the point brought up at the beginning of Section \@ref(patha) that biological changes may be the result of small changes in many related genes. GSEA allows for the detection of such changes.
+3. The sign of the enrichment score tell us in which category a set of genes is primarily up- or down-regulated. For example, suppose we test the difference between the means of two groups for each gene using the <a href="https://doi.org/doi:10.18129/B9.bioc.limma" title = "limma: Linear Models for Microarray Data">limma</a> package. Since ranking metrics incorporate the direction of change, a positive enrichment score would mean that the majority of genes in that particular set are up-regulated in A relative to B/down-regulated in B relative to A.
+4. The choice of ranking metric is important.
+<!---
+Talk more about ranking metrics and include sources!!!
+--->
+
+

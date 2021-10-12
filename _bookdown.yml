@@ -9,5 +9,5 @@ language:
     chapter_name: "Section "
 new_session: yes
 rmd_files:
-  ["index.Rmd", "EDA.Rmd", "DEA.Rmd", "enrichment_analysis.Rmd",
+  ["index.Rmd", "EDA.Rmd", "DEA.Rmd", "pathway_analysis.Rmd",
   "references.Rmd"]

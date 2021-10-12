@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>4.2 GSEA | A Tutorial for Proteomics Data Analysis with R/Bioconductor</title>
+  <title>4.3 Gene Set Enrichment Analysis | A Tutorial for Proteomics Data Analysis with R/Bioconductor</title>
   <meta name="description" content="This is a comprehensive tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="4.2 GSEA | A Tutorial for Proteomics Data Analysis with R/Bioconductor" />
+  <meta property="og:title" content="4.3 Gene Set Enrichment Analysis | A Tutorial for Proteomics Data Analysis with R/Bioconductor" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="4.2 GSEA | A Tutorial for Proteomics Data Analysis with R/Bioconductor" />
+  <meta name="twitter:title" content="4.3 Gene Set Enrichment Analysis | A Tutorial for Proteomics Data Analysis with R/Bioconductor" />
   
   <meta name="twitter:description" content="This is a comprehensive tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -24,15 +24,15 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2021-09-14" />
+<meta name="date" content="2021-10-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="sea.html"/>
-<link rel="next" href="databases.html"/>
+<link rel="prev" href="ora.html"/>
+<link rel="next" href="references.html"/>
 <script src="libs/header-attrs-2.9/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -53,6 +53,8 @@
 
 <link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -188,16 +190,40 @@ div.csl-indent {
 <li class="chapter" data-level="3.2" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>3.2</b> p-value Histograms</a></li>
 <li class="chapter" data-level="3.3" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>3.3</b> Volcano Plots</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="enrich.html"><a href="enrich.html"><i class="fa fa-check"></i><b>4</b> Enrichment Analysis</a>
+<li class="chapter" data-level="4" data-path="patha.html"><a href="patha.html"><i class="fa fa-check"></i><b>4</b> Pathway Analysis</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="sea.html"><a href="sea.html"><i class="fa fa-check"></i><b>4.1</b> SEA</a></li>
-<li class="chapter" data-level="4.2" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>4.2</b> GSEA</a></li>
-<li class="chapter" data-level="4.3" data-path="databases.html"><a href="databases.html"><i class="fa fa-check"></i><b>4.3</b> Databases</a>
+<li class="chapter" data-level="4.1" data-path="enrichdb.html"><a href="enrichdb.html"><i class="fa fa-check"></i><b>4.1</b> Annotation Databases</a>
 <ul>
-<li class="chapter" data-level="4.3.1" data-path="databases.html"><a href="databases.html#gene-ontology"><i class="fa fa-check"></i><b>4.3.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="4.3.2" data-path="databases.html"><a href="databases.html#reactome"><i class="fa fa-check"></i><b>4.3.2</b> Reactome</a></li>
-<li class="chapter" data-level="4.3.3" data-path="databases.html"><a href="databases.html#kegg"><i class="fa fa-check"></i><b>4.3.3</b> KEGG</a></li>
-<li class="chapter" data-level="4.3.4" data-path="databases.html"><a href="databases.html#pfam"><i class="fa fa-check"></i><b>4.3.4</b> Pfam</a></li>
+<li class="chapter" data-level="4.1.1" data-path="enrichdb.html"><a href="enrichdb.html#gene-ontology"><i class="fa fa-check"></i><b>4.1.1</b> Gene Ontology</a>
+<ul>
+<li class="chapter" data-level="" data-path="enrichdb.html"><a href="enrichdb.html#semantic-similarity"><i class="fa fa-check"></i>Semantic Similarity</a></li>
+<li class="chapter" data-level="" data-path="enrichdb.html"><a href="enrichdb.html#go-subsetsslims"><i class="fa fa-check"></i>GO Subsets/Slims</a></li>
+</ul></li>
+<li class="chapter" data-level="4.1.2" data-path="enrichdb.html"><a href="enrichdb.html#reactome"><i class="fa fa-check"></i><b>4.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="4.1.3" data-path="enrichdb.html"><a href="enrichdb.html#kegg"><i class="fa fa-check"></i><b>4.1.3</b> KEGG</a></li>
+<li class="chapter" data-level="4.1.4" data-path="enrichdb.html"><a href="enrichdb.html#pfam"><i class="fa fa-check"></i><b>4.1.4</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>4.2</b> Over-Representation Analysis</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>4.2.1</b> Overview</a></li>
+<li class="chapter" data-level="4.2.2" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>4.2.2</b> Examples</a>
+<ul>
+<li class="chapter" data-level="" data-path="ora.html"><a href="ora.html#gene-ontology-1"><i class="fa fa-check"></i>Gene Ontology</a></li>
+<li class="chapter" data-level="" data-path="ora.html"><a href="ora.html#reactome-1"><i class="fa fa-check"></i>Reactome</a></li>
+<li class="chapter" data-level="" data-path="ora.html"><a href="ora.html#pfam-1"><i class="fa fa-check"></i>Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2.3" data-path="ora.html"><a href="ora.html#considerations"><i class="fa fa-check"></i><b>4.2.3</b> Considerations</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>4.3</b> Gene Set Enrichment Analysis</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>4.3.1</b> Overview</a></li>
+<li class="chapter" data-level="4.3.2" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>4.3.2</b> Examples</a>
+<ul>
+<li class="chapter" data-level="4.3.2.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-2"><i class="fa fa-check"></i><b>4.3.2.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="4.3.2.2" data-path="gsea.html"><a href="gsea.html#reactome-2"><i class="fa fa-check"></i><b>4.3.2.2</b> Reactome</a></li>
+<li class="chapter" data-level="4.3.2.3" data-path="gsea.html"><a href="gsea.html#pfam-2"><i class="fa fa-check"></i><b>4.3.2.3</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3.3" data-path="gsea.html"><a href="gsea.html#considerations-1"><i class="fa fa-check"></i><b>4.3.3</b> Considerations</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -218,34 +244,62 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="gsea" class="section level2" number="4.2">
-<h2><span class="header-section-number">4.2</span> GSEA</h2>
-<!---
-Gene Set Enrichment Analysis (GSEA) employs a "no-cutoff" strategy that utilizes some "quantitative biological value (such as fold change or degree of differential expression)" to rank a list $L$ of genes [@tipney_introduction_2010; @subramanian_gene_2005]. After ranking $L$, an enrichment score (ES) is calculated for a particular gene set $S$. This is done by 1) "walking down the list $L$, increasing a running-sum statistic when we encounter a gene in $S$ and decreasing it when we encounter genes not in $S$"; and then 2) determining the "maximum deviation from zero encountered in the random walk." This maximum deviation is the ES for a particular gene set. Once the ES has been obtained, the statistical significance is estimated by permuting (randomizing) the "phenotype labels and recomput[ing] the ES of the gene set for the permuted data, which generates a null distribution for the ES" [@subramanian_gene_2005]. Finally, adjustment for multiple hypothesis testing is performed.
---->
-<p>Gene Set Enrichment Analysis (GSEA) employs a “no-cutoff” strategy that utilizes some “quantitative biological value (such as fold change or degree of differential expression)” to rank a list of <span class="math inline">\(N\)</span> genes in descending order <span class="citation">(<a href="#ref-tipney_introduction_2010" role="doc-biblioref">Tipney et al., 2010</a>)</span>. Using this ranked list <span class="math inline">\(L\)</span>, the values of the ranking metric, and an <em>a priori</em> defined gene set <span class="math inline">\(S\)</span>, we can calculate an enrichment score. This is done by “walking down the list <span class="math inline">\(L\)</span>, increasing a running-sum statistic when we encounter a gene in <span class="math inline">\(S\)</span> and decreasing it when we encounter genes not in <span class="math inline">\(S\)</span>.” The “maximum deviation from zero” of this running-sum statistic is the enrichment score for <span class="math inline">\(S\)</span>, denoted by <span class="math inline">\(ES(S)\)</span>. If the genes in <span class="math inline">\(S\)</span> are randomly distributed throughout <span class="math inline">\(L\)</span> (this is the null hypothesis), <span class="math inline">\(ES(S)\)</span> will be relatively small; however, if they are not randomly distributed (i.e. primarily located near the top or bottom of <span class="math inline">\(L\)</span>), then <span class="math inline">\(ES(S)\)</span> will be relatively large <span class="citation">(<a href="#ref-subramanian_gene_2005" role="doc-biblioref">Subramanian et al., 2005</a>)</span>.</p>
-<p>To assess the statistical significance of <span class="math inline">\(ES(S)\)</span>, we randomize the phenotype labels in the original expression data, re-compute the ranking metric values, reorder <span class="math inline">\(L\)</span> using these new values, and re-compute the enrichment score <span class="math inline">\(ES_{\text{NULL}}\)</span>. This process is repeated hundreds or thousands of times until we have a distribution of enrichment scores. We then define the nominal p-value as the proportion of these enrichment scores that are greater than or equal to <span class="math inline">\(ES(S)\)</span>. Once a p-value has been calculated for each gene set, they are adjusted for multiply hypothesis testing <span class="citation">(<a href="#ref-subramanian_gene_2005" role="doc-biblioref">Subramanian et al., 2005</a>)</span>.</p>
-<!---
-We will now elaborate on how $ES(S)$ is derived. Given a ranked list of genes $L = \{g_1, \dots, g_N \}$, a gene set $S$ consisting of $M$ genes, and the values of the ranking metric ($X = \{ x_1, \dots, x_N \}$ used to generate $L$, we define
-
-\[
-P_{\text{hit}}(S, i) = \sum \limits_{g_j \in S \\ j \leq i} \frac{|x_j|^p}{N_R} \quad \text{and} \quad P_{\text{miss}}(S, i) = \sum \limits_{g_j \in S \\ j \leq i} \frac{1}{N - M}
-\]
-
-where $N_R = \sum \limits_{g_j \in S} |x_j|^p$
---->
-<!---
-TODO:
-Talk about benefits of GSEA over SEA (i.e. reduced variability in "non-statistical layers" and usable when few or no genes pass the threshold for statistical significance.)
---->
+<div id="gsea" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> Gene Set Enrichment Analysis</h2>
+<div id="gsea-overview" class="section level3" number="4.3.1">
+<h3><span class="header-section-number">4.3.1</span> Overview</h3>
+<p>Gene Set Enrichment Analysis (GSEA) employs a “no-cutoff” strategy that utilizes some experimental value (such as fold change, the moderated t-statistic, or Z-Score) to rank a list of <span class="math inline">\(N\)</span> genes in descending order. Using this ranked list <span class="math inline">\(L\)</span>, the values of the ranking metric, and an <em>a priori</em> defined gene set <span class="math inline">\(S\)</span>, we can calculate an enrichment score. This is done by “walking down the list <span class="math inline">\(L\)</span>, increasing a running-sum statistic when we encounter a gene in <span class="math inline">\(S\)</span> and decreasing it when we encounter genes not in <span class="math inline">\(S\)</span>.” The maximum deviation from zero of this running-sum statistic is the enrichment score for <span class="math inline">\(S\)</span>, denoted by <span class="math inline">\(ES(S)\)</span>. If the genes in <span class="math inline">\(S\)</span> are randomly distributed throughout <span class="math inline">\(L\)</span>, <span class="math inline">\(ES(S)\)</span> will be relatively small; however, if they are not randomly distributed (i.e. primarily located near either end of <span class="math inline">\(L\)</span>), then <span class="math inline">\(ES(S)\)</span> will be relatively large <span class="citation">(<a href="#ref-mootha_pgc-1-responsive_2003" role="doc-biblioref">Mootha et al., 2003</a>; <a href="#ref-subramanian_gene_2005" role="doc-biblioref">Subramanian et al., 2005</a>)</span>.</p>
+<p>To assess the statistical significance of each <span class="math inline">\(ES(S)\)</span>, we permute the phenotype labels in the expression data and recalculate the ranking metric and subsequent enrichment score <span class="math inline">\(ES_{\text{NULL}}\)</span>. Alternatively, we could permute the genes: for a given <span class="math inline">\(S\)</span> of size <span class="math inline">\(k\)</span>, we randomly select <span class="math inline">\(k\)</span> genes from the list <span class="math inline">\(L\)</span> and calculate an enrichment score <span class="math inline">\(ES_{\text{NULL}}\)</span>. This is the method implemented by <a href="https://doi.org/doi:10.18129/B9.bioc.fgsea" title = "fgsea: Fast Gene Set Enrichment Analysis">fgsea</a> and, consequently, <a href="https://doi.org/doi:10.18129/B9.bioc.clusterProfiler" title = "clusterProfiler: A universal enrichment tool for interpreting omics data">clusterProfiler</a>, though it is “not strictly accurate” because it does not preserve the correlations between genes <span class="citation">(<a href="#ref-subramanian_gene_2005" role="doc-biblioref">Subramanian et al., 2005</a>)</span>. Regardless of the permutation approach, it is repeated one thousand to tens of thousands of times to produce an empirical null distribution. Then, we define the nominal p-value as the proportion of <span class="math inline">\(ES_{\text{NULL}}\)</span> that are more extreme than <span class="math inline">\(ES(S)\)</span>. Once a p-value has been obtained for every gene set, we apply an appropriate adjustment for multiple hypothesis testing. The phenotype randomization approach is summarized in <a href="https://www.nature.com/articles/ng1180/figures/1" title = "Figure 1: Schematic overview of GSEA.">Figure 1: Schematic overview of GSEA</a> in the paper by <span class="citation"><a href="#ref-mootha_pgc-1-responsive_2003" role="doc-biblioref">Mootha et al.</a> (<a href="#ref-mootha_pgc-1-responsive_2003" role="doc-biblioref">2003</a>)</span>. The mathematical details of GSEA are provided below.</p>
+<p>Let <span class="math inline">\(x = \{x_1, ..., x_N : x_i &gt; x_j \ \forall i &lt; j\}\)</span> be the vector of ranking metric values. Also let <span class="math inline">\(S\)</span> be a particular gene set of size <span class="math inline">\(k\)</span> and <span class="math inline">\(NS = \sum\limits_{i \in S}|x_i|\)</span>. We define the value of the running sum at gene <span class="math inline">\(i\)</span> as</p>
+<p><span class="math display">\[
+r_i = \begin{cases}
+0 &amp; \text{if } i = 0, \\
+r_{i-1} + \frac{1}{NS}|x_i| &amp; \text{if } 1 \leq i \leq N \text{ and } i \in S, \\
+r_{i-1} - \frac{1}{N-k} &amp; \text{if } 1 \leq i \leq N \text{ and } i \not\in S
+\end{cases}
+\]</span></p>
+<p><span class="math inline">\(ES(S)\)</span> is the largest (in terms of absolute value) element of <span class="math inline">\(r_N\)</span>. This notation is a slightly modified version of what is presented in the paper by <span class="citation"><a href="#ref-korotkevich_fast_2016" role="doc-biblioref">Korotkevich et al.</a> (<a href="#ref-korotkevich_fast_2016" role="doc-biblioref">2016</a>)</span>.</p>
 </div>
+<div id="examples" class="section level3" number="4.3.2">
+<h3><span class="header-section-number">4.3.2</span> Examples</h3>
+<div id="gene-ontology-2" class="section level4" number="4.3.2.1">
+<h4><span class="header-section-number">4.3.2.1</span> Gene Ontology</h4>
+</div>
+<div id="reactome-2" class="section level4" number="4.3.2.2">
+<h4><span class="header-section-number">4.3.2.2</span> Reactome</h4>
+</div>
+<div id="pfam-2" class="section level4" number="4.3.2.3">
+<h4><span class="header-section-number">4.3.2.3</span> Pfam</h4>
+</div>
+</div>
+<div id="considerations-1" class="section level3" number="4.3.3">
+<h3><span class="header-section-number">4.3.3</span> Considerations</h3>
+<ol style="list-style-type: decimal">
+<li>GSEA is not influenced by an arbitrary cutoff for statistical significance. This is especially useful when only a few features pass this threshold after adjustment for multiple testing, and it also means that it does not depend on the choice of p-value adjustment.</li>
+<li>All genes in an experiment are allowed to “contribute to the enrichment analysis in differing degrees” <span class="citation">(<a href="#ref-huang_bioinformatics_2009" role="doc-biblioref">Huang et al., 2009</a>)</span>. This addresses the point brought up at the beginning of Section <a href="patha.html#patha">4</a> that biological changes may be the result of small changes in many related genes. GSEA allows for the detection of such changes.</li>
+<li>The sign of the enrichment score tell us in which category a set of genes is primarily up- or down-regulated. For example, suppose we test the difference between the means of two groups for each gene using the <a href="https://doi.org/doi:10.18129/B9.bioc.limma" title = "limma: Linear Models for Microarray Data">limma</a> package. Since ranking metrics incorporate the direction of change, a positive enrichment score would mean that the majority of genes in that particular set are up-regulated in A relative to B/down-regulated in B relative to A.</li>
+<li>The choice of ranking metric is important.
+<!---
+Talk more about ranking metrics and include sources!!!
+---></li>
+</ol>
+
+</div>
+</div>
+<!-- </div> -->
 <h3>References</h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-huang_bioinformatics_2009" class="csl-entry">
+Huang, D. W., Sherman, B. T. and Lempicki, R. A., Bioinformatics Enrichment Tools: Paths Toward the Comprehensive Functional Analysis of Large Gene Lists, <em>Nucleic Acids Research</em>, vol. <strong>37</strong>, no. 1, pp. 1–13, accessed September 7, 2021, from <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2615629/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2615629/</a>, January 2009. DOI: <a href="https://doi.org/10.1093/nar/gkn923">10.1093/nar/gkn923</a>
+</div>
+<div id="ref-korotkevich_fast_2016" class="csl-entry">
+Korotkevich, G., Sukhov, V., Budin, N., Shpak, B., Artyomov, M. N., and Sergushichev, A., Fast Gene Set Enrichment Analysis, Bioinformatics, Jun. 2016.
+</div>
+<div id="ref-mootha_pgc-1-responsive_2003" class="csl-entry">
+Mootha, V. K., Lindgren, C. M., Eriksson, K.-F., Subramanian, A., Sihag, S., Lehar, J., Puigserver, P., et al., <span>PGC</span>-1α-Responsive Genes Involved in Oxidative Phosphorylation Are Coordinately Downregulated in Human Diabetes, <em>Nature Genetics</em>, vol. <strong>34</strong>, no. 3, pp. 267–73, accessed September 19, 2021, from <a href="https://www.nature.com/articles/ng1180">https://www.nature.com/articles/ng1180</a>, July 2003. DOI: <a href="https://doi.org/10.1038/ng1180">10.1038/ng1180</a>
+</div>
 <div id="ref-subramanian_gene_2005" class="csl-entry">
 Subramanian, A., Tamayo, P., Mootha, V. K., Mukherjee, S., Ebert, B. L., Gillette, M. A., Paulovich, A., et al., Gene Set Enrichment Analysis: <span>A</span> Knowledge-Based Approach for Interpreting Genome-Wide Expression Profiles, <em>Proceedings of the National Academy of Sciences of the United States of America</em>, vol. <strong>102</strong>, no. 43, pp. 15545–50, accessed September 7, 2021, from <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1239896/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1239896/</a>, October 2005. DOI: <a href="https://doi.org/10.1073/pnas.0506580102">10.1073/pnas.0506580102</a>
-</div>
-<div id="ref-tipney_introduction_2010" class="csl-entry">
-Tipney, H. and Hunter, L., An Introduction to Effective Use of Enrichment Analysis Software, <em>Human Genomics</em>, vol. <strong>4</strong>, no. 3, p. 202, accessed September 10, 2021, from <a href="https://doi.org/10.1186/1479-7364-4-3-202">https://doi.org/10.1186/1479-7364-4-3-202</a>, February 2010. DOI: <a href="https://doi.org/10.1186/1479-7364-4-3-202">10.1186/1479-7364-4-3-202</a>
 </div>
 </div>
             </section>
@@ -253,8 +307,8 @@ Tipney, H. and Hunter, L., An Introduction to Effective Use of Enrichment Analys
           </div>
         </div>
       </div>
-<a href="sea.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="databases.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="ora.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
