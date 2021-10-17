@@ -4,9 +4,9 @@ bookdown::gitbook:
   split_by: section
   config:
     toc:
-      collapse: subsection
+      collapse: section
       before: |
-           <li><a href=".">A Tutorial for Proteomics Data Analysis in R/Bioconductor</a></li>
+           <li><a href=".">Proteomics Data Analysis in R/Bioconductor</a></li>
     sharing:
       github: yes
       facebook: no

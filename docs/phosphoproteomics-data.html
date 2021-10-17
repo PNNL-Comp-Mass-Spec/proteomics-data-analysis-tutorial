@@ -1,0 +1,2839 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2.2 Phosphoproteomics Data | Proteomics Data Analysis in R/Bioconductor</title>
+  <meta name="description" content="This is a comprehensive tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="2.2 Phosphoproteomics Data | Proteomics Data Analysis in R/Bioconductor" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a comprehensive tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2.2 Phosphoproteomics Data | Proteomics Data Analysis in R/Bioconductor" />
+  
+  <meta name="twitter:description" content="This is a comprehensive tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
+  
+
+<meta name="author" content="Tyler Sagendorf" />
+
+
+<meta name="date" content="2021-10-17" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="global-proteomics-data.html"/>
+<link rel="next" href="exploratory-data-analysis.html"/>
+<script src="libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href=".">Proteomics Data Analysis in R/Bioconductor</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome!</a></li>
+<li class="chapter" data-level="1" data-path="miscellaneous-resources.html"><a href="miscellaneous-resources.html"><i class="fa fa-check"></i><b>1</b> Miscellaneous Resources</a></li>
+<li class="chapter" data-level="2" data-path="isobaric-quantification-pipelines.html"><a href="isobaric-quantification-pipelines.html"><i class="fa fa-check"></i><b>2</b> Isobaric Quantification Pipelines</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html"><i class="fa fa-check"></i><b>2.1</b> Global Proteomics Data</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#prepare-MS2-IDs-global"><i class="fa fa-check"></i><b>2.1.1</b> Prepare MS/MS Identifications</a>
+<ul>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#read-ms-gf-data"><i class="fa fa-check"></i>Read MS-GF+ Data</a></li>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#correct-isotope-selection-error"><i class="fa fa-check"></i>Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#remove-contaminants"><i class="fa fa-check"></i>Remove Contaminants</a></li>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#msms-id-filter-peptide-level"><i class="fa fa-check"></i>MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#msms-id-filter-protein-level"><i class="fa fa-check"></i>MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#inference-of-parsimonious-protein-set"><i class="fa fa-check"></i>Inference of Parsimonious Protein Set</a></li>
+</ul></li>
+<li class="chapter" data-level="2.1.2" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#reporter-ion-intensities"><i class="fa fa-check"></i><b>2.1.2</b> Prepare Reporter Ion Intensities</a>
+<ul>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#read-masic-output"><i class="fa fa-check"></i>Read MASIC Output</a></li>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#filter-masic-data"><i class="fa fa-check"></i>Filter MASIC Data</a></li>
+</ul></li>
+<li class="chapter" data-level="2.1.3" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#fetch-study-design-tables"><i class="fa fa-check"></i><b>2.1.3</b> Create Study Design Tables</a>
+<ul>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#fractions"><i class="fa fa-check"></i>Fractions</a></li>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#samples"><i class="fa fa-check"></i>Samples</a></li>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#references"><i class="fa fa-check"></i>References</a></li>
+</ul></li>
+<li class="chapter" data-level="2.1.4" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#global-quant-crosstab"><i class="fa fa-check"></i><b>2.1.4</b> Create Quantitative Cross-tab</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html"><i class="fa fa-check"></i><b>2.2</b> Phosphoproteomics Data</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#prepare-MS2-IDs-phospho"><i class="fa fa-check"></i><b>2.2.1</b> Prepare MS/MS Identifications</a>
+<ul>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#read-ms-gf-output"><i class="fa fa-check"></i>Read MS-GF+ Output</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-non-phosphorylated-peptides"><i class="fa fa-check"></i>Remove Non-Phosphorylated Peptides</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#correct-isotope-selection-error-1"><i class="fa fa-check"></i>Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-contaminants-1"><i class="fa fa-check"></i>Remove Contaminants</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#ascore"><i class="fa fa-check"></i>AScore</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#msms-id-filter-peptide-level-1"><i class="fa fa-check"></i>MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#msms-id-filter-protein-level-1"><i class="fa fa-check"></i>MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#inference-of-parsimonious-protein-set-1"><i class="fa fa-check"></i>Inference of Parsimonious Protein Set</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#map-sites-to-protein-sequences"><i class="fa fa-check"></i>Map Sites to Protein Sequences</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2.2" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#phospho-reporter-ion-intensities"><i class="fa fa-check"></i><b>2.2.2</b> Prepare Reporter Ion Intensities</a>
+<ul>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#read-masic-output-1"><i class="fa fa-check"></i>Read MASIC Output</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#filter-masic-data-1"><i class="fa fa-check"></i>Filter MASIC Data</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2.3" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#create-study-design-tables"><i class="fa fa-check"></i><b>2.2.3</b> Create Study Design Tables</a>
+<ul>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#fractions-1"><i class="fa fa-check"></i>Fractions</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#samples-1"><i class="fa fa-check"></i>Samples</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#references-1"><i class="fa fa-check"></i>References</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2.4" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#phospho-create-crosstab"><i class="fa fa-check"></i><b>2.2.4</b> Create Quantitative Cross-tab</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>3</b> Exploratory Data Analysis</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>3.1</b> Count Features in Samples</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html#lollipop-plot"><i class="fa fa-check"></i><b>3.1.1</b> Lollipop Plot</a></li>
+<li class="chapter" data-level="3.1.2" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html#boxplot"><i class="fa fa-check"></i><b>3.1.2</b> Boxplot</a></li>
+<li class="chapter" data-level="3.1.3" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html#density-plot"><i class="fa fa-check"></i><b>3.1.3</b> Density Plot</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>3.2</b> Estimate Blood Contamination</a></li>
+<li class="chapter" data-level="3.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>3.3</b> PCA</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="pca.html"><a href="pca.html#overview"><i class="fa fa-check"></i><b>3.3.1</b> Overview</a></li>
+<li class="chapter" data-level="3.3.2" data-path="pca.html"><a href="pca.html#pca-plots"><i class="fa fa-check"></i><b>3.3.2</b> PCA Plots</a></li>
+<li class="chapter" data-level="3.3.3" data-path="pca.html"><a href="pca.html#list-top-contributing-features"><i class="fa fa-check"></i><b>3.3.3</b> List Top-Contributing Features</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>4</b> Differential Expression Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="dea-with-limma.html"><a href="dea-with-limma.html"><i class="fa fa-check"></i><b>4.1</b> DEA with limma</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="dea-with-limma.html"><a href="dea-with-limma.html#dichotomous-predictors"><i class="fa fa-check"></i><b>4.1.1</b> Dichotomous Predictors</a></li>
+<li class="chapter" data-level="4.1.2" data-path="dea-with-limma.html"><a href="dea-with-limma.html#continuous-predictors"><i class="fa fa-check"></i><b>4.1.2</b> Continuous Predictors</a></li>
+<li class="chapter" data-level="4.1.3" data-path="dea-with-limma.html"><a href="dea-with-limma.html#reference-level-comparisons"><i class="fa fa-check"></i><b>4.1.3</b> Reference Level Comparisons</a></li>
+<li class="chapter" data-level="4.1.4" data-path="dea-with-limma.html"><a href="dea-with-limma.html#custom-contrasts"><i class="fa fa-check"></i><b>4.1.4</b> Custom Contrasts</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>4.2</b> p-value Histograms</a></li>
+<li class="chapter" data-level="4.3" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>4.3</b> Volcano Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>5</b> Pathway Analysis</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>5.1</b> Annotation Databases</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>5.1.1</b> Gene Ontology</a>
+<ul>
+<li class="chapter" data-level="" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i>Semantic Similarity</a></li>
+<li class="chapter" data-level="" data-path="annotation-databases.html"><a href="annotation-databases.html#go-subsetsslims"><i class="fa fa-check"></i>GO Subsets/Slims</a></li>
+</ul></li>
+<li class="chapter" data-level="5.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>5.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="5.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>5.1.3</b> KEGG</a></li>
+<li class="chapter" data-level="5.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>5.1.4</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>5.2</b> Over-Representation Analysis</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>5.2.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2.2" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>5.2.2</b> Examples</a>
+<ul>
+<li class="chapter" data-level="" data-path="ora.html"><a href="ora.html#gene-ontology-1"><i class="fa fa-check"></i>Gene Ontology</a></li>
+<li class="chapter" data-level="" data-path="ora.html"><a href="ora.html#reactome-1"><i class="fa fa-check"></i>Reactome</a></li>
+<li class="chapter" data-level="" data-path="ora.html"><a href="ora.html#pfam-1"><i class="fa fa-check"></i>Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2.3" data-path="ora.html"><a href="ora.html#considerations"><i class="fa fa-check"></i><b>5.2.3</b> Considerations</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>5.3</b> Gene Set Enrichment Analysis</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>5.3.1</b> Overview</a></li>
+<li class="chapter" data-level="5.3.2" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>5.3.2</b> Examples</a>
+<ul>
+<li class="chapter" data-level="5.3.2.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-2"><i class="fa fa-check"></i><b>5.3.2.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="5.3.2.2" data-path="gsea.html"><a href="gsea.html#reactome-2"><i class="fa fa-check"></i><b>5.3.2.2</b> Reactome</a></li>
+<li class="chapter" data-level="5.3.2.3" data-path="gsea.html"><a href="gsea.html#pfam-2"><i class="fa fa-check"></i><b>5.3.2.3</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3.3" data-path="gsea.html"><a href="gsea.html#considerations-1"><i class="fa fa-check"></i><b>5.3.3</b> Considerations</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references-2.html"><a href="references-2.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Proteomics Data Analysis in R/Bioconductor</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="phosphoproteomics-data" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Phosphoproteomics Data</h2>
+<p>This pipeline shows how to process data from the DMS. The number of the data package is <code>3626</code>. For this section, we need the <code>PlexedPiper</code> package for isobaric quantification and <code>PNNL.DMS.utils</code> to interface with the DMS. Also, some details will be omitted if they were already provided in Section <a href="global-proteomics-data.html#global-proteomics-data">2.1</a>.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="phosphoproteomics-data.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setup</span></span>
+<span id="cb32-2"><a href="phosphoproteomics-data.html#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PNNL.DMS.utils)</span>
+<span id="cb32-3"><a href="phosphoproteomics-data.html#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PlexedPiper)</span>
+<span id="cb32-4"><a href="phosphoproteomics-data.html#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Biostrings)</span>
+<span id="cb32-5"><a href="phosphoproteomics-data.html#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr) <span class="co"># %&gt;%</span></span></code></pre></div>
+<div id="prepare-MS2-IDs-phospho" class="section level3" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> Prepare MS/MS Identifications</h3>
+<div id="read-ms-gf-output" class="section level4 unnumbered">
+<h4>Read MS-GF+ Output</h4>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="phosphoproteomics-data.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read MS-GF+ data</span></span>
+<span id="cb33-2"><a href="phosphoproteomics-data.html#cb33-2" aria-hidden="true" tabindex="-1"></a>data_package_num <span class="ot">&lt;-</span> <span class="dv">3626</span></span>
+<span id="cb33-3"><a href="phosphoproteomics-data.html#cb33-3" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">read_msgf_data_from_DMS</span>(data_package_num)</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="phosphoproteomics-data.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  23 
+## #PSMs: 612667 at 55 % FDR
+## #peptides: 396540 at 75 % FDR
+## #accessions: 121521 at 98 % FDR</code></pre>
+</div>
+<div id="remove-non-phosphorylated-peptides" class="section level4 unnumbered">
+<h4>Remove Non-Phosphorylated Peptides</h4>
+<p>In this case, the phosphorylation of an amino acid is marked by a <code>*</code> appearing after the amino acid. We will not consider unmodified peptides, so we can filter them out. The <code>*</code> is a special character that must be escaped with backslashes, and the backslashes must also be escaped.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="phosphoproteomics-data.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove non-phosphorylated peptides</span></span>
+<span id="cb36-2"><a href="phosphoproteomics-data.html#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (peptides that do not contain a *)</span></span>
+<span id="cb36-3"><a href="phosphoproteomics-data.html#cb36-3" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">apply_filter</span>(msnid, <span class="st">&quot;grepl(&#39;</span><span class="sc">\\\\</span><span class="st">*&#39;, peptide)&quot;</span>)</span>
+<span id="cb36-4"><a href="phosphoproteomics-data.html#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  23 
+## #PSMs: 537749 at 57 % FDR
+## #peptides: 353634 at 76 % FDR
+## #accessions: 118817 at 98 % FDR</code></pre>
+</div>
+<div id="correct-isotope-selection-error-1" class="section level4 unnumbered">
+<h4>Correct Isotope Selection Error</h4>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="phosphoproteomics-data.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correct for isotope selection error</span></span>
+<span id="cb38-2"><a href="phosphoproteomics-data.html#cb38-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">correct_peak_selection</span>(msnid)</span></code></pre></div>
+</div>
+<div id="remove-contaminants-1" class="section level4 unnumbered">
+<h4>Remove Contaminants</h4>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="phosphoproteomics-data.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove contaminants</span></span>
+<span id="cb39-2"><a href="phosphoproteomics-data.html#cb39-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">apply_filter</span>(msnid, <span class="st">&quot;!grepl(&#39;Contaminant&#39;, accession)&quot;</span>)</span>
+<span id="cb39-3"><a href="phosphoproteomics-data.html#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  23 
+## #PSMs: 537572 at 57 % FDR
+## #peptides: 353489 at 76 % FDR
+## #accessions: 118797 at 98 % FDR</code></pre>
+</div>
+<div id="ascore" class="section level4 unnumbered">
+<h4>AScore</h4>
+<p>Phospho datasets involve AScore jobs for improving phosphosite localization. There should be one AScore job per data package. The fetched object is a data.frame that links datasets, scans and original PTM localization to newly suggested locations. Importantly, it contains <code>AScore</code> column that signifies the confidence of PTM assignment. AScore &gt; 17 is considered confident.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="phosphoproteomics-data.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter PTMs by AScore</span></span>
+<span id="cb41-2"><a href="phosphoproteomics-data.html#cb41-2" aria-hidden="true" tabindex="-1"></a>ascore <span class="ot">&lt;-</span> <span class="fu">get_AScore_results</span>(data_package_num)</span>
+<span id="cb41-3"><a href="phosphoproteomics-data.html#cb41-3" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">best_PTM_location_by_ascore</span>(msnid, ascore)</span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="phosphoproteomics-data.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  23 
+## #PSMs: 188791 at 30 % FDR
+## #peptides: 101873 at 53 % FDR
+## #accessions: 90677 at 93 % FDR</code></pre>
+</div>
+<div id="msms-id-filter-peptide-level-1" class="section level4 unnumbered">
+<h4>MS/MS ID Filter: Peptide Level</h4>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="phosphoproteomics-data.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1% FDR filter at the peptide level</span></span>
+<span id="cb44-2"><a href="phosphoproteomics-data.html#cb44-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">filter_msgf_data</span>(msnid,</span>
+<span id="cb44-3"><a href="phosphoproteomics-data.html#cb44-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">level =</span> <span class="st">&quot;peptide&quot;</span>,</span>
+<span id="cb44-4"><a href="phosphoproteomics-data.html#cb44-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">fdr.max =</span> <span class="fl">0.01</span>)</span>
+<span id="cb44-5"><a href="phosphoproteomics-data.html#cb44-5" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  23 
+## #PSMs: 76103 at 0.49 % FDR
+## #peptides: 23378 at 1 % FDR
+## #accessions: 16090 at 4.7 % FDR</code></pre>
+</div>
+<div id="msms-id-filter-protein-level-1" class="section level4 unnumbered">
+<h4>MS/MS ID Filter: Protein Level</h4>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="phosphoproteomics-data.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get path to FASTA file</span></span>
+<span id="cb46-2"><a href="phosphoproteomics-data.html#cb46-2" aria-hidden="true" tabindex="-1"></a>path_to_FASTA <span class="ot">&lt;-</span> <span class="fu">path_to_FASTA_used_by_DMS</span>(data_package_num)</span>
+<span id="cb46-3"><a href="phosphoproteomics-data.html#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-4"><a href="phosphoproteomics-data.html#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute number of peptides per 1000 amino acids</span></span>
+<span id="cb46-5"><a href="phosphoproteomics-data.html#cb46-5" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">compute_num_peptides_per_1000aa</span>(msnid, path_to_FASTA)</span>
+<span id="cb46-6"><a href="phosphoproteomics-data.html#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-7"><a href="phosphoproteomics-data.html#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 1% FDR filter at the protein level</span></span>
+<span id="cb46-8"><a href="phosphoproteomics-data.html#cb46-8" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">filter_msgf_data</span>(msnid,</span>
+<span id="cb46-9"><a href="phosphoproteomics-data.html#cb46-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">level =</span> <span class="st">&quot;accession&quot;</span>,</span>
+<span id="cb46-10"><a href="phosphoproteomics-data.html#cb46-10" aria-hidden="true" tabindex="-1"></a>                          <span class="at">fdr.max =</span> <span class="fl">0.01</span>)</span>
+<span id="cb46-11"><a href="phosphoproteomics-data.html#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  23 
+## #PSMs: 72471 at 0.12 % FDR
+## #peptides: 21261 at 0.25 % FDR
+## #accessions: 9413 at 0.95 % FDR</code></pre>
+</div>
+<div id="inference-of-parsimonious-protein-set-1" class="section level4 unnumbered">
+<h4>Inference of Parsimonious Protein Set</h4>
+<!---
+TODO:
+* Talk about using prior information from global cross-tab to improve inference of the parsimonious protein set for phospho data.
+--->
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="phosphoproteomics-data.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load proteins from global crosstab</span></span>
+<span id="cb48-2"><a href="phosphoproteomics-data.html#cb48-2" aria-hidden="true" tabindex="-1"></a>global_proteins <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;data/3442_global_protein_names.rds&quot;</span>)</span>
+<span id="cb48-3"><a href="phosphoproteomics-data.html#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Inference of parsimonious protein set</span></span>
+<span id="cb48-4"><a href="phosphoproteomics-data.html#cb48-4" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">infer_parsimonious_accessions</span>(msnid, <span class="at">unique_only =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb48-5"><a href="phosphoproteomics-data.html#cb48-5" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">prior =</span> global_proteins)</span>
+<span id="cb48-6"><a href="phosphoproteomics-data.html#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  23 
+## #PSMs: 72471 at 0.12 % FDR
+## #peptides: 21261 at 0.25 % FDR
+## #accessions: 2890 at 1.6 % FDR</code></pre>
+<p>Notice that the protein-level FDR increased above the acceptable threshold, so we need to reapply the filter.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="phosphoproteomics-data.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1% FDR filter at the protein level</span></span>
+<span id="cb50-2"><a href="phosphoproteomics-data.html#cb50-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">filter_msgf_data</span>(msnid,</span>
+<span id="cb50-3"><a href="phosphoproteomics-data.html#cb50-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">level =</span> <span class="st">&quot;accession&quot;</span>,</span>
+<span id="cb50-4"><a href="phosphoproteomics-data.html#cb50-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">fdr.max =</span> <span class="fl">0.01</span>)</span>
+<span id="cb50-5"><a href="phosphoproteomics-data.html#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  23 
+## #PSMs: 70359 at 0.075 % FDR
+## #peptides: 20127 at 0.15 % FDR
+## #accessions: 2356 at 0.99 % FDR</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="phosphoproteomics-data.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove Decoy Accessions</span></span>
+<span id="cb52-2"><a href="phosphoproteomics-data.html#cb52-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">apply_filter</span>(msnid, <span class="st">&quot;!isDecoy&quot;</span>)</span>
+<span id="cb52-3"><a href="phosphoproteomics-data.html#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  23 
+## #PSMs: 70306 at 0 % FDR
+## #peptides: 20096 at 0 % FDR
+## #accessions: 2333 at 0 % FDR</code></pre>
+</div>
+<div id="map-sites-to-protein-sequences" class="section level4 unnumbered">
+<h4>Map Sites to Protein Sequences</h4>
+<p>Prepare FASTA to make sure entry names in FASTA file match MSnID accessions. The plan is to make this conversion automatic. <code>map_mod_sites</code> creates number of columns describing mapping of the site/s onto the protein sequences. The most important for the user is <code>SiteID</code>.</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="phosphoproteomics-data.html#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create AAStringSet</span></span>
+<span id="cb54-2"><a href="phosphoproteomics-data.html#cb54-2" aria-hidden="true" tabindex="-1"></a>fst <span class="ot">&lt;-</span> <span class="fu">readAAStringSet</span>(path_to_FASTA)</span>
+<span id="cb54-3"><a href="phosphoproteomics-data.html#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove contaminants</span></span>
+<span id="cb54-4"><a href="phosphoproteomics-data.html#cb54-4" aria-hidden="true" tabindex="-1"></a>fst <span class="ot">&lt;-</span> fst[<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">&quot;Contaminant&quot;</span>, <span class="fu">names</span>(fst)), ]</span>
+<span id="cb54-5"><a href="phosphoproteomics-data.html#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="co"># First 6 names</span></span>
+<span id="cb54-6"><a href="phosphoproteomics-data.html#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">names</span>(fst))</span></code></pre></div>
+<pre><code>## [1] &quot;NP_783171.2 cathepsin R precursor [Rattus norvegicus]&quot;                    
+## [2] &quot;NP_001101862.2 zinc finger protein ZIC 2 [Rattus norvegicus]&quot;             
+## [3] &quot;NP_113721.4 UDP-glucuronosyltransferase 2B2 precursor [Rattus norvegicus]&quot;
+## [4] &quot;NP_714948.1 Ly-49 stimulatory receptor 3 [Rattus norvegicus]&quot;             
+## [5] &quot;NP_001000704.1 olfactory receptor Olr931 [Rattus norvegicus]&quot;             
+## [6] &quot;NP_001000638.1 olfactory receptor Olr652 [Rattus norvegicus]&quot;</code></pre>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="phosphoproteomics-data.html#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify names to match accessions(msnid)</span></span>
+<span id="cb56-2"><a href="phosphoproteomics-data.html#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(fst) <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(<span class="fu">names</span>(fst), <span class="at">split =</span> <span class="st">&quot; &quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb56-3"><a href="phosphoproteomics-data.html#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Select text before first space</span></span>
+<span id="cb56-4"><a href="phosphoproteomics-data.html#cb56-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">lapply</span>(<span class="cf">function</span>(x) x[<span class="dv">1</span>]) <span class="sc">%&gt;%</span> </span>
+<span id="cb56-5"><a href="phosphoproteomics-data.html#cb56-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unlist</span>()</span>
+<span id="cb56-6"><a href="phosphoproteomics-data.html#cb56-6" aria-hidden="true" tabindex="-1"></a><span class="co"># First 6 names</span></span>
+<span id="cb56-7"><a href="phosphoproteomics-data.html#cb56-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">names</span>(fst))</span></code></pre></div>
+<pre><code>## [1] &quot;NP_783171.2&quot;    &quot;NP_001101862.2&quot; &quot;NP_113721.4&quot;    &quot;NP_714948.1&quot;   
+## [5] &quot;NP_001000704.1&quot; &quot;NP_001000638.1&quot;</code></pre>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="phosphoproteomics-data.html#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Main mapping call</span></span>
+<span id="cb58-2"><a href="phosphoproteomics-data.html#cb58-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">map_mod_sites</span>(<span class="at">object =</span> msnid, <span class="at">fasta =</span> fst, </span>
+<span id="cb58-3"><a href="phosphoproteomics-data.html#cb58-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">accession_col =</span> <span class="st">&quot;accession&quot;</span>, </span>
+<span id="cb58-4"><a href="phosphoproteomics-data.html#cb58-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">peptide_mod_col =</span> <span class="st">&quot;peptide&quot;</span>, </span>
+<span id="cb58-5"><a href="phosphoproteomics-data.html#cb58-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">mod_char =</span> <span class="st">&quot;*&quot;</span>,</span>
+<span id="cb58-6"><a href="phosphoproteomics-data.html#cb58-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">site_delimiter =</span> <span class="st">&quot;lower&quot;</span>)</span></code></pre></div>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; overflow-x: scroll; width:100%; ">
+<table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:phospho-msnid-table">Table 2.7: </span><left>First 10 rows of the processed MS-GF+ results.</left>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Dataset
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+ResultID
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Scan
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+FragMethod
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+SpecIndex
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Charge
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PrecursorMZ
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+DelM
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+DelM_PPM
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+MH
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+OriginalPeptide
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Protein
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+NTT
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+DeNovoScore
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+MSGFScore
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+MSGFDB_SpecEValue
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Rank_MSGFDB_SpecEValue
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+EValue
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+QValue
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PepQValue
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+IsotopeError
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+accession
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+calculatedMassToCharge
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+chargeState
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+experimentalMassToCharge
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+isDecoy
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+spectrumFile
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+spectrumID
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+pepSeq
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+peptide
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+maxAScore
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+msmsScore
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+absParentMassErrorPPM
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+peptides_per_1000aa
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+First_AA
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Last_AA
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+First_AA_First
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Last_AA_First
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+ProtLen
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+ModShift
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+ModAAs
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+SiteLoc
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Site
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+SiteCollapsed
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+SiteCollapsedFirst
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+SiteID
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S1_06_DIL_28Oct17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+12697
+</td>
+<td style="text-align:right;">
+27321
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+2256
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1045.124
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+<td style="text-align:right;">
+0.858
+</td>
+<td style="text-align:right;">
+3131.346
+</td>
+<td style="text-align:left;">
+A.AAAAAGDS*DS*WDADTFSMEDPVRK.V
+</td>
+<td style="text-align:left;">
+NP_001071138.1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+146
+</td>
+<td style="text-align:right;">
+58
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+NP_001071138.1
+</td>
+<td style="text-align:right;">
+1044.454
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1044.455
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S1_06_DIL_28Oct17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+27321
+</td>
+<td style="text-align:left;">
+AAAAAGDSDSWDADTFSMEDPVRK
+</td>
+<td style="text-align:left;">
+A.AAAAAGDSDS*WDADT*FSMEDPVRK.V
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+1.057
+</td>
+<td style="text-align:right;">
+7.722
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+28
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+28
+</td>
+<td style="text-align:right;">
+259
+</td>
+<td style="text-align:left;">
+9, 14
+</td>
+<td style="text-align:left;">
+S, T
+</td>
+<td style="text-align:left;">
+14, 19
+</td>
+<td style="text-align:left;">
+S14, T19
+</td>
+<td style="text-align:left;">
+S14,T19
+</td>
+<td style="text-align:left;">
+S14,T19
+</td>
+<td style="text-align:left;">
+NP_001071138.1-S14sT19t
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S1_07_DIL_28Oct17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+875
+</td>
+<td style="text-align:right;">
+23519
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+264
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+952.144
+</td>
+<td style="text-align:right;">
+0.004
+</td>
+<td style="text-align:right;">
+1.538
+</td>
+<td style="text-align:right;">
+2854.412
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIAT*PGTEDSDDALLK.M
+</td>
+<td style="text-align:left;">
+XP_006232986.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+165
+</td>
+<td style="text-align:right;">
+129
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+XP_006232986.1
+</td>
+<td style="text-align:right;">
+952.142
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+952.144
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S1_07_DIL_28Oct17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+23519
+</td>
+<td style="text-align:left;">
+AAAASAAEAGIATPGTEDSDDALLK
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIAT*PGTEDSDDALLK.M
+</td>
+<td style="text-align:right;">
+52.349
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+1.625
+</td>
+<td style="text-align:right;">
+5.305
+</td>
+<td style="text-align:left;">
+238
+</td>
+<td style="text-align:left;">
+262
+</td>
+<td style="text-align:right;">
+238
+</td>
+<td style="text-align:right;">
+262
+</td>
+<td style="text-align:right;">
+377
+</td>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:left;">
+T
+</td>
+<td style="text-align:left;">
+250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+XP_006232986.1-T250t
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S1_07_DIL_28Oct17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+12873
+</td>
+<td style="text-align:right;">
+23508
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+2213
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+714.360
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+<td style="text-align:right;">
+2.392
+</td>
+<td style="text-align:right;">
+2854.412
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIAT*PGTEDSDDALLK.M
+</td>
+<td style="text-align:left;">
+XP_006232986.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+122
+</td>
+<td style="text-align:right;">
+81
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+XP_006232986.1
+</td>
+<td style="text-align:right;">
+714.358
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+714.360
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S1_07_DIL_28Oct17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+23508
+</td>
+<td style="text-align:left;">
+AAAASAAEAGIATPGTEDSDDALLK
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIAT*PGTEDSDDALLK.M
+</td>
+<td style="text-align:right;">
+17.480
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+2.472
+</td>
+<td style="text-align:right;">
+5.305
+</td>
+<td style="text-align:left;">
+238
+</td>
+<td style="text-align:left;">
+262
+</td>
+<td style="text-align:right;">
+238
+</td>
+<td style="text-align:right;">
+262
+</td>
+<td style="text-align:right;">
+377
+</td>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:left;">
+T
+</td>
+<td style="text-align:left;">
+250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+XP_006232986.1-T250t
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S2_07_3Nov17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+2731
+</td>
+<td style="text-align:right;">
+23697
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+502
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+714.610
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+<td style="text-align:right;">
+0.706
+</td>
+<td style="text-align:right;">
+2854.412
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIAT*PGTEDSDDALLK.M
+</td>
+<td style="text-align:left;">
+XP_006232986.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+135
+</td>
+<td style="text-align:right;">
+104
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+XP_006232986.1
+</td>
+<td style="text-align:right;">
+714.358
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+714.359
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S2_07_3Nov17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+23697
+</td>
+<td style="text-align:left;">
+AAAASAAEAGIATPGTEDSDDALLK
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIAT*PGTEDSDDALLK.M
+</td>
+<td style="text-align:right;">
+26.295
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+0.780
+</td>
+<td style="text-align:right;">
+5.305
+</td>
+<td style="text-align:left;">
+238
+</td>
+<td style="text-align:left;">
+262
+</td>
+<td style="text-align:right;">
+238
+</td>
+<td style="text-align:right;">
+262
+</td>
+<td style="text-align:right;">
+377
+</td>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:left;">
+T
+</td>
+<td style="text-align:left;">
+250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+XP_006232986.1-T250t
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S1_07_DIL_28Oct17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+4877
+</td>
+<td style="text-align:right;">
+21265
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+935
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+800.403
+</td>
+<td style="text-align:right;">
+0.006
+</td>
+<td style="text-align:right;">
+1.871
+</td>
+<td style="text-align:right;">
+3196.577
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIAT*PGTEGERDSDDALLK.M
+</td>
+<td style="text-align:left;">
+NP_112621.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+194
+</td>
+<td style="text-align:right;">
+114
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+NP_112621.1
+</td>
+<td style="text-align:right;">
+799.900
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+799.901
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S1_07_DIL_28Oct17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+21265
+</td>
+<td style="text-align:left;">
+AAAASAAEAGIATPGTEGERDSDDALLK
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIATPGT*EGERDSDDALLK.M
+</td>
+<td style="text-align:right;">
+6.213
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+1.902
+</td>
+<td style="text-align:right;">
+10.526
+</td>
+<td style="text-align:left;">
+238
+</td>
+<td style="text-align:left;">
+265
+</td>
+<td style="text-align:right;">
+238
+</td>
+<td style="text-align:right;">
+265
+</td>
+<td style="text-align:right;">
+380
+</td>
+<td style="text-align:left;">
+15
+</td>
+<td style="text-align:left;">
+T
+</td>
+<td style="text-align:left;">
+253
+</td>
+<td style="text-align:left;">
+T253
+</td>
+<td style="text-align:left;">
+T253
+</td>
+<td style="text-align:left;">
+T253
+</td>
+<td style="text-align:left;">
+NP_112621.1-T253t
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S1_07_DIL_28Oct17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+6826
+</td>
+<td style="text-align:right;">
+21280
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+1251
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1066.532
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+-0.095
+</td>
+<td style="text-align:right;">
+3196.577
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIATPGT*EGERDSDDALLK.M
+</td>
+<td style="text-align:left;">
+NP_112621.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:right;">
+94
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+NP_112621.1
+</td>
+<td style="text-align:right;">
+1066.197
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1066.197
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S1_07_DIL_28Oct17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+21280
+</td>
+<td style="text-align:left;">
+AAAASAAEAGIATPGTEGERDSDDALLK
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIATPGT*EGERDSDDALLK.M
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+0.043
+</td>
+<td style="text-align:right;">
+10.526
+</td>
+<td style="text-align:left;">
+238
+</td>
+<td style="text-align:left;">
+265
+</td>
+<td style="text-align:right;">
+238
+</td>
+<td style="text-align:right;">
+265
+</td>
+<td style="text-align:right;">
+380
+</td>
+<td style="text-align:left;">
+15
+</td>
+<td style="text-align:left;">
+T
+</td>
+<td style="text-align:left;">
+253
+</td>
+<td style="text-align:left;">
+T253
+</td>
+<td style="text-align:left;">
+T253
+</td>
+<td style="text-align:left;">
+T253
+</td>
+<td style="text-align:left;">
+NP_112621.1-T253t
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S1_09_DIL_28Oct17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+4625
+</td>
+<td style="text-align:right;">
+20810
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+736
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+800.150
+</td>
+<td style="text-align:right;">
+-0.002
+</td>
+<td style="text-align:right;">
+-0.743
+</td>
+<td style="text-align:right;">
+3196.577
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIATPGT*EGERDSDDALLK.M
+</td>
+<td style="text-align:left;">
+NP_112621.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+156
+</td>
+<td style="text-align:right;">
+93
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+NP_112621.1
+</td>
+<td style="text-align:right;">
+799.900
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+799.899
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S1_09_DIL_28Oct17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+20810
+</td>
+<td style="text-align:left;">
+AAAASAAEAGIATPGTEGERDSDDALLK
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIATPGTEGERDS*DDALLK.M
+</td>
+<td style="text-align:right;">
+5.771
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+0.712
+</td>
+<td style="text-align:right;">
+10.526
+</td>
+<td style="text-align:left;">
+238
+</td>
+<td style="text-align:left;">
+265
+</td>
+<td style="text-align:right;">
+238
+</td>
+<td style="text-align:right;">
+265
+</td>
+<td style="text-align:right;">
+380
+</td>
+<td style="text-align:left;">
+21
+</td>
+<td style="text-align:left;">
+S
+</td>
+<td style="text-align:left;">
+259
+</td>
+<td style="text-align:left;">
+S259
+</td>
+<td style="text-align:left;">
+S259
+</td>
+<td style="text-align:left;">
+S259
+</td>
+<td style="text-align:left;">
+NP_112621.1-S259s
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S1_09_DIL_28Oct17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+16605
+</td>
+<td style="text-align:right;">
+20839
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+2489
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1066.530
+</td>
+<td style="text-align:right;">
+-0.006
+</td>
+<td style="text-align:right;">
+-1.812
+</td>
+<td style="text-align:right;">
+3196.577
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIATPGTEGERDS*DDALLK.M
+</td>
+<td style="text-align:left;">
+NP_112621.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+159
+</td>
+<td style="text-align:right;">
+48
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+<td style="text-align:right;">
+0.005
+</td>
+<td style="text-align:right;">
+0.007
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+NP_112621.1
+</td>
+<td style="text-align:right;">
+1066.197
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1066.195
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S1_09_DIL_28Oct17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+20839
+</td>
+<td style="text-align:left;">
+AAAASAAEAGIATPGTEGERDSDDALLK
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIATPGTEGERDS*DDALLK.M
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+2.148
+</td>
+<td style="text-align:right;">
+1.673
+</td>
+<td style="text-align:right;">
+10.526
+</td>
+<td style="text-align:left;">
+238
+</td>
+<td style="text-align:left;">
+265
+</td>
+<td style="text-align:right;">
+238
+</td>
+<td style="text-align:right;">
+265
+</td>
+<td style="text-align:right;">
+380
+</td>
+<td style="text-align:left;">
+21
+</td>
+<td style="text-align:left;">
+S
+</td>
+<td style="text-align:left;">
+259
+</td>
+<td style="text-align:left;">
+S259
+</td>
+<td style="text-align:left;">
+S259
+</td>
+<td style="text-align:left;">
+S259
+</td>
+<td style="text-align:left;">
+NP_112621.1-S259s
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S2_07_3Nov17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+433
+</td>
+<td style="text-align:right;">
+21424
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1066.531
+</td>
+<td style="text-align:right;">
+-0.004
+</td>
+<td style="text-align:right;">
+-1.125
+</td>
+<td style="text-align:right;">
+3196.577
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIAT*PGTEGERDSDDALLK.M
+</td>
+<td style="text-align:left;">
+NP_112621.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+241
+</td>
+<td style="text-align:right;">
+168
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+NP_112621.1
+</td>
+<td style="text-align:right;">
+1066.197
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1066.196
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S2_07_3Nov17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+21424
+</td>
+<td style="text-align:left;">
+AAAASAAEAGIATPGTEGERDSDDALLK
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIAT*PGTEGERDSDDALLK.M
+</td>
+<td style="text-align:right;">
+32.347
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+0.989
+</td>
+<td style="text-align:right;">
+10.526
+</td>
+<td style="text-align:left;">
+238
+</td>
+<td style="text-align:left;">
+265
+</td>
+<td style="text-align:right;">
+238
+</td>
+<td style="text-align:right;">
+265
+</td>
+<td style="text-align:right;">
+380
+</td>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:left;">
+T
+</td>
+<td style="text-align:left;">
+250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+NP_112621.1-T250t
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S2_07_3Nov17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+434
+</td>
+<td style="text-align:right;">
+21424
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1066.531
+</td>
+<td style="text-align:right;">
+-0.004
+</td>
+<td style="text-align:right;">
+-1.125
+</td>
+<td style="text-align:right;">
+3196.577
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIATPGT*EGERDSDDALLK.M
+</td>
+<td style="text-align:left;">
+NP_112621.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+241
+</td>
+<td style="text-align:right;">
+168
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+NP_112621.1
+</td>
+<td style="text-align:right;">
+1066.197
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1066.196
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S2_07_3Nov17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+21424
+</td>
+<td style="text-align:left;">
+AAAASAAEAGIATPGTEGERDSDDALLK
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIAT*PGTEGERDSDDALLK.M
+</td>
+<td style="text-align:right;">
+32.347
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+0.989
+</td>
+<td style="text-align:right;">
+10.526
+</td>
+<td style="text-align:left;">
+238
+</td>
+<td style="text-align:left;">
+265
+</td>
+<td style="text-align:right;">
+238
+</td>
+<td style="text-align:right;">
+265
+</td>
+<td style="text-align:right;">
+380
+</td>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:left;">
+T
+</td>
+<td style="text-align:left;">
+250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+NP_112621.1-T250t
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p></br></p>
+<p>Table <a href="phosphoproteomics-data.html#tab:phospho-msnid-table">2.7</a> shows the first 10 rows of the processed MS-GF+ output.</p>
+</div>
+</div>
+<div id="phospho-reporter-ion-intensities" class="section level3" number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> Prepare Reporter Ion Intensities</h3>
+<div id="read-masic-output-1" class="section level4 unnumbered">
+<h4>Read MASIC Output</h4>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="phosphoproteomics-data.html#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read MASIC data</span></span>
+<span id="cb59-2"><a href="phosphoproteomics-data.html#cb59-2" aria-hidden="true" tabindex="-1"></a>masic_data <span class="ot">&lt;-</span> <span class="fu">read_masic_data_from_DMS</span>(data_package_num, </span>
+<span id="cb59-3"><a href="phosphoproteomics-data.html#cb59-3" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">interference_score =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+<div id="filter-masic-data-1" class="section level4 unnumbered">
+<h4>Filter MASIC Data</h4>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="phosphoproteomics-data.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter MASIC data</span></span>
+<span id="cb60-2"><a href="phosphoproteomics-data.html#cb60-2" aria-hidden="true" tabindex="-1"></a>masic_data <span class="ot">&lt;-</span> <span class="fu">filter_masic_data</span>(masic_data, </span>
+<span id="cb60-3"><a href="phosphoproteomics-data.html#cb60-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">interference_score_threshold =</span> <span class="fl">0.5</span>,</span>
+<span id="cb60-4"><a href="phosphoproteomics-data.html#cb60-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">s2n_threshold =</span> <span class="dv">0</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="create-study-design-tables" class="section level3" number="2.2.3">
+<h3><span class="header-section-number">2.2.3</span> Create Study Design Tables</h3>
+<div id="fractions-1" class="section level4 unnumbered">
+<h4>Fractions</h4>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="phosphoproteomics-data.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create fractions table</span></span>
+<span id="cb61-2"><a href="phosphoproteomics-data.html#cb61-2" aria-hidden="true" tabindex="-1"></a>fractions <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Dataset =</span> <span class="fu">unique</span>(masic_data<span class="sc">$</span>Dataset)) <span class="sc">%&gt;%</span> </span>
+<span id="cb61-3"><a href="phosphoproteomics-data.html#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">PlexID =</span> <span class="fu">gsub</span>(<span class="st">&quot;.*_P_(S</span><span class="sc">\\</span><span class="st">d{1})_.*&quot;</span>, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">1&quot;</span>, Dataset))</span></code></pre></div>
+</div>
+<div id="samples-1" class="section level4 unnumbered">
+<h4>Samples</h4>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="phosphoproteomics-data.html#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># TMT10 Reporter Converter table from MSnID package</span></span>
+<span id="cb62-2"><a href="phosphoproteomics-data.html#cb62-2" aria-hidden="true" tabindex="-1"></a>conv <span class="ot">&lt;-</span> reporter_converter<span class="sc">$</span>tmt10</span>
+<span id="cb62-3"><a href="phosphoproteomics-data.html#cb62-3" aria-hidden="true" tabindex="-1"></a>plexes <span class="ot">&lt;-</span> <span class="fu">unique</span>(fractions<span class="sc">$</span>PlexID)</span>
+<span id="cb62-4"><a href="phosphoproteomics-data.html#cb62-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-5"><a href="phosphoproteomics-data.html#cb62-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Reference channel</span></span>
+<span id="cb62-6"><a href="phosphoproteomics-data.html#cb62-6" aria-hidden="true" tabindex="-1"></a>ref_channel <span class="ot">&lt;-</span> <span class="st">&quot;131&quot;</span></span>
+<span id="cb62-7"><a href="phosphoproteomics-data.html#cb62-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb62-8"><a href="phosphoproteomics-data.html#cb62-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create samples table</span></span>
+<span id="cb62-9"><a href="phosphoproteomics-data.html#cb62-9" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">PlexID =</span> <span class="fu">rep</span>(plexes, <span class="at">each =</span> <span class="fu">nrow</span>(conv)),  </span>
+<span id="cb62-10"><a href="phosphoproteomics-data.html#cb62-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">ReporterName =</span> <span class="fu">rep</span>(conv<span class="sc">$</span>ReporterName, </span>
+<span id="cb62-11"><a href="phosphoproteomics-data.html#cb62-11" aria-hidden="true" tabindex="-1"></a>                                         <span class="fu">length</span>(plexes))) <span class="sc">%&gt;%</span> </span>
+<span id="cb62-12"><a href="phosphoproteomics-data.html#cb62-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ReporterAlias =</span> <span class="fu">sprintf</span>(<span class="st">&quot;%s_%s&quot;</span>, PlexID, ReporterName),</span>
+<span id="cb62-13"><a href="phosphoproteomics-data.html#cb62-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">MeasurementName =</span> ReporterAlias,</span>
+<span id="cb62-14"><a href="phosphoproteomics-data.html#cb62-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">QuantBlock =</span> <span class="dv">1</span>,</span>
+<span id="cb62-15"><a href="phosphoproteomics-data.html#cb62-15" aria-hidden="true" tabindex="-1"></a>         <span class="co"># Comment out this next part if the reference</span></span>
+<span id="cb62-16"><a href="phosphoproteomics-data.html#cb62-16" aria-hidden="true" tabindex="-1"></a>         <span class="co"># is not one of the reporter ion channels.</span></span>
+<span id="cb62-17"><a href="phosphoproteomics-data.html#cb62-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">MeasurementName =</span> <span class="fu">ifelse</span>(ReporterName <span class="sc">==</span> ref_channel,</span>
+<span id="cb62-18"><a href="phosphoproteomics-data.html#cb62-18" aria-hidden="true" tabindex="-1"></a>                                  <span class="cn">NA</span>, MeasurementName)</span>
+<span id="cb62-19"><a href="phosphoproteomics-data.html#cb62-19" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+</div>
+<div id="references-1" class="section level4 unnumbered">
+<h4>References</h4>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="phosphoproteomics-data.html#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create references table</span></span>
+<span id="cb63-2"><a href="phosphoproteomics-data.html#cb63-2" aria-hidden="true" tabindex="-1"></a>references <span class="ot">&lt;-</span> samples <span class="sc">%&gt;%</span> </span>
+<span id="cb63-3"><a href="phosphoproteomics-data.html#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter to reference channel</span></span>
+<span id="cb63-4"><a href="phosphoproteomics-data.html#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ReporterName <span class="sc">==</span> ref_channel) <span class="sc">%&gt;%</span> </span>
+<span id="cb63-5"><a href="phosphoproteomics-data.html#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Select required columns and rename ReporterAlias to Reference</span></span>
+<span id="cb63-6"><a href="phosphoproteomics-data.html#cb63-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(PlexID, <span class="at">Reference =</span> ReporterAlias, QuantBlock)</span></code></pre></div>
+</div>
+</div>
+<div id="phospho-create-crosstab" class="section level3" number="2.2.4">
+<h3><span class="header-section-number">2.2.4</span> Create Quantitative Cross-tab</h3>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="phosphoproteomics-data.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set aggregation level</span></span>
+<span id="cb64-2"><a href="phosphoproteomics-data.html#cb64-2" aria-hidden="true" tabindex="-1"></a>aggregation_level <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;accession&quot;</span>, <span class="st">&quot;peptide&quot;</span>)</span>
+<span id="cb64-3"><a href="phosphoproteomics-data.html#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create cross-tab</span></span>
+<span id="cb64-4"><a href="phosphoproteomics-data.html#cb64-4" aria-hidden="true" tabindex="-1"></a>crosstab <span class="ot">&lt;-</span> <span class="fu">create_crosstab</span>(msnid, masic_data,</span>
+<span id="cb64-5"><a href="phosphoproteomics-data.html#cb64-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">aggregation_level =</span> aggregation_level,</span>
+<span id="cb64-6"><a href="phosphoproteomics-data.html#cb64-6" aria-hidden="true" tabindex="-1"></a>                            fractions, samples, references)</span></code></pre></div>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; overflow-x: scroll; width:100%; ">
+<table class="table" style="font-size: 12px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:unnamed-chunk-46">Table 2.8: </span><left>First 10 rows of the phospho quantitative cross-tab.</left>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_126
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_127C
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_127N
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_128C
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_128N
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_129C
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_129N
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_130C
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_130N
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_126
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_127C
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_127N
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_128C
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_128N
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_129C
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_129N
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_130C
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_130N
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+NP_001001512.2@K.S*SEPPPPPPVPEPTNAGK.R
+</td>
+<td style="text-align:right;">
+-0.5441083
+</td>
+<td style="text-align:right;">
+-0.0291611
+</td>
+<td style="text-align:right;">
+-0.5540885
+</td>
+<td style="text-align:right;">
+-0.1812456
+</td>
+<td style="text-align:right;">
+-0.5675833
+</td>
+<td style="text-align:right;">
+-0.0427948
+</td>
+<td style="text-align:right;">
+-0.8030560
+</td>
+<td style="text-align:right;">
+-0.5236890
+</td>
+<td style="text-align:right;">
+-1.0398773
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NP_001001512.2@K.SS*EPPPPPPVPEPTNAGK.R
+</td>
+<td style="text-align:right;">
+-0.2806018
+</td>
+<td style="text-align:right;">
+-0.2939827
+</td>
+<td style="text-align:right;">
+-0.3923442
+</td>
+<td style="text-align:right;">
+-0.3242804
+</td>
+<td style="text-align:right;">
+-0.6512914
+</td>
+<td style="text-align:right;">
+-0.4914234
+</td>
+<td style="text-align:right;">
+-1.2105927
+</td>
+<td style="text-align:right;">
+-0.6421375
+</td>
+<td style="text-align:right;">
+-0.8869142
+</td>
+<td style="text-align:right;">
+-0.3079991
+</td>
+<td style="text-align:right;">
+-0.8072458
+</td>
+<td style="text-align:right;">
+-0.4801256
+</td>
+<td style="text-align:right;">
+-0.4458455
+</td>
+<td style="text-align:right;">
+-0.7588038
+</td>
+<td style="text-align:right;">
+-1.3958746
+</td>
+<td style="text-align:right;">
+-0.6640721
+</td>
+<td style="text-align:right;">
+-0.7046127
+</td>
+<td style="text-align:right;">
+-0.3091972
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NP_001001512.2@K.TNSS*PSVNTTASGVEDLNIIQVTIPDDDNER.L
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+-1.4611181
+</td>
+<td style="text-align:right;">
+-2.2975481
+</td>
+<td style="text-align:right;">
+-1.6828088
+</td>
+<td style="text-align:right;">
+-2.3039510
+</td>
+<td style="text-align:right;">
+-1.8632844
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+-1.5981389
+</td>
+<td style="text-align:right;">
+-2.4732843
+</td>
+<td style="text-align:right;">
+-0.4736739
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NP_001001512.2@K.TNSSPS*VNTTASGVEDLNIIQVTIPDDDNER.L
+</td>
+<td style="text-align:right;">
+-1.2580276
+</td>
+<td style="text-align:right;">
+-1.3182692
+</td>
+<td style="text-align:right;">
+-2.1938861
+</td>
+<td style="text-align:right;">
+-2.0017857
+</td>
+<td style="text-align:right;">
+0.0219220
+</td>
+<td style="text-align:right;">
+-0.7086501
+</td>
+<td style="text-align:right;">
+-1.6940153
+</td>
+<td style="text-align:right;">
+-1.4681967
+</td>
+<td style="text-align:right;">
+-1.5795032
+</td>
+<td style="text-align:right;">
+0.3139811
+</td>
+<td style="text-align:right;">
+-0.6805752
+</td>
+<td style="text-align:right;">
+-0.8132341
+</td>
+<td style="text-align:right;">
+-1.7933771
+</td>
+<td style="text-align:right;">
+0.0127816
+</td>
+<td style="text-align:right;">
+0.2726023
+</td>
+<td style="text-align:right;">
+0.2266855
+</td>
+<td style="text-align:right;">
+0.5058189
+</td>
+<td style="text-align:right;">
+0.9332038
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NP_001001512.2@R.RPS*TFGIPR.L
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+-0.7930334
+</td>
+<td style="text-align:right;">
+-1.2173509
+</td>
+<td style="text-align:right;">
+-0.4608541
+</td>
+<td style="text-align:right;">
+-1.2596689
+</td>
+<td style="text-align:right;">
+-0.8004630
+</td>
+<td style="text-align:right;">
+-0.8584401
+</td>
+<td style="text-align:right;">
+-0.4918316
+</td>
+<td style="text-align:right;">
+-0.2745069
+</td>
+<td style="text-align:right;">
+0.2867235
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NP_001001514.1@K.ET*RTSSES*IVSVPASSTSGSPSR.V
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+-0.5242609
+</td>
+<td style="text-align:right;">
+-0.2564000
+</td>
+<td style="text-align:right;">
+-0.1703421
+</td>
+<td style="text-align:right;">
+-0.8016035
+</td>
+<td style="text-align:right;">
+-0.6177977
+</td>
+<td style="text-align:right;">
+-1.8986707
+</td>
+<td style="text-align:right;">
+-0.9217045
+</td>
+<td style="text-align:right;">
+-1.1410773
+</td>
+<td style="text-align:right;">
+-0.4219050
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NP_001001514.1@K.ETRTSS*ESIVSVPASSTSGSPSR.V
+</td>
+<td style="text-align:right;">
+-0.3952598
+</td>
+<td style="text-align:right;">
+-0.3773814
+</td>
+<td style="text-align:right;">
+-0.1113785
+</td>
+<td style="text-align:right;">
+-0.2246094
+</td>
+<td style="text-align:right;">
+-0.5676749
+</td>
+<td style="text-align:right;">
+-0.7561756
+</td>
+<td style="text-align:right;">
+-0.9173361
+</td>
+<td style="text-align:right;">
+-1.0505509
+</td>
+<td style="text-align:right;">
+-1.4130691
+</td>
+<td style="text-align:right;">
+-0.2275133
+</td>
+<td style="text-align:right;">
+-0.8394326
+</td>
+<td style="text-align:right;">
+-0.3245755
+</td>
+<td style="text-align:right;">
+-0.9394990
+</td>
+<td style="text-align:right;">
+-0.5237369
+</td>
+<td style="text-align:right;">
+-0.8749379
+</td>
+<td style="text-align:right;">
+-0.7834843
+</td>
+<td style="text-align:right;">
+-0.5268181
+</td>
+<td style="text-align:right;">
+-0.2208240
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NP_001001514.1@K.ETRTSSES*IVS*VPASSTSGSPSR.V
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+-0.1167323
+</td>
+<td style="text-align:right;">
+0.0249531
+</td>
+<td style="text-align:right;">
+0.1045728
+</td>
+<td style="text-align:right;">
+-0.6020616
+</td>
+<td style="text-align:right;">
+-0.1762188
+</td>
+<td style="text-align:right;">
+-0.3440353
+</td>
+<td style="text-align:right;">
+-0.2297419
+</td>
+<td style="text-align:right;">
+0.1989361
+</td>
+<td style="text-align:right;">
+0.4882626
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NP_001001514.1@K.GDADT*RTNSPDLDSQS*LSLSSGADQEPLQR.M
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+-0.0742108
+</td>
+<td style="text-align:right;">
+-0.2566411
+</td>
+<td style="text-align:right;">
+-0.4073881
+</td>
+<td style="text-align:right;">
+-1.1553706
+</td>
+<td style="text-align:right;">
+-0.7643052
+</td>
+<td style="text-align:right;">
+-1.3815904
+</td>
+<td style="text-align:right;">
+-1.3611955
+</td>
+<td style="text-align:right;">
+-1.0650441
+</td>
+<td style="text-align:right;">
+-0.0341310
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NP_001001514.1@K.GDADTRTNSPDLDS*QS*LSLSSGADQEPLQR.M
+</td>
+<td style="text-align:right;">
+-0.8822947
+</td>
+<td style="text-align:right;">
+-0.7983921
+</td>
+<td style="text-align:right;">
+-0.6040902
+</td>
+<td style="text-align:right;">
+-1.0568789
+</td>
+<td style="text-align:right;">
+-0.5751194
+</td>
+<td style="text-align:right;">
+-0.4792532
+</td>
+<td style="text-align:right;">
+-1.1417354
+</td>
+<td style="text-align:right;">
+-0.9907350
+</td>
+<td style="text-align:right;">
+-0.8330389
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p></br></p>
+<p>We will save the cross-tab for later sections.</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="phosphoproteomics-data.html#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify cross-tab for saving</span></span>
+<span id="cb65-2"><a href="phosphoproteomics-data.html#cb65-2" aria-hidden="true" tabindex="-1"></a>crosstab <span class="ot">&lt;-</span> crosstab <span class="sc">%&gt;%</span> </span>
+<span id="cb65-3"><a href="phosphoproteomics-data.html#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb65-4"><a href="phosphoproteomics-data.html#cb65-4" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">&quot;phospho_peptide&quot;</span>)</span>
+<span id="cb65-5"><a href="phosphoproteomics-data.html#cb65-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb65-6"><a href="phosphoproteomics-data.html#cb65-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Save cross-tab</span></span>
+<span id="cb65-7"><a href="phosphoproteomics-data.html#cb65-7" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(crosstab, <span class="at">file =</span> <span class="st">&quot;data/phospho_quant_crosstab.txt&quot;</span>,</span>
+<span id="cb65-8"><a href="phosphoproteomics-data.html#cb65-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+
+</div>
+</div>
+<!-- </div> -->
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="global-proteomics-data.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="exploratory-data-analysis.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

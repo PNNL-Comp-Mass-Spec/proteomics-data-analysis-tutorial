@@ -1,0 +1,4861 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2.1 Global Proteomics Data | Proteomics Data Analysis in R/Bioconductor</title>
+  <meta name="description" content="This is a comprehensive tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="2.1 Global Proteomics Data | Proteomics Data Analysis in R/Bioconductor" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a comprehensive tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2.1 Global Proteomics Data | Proteomics Data Analysis in R/Bioconductor" />
+  
+  <meta name="twitter:description" content="This is a comprehensive tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
+  
+
+<meta name="author" content="Tyler Sagendorf" />
+
+
+<meta name="date" content="2021-10-17" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="isobaric-quantification-pipelines.html"/>
+<link rel="next" href="phosphoproteomics-data.html"/>
+<script src="libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href=".">Proteomics Data Analysis in R/Bioconductor</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome!</a></li>
+<li class="chapter" data-level="1" data-path="miscellaneous-resources.html"><a href="miscellaneous-resources.html"><i class="fa fa-check"></i><b>1</b> Miscellaneous Resources</a></li>
+<li class="chapter" data-level="2" data-path="isobaric-quantification-pipelines.html"><a href="isobaric-quantification-pipelines.html"><i class="fa fa-check"></i><b>2</b> Isobaric Quantification Pipelines</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html"><i class="fa fa-check"></i><b>2.1</b> Global Proteomics Data</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#prepare-MS2-IDs-global"><i class="fa fa-check"></i><b>2.1.1</b> Prepare MS/MS Identifications</a>
+<ul>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#read-ms-gf-data"><i class="fa fa-check"></i>Read MS-GF+ Data</a></li>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#correct-isotope-selection-error"><i class="fa fa-check"></i>Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#remove-contaminants"><i class="fa fa-check"></i>Remove Contaminants</a></li>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#msms-id-filter-peptide-level"><i class="fa fa-check"></i>MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#msms-id-filter-protein-level"><i class="fa fa-check"></i>MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#inference-of-parsimonious-protein-set"><i class="fa fa-check"></i>Inference of Parsimonious Protein Set</a></li>
+</ul></li>
+<li class="chapter" data-level="2.1.2" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#reporter-ion-intensities"><i class="fa fa-check"></i><b>2.1.2</b> Prepare Reporter Ion Intensities</a>
+<ul>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#read-masic-output"><i class="fa fa-check"></i>Read MASIC Output</a></li>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#filter-masic-data"><i class="fa fa-check"></i>Filter MASIC Data</a></li>
+</ul></li>
+<li class="chapter" data-level="2.1.3" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#fetch-study-design-tables"><i class="fa fa-check"></i><b>2.1.3</b> Create Study Design Tables</a>
+<ul>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#fractions"><i class="fa fa-check"></i>Fractions</a></li>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#samples"><i class="fa fa-check"></i>Samples</a></li>
+<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#references"><i class="fa fa-check"></i>References</a></li>
+</ul></li>
+<li class="chapter" data-level="2.1.4" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#global-quant-crosstab"><i class="fa fa-check"></i><b>2.1.4</b> Create Quantitative Cross-tab</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html"><i class="fa fa-check"></i><b>2.2</b> Phosphoproteomics Data</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#prepare-MS2-IDs-phospho"><i class="fa fa-check"></i><b>2.2.1</b> Prepare MS/MS Identifications</a>
+<ul>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#read-ms-gf-output"><i class="fa fa-check"></i>Read MS-GF+ Output</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-non-phosphorylated-peptides"><i class="fa fa-check"></i>Remove Non-Phosphorylated Peptides</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#correct-isotope-selection-error-1"><i class="fa fa-check"></i>Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-contaminants-1"><i class="fa fa-check"></i>Remove Contaminants</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#ascore"><i class="fa fa-check"></i>AScore</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#msms-id-filter-peptide-level-1"><i class="fa fa-check"></i>MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#msms-id-filter-protein-level-1"><i class="fa fa-check"></i>MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#inference-of-parsimonious-protein-set-1"><i class="fa fa-check"></i>Inference of Parsimonious Protein Set</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#map-sites-to-protein-sequences"><i class="fa fa-check"></i>Map Sites to Protein Sequences</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2.2" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#phospho-reporter-ion-intensities"><i class="fa fa-check"></i><b>2.2.2</b> Prepare Reporter Ion Intensities</a>
+<ul>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#read-masic-output-1"><i class="fa fa-check"></i>Read MASIC Output</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#filter-masic-data-1"><i class="fa fa-check"></i>Filter MASIC Data</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2.3" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#create-study-design-tables"><i class="fa fa-check"></i><b>2.2.3</b> Create Study Design Tables</a>
+<ul>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#fractions-1"><i class="fa fa-check"></i>Fractions</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#samples-1"><i class="fa fa-check"></i>Samples</a></li>
+<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#references-1"><i class="fa fa-check"></i>References</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2.4" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#phospho-create-crosstab"><i class="fa fa-check"></i><b>2.2.4</b> Create Quantitative Cross-tab</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>3</b> Exploratory Data Analysis</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>3.1</b> Count Features in Samples</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html#lollipop-plot"><i class="fa fa-check"></i><b>3.1.1</b> Lollipop Plot</a></li>
+<li class="chapter" data-level="3.1.2" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html#boxplot"><i class="fa fa-check"></i><b>3.1.2</b> Boxplot</a></li>
+<li class="chapter" data-level="3.1.3" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html#density-plot"><i class="fa fa-check"></i><b>3.1.3</b> Density Plot</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>3.2</b> Estimate Blood Contamination</a></li>
+<li class="chapter" data-level="3.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>3.3</b> PCA</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="pca.html"><a href="pca.html#overview"><i class="fa fa-check"></i><b>3.3.1</b> Overview</a></li>
+<li class="chapter" data-level="3.3.2" data-path="pca.html"><a href="pca.html#pca-plots"><i class="fa fa-check"></i><b>3.3.2</b> PCA Plots</a></li>
+<li class="chapter" data-level="3.3.3" data-path="pca.html"><a href="pca.html#list-top-contributing-features"><i class="fa fa-check"></i><b>3.3.3</b> List Top-Contributing Features</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>4</b> Differential Expression Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="dea-with-limma.html"><a href="dea-with-limma.html"><i class="fa fa-check"></i><b>4.1</b> DEA with limma</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="dea-with-limma.html"><a href="dea-with-limma.html#dichotomous-predictors"><i class="fa fa-check"></i><b>4.1.1</b> Dichotomous Predictors</a></li>
+<li class="chapter" data-level="4.1.2" data-path="dea-with-limma.html"><a href="dea-with-limma.html#continuous-predictors"><i class="fa fa-check"></i><b>4.1.2</b> Continuous Predictors</a></li>
+<li class="chapter" data-level="4.1.3" data-path="dea-with-limma.html"><a href="dea-with-limma.html#reference-level-comparisons"><i class="fa fa-check"></i><b>4.1.3</b> Reference Level Comparisons</a></li>
+<li class="chapter" data-level="4.1.4" data-path="dea-with-limma.html"><a href="dea-with-limma.html#custom-contrasts"><i class="fa fa-check"></i><b>4.1.4</b> Custom Contrasts</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>4.2</b> p-value Histograms</a></li>
+<li class="chapter" data-level="4.3" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>4.3</b> Volcano Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>5</b> Pathway Analysis</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>5.1</b> Annotation Databases</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>5.1.1</b> Gene Ontology</a>
+<ul>
+<li class="chapter" data-level="" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i>Semantic Similarity</a></li>
+<li class="chapter" data-level="" data-path="annotation-databases.html"><a href="annotation-databases.html#go-subsetsslims"><i class="fa fa-check"></i>GO Subsets/Slims</a></li>
+</ul></li>
+<li class="chapter" data-level="5.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>5.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="5.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>5.1.3</b> KEGG</a></li>
+<li class="chapter" data-level="5.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>5.1.4</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>5.2</b> Over-Representation Analysis</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>5.2.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2.2" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>5.2.2</b> Examples</a>
+<ul>
+<li class="chapter" data-level="" data-path="ora.html"><a href="ora.html#gene-ontology-1"><i class="fa fa-check"></i>Gene Ontology</a></li>
+<li class="chapter" data-level="" data-path="ora.html"><a href="ora.html#reactome-1"><i class="fa fa-check"></i>Reactome</a></li>
+<li class="chapter" data-level="" data-path="ora.html"><a href="ora.html#pfam-1"><i class="fa fa-check"></i>Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="5.2.3" data-path="ora.html"><a href="ora.html#considerations"><i class="fa fa-check"></i><b>5.2.3</b> Considerations</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>5.3</b> Gene Set Enrichment Analysis</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>5.3.1</b> Overview</a></li>
+<li class="chapter" data-level="5.3.2" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>5.3.2</b> Examples</a>
+<ul>
+<li class="chapter" data-level="5.3.2.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-2"><i class="fa fa-check"></i><b>5.3.2.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="5.3.2.2" data-path="gsea.html"><a href="gsea.html#reactome-2"><i class="fa fa-check"></i><b>5.3.2.2</b> Reactome</a></li>
+<li class="chapter" data-level="5.3.2.3" data-path="gsea.html"><a href="gsea.html#pfam-2"><i class="fa fa-check"></i><b>5.3.2.3</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3.3" data-path="gsea.html"><a href="gsea.html#considerations-1"><i class="fa fa-check"></i><b>5.3.3</b> Considerations</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references-2.html"><a href="references-2.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Proteomics Data Analysis in R/Bioconductor</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="global-proteomics-data" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Global Proteomics Data</h2>
+<p>This pipeline shows how to process TMT data that is processed outside of PNNL’s DMS. Section <a href="phosphoproteomics-data.html#phosphoproteomics-data">2.2</a> shows how to process data from the DMS. For convenience, the results of MS-GF+ and MASIC processing are provided in a companion <code>PlexedPiperTestData</code> package. For this section, we need three packages: <code>PlexedPiper</code> for isobaric quantification, <code>PlexedPiperTestData</code>, and <code>dplyr</code> to manipulate data frames.</p>
+<!---
+For these examples, we need two packages: PlexedPiper and PlexedPiperTestData. The former is used to interface with the DMS, while the latter is tailored to isobaric quantification.
+--->
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="global-proteomics-data.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setup</span></span>
+<span id="cb1-2"><a href="global-proteomics-data.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PlexedPiper)</span>
+<span id="cb1-3"><a href="global-proteomics-data.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PlexedPiperTestData)</span>
+<span id="cb1-4"><a href="global-proteomics-data.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<div id="prepare-MS2-IDs-global" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> Prepare MS/MS Identifications</h3>
+<div id="read-ms-gf-data" class="section level4 unnumbered">
+<h4>Read MS-GF+ Data</h4>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="global-proteomics-data.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get file path</span></span>
+<span id="cb2-2"><a href="global-proteomics-data.html#cb2-2" aria-hidden="true" tabindex="-1"></a>path_to_MSGF_results <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata/global/msgf_output&quot;</span>, </span>
+<span id="cb2-3"><a href="global-proteomics-data.html#cb2-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">package =</span> <span class="st">&quot;PlexedPiperTestData&quot;</span>)</span>
+<span id="cb2-4"><a href="global-proteomics-data.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Read MS-GF+ data from path</span></span>
+<span id="cb2-5"><a href="global-proteomics-data.html#cb2-5" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">read_msgf_data</span>(path_to_MSGF_results)</span></code></pre></div>
+<p>Normally, this would display a progress bar in the console as the data is being fetched. However, the output was suppressed to save space. We can view a summary of the MSnID object with the <code>show()</code> function.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="global-proteomics-data.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  48 
+## #PSMs: 1156754 at 31 % FDR
+## #peptides: 511617 at 61 % FDR
+## #accessions: 128378 at 98 % FDR</code></pre>
+<p><code>msnid</code> consists of 4 spectrum files (datasets), and contains a total of 1,156,754 peptide-spectrum-matches (PSMs), 511,617 total peptides, and 128,378 total accessions (proteins). The reported FDR is the empirical <strong>false-discovery rate</strong>, which is calculated as the ratio of the number of false (decoy) PSMs, peptides, or accessions to their true (non-decoy) counterparts. Calculation of these counts and their FDRs is shown below.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="global-proteomics-data.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculating the counts and FDRs from the show() output ---</span></span>
+<span id="cb5-2"><a href="global-proteomics-data.html#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Spectrum Files:</span></span>
+<span id="cb5-3"><a href="global-proteomics-data.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Count</span></span>
+<span id="cb5-4"><a href="global-proteomics-data.html#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">psms</span>(msnid) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-5"><a href="global-proteomics-data.html#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(Dataset) <span class="sc">%&gt;%</span></span>
+<span id="cb5-6"><a href="global-proteomics-data.html#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>() <span class="co"># 48</span></span>
+<span id="cb5-7"><a href="global-proteomics-data.html#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="global-proteomics-data.html#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># PSMs:</span></span>
+<span id="cb5-9"><a href="global-proteomics-data.html#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Count</span></span>
+<span id="cb5-10"><a href="global-proteomics-data.html#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">psms</span>(msnid) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-11"><a href="global-proteomics-data.html#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(Dataset, Scan, peptide, isDecoy) <span class="sc">%&gt;%</span></span>
+<span id="cb5-12"><a href="global-proteomics-data.html#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Assign intermediate to variable</span></span>
+<span id="cb5-13"><a href="global-proteomics-data.html#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="st">&quot;x_psm&quot;</span>, ., <span class="at">envir =</span> <span class="fu">globalenv</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-14"><a href="global-proteomics-data.html#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>() <span class="co"># 1156754</span></span>
+<span id="cb5-15"><a href="global-proteomics-data.html#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co"># FDR</span></span>
+<span id="cb5-16"><a href="global-proteomics-data.html#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(x_psm[x_psm<span class="sc">$</span>isDecoy <span class="sc">==</span> <span class="cn">TRUE</span>, ]) <span class="sc">/</span> </span>
+<span id="cb5-17"><a href="global-proteomics-data.html#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>(x_psm[x_psm<span class="sc">$</span>isDecoy <span class="sc">==</span> <span class="cn">FALSE</span>, ]) </span>
+<span id="cb5-18"><a href="global-proteomics-data.html#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.3127463 = 31%</span></span>
+<span id="cb5-19"><a href="global-proteomics-data.html#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="global-proteomics-data.html#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># peptides:</span></span>
+<span id="cb5-21"><a href="global-proteomics-data.html#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Count</span></span>
+<span id="cb5-22"><a href="global-proteomics-data.html#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="fu">psms</span>(msnid) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-23"><a href="global-proteomics-data.html#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(peptide, isDecoy) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-24"><a href="global-proteomics-data.html#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="st">&quot;x_peptide&quot;</span>, ., <span class="at">envir =</span> <span class="fu">globalenv</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb5-25"><a href="global-proteomics-data.html#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>() <span class="co"># 511617</span></span>
+<span id="cb5-26"><a href="global-proteomics-data.html#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co"># FDR</span></span>
+<span id="cb5-27"><a href="global-proteomics-data.html#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(x_peptide[x_peptide<span class="sc">$</span>isDecoy <span class="sc">==</span> <span class="cn">TRUE</span>, ]) <span class="sc">/</span> </span>
+<span id="cb5-28"><a href="global-proteomics-data.html#cb5-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>(x_peptide[x_peptide<span class="sc">$</span>isDecoy <span class="sc">==</span> <span class="cn">FALSE</span>, ])</span>
+<span id="cb5-29"><a href="global-proteomics-data.html#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.611245 = 61%</span></span>
+<span id="cb5-30"><a href="global-proteomics-data.html#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="global-proteomics-data.html#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Accessions:</span></span>
+<span id="cb5-32"><a href="global-proteomics-data.html#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Count</span></span>
+<span id="cb5-33"><a href="global-proteomics-data.html#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">accessions</span>(msnid)) <span class="co"># or</span></span>
+<span id="cb5-34"><a href="global-proteomics-data.html#cb5-34" aria-hidden="true" tabindex="-1"></a><span class="fu">psms</span>(msnid) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-35"><a href="global-proteomics-data.html#cb5-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(accession, isDecoy) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-36"><a href="global-proteomics-data.html#cb5-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assign</span>(<span class="st">&quot;x_acc&quot;</span>, ., <span class="at">envir =</span> <span class="fu">globalenv</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb5-37"><a href="global-proteomics-data.html#cb5-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>() <span class="co"># 128378</span></span>
+<span id="cb5-38"><a href="global-proteomics-data.html#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="co"># FDR</span></span>
+<span id="cb5-39"><a href="global-proteomics-data.html#cb5-39" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(x_acc[x_acc<span class="sc">$</span>isDecoy <span class="sc">==</span> <span class="cn">TRUE</span>, ]) <span class="sc">/</span> </span>
+<span id="cb5-40"><a href="global-proteomics-data.html#cb5-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>(x_acc[x_acc<span class="sc">$</span>isDecoy <span class="sc">==</span> <span class="cn">FALSE</span>, ])</span>
+<span id="cb5-41"><a href="global-proteomics-data.html#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.9827024 = 98%</span></span></code></pre></div>
+<p>Now that we have an <code>MSnID</code> object, we need to process it.</p>
+</div>
+<div id="correct-isotope-selection-error" class="section level4 unnumbered">
+<h4>Correct Isotope Selection Error</h4>
+<p>Occasionally, the instrument selects a peak with +1 or more C13 atoms, rather than the monoisotopic (lowest mass) peak. While MS-FG+ is still capable of correctly identifying those, the downstream calculations of mass measurement error need to be fixed. The <code>correct_peak_selection</code> method corrects for these mass measurement errors.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="global-proteomics-data.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correct for isotope selection error</span></span>
+<span id="cb6-2"><a href="global-proteomics-data.html#cb6-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">correct_peak_selection</span>(msnid)</span></code></pre></div>
+</div>
+<div id="remove-contaminants" class="section level4 unnumbered">
+<h4>Remove Contaminants</h4>
+<p>Now, we will remove contaminants such as the pig trypsin that was used for protein digestion. We can use <code>grepl</code> to search for all accessions that contain “Contaminant.”</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="global-proteomics-data.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># All unique contaminants</span></span>
+<span id="cb7-2"><a href="global-proteomics-data.html#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(msnid<span class="sc">$</span>accession[<span class="fu">grepl</span>(<span class="st">&quot;Contaminant&quot;</span>, msnid<span class="sc">$</span>accession)])</span></code></pre></div>
+<pre><code>##  [1] &quot;Contaminant_K2C1_HUMAN&quot;      &quot;Contaminant_K1C9_HUMAN&quot;     
+##  [3] &quot;Contaminant_ALBU_HUMAN&quot;      &quot;Contaminant_ALBU_BOVIN&quot;     
+##  [5] &quot;Contaminant_TRYP_PIG&quot;        &quot;Contaminant_K1C10_HUMAN&quot;    
+##  [7] &quot;XXX_Contaminant_K1C9_HUMAN&quot;  &quot;Contaminant_K22E_HUMAN&quot;     
+##  [9] &quot;Contaminant_Trypa3&quot;          &quot;Contaminant_Trypa5&quot;         
+## [11] &quot;XXX_Contaminant_K1C10_HUMAN&quot; &quot;XXX_Contaminant_K22E_HUMAN&quot; 
+## [13] &quot;XXX_Contaminant_K2C1_HUMAN&quot;  &quot;Contaminant_TRYP_BOVIN&quot;     
+## [15] &quot;XXX_Contaminant_ALBU_HUMAN&quot;  &quot;XXX_Contaminant_ALBU_BOVIN&quot; 
+## [17] &quot;XXX_Contaminant_TRYP_BOVIN&quot;  &quot;Contaminant_CTRB_BOVIN&quot;     
+## [19] &quot;Contaminant_Trypa1&quot;          &quot;Contaminant_Trypa6&quot;         
+## [21] &quot;Contaminant_CTRA_BOVIN&quot;      &quot;XXX_Contaminant_TRYP_PIG&quot;   
+## [23] &quot;XXX_Contaminant_CTRB_BOVIN&quot;  &quot;XXX_Contaminant_CTRA_BOVIN&quot; 
+## [25] &quot;Contaminant_Trypa2&quot;</code></pre>
+<p>To remove contaminants, we use <code>apply_filter</code> with an appropriate character string that tells the function what rows to keep. In this case, we keep rows where the accession does not contain “Contaminant.” We will use <code>show</code> to see how the counts change.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="global-proteomics-data.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove contaminants</span></span>
+<span id="cb9-2"><a href="global-proteomics-data.html#cb9-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">apply_filter</span>(msnid, <span class="st">&quot;!grepl(&#39;Contaminant&#39;, accession)&quot;</span>)</span>
+<span id="cb9-3"><a href="global-proteomics-data.html#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  48 
+## #PSMs: 1155442 at 31 % FDR
+## #peptides: 511196 at 61 % FDR
+## #accessions: 128353 at 98 % FDR</code></pre>
+</div>
+<div id="msms-id-filter-peptide-level" class="section level4 unnumbered">
+<h4>MS/MS ID Filter: Peptide Level</h4>
+<p>The next step is to use the <code>PepQValue</code> column from the MSnID object and the absolute deviation of the mass measurement error of parent ions (in ppm) to maximize the number of PSMs while ensuring that the empirical peptide-level FDR is at most 1%.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="global-proteomics-data.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1% FDR filter at the peptide level</span></span>
+<span id="cb11-2"><a href="global-proteomics-data.html#cb11-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">filter_msgf_data</span>(msnid,</span>
+<span id="cb11-3"><a href="global-proteomics-data.html#cb11-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">level =</span> <span class="st">&quot;peptide&quot;</span>,</span>
+<span id="cb11-4"><a href="global-proteomics-data.html#cb11-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">fdr.max =</span> <span class="fl">0.01</span>)</span>
+<span id="cb11-5"><a href="global-proteomics-data.html#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  48 
+## #PSMs: 464542 at 0.45 % FDR
+## #peptides: 96493 at 1 % FDR
+## #accessions: 27120 at 9.2 % FDR</code></pre>
+<p>We can see that filtering drastically reduces the number of PSMs, and the empirical peptide-level FDR is now 1%. However, notice that the empirical protein-level FDR is still fairly high.</p>
+</div>
+<div id="msms-id-filter-protein-level" class="section level4 unnumbered">
+<h4>MS/MS ID Filter: Protein Level</h4>
+<p>A while ago, the proteomics field established the hard-and-fast two-peptides-per-protein rule. That is, we can not be confident if a protein is identified by the detection of only one peptide. This rule penalizes short proteins and doesn’t consider that there are some very long proteins (e.g. Titin 3.8 MDa) that easily have more then two matching peptides even in reversed sequence. Thus, we propose to normalize the number of peptides per protein length and use that as a filtering criterion.</p>
+<p>We need the FASTA (pronounced FAST-AYE) file to get the length of each protein, which we can then use to calculate the associated number of peptides per 1000 amino acids. This new <code>peptides_per_1000aa</code> column is used to filter the MSnID object so that the empirical accession-level FDR is at most 1%.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="global-proteomics-data.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get path to FASTA file</span></span>
+<span id="cb13-2"><a href="global-proteomics-data.html#cb13-2" aria-hidden="true" tabindex="-1"></a>path_to_FASTA <span class="ot">&lt;-</span> <span class="fu">system.file</span>(</span>
+<span id="cb13-3"><a href="global-proteomics-data.html#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;extdata/Rattus_norvegicus_NCBI_RefSeq_2018-04-10.fasta.gz&quot;</span>, </span>
+<span id="cb13-4"><a href="global-proteomics-data.html#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">package =</span> <span class="st">&quot;PlexedPiperTestData&quot;</span></span>
+<span id="cb13-5"><a href="global-proteomics-data.html#cb13-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-6"><a href="global-proteomics-data.html#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="global-proteomics-data.html#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute number of peptides per 1000 amino acids</span></span>
+<span id="cb13-8"><a href="global-proteomics-data.html#cb13-8" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">compute_num_peptides_per_1000aa</span>(msnid, path_to_FASTA)</span>
+<span id="cb13-9"><a href="global-proteomics-data.html#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="global-proteomics-data.html#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 1% FDR filter at the protein level</span></span>
+<span id="cb13-11"><a href="global-proteomics-data.html#cb13-11" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">filter_msgf_data</span>(msnid,</span>
+<span id="cb13-12"><a href="global-proteomics-data.html#cb13-12" aria-hidden="true" tabindex="-1"></a>                          <span class="at">level =</span> <span class="st">&quot;accession&quot;</span>,</span>
+<span id="cb13-13"><a href="global-proteomics-data.html#cb13-13" aria-hidden="true" tabindex="-1"></a>                          <span class="at">fdr.max =</span> <span class="fl">0.01</span>)</span>
+<span id="cb13-14"><a href="global-proteomics-data.html#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  48 
+## #PSMs: 458097 at 0.16 % FDR
+## #peptides: 92024 at 0.32 % FDR
+## #accessions: 15620 at 0.98 % FDR</code></pre>
+</div>
+<div id="inference-of-parsimonious-protein-set" class="section level4 unnumbered">
+<h4>Inference of Parsimonious Protein Set</h4>
+<p>The situation when a certain peptide sequence matches multiple proteins adds complication to the downstream quantitative analysis, as it is not clear which protein this peptide is originating from. There are common ways for dealing with this. One is to simply retain uniquely matching peptides and discard shared peptides (<code>unique_only = TRUE</code>). Alternatively (in case of <code>unique_only = FALSE</code>) assign the shared peptides to the proteins with the larger number of uniquely mapping peptides. If there is a choice between multiple proteins with equal numbers of uniquely mapping peptides, the shared peptides are assigned to the first protein according to alphanumeric order. This step could be done prior to filtering at the accession level, but the removal of an accession will completely remove its associated peptides.</p>
+<!---
+TODO:
+* Include a visual for inference of the parsimonious protein set.
+--->
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="global-proteomics-data.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inference of parsimonious protein set</span></span>
+<span id="cb15-2"><a href="global-proteomics-data.html#cb15-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">infer_parsimonious_accessions</span>(msnid, <span class="at">unique_only =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-3"><a href="global-proteomics-data.html#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  48 
+## #PSMs: 445003 at 0.15 % FDR
+## #peptides: 90466 at 0.27 % FDR
+## #accessions: 5246 at 1.1 % FDR</code></pre>
+<p>Notice that the protein-level FDR increased above the acceptable threshold, so we need to reapply the filter.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="global-proteomics-data.html#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1% FDR filter at the protein level</span></span>
+<span id="cb17-2"><a href="global-proteomics-data.html#cb17-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">filter_msgf_data</span>(msnid,</span>
+<span id="cb17-3"><a href="global-proteomics-data.html#cb17-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">level =</span> <span class="st">&quot;accession&quot;</span>,</span>
+<span id="cb17-4"><a href="global-proteomics-data.html#cb17-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">fdr.max =</span> <span class="fl">0.01</span>)</span>
+<span id="cb17-5"><a href="global-proteomics-data.html#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  48 
+## #PSMs: 444857 at 0.14 % FDR
+## #peptides: 90357 at 0.26 % FDR
+## #accessions: 5211 at 0.99 % FDR</code></pre>
+<p>Once all filtering is done, we can remove the decoy accessions. We use the <code>apply_filter</code> function again and only keep entries where <code>isDecoy</code> is <code>FALSE</code>.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="global-proteomics-data.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove Decoy Accessions</span></span>
+<span id="cb19-2"><a href="global-proteomics-data.html#cb19-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">apply_filter</span>(msnid, <span class="st">&quot;!isDecoy&quot;</span>)</span>
+<span id="cb19-3"><a href="global-proteomics-data.html#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  48 
+## #PSMs: 444216 at 0 % FDR
+## #peptides: 90126 at 0 % FDR
+## #accessions: 5160 at 0 % FDR</code></pre>
+<p>After processing, we are left with 318,448 PSMs, 81,048 peptides, and 5,143 proteins. The empirical FDRs are the same as before, but can not be calculated because we removed the decoys.</p>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; overflow-x: scroll; width:100%; ">
+<table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:global-msnid-table">Table 2.1: </span><left>First 10 rows of the processed MS-GF+ results.</left>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Dataset
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+ResultID
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Scan
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+FragMethod
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+SpecIndex
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Charge
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PrecursorMZ
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+DelM
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+DelM_PPM
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+MH
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+peptide
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Protein
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+NTT
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+DeNovoScore
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+MSGFScore
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+MSGFDB_SpecEValue
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Rank_MSGFDB_SpecEValue
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+EValue
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+QValue
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PepQValue
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+IsotopeError
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+accession
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+calculatedMassToCharge
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+chargeState
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+experimentalMassToCharge
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+isDecoy
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+spectrumFile
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+spectrumID
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+pepSeq
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+msmsScore
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+absParentMassErrorPPM
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+peptides_per_1000aa
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_07_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+1862
+</td>
+<td style="text-align:right;">
+27707
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+324
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+928.541
+</td>
+<td style="text-align:right;">
+-0.001
+</td>
+<td style="text-align:right;">
+-0.526
+</td>
+<td style="text-align:right;">
+1856.075
+</td>
+<td style="text-align:left;">
+R.AAAAAAAAAAAAAAGAAGK.E
+</td>
+<td style="text-align:left;">
+NP_113986.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+285
+</td>
+<td style="text-align:right;">
+282
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NP_113986.1
+</td>
+<td style="text-align:right;">
+928.541
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+928.541
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_07_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+27707
+</td>
+<td style="text-align:left;">
+AAAAAAAAAAAAAAGAAGK
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+0.589
+</td>
+<td style="text-align:right;">
+25.769
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_07_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+4192
+</td>
+<td style="text-align:right;">
+27684
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+906
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:right;">
+-0.002
+</td>
+<td style="text-align:right;">
+-0.887
+</td>
+<td style="text-align:right;">
+1856.075
+</td>
+<td style="text-align:left;">
+R.AAAAAAAAAAAAAAGAAGK.E
+</td>
+<td style="text-align:left;">
+NP_113986.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+156
+</td>
+<td style="text-align:right;">
+144
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NP_113986.1
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_07_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+27684
+</td>
+<td style="text-align:left;">
+AAAAAAAAAAAAAAGAAGK
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+0.991
+</td>
+<td style="text-align:right;">
+25.769
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_06_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+26263
+</td>
+<td style="text-align:right;">
+27336
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+5187
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.197
+</td>
+<td style="text-align:right;">
+1856.075
+</td>
+<td style="text-align:left;">
+R.AAAAAAAAAAAAAAGAAGK.E
+</td>
+<td style="text-align:left;">
+NP_113986.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+118
+</td>
+<td style="text-align:right;">
+85
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NP_113986.1
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_06_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+27336
+</td>
+<td style="text-align:left;">
+AAAAAAAAAAAAAAGAAGK
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+0.091
+</td>
+<td style="text-align:right;">
+25.769
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_07_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+1471
+</td>
+<td style="text-align:right;">
+27096
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+415
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:right;">
+-0.001
+</td>
+<td style="text-align:right;">
+-0.591
+</td>
+<td style="text-align:right;">
+1856.075
+</td>
+<td style="text-align:left;">
+R.AAAAAAAAAAAAAAGAAGK.E
+</td>
+<td style="text-align:left;">
+NP_113986.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+157
+</td>
+<td style="text-align:right;">
+156
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NP_113986.1
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_07_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+27096
+</td>
+<td style="text-align:left;">
+AAAAAAAAAAAAAAGAAGK
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+0.684
+</td>
+<td style="text-align:right;">
+25.769
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_05_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+28664
+</td>
+<td style="text-align:right;">
+10441
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+4849
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+586.832
+</td>
+<td style="text-align:right;">
+-0.001
+</td>
+<td style="text-align:right;">
+-0.728
+</td>
+<td style="text-align:right;">
+1172.659
+</td>
+<td style="text-align:left;">
+R.AAAAADLANR.S
+</td>
+<td style="text-align:left;">
+NP_001007804.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+124
+</td>
+<td style="text-align:right;">
+124
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NP_001007804.1
+</td>
+<td style="text-align:right;">
+586.833
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+586.832
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_05_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+10441
+</td>
+<td style="text-align:left;">
+AAAAADLANR
+</td>
+<td style="text-align:right;">
+2.480
+</td>
+<td style="text-align:right;">
+0.746
+</td>
+<td style="text-align:right;">
+34.755
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_24_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+41775
+</td>
+<td style="text-align:right;">
+8033
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+7889
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+831.447
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+1661.886
+</td>
+<td style="text-align:left;">
+G.AAAAAEAESGGGGGK.K
+</td>
+<td style="text-align:left;">
+NP_001128630.1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+176
+</td>
+<td style="text-align:right;">
+76
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NP_001128630.1
+</td>
+<td style="text-align:right;">
+831.447
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+831.447
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_24_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+8033
+</td>
+<td style="text-align:left;">
+AAAAAEAESGGGGGK
+</td>
+<td style="text-align:right;">
+2.583
+</td>
+<td style="text-align:right;">
+0.106
+</td>
+<td style="text-align:right;">
+580.844
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_08_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+18244
+</td>
+<td style="text-align:right;">
+10302
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+3724
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+653.695
+</td>
+<td style="text-align:right;">
+-0.003
+</td>
+<td style="text-align:right;">
+-1.649
+</td>
+<td style="text-align:right;">
+1958.071
+</td>
+<td style="text-align:left;">
+A.AAAAATEQQGSNGPVK.K
+</td>
+<td style="text-align:left;">
+NP_001177997.1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+106
+</td>
+<td style="text-align:right;">
+85
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+NP_001177997.1
+</td>
+<td style="text-align:right;">
+653.362
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+653.361
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_08_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+10302
+</td>
+<td style="text-align:left;">
+AAAAATEQQGSNGPVK
+</td>
+<td style="text-align:right;">
+3.432
+</td>
+<td style="text-align:right;">
+1.685
+</td>
+<td style="text-align:right;">
+62.500
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_16_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+13019
+</td>
+<td style="text-align:right;">
+8116
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+3103
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+613.301
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.100
+</td>
+<td style="text-align:right;">
+1837.888
+</td>
+<td style="text-align:left;">
+R.AAAADGEPLHNEEER.T
+</td>
+<td style="text-align:left;">
+NP_001099982.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+112
+</td>
+<td style="text-align:right;">
+108
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NP_001099982.1
+</td>
+<td style="text-align:right;">
+613.301
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+613.301
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_16_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+8116
+</td>
+<td style="text-align:left;">
+AAAADGEPLHNEEER
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+0.105
+</td>
+<td style="text-align:right;">
+14.749
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_16_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+18313
+</td>
+<td style="text-align:right;">
+8217
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+3907
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+613.302
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+<td style="text-align:right;">
+1.692
+</td>
+<td style="text-align:right;">
+1837.888
+</td>
+<td style="text-align:left;">
+R.AAAADGEPLHNEEER.T
+</td>
+<td style="text-align:left;">
+NP_001099982.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+90
+</td>
+<td style="text-align:right;">
+68
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NP_001099982.1
+</td>
+<td style="text-align:right;">
+613.301
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+613.302
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_16_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+8217
+</td>
+<td style="text-align:left;">
+AAAADGEPLHNEEER
+</td>
+<td style="text-align:right;">
+3.000
+</td>
+<td style="text-align:right;">
+1.703
+</td>
+<td style="text-align:right;">
+14.749
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_24_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+16441
+</td>
+<td style="text-align:right;">
+6833
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+3438
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+795.928
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+1590.849
+</td>
+<td style="text-align:left;">
+A.AAAAEAESGGGGGK.K
+</td>
+<td style="text-align:left;">
+NP_001128630.1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+230
+</td>
+<td style="text-align:right;">
+192
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NP_001128630.1
+</td>
+<td style="text-align:right;">
+795.928
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+795.928
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_24_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+6833
+</td>
+<td style="text-align:left;">
+AAAAEAESGGGGGK
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+0.104
+</td>
+<td style="text-align:right;">
+580.844
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p></br></p>
+<p>Table <a href="global-proteomics-data.html#tab:global-msnid-table">2.1</a> shows the first 10 rows of the processed MS-GF+ output.</p>
+</div>
+</div>
+<div id="reporter-ion-intensities" class="section level3" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> Prepare Reporter Ion Intensities</h3>
+<div id="read-masic-output" class="section level4 unnumbered">
+<h4>Read MASIC Output</h4>
+<p>MASIC is a tool for extracting ion intensities. With proper parameter settings, it can be used for extracting TMT (or iTRAQ) reporter ion intensities. In addition, it reports a number of other helpful metrics. Notably, the interference score at the parent ion level and the signal-to-noise ratio (S/N) at the reporter ion level (computed by Thermo software). The interference score reflects the proportion of the ion population that was isolated for fragmentation that is due to the targeted ion. In other words, 1 - InterferenceScore is due to co-isolated species that have similar elution time and parent ion m/z.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="global-proteomics-data.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Path to MASIC data</span></span>
+<span id="cb21-2"><a href="global-proteomics-data.html#cb21-2" aria-hidden="true" tabindex="-1"></a>path_to_MASIC_results <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata/global/masic_output&quot;</span>, </span>
+<span id="cb21-3"><a href="global-proteomics-data.html#cb21-3" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">package =</span> <span class="st">&quot;PlexedPiperTestData&quot;</span>)</span>
+<span id="cb21-4"><a href="global-proteomics-data.html#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="global-proteomics-data.html#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Read MASIC data</span></span>
+<span id="cb21-6"><a href="global-proteomics-data.html#cb21-6" aria-hidden="true" tabindex="-1"></a>masic_data <span class="ot">&lt;-</span> <span class="fu">read_masic_data</span>(path_to_MASIC_results, <span class="at">interference_score =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>Normally, this would display two progress bars in the console as the data is being fetched. However, the output was suppressed to save space.</p>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; overflow-x: scroll; width:100%; ">
+<table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:global-masic-table">Table 2.2: </span><left>First 10 rows of the MASIC data.</left>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Dataset
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+ScanNumber
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Collision.Mode
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+ParentIonMZ
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+BasePeakIntensity
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+BasePeakMZ
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+ReporterIonIntensityMax
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_126.128
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_127.125
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_127.131
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_128.128
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_128.134
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_129.131
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_129.138
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_130.135
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_130.141
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_131.138
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Weighted.Avg.Pct.Intensity.Correction
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_126.128_SignalToNoise
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_127.125_SignalToNoise
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_127.131_SignalToNoise
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_128.128_SignalToNoise
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_128.134_SignalToNoise
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_129.131_SignalToNoise
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_129.138_SignalToNoise
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_130.135_SignalToNoise
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_130.141_SignalToNoise
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_131.138_SignalToNoise
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_126.128_Resolution
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_127.125_Resolution
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_127.131_Resolution
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_128.128_Resolution
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_128.134_Resolution
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_129.131_Resolution
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_129.138_Resolution
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_130.135_Resolution
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_130.141_Resolution
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Ion_131.138_Resolution
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+ParentIonIndex
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+MZ
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+SurveyScanNumber
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+OptimalPeakApexScanNumber
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PeakApexOverrideParentIonIndex
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+CustomSICPeak
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PeakScanStart
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PeakScanEnd
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PeakScanMaxIntensity
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PeakMaxIntensity
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PeakSignalToNoiseRatio
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+FWHMInScans
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PeakArea
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+ParentIonIntensity
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PeakBaselineNoiseLevel
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PeakBaselineNoiseStDev
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PeakBaselinePointsUsed
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+StatMomentsArea
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+CenterOfMassScan
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PeakStDev
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PeakSkew
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PeakKSStat
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+StatMomentsDataCountUsed
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+InterferenceScore
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:left;">
+hcd
+</td>
+<td style="text-align:right;">
+407.74
+</td>
+<td style="text-align:right;">
+227695.44
+</td>
+<td style="text-align:right;">
+407.741
+</td>
+<td style="text-align:right;">
+92236.87
+</td>
+<td style="text-align:right;">
+70562.39
+</td>
+<td style="text-align:right;">
+24864.62
+</td>
+<td style="text-align:right;">
+17165.80
+</td>
+<td style="text-align:right;">
+35625.00
+</td>
+<td style="text-align:right;">
+92236.87
+</td>
+<td style="text-align:right;">
+9640.23
+</td>
+<td style="text-align:right;">
+8578.05
+</td>
+<td style="text-align:right;">
+6996.69
+</td>
+<td style="text-align:right;">
+11833.07
+</td>
+<td style="text-align:right;">
+32281.34
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+71.47
+</td>
+<td style="text-align:right;">
+25.17
+</td>
+<td style="text-align:right;">
+17.38
+</td>
+<td style="text-align:right;">
+36.04
+</td>
+<td style="text-align:right;">
+93.32
+</td>
+<td style="text-align:right;">
+9.75
+</td>
+<td style="text-align:right;">
+8.67
+</td>
+<td style="text-align:right;">
+7.07
+</td>
+<td style="text-align:right;">
+11.96
+</td>
+<td style="text-align:right;">
+32.71
+</td>
+<td style="text-align:right;">
+44102
+</td>
+<td style="text-align:right;">
+42700
+</td>
+<td style="text-align:right;">
+42100
+</td>
+<td style="text-align:right;">
+41800
+</td>
+<td style="text-align:right;">
+44404
+</td>
+<td style="text-align:right;">
+40500
+</td>
+<td style="text-align:right;">
+39500
+</td>
+<td style="text-align:right;">
+36800
+</td>
+<td style="text-align:right;">
+41100
+</td>
+<td style="text-align:right;">
+42302
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+407.742
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+2901600
+</td>
+<td style="text-align:right;">
+211.000
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+50422000
+</td>
+<td style="text-align:right;">
+2579600
+</td>
+<td style="text-align:right;">
+13750
+</td>
+<td style="text-align:right;">
+97562
+</td>
+<td style="text-align:right;">
+10113
+</td>
+<td style="text-align:right;">
+47031000
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+5.68
+</td>
+<td style="text-align:right;">
+-0.189
+</td>
+<td style="text-align:right;">
+0.353
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.996
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:left;">
+hcd
+</td>
+<td style="text-align:right;">
+396.72
+</td>
+<td style="text-align:right;">
+59127.97
+</td>
+<td style="text-align:right;">
+529.294
+</td>
+<td style="text-align:right;">
+34294.90
+</td>
+<td style="text-align:right;">
+23706.89
+</td>
+<td style="text-align:right;">
+13559.32
+</td>
+<td style="text-align:right;">
+5856.83
+</td>
+<td style="text-align:right;">
+16322.71
+</td>
+<td style="text-align:right;">
+34294.90
+</td>
+<td style="text-align:right;">
+4853.11
+</td>
+<td style="text-align:right;">
+7938.24
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+1465.03
+</td>
+<td style="text-align:right;">
+18182.27
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+26.12
+</td>
+<td style="text-align:right;">
+14.94
+</td>
+<td style="text-align:right;">
+6.45
+</td>
+<td style="text-align:right;">
+17.97
+</td>
+<td style="text-align:right;">
+37.77
+</td>
+<td style="text-align:right;">
+5.34
+</td>
+<td style="text-align:right;">
+8.74
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+1.61
+</td>
+<td style="text-align:right;">
+19.93
+</td>
+<td style="text-align:right;">
+42702
+</td>
+<td style="text-align:right;">
+41100
+</td>
+<td style="text-align:right;">
+37000
+</td>
+<td style="text-align:right;">
+40400
+</td>
+<td style="text-align:right;">
+43404
+</td>
+<td style="text-align:right;">
+36400
+</td>
+<td style="text-align:right;">
+39700
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+29800
+</td>
+<td style="text-align:right;">
+41802
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+396.718
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+2181900
+</td>
+<td style="text-align:right;">
+19.690
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+34508000
+</td>
+<td style="text-align:right;">
+1690600
+</td>
+<td style="text-align:right;">
+110841
+</td>
+<td style="text-align:right;">
+1120000
+</td>
+<td style="text-align:right;">
+10166
+</td>
+<td style="text-align:right;">
+31578000
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+5.59
+</td>
+<td style="text-align:right;">
+-0.217
+</td>
+<td style="text-align:right;">
+0.347
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.993
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:left;">
+hcd
+</td>
+<td style="text-align:right;">
+438.23
+</td>
+<td style="text-align:right;">
+110444.82
+</td>
+<td style="text-align:right;">
+362.224
+</td>
+<td style="text-align:right;">
+14053.40
+</td>
+<td style="text-align:right;">
+12459.86
+</td>
+<td style="text-align:right;">
+11785.91
+</td>
+<td style="text-align:right;">
+10932.51
+</td>
+<td style="text-align:right;">
+10653.32
+</td>
+<td style="text-align:right;">
+12328.62
+</td>
+<td style="text-align:right;">
+5959.86
+</td>
+<td style="text-align:right;">
+9905.82
+</td>
+<td style="text-align:right;">
+8387.04
+</td>
+<td style="text-align:right;">
+11166.70
+</td>
+<td style="text-align:right;">
+14053.40
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+12.40
+</td>
+<td style="text-align:right;">
+11.75
+</td>
+<td style="text-align:right;">
+10.90
+</td>
+<td style="text-align:right;">
+10.64
+</td>
+<td style="text-align:right;">
+12.31
+</td>
+<td style="text-align:right;">
+5.96
+</td>
+<td style="text-align:right;">
+9.91
+</td>
+<td style="text-align:right;">
+8.40
+</td>
+<td style="text-align:right;">
+11.18
+</td>
+<td style="text-align:right;">
+14.13
+</td>
+<td style="text-align:right;">
+42006
+</td>
+<td style="text-align:right;">
+40702
+</td>
+<td style="text-align:right;">
+41402
+</td>
+<td style="text-align:right;">
+40700
+</td>
+<td style="text-align:right;">
+40400
+</td>
+<td style="text-align:right;">
+38800
+</td>
+<td style="text-align:right;">
+40200
+</td>
+<td style="text-align:right;">
+38900
+</td>
+<td style="text-align:right;">
+40400
+</td>
+<td style="text-align:right;">
+41002
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+438.227
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+131
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+114
+</td>
+<td style="text-align:right;">
+107
+</td>
+<td style="text-align:right;">
+8255600
+</td>
+<td style="text-align:right;">
+9.465
+</td>
+<td style="text-align:right;">
+44
+</td>
+<td style="text-align:right;">
+444610000
+</td>
+<td style="text-align:right;">
+658727
+</td>
+<td style="text-align:right;">
+872195
+</td>
+<td style="text-align:right;">
+2620000
+</td>
+<td style="text-align:right;">
+10129
+</td>
+<td style="text-align:right;">
+343470000
+</td>
+<td style="text-align:right;">
+82
+</td>
+<td style="text-align:right;">
+22.80
+</td>
+<td style="text-align:right;">
+-0.626
+</td>
+<td style="text-align:right;">
+1.099
+</td>
+<td style="text-align:right;">
+89
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:left;">
+hcd
+</td>
+<td style="text-align:right;">
+481.50
+</td>
+<td style="text-align:right;">
+37082.72
+</td>
+<td style="text-align:right;">
+206.466
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+481.505
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+52
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+401824
+</td>
+<td style="text-align:right;">
+27.990
+</td>
+<td style="text-align:right;">
+23
+</td>
+<td style="text-align:right;">
+16244000
+</td>
+<td style="text-align:right;">
+344491
+</td>
+<td style="text-align:right;">
+14356
+</td>
+<td style="text-align:right;">
+65777
+</td>
+<td style="text-align:right;">
+10109
+</td>
+<td style="text-align:right;">
+14899000
+</td>
+<td style="text-align:right;">
+26
+</td>
+<td style="text-align:right;">
+14.10
+</td>
+<td style="text-align:right;">
+0.054
+</td>
+<td style="text-align:right;">
+0.504
+</td>
+<td style="text-align:right;">
+39
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:left;">
+hcd
+</td>
+<td style="text-align:right;">
+549.28
+</td>
+<td style="text-align:right;">
+21077.05
+</td>
+<td style="text-align:right;">
+128.129
+</td>
+<td style="text-align:right;">
+21077.05
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+10998.67
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+21077.05
+</td>
+<td style="text-align:right;">
+2725.50
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+6800.70
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+9.19
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+17.57
+</td>
+<td style="text-align:right;">
+2.27
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+5.66
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+40302
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+42102
+</td>
+<td style="text-align:right;">
+46600
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+40300
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+549.279
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+363656
+</td>
+<td style="text-align:right;">
+0.700
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+5941200
+</td>
+<td style="text-align:right;">
+347071
+</td>
+<td style="text-align:right;">
+519640
+</td>
+<td style="text-align:right;">
+1990000
+</td>
+<td style="text-align:right;">
+10109
+</td>
+<td style="text-align:right;">
+2528900
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+2.49
+</td>
+<td style="text-align:right;">
+-0.583
+</td>
+<td style="text-align:right;">
+0.430
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:left;">
+hcd
+</td>
+<td style="text-align:right;">
+388.72
+</td>
+<td style="text-align:right;">
+40605.85
+</td>
+<td style="text-align:right;">
+356.719
+</td>
+<td style="text-align:right;">
+8087.76
+</td>
+<td style="text-align:right;">
+6166.82
+</td>
+<td style="text-align:right;">
+1371.27
+</td>
+<td style="text-align:right;">
+2418.35
+</td>
+<td style="text-align:right;">
+8087.76
+</td>
+<td style="text-align:right;">
+5485.35
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+1543.48
+</td>
+<td style="text-align:right;">
+1943.96
+</td>
+<td style="text-align:right;">
+7436.60
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+6.92
+</td>
+<td style="text-align:right;">
+1.54
+</td>
+<td style="text-align:right;">
+2.71
+</td>
+<td style="text-align:right;">
+9.04
+</td>
+<td style="text-align:right;">
+6.13
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+1.72
+</td>
+<td style="text-align:right;">
+2.16
+</td>
+<td style="text-align:right;">
+8.26
+</td>
+<td style="text-align:right;">
+40000
+</td>
+<td style="text-align:right;">
+26400
+</td>
+<td style="text-align:right;">
+30400
+</td>
+<td style="text-align:right;">
+40400
+</td>
+<td style="text-align:right;">
+44300
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+28800
+</td>
+<td style="text-align:right;">
+28500
+</td>
+<td style="text-align:right;">
+38700
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+388.720
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+30
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+478135
+</td>
+<td style="text-align:right;">
+28.710
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+10718000
+</td>
+<td style="text-align:right;">
+291189
+</td>
+<td style="text-align:right;">
+16653
+</td>
+<td style="text-align:right;">
+142562
+</td>
+<td style="text-align:right;">
+10142
+</td>
+<td style="text-align:right;">
+9961100
+</td>
+<td style="text-align:right;">
+16
+</td>
+<td style="text-align:right;">
+8.60
+</td>
+<td style="text-align:right;">
+-0.051
+</td>
+<td style="text-align:right;">
+0.283
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+0.969
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:left;">
+hcd
+</td>
+<td style="text-align:right;">
+403.21
+</td>
+<td style="text-align:right;">
+40667.64
+</td>
+<td style="text-align:right;">
+403.251
+</td>
+<td style="text-align:right;">
+5860.96
+</td>
+<td style="text-align:right;">
+4991.79
+</td>
+<td style="text-align:right;">
+1274.12
+</td>
+<td style="text-align:right;">
+5860.96
+</td>
+<td style="text-align:right;">
+4699.99
+</td>
+<td style="text-align:right;">
+4906.33
+</td>
+<td style="text-align:right;">
+1782.18
+</td>
+<td style="text-align:right;">
+4580.83
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+5.29
+</td>
+<td style="text-align:right;">
+1.35
+</td>
+<td style="text-align:right;">
+6.21
+</td>
+<td style="text-align:right;">
+4.98
+</td>
+<td style="text-align:right;">
+5.19
+</td>
+<td style="text-align:right;">
+1.89
+</td>
+<td style="text-align:right;">
+4.85
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+41600
+</td>
+<td style="text-align:right;">
+21900
+</td>
+<td style="text-align:right;">
+38604
+</td>
+<td style="text-align:right;">
+39000
+</td>
+<td style="text-align:right;">
+36800
+</td>
+<td style="text-align:right;">
+26700
+</td>
+<td style="text-align:right;">
+39200
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+6
+</td>
+<td style="text-align:right;">
+403.214
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+309628
+</td>
+<td style="text-align:right;">
+18.930
+</td>
+<td style="text-align:right;">
+25
+</td>
+<td style="text-align:right;">
+13671000
+</td>
+<td style="text-align:right;">
+232858
+</td>
+<td style="text-align:right;">
+16353
+</td>
+<td style="text-align:right;">
+50315
+</td>
+<td style="text-align:right;">
+3379
+</td>
+<td style="text-align:right;">
+12441000
+</td>
+<td style="text-align:right;">
+27
+</td>
+<td style="text-align:right;">
+14.90
+</td>
+<td style="text-align:right;">
+0.086
+</td>
+<td style="text-align:right;">
+0.489
+</td>
+<td style="text-align:right;">
+41
+</td>
+<td style="text-align:right;">
+0.618
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:left;">
+hcd
+</td>
+<td style="text-align:right;">
+476.26
+</td>
+<td style="text-align:right;">
+14753.41
+</td>
+<td style="text-align:right;">
+577.352
+</td>
+<td style="text-align:right;">
+6170.43
+</td>
+<td style="text-align:right;">
+2622.09
+</td>
+<td style="text-align:right;">
+1825.23
+</td>
+<td style="text-align:right;">
+2987.08
+</td>
+<td style="text-align:right;">
+1852.17
+</td>
+<td style="text-align:right;">
+2309.64
+</td>
+<td style="text-align:right;">
+1348.42
+</td>
+<td style="text-align:right;">
+6170.43
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+1735.76
+</td>
+<td style="text-align:right;">
+5115.81
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+2.61
+</td>
+<td style="text-align:right;">
+1.80
+</td>
+<td style="text-align:right;">
+2.95
+</td>
+<td style="text-align:right;">
+1.81
+</td>
+<td style="text-align:right;">
+2.26
+</td>
+<td style="text-align:right;">
+1.31
+</td>
+<td style="text-align:right;">
+5.99
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+1.67
+</td>
+<td style="text-align:right;">
+4.93
+</td>
+<td style="text-align:right;">
+30500
+</td>
+<td style="text-align:right;">
+28200
+</td>
+<td style="text-align:right;">
+29400
+</td>
+<td style="text-align:right;">
+28800
+</td>
+<td style="text-align:right;">
+29800
+</td>
+<td style="text-align:right;">
+23300
+</td>
+<td style="text-align:right;">
+39004
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+31200
+</td>
+<td style="text-align:right;">
+39200
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+476.262
+</td>
+<td style="text-align:right;">
+7
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+18
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+276349
+</td>
+<td style="text-align:right;">
+3.873
+</td>
+<td style="text-align:right;">
+4
+</td>
+<td style="text-align:right;">
+4751000
+</td>
+<td style="text-align:right;">
+277210
+</td>
+<td style="text-align:right;">
+71355
+</td>
+<td style="text-align:right;">
+309842
+</td>
+<td style="text-align:right;">
+3361
+</td>
+<td style="text-align:right;">
+3027500
+</td>
+<td style="text-align:right;">
+11
+</td>
+<td style="text-align:right;">
+5.27
+</td>
+<td style="text-align:right;">
+-0.363
+</td>
+<td style="text-align:right;">
+0.376
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+0.616
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+13
+</td>
+<td style="text-align:left;">
+hcd
+</td>
+<td style="text-align:right;">
+455.24
+</td>
+<td style="text-align:right;">
+22331.15
+</td>
+<td style="text-align:right;">
+207.407
+</td>
+<td style="text-align:right;">
+1521.09
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+1521.09
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+1.54
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+31600
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+455.243
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+330250
+</td>
+<td style="text-align:right;">
+0.043
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+4566900
+</td>
+<td style="text-align:right;">
+330250
+</td>
+<td style="text-align:right;">
+7747800
+</td>
+<td style="text-align:right;">
+56200000
+</td>
+<td style="text-align:right;">
+10118
+</td>
+<td style="text-align:right;">
+2203700
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+2.99
+</td>
+<td style="text-align:right;">
+-0.545
+</td>
+<td style="text-align:right;">
+0.373
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+0.948
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+14
+</td>
+<td style="text-align:left;">
+hcd
+</td>
+<td style="text-align:right;">
+411.72
+</td>
+<td style="text-align:right;">
+15172.97
+</td>
+<td style="text-align:right;">
+126.128
+</td>
+<td style="text-align:right;">
+15172.97
+</td>
+<td style="text-align:right;">
+15172.97
+</td>
+<td style="text-align:right;">
+7654.57
+</td>
+<td style="text-align:right;">
+10487.60
+</td>
+<td style="text-align:right;">
+9163.71
+</td>
+<td style="text-align:right;">
+9064.43
+</td>
+<td style="text-align:right;">
+5550.98
+</td>
+<td style="text-align:right;">
+6100.78
+</td>
+<td style="text-align:right;">
+6920.02
+</td>
+<td style="text-align:right;">
+5498.97
+</td>
+<td style="text-align:right;">
+9974.23
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+16.25
+</td>
+<td style="text-align:right;">
+8.21
+</td>
+<td style="text-align:right;">
+11.25
+</td>
+<td style="text-align:right;">
+9.85
+</td>
+<td style="text-align:right;">
+9.75
+</td>
+<td style="text-align:right;">
+5.98
+</td>
+<td style="text-align:right;">
+6.57
+</td>
+<td style="text-align:right;">
+7.47
+</td>
+<td style="text-align:right;">
+5.93
+</td>
+<td style="text-align:right;">
+10.83
+</td>
+<td style="text-align:right;">
+41906
+</td>
+<td style="text-align:right;">
+38300
+</td>
+<td style="text-align:right;">
+41200
+</td>
+<td style="text-align:right;">
+39900
+</td>
+<td style="text-align:right;">
+40500
+</td>
+<td style="text-align:right;">
+38800
+</td>
+<td style="text-align:right;">
+39600
+</td>
+<td style="text-align:right;">
+38600
+</td>
+<td style="text-align:right;">
+41800
+</td>
+<td style="text-align:right;">
+39002
+</td>
+<td style="text-align:right;">
+9
+</td>
+<td style="text-align:right;">
+411.719
+</td>
+<td style="text-align:right;">
+12
+</td>
+<td style="text-align:right;">
+34
+</td>
+<td style="text-align:right;">
+-1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+39
+</td>
+<td style="text-align:right;">
+34
+</td>
+<td style="text-align:right;">
+344633
+</td>
+<td style="text-align:right;">
+0.004
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+10577000
+</td>
+<td style="text-align:right;">
+257141
+</td>
+<td style="text-align:right;">
+86211000
+</td>
+<td style="text-align:right;">
+507000000
+</td>
+<td style="text-align:right;">
+9997
+</td>
+<td style="text-align:right;">
+1705500
+</td>
+<td style="text-align:right;">
+34
+</td>
+<td style="text-align:right;">
+1.93
+</td>
+<td style="text-align:right;">
+-0.722
+</td>
+<td style="text-align:right;">
+0.397
+</td>
+<td style="text-align:right;">
+5
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p></br></p>
+<p>Table <a href="global-proteomics-data.html#tab:global-masic-table">2.2</a> shows the first 10 rows of <code>masic_data</code>.</p>
+</div>
+<div id="filter-masic-data" class="section level4 unnumbered">
+<h4>Filter MASIC Data</h4>
+<p>Currently, we recommend keeping entries where at least 50% of the ion population is due to the targeted ion (interference score <span class="math inline">\(\geq\)</span> 0.5) and not filtering by S/N.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="global-proteomics-data.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter MASIC data</span></span>
+<span id="cb22-2"><a href="global-proteomics-data.html#cb22-2" aria-hidden="true" tabindex="-1"></a>masic_data <span class="ot">&lt;-</span> <span class="fu">filter_masic_data</span>(masic_data, </span>
+<span id="cb22-3"><a href="global-proteomics-data.html#cb22-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">interference_score_threshold =</span> <span class="fl">0.5</span>,</span>
+<span id="cb22-4"><a href="global-proteomics-data.html#cb22-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">s2n_threshold =</span> <span class="dv">0</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="fetch-study-design-tables" class="section level3" number="2.1.3">
+<h3><span class="header-section-number">2.1.3</span> Create Study Design Tables</h3>
+<p>To convert from PSMs and reporter ion intensities to meaningful quantitative data, it is necessary to know what are the samples in the reporter channels and what is the intended reference channel (or combination of channels). The entire study design is captured by three tables - fractions, samples, references. With newly processed data, these typically do not exist, and must be created. If the tables already exist, the code to access them is as follows.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="global-proteomics-data.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read tables from folder:</span></span>
+<span id="cb23-2"><a href="global-proteomics-data.html#cb23-2" aria-hidden="true" tabindex="-1"></a>fractions <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata/study_design/fractions.txt&quot;</span>, </span>
+<span id="cb23-3"><a href="global-proteomics-data.html#cb23-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">package =</span> <span class="st">&quot;PlexedPiperTestData&quot;</span>))</span>
+<span id="cb23-4"><a href="global-proteomics-data.html#cb23-4" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata/study_design/samples.txt&quot;</span>, </span>
+<span id="cb23-5"><a href="global-proteomics-data.html#cb23-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">package =</span> <span class="st">&quot;PlexedPiperTestData&quot;</span>))</span>
+<span id="cb23-6"><a href="global-proteomics-data.html#cb23-6" aria-hidden="true" tabindex="-1"></a>references <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata/study_design/references.txt&quot;</span>, </span>
+<span id="cb23-7"><a href="global-proteomics-data.html#cb23-7" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">package =</span> <span class="st">&quot;PlexedPiperTestData&quot;</span>))</span>
+<span id="cb23-8"><a href="global-proteomics-data.html#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="global-proteomics-data.html#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="co"># If using a data package from the DMS:</span></span>
+<span id="cb23-10"><a href="global-proteomics-data.html#cb23-10" aria-hidden="true" tabindex="-1"></a>study_design <span class="ot">&lt;-</span> <span class="fu">read_study_design_from_DMS</span>(data_package_num)</span>
+<span id="cb23-11"><a href="global-proteomics-data.html#cb23-11" aria-hidden="true" tabindex="-1"></a>fractions <span class="ot">&lt;-</span> study_design<span class="sc">$</span>fractions</span>
+<span id="cb23-12"><a href="global-proteomics-data.html#cb23-12" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">&lt;-</span> study_design<span class="sc">$</span>samples</span>
+<span id="cb23-13"><a href="global-proteomics-data.html#cb23-13" aria-hidden="true" tabindex="-1"></a>references <span class="ot">&lt;-</span> study_design<span class="sc">$</span>references</span></code></pre></div>
+<div id="fractions" class="section level4 unnumbered">
+<h4>Fractions</h4>
+<p>The fractions table consists of two columns: <code>Dataset</code> and <code>PlexID</code>. The <code>Dataset</code> column contains all of the unique datasets from <code>msnid$Dataset</code> or <code>masic_data$Dataset</code>. The <code>PlexID</code> column contains the plex ID associated with each dataset, and is typically an “S” followed by a number (“S1,” “S2,” etc.). We can extract the plex ID from the datasets. In this case, the plex ID always comes after “<em>W</em>,” so we can use a regular expression (regex) to capture it (the first argument of <code>gsub</code>). The regex below says to capture an “S” followed by a single digit that appears after “<em>W</em>” and before an underscore.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="global-proteomics-data.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create fractions table</span></span>
+<span id="cb24-2"><a href="global-proteomics-data.html#cb24-2" aria-hidden="true" tabindex="-1"></a>fractions <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Dataset =</span> <span class="fu">unique</span>(masic_data<span class="sc">$</span>Dataset)) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-3"><a href="global-proteomics-data.html#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">PlexID =</span> <span class="fu">gsub</span>(<span class="st">&quot;.*_W_(S</span><span class="sc">\\</span><span class="st">d{1})_.*&quot;</span>, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">1&quot;</span>, Dataset))</span></code></pre></div>
+<table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:fractions-table">Table 2.3: </span><left>First 10 rows of the fractions table.</left>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Dataset
+</th>
+<th style="text-align:left;">
+PlexID
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_02_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_03_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_04_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_05_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_06_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_07_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_08_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_09_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_10_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+</tbody>
+</table>
+<p></br></p>
+<p>Table <a href="global-proteomics-data.html#tab:fractions-table">2.3</a> shows the first 10 rows of <code>fractions</code>.</p>
+</div>
+<div id="samples" class="section level4 unnumbered">
+<h4>Samples</h4>
+<p>The samples table contains columns <code>PlexID</code>, <code>QuantBlock</code>, <code>ReporterName</code>, <code>ReporterAlias</code>, and <code>MeasurementName</code>. The plex ID must be the same as the plex ID in the <code>fractions</code> table. <code>ReporterName</code> is the reporter ion name (“126,” “127N,” “127C,” etc.). <code>ReporterAlias</code> is the intermediate between <code>ReporterName</code> and <code>MeasurementName</code> and is used for defining the reference. <code>MeasurementName</code> determines the column names for the final cross-tab, and must be unique and begin with a letter. <code>MeasurementName</code> is easily constructed by prepending <code>PlexID</code> to the <code>ReporterName</code>. Finally, <code>QuantBlock</code> can be thought of as a way of defining sub-plex. In a typical TMT experiment, <code>QuantBlock</code> is always 1. In case of 5 pairwise comparisons within TMT10, there will be 5 QuantBlocks (1-5) with a reference for each <code>QuantBlock</code>.</p>
+<p>For this experiment, channel 131 will serve as the reference, so we set <code>MeasurementName</code> to <code>NA</code> when <code>ReporterName</code> is <code>"131"</code>. This will make the reference channel absent from the quantitative cross-tab. In cases where reporter ion intensities are not normalized by a reference channel (reference = 1) or they are normalized by the average of select channels, do not set any <code>MeasurementName</code> to <code>NA</code>.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="global-proteomics-data.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># TMT10 Reporter Converter table from MSnID package</span></span>
+<span id="cb25-2"><a href="global-proteomics-data.html#cb25-2" aria-hidden="true" tabindex="-1"></a>conv <span class="ot">&lt;-</span> reporter_converter<span class="sc">$</span>tmt10</span>
+<span id="cb25-3"><a href="global-proteomics-data.html#cb25-3" aria-hidden="true" tabindex="-1"></a>plexes <span class="ot">&lt;-</span> <span class="fu">unique</span>(fractions<span class="sc">$</span>PlexID)</span>
+<span id="cb25-4"><a href="global-proteomics-data.html#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="global-proteomics-data.html#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Reference channel</span></span>
+<span id="cb25-6"><a href="global-proteomics-data.html#cb25-6" aria-hidden="true" tabindex="-1"></a>ref_channel <span class="ot">&lt;-</span> <span class="st">&quot;131&quot;</span></span>
+<span id="cb25-7"><a href="global-proteomics-data.html#cb25-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-8"><a href="global-proteomics-data.html#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create samples table</span></span>
+<span id="cb25-9"><a href="global-proteomics-data.html#cb25-9" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">PlexID =</span> <span class="fu">rep</span>(plexes, <span class="at">each =</span> <span class="fu">nrow</span>(conv)),  </span>
+<span id="cb25-10"><a href="global-proteomics-data.html#cb25-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">ReporterName =</span> <span class="fu">rep</span>(conv<span class="sc">$</span>ReporterName, </span>
+<span id="cb25-11"><a href="global-proteomics-data.html#cb25-11" aria-hidden="true" tabindex="-1"></a>                                         <span class="fu">length</span>(plexes))) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-12"><a href="global-proteomics-data.html#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ReporterAlias =</span> <span class="fu">sprintf</span>(<span class="st">&quot;%s_%s&quot;</span>, PlexID, ReporterName),</span>
+<span id="cb25-13"><a href="global-proteomics-data.html#cb25-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">MeasurementName =</span> ReporterAlias,</span>
+<span id="cb25-14"><a href="global-proteomics-data.html#cb25-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">QuantBlock =</span> <span class="dv">1</span>,</span>
+<span id="cb25-15"><a href="global-proteomics-data.html#cb25-15" aria-hidden="true" tabindex="-1"></a>         <span class="co"># Comment out this next part if the reference</span></span>
+<span id="cb25-16"><a href="global-proteomics-data.html#cb25-16" aria-hidden="true" tabindex="-1"></a>         <span class="co"># is not one of the reporter ion channels.</span></span>
+<span id="cb25-17"><a href="global-proteomics-data.html#cb25-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">MeasurementName =</span> <span class="fu">ifelse</span>(ReporterName <span class="sc">==</span> ref_channel,</span>
+<span id="cb25-18"><a href="global-proteomics-data.html#cb25-18" aria-hidden="true" tabindex="-1"></a>                                  <span class="cn">NA</span>, MeasurementName)</span>
+<span id="cb25-19"><a href="global-proteomics-data.html#cb25-19" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div>
+<table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:samples-table">Table 2.4: </span><left>First 10 rows of the samples table.</left>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+PlexID
+</th>
+<th style="text-align:left;">
+ReporterName
+</th>
+<th style="text-align:left;">
+ReporterAlias
+</th>
+<th style="text-align:left;">
+MeasurementName
+</th>
+<th style="text-align:right;">
+QuantBlock
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:left;">
+126
+</td>
+<td style="text-align:left;">
+S1_126
+</td>
+<td style="text-align:left;">
+S1_126
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:left;">
+127N
+</td>
+<td style="text-align:left;">
+S1_127N
+</td>
+<td style="text-align:left;">
+S1_127N
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:left;">
+127C
+</td>
+<td style="text-align:left;">
+S1_127C
+</td>
+<td style="text-align:left;">
+S1_127C
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:left;">
+128N
+</td>
+<td style="text-align:left;">
+S1_128N
+</td>
+<td style="text-align:left;">
+S1_128N
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:left;">
+128C
+</td>
+<td style="text-align:left;">
+S1_128C
+</td>
+<td style="text-align:left;">
+S1_128C
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:left;">
+129N
+</td>
+<td style="text-align:left;">
+S1_129N
+</td>
+<td style="text-align:left;">
+S1_129N
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:left;">
+129C
+</td>
+<td style="text-align:left;">
+S1_129C
+</td>
+<td style="text-align:left;">
+S1_129C
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:left;">
+130N
+</td>
+<td style="text-align:left;">
+S1_130N
+</td>
+<td style="text-align:left;">
+S1_130N
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:left;">
+130C
+</td>
+<td style="text-align:left;">
+S1_130C
+</td>
+<td style="text-align:left;">
+S1_130C
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:left;">
+131
+</td>
+<td style="text-align:left;">
+S1_131
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+<p></br></p>
+<p>Table <a href="global-proteomics-data.html#tab:samples-table">2.4</a> shows the first 10 rows of <code>samples</code>.</p>
+</div>
+<div id="references" class="section level4 unnumbered">
+<h4>References</h4>
+<p>Reference can be a certain channel, average of multiple channels, or 1. The general form is an expression with <code>ReporterAlias</code> names as variables. It is evaluated for each <code>PlexID</code>/<code>QuantBlock</code> combination and applied to divide reporter ion intensities within corresponding <code>PlexID</code>/<code>QuantBlock</code>.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="global-proteomics-data.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create references table</span></span>
+<span id="cb26-2"><a href="global-proteomics-data.html#cb26-2" aria-hidden="true" tabindex="-1"></a>references <span class="ot">&lt;-</span> samples <span class="sc">%&gt;%</span> </span>
+<span id="cb26-3"><a href="global-proteomics-data.html#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter to reference channel</span></span>
+<span id="cb26-4"><a href="global-proteomics-data.html#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ReporterName <span class="sc">==</span> ref_channel) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-5"><a href="global-proteomics-data.html#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Select required columns and rename ReporterAlias to Reference</span></span>
+<span id="cb26-6"><a href="global-proteomics-data.html#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(PlexID, <span class="at">Reference =</span> ReporterAlias, QuantBlock)</span></code></pre></div>
+<table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:references-table">Table 2.5: </span><left>References table.</left>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+PlexID
+</th>
+<th style="text-align:left;">
+Reference
+</th>
+<th style="text-align:right;">
+QuantBlock
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:left;">
+S1_131
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+S2
+</td>
+<td style="text-align:left;">
+S2_131
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+<p></br></p>
+<p>Table <a href="global-proteomics-data.html#tab:references-table">2.5</a> shows the first 10 rows of <code>references</code>. The code to use the geometric average instead of a single channel as the reference is shown below. The geometric average is the product of the reporter ion channels to the power of (1/number of channels). For each <code>PlexID</code> group, collapse the vector of reporter ion names with <code>*</code>, surround them in parentheses, and raise to the power of (1/number of channels).</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="global-proteomics-data.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use geometric average as reference</span></span>
+<span id="cb27-2"><a href="global-proteomics-data.html#cb27-2" aria-hidden="true" tabindex="-1"></a>references <span class="ot">&lt;-</span> samples <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="global-proteomics-data.html#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PlexID, QuantBlock) <span class="sc">%&gt;%</span></span>
+<span id="cb27-4"><a href="global-proteomics-data.html#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Reference =</span> <span class="fu">sprintf</span>(<span class="st">&quot;(%s)^(1/%d)&quot;</span>, </span>
+<span id="cb27-5"><a href="global-proteomics-data.html#cb27-5" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">paste</span>(ReporterAlias, <span class="at">collapse =</span> <span class="st">&quot;*&quot;</span>), <span class="fu">n</span>()))</span>
+<span id="cb27-6"><a href="global-proteomics-data.html#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="global-proteomics-data.html#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Do not normalize by reference channel (use 1 as the reference)</span></span>
+<span id="cb27-8"><a href="global-proteomics-data.html#cb27-8" aria-hidden="true" tabindex="-1"></a>references <span class="ot">&lt;-</span> samples <span class="sc">%&gt;%</span> </span>
+<span id="cb27-9"><a href="global-proteomics-data.html#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(PlexID, QuantBlock) <span class="sc">%&gt;%</span> </span>
+<span id="cb27-10"><a href="global-proteomics-data.html#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Reference =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p>Now that we have the three study design tables, we should save them.</p>
+<!---
+TODO:
+Explain how to add the study design tables to the DMS.
+--->
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="global-proteomics-data.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save study design tables</span></span>
+<span id="cb28-2"><a href="global-proteomics-data.html#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(fractions, <span class="at">file =</span> <span class="st">&quot;fractions.txt&quot;</span>,</span>
+<span id="cb28-3"><a href="global-proteomics-data.html#cb28-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb28-4"><a href="global-proteomics-data.html#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(samples, <span class="at">file =</span> <span class="st">&quot;samples.txt&quot;</span>,</span>
+<span id="cb28-5"><a href="global-proteomics-data.html#cb28-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb28-6"><a href="global-proteomics-data.html#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(references, <span class="at">file =</span> <span class="st">&quot;references.txt&quot;</span>,</span>
+<span id="cb28-7"><a href="global-proteomics-data.html#cb28-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="global-quant-crosstab" class="section level3" number="2.1.4">
+<h3><span class="header-section-number">2.1.4</span> Create Quantitative Cross-tab</h3>
+<p>This is the final step where MS/MS IDs and reporter ions are linked together and aggregated to the peptide or accession (i.e. protein) level. To retain protein IDs while aggregating to peptide level, set <code>aggregation_level &lt;- c("accession","peptide")</code>. The entries are <span class="math inline">\(log_2\)</span>-transformed after being normalized by the reference.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="global-proteomics-data.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set aggregation level</span></span>
+<span id="cb29-2"><a href="global-proteomics-data.html#cb29-2" aria-hidden="true" tabindex="-1"></a>aggregation_level <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;accession&quot;</span>)</span>
+<span id="cb29-3"><a href="global-proteomics-data.html#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create cross-tab</span></span>
+<span id="cb29-4"><a href="global-proteomics-data.html#cb29-4" aria-hidden="true" tabindex="-1"></a>crosstab <span class="ot">&lt;-</span> <span class="fu">create_crosstab</span>(msnid, masic_data,</span>
+<span id="cb29-5"><a href="global-proteomics-data.html#cb29-5" aria-hidden="true" tabindex="-1"></a>                            <span class="at">aggregation_level =</span> aggregation_level,</span>
+<span id="cb29-6"><a href="global-proteomics-data.html#cb29-6" aria-hidden="true" tabindex="-1"></a>                            fractions, samples, references)</span></code></pre></div>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; overflow-x: scroll; width:100%; ">
+<table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:unnamed-chunk-21">Table 2.6: </span><left>First 10 rows of the global quantitative cross-tab.</left>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_126
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_127C
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_127N
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_128C
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_128N
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_129C
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_129N
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_130C
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S1_130N
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_126
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_127C
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_127N
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_128C
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_128N
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_129C
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_129N
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_130C
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+S2_130N
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+AP_004893.1
+</td>
+<td style="text-align:right;">
+0.1419768
+</td>
+<td style="text-align:right;">
+0.7628195
+</td>
+<td style="text-align:right;">
+0.1653552
+</td>
+<td style="text-align:right;">
+0.8662554
+</td>
+<td style="text-align:right;">
+0.9453172
+</td>
+<td style="text-align:right;">
+-0.6460065
+</td>
+<td style="text-align:right;">
+-1.9294467
+</td>
+<td style="text-align:right;">
+-0.4321433
+</td>
+<td style="text-align:right;">
+-1.2831873
+</td>
+<td style="text-align:right;">
+-1.0271227
+</td>
+<td style="text-align:right;">
+-0.9390945
+</td>
+<td style="text-align:right;">
+0.4883309
+</td>
+<td style="text-align:right;">
+-1.7148628
+</td>
+<td style="text-align:right;">
+-0.7029685
+</td>
+<td style="text-align:right;">
+-0.8794712
+</td>
+<td style="text-align:right;">
+-0.1912097
+</td>
+<td style="text-align:right;">
+0.3964607
+</td>
+<td style="text-align:right;">
+-0.2440478
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AP_004894.1
+</td>
+<td style="text-align:right;">
+0.8092676
+</td>
+<td style="text-align:right;">
+-0.0976095
+</td>
+<td style="text-align:right;">
+-0.3113350
+</td>
+<td style="text-align:right;">
+0.3215692
+</td>
+<td style="text-align:right;">
+0.2171255
+</td>
+<td style="text-align:right;">
+-0.3678781
+</td>
+<td style="text-align:right;">
+-0.1638689
+</td>
+<td style="text-align:right;">
+-0.6696829
+</td>
+<td style="text-align:right;">
+-1.2039041
+</td>
+<td style="text-align:right;">
+-0.5124954
+</td>
+<td style="text-align:right;">
+-0.2364175
+</td>
+<td style="text-align:right;">
+-0.4428327
+</td>
+<td style="text-align:right;">
+-1.3730408
+</td>
+<td style="text-align:right;">
+-0.6711809
+</td>
+<td style="text-align:right;">
+-1.3515366
+</td>
+<td style="text-align:right;">
+-0.7462995
+</td>
+<td style="text-align:right;">
+-0.8338103
+</td>
+<td style="text-align:right;">
+-0.2227493
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AP_004895.1
+</td>
+<td style="text-align:right;">
+0.2078433
+</td>
+<td style="text-align:right;">
+-0.2867209
+</td>
+<td style="text-align:right;">
+-0.6089756
+</td>
+<td style="text-align:right;">
+-0.1162062
+</td>
+<td style="text-align:right;">
+-0.3840271
+</td>
+<td style="text-align:right;">
+-1.1240967
+</td>
+<td style="text-align:right;">
+-0.6908468
+</td>
+<td style="text-align:right;">
+-0.6652575
+</td>
+<td style="text-align:right;">
+-0.7140383
+</td>
+<td style="text-align:right;">
+0.2717217
+</td>
+<td style="text-align:right;">
+-0.1448289
+</td>
+<td style="text-align:right;">
+-0.1200736
+</td>
+<td style="text-align:right;">
+-0.6435709
+</td>
+<td style="text-align:right;">
+-0.4287771
+</td>
+<td style="text-align:right;">
+-0.6780284
+</td>
+<td style="text-align:right;">
+-0.6102404
+</td>
+<td style="text-align:right;">
+-0.3896190
+</td>
+<td style="text-align:right;">
+-0.1548544
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AP_004896.1
+</td>
+<td style="text-align:right;">
+-0.1494849
+</td>
+<td style="text-align:right;">
+-0.3664339
+</td>
+<td style="text-align:right;">
+-0.7314368
+</td>
+<td style="text-align:right;">
+-0.1742391
+</td>
+<td style="text-align:right;">
+-0.5352280
+</td>
+<td style="text-align:right;">
+-1.2945071
+</td>
+<td style="text-align:right;">
+-1.0372327
+</td>
+<td style="text-align:right;">
+-0.7060783
+</td>
+<td style="text-align:right;">
+-0.8299749
+</td>
+<td style="text-align:right;">
+0.1939540
+</td>
+<td style="text-align:right;">
+-0.2274358
+</td>
+<td style="text-align:right;">
+-0.1688422
+</td>
+<td style="text-align:right;">
+-0.5251264
+</td>
+<td style="text-align:right;">
+-0.4222698
+</td>
+<td style="text-align:right;">
+-0.6543311
+</td>
+<td style="text-align:right;">
+-0.6741064
+</td>
+<td style="text-align:right;">
+-0.3994149
+</td>
+<td style="text-align:right;">
+-0.0441485
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AP_004898.1
+</td>
+<td style="text-align:right;">
+0.0362964
+</td>
+<td style="text-align:right;">
+0.7497227
+</td>
+<td style="text-align:right;">
+0.4252227
+</td>
+<td style="text-align:right;">
+0.4913660
+</td>
+<td style="text-align:right;">
+1.1580326
+</td>
+<td style="text-align:right;">
+0.1211536
+</td>
+<td style="text-align:right;">
+-0.3640632
+</td>
+<td style="text-align:right;">
+-0.3019505
+</td>
+<td style="text-align:right;">
+-0.8291744
+</td>
+<td style="text-align:right;">
+-0.8407749
+</td>
+<td style="text-align:right;">
+-0.2796091
+</td>
+<td style="text-align:right;">
+-0.4130732
+</td>
+<td style="text-align:right;">
+-1.5747761
+</td>
+<td style="text-align:right;">
+-0.9449498
+</td>
+<td style="text-align:right;">
+-1.8439756
+</td>
+<td style="text-align:right;">
+-0.1774225
+</td>
+<td style="text-align:right;">
+-1.1083199
+</td>
+<td style="text-align:right;">
+-0.4175363
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AP_004899.1
+</td>
+<td style="text-align:right;">
+0.7140968
+</td>
+<td style="text-align:right;">
+-0.1781542
+</td>
+<td style="text-align:right;">
+-0.3732752
+</td>
+<td style="text-align:right;">
+0.3494902
+</td>
+<td style="text-align:right;">
+-0.0615626
+</td>
+<td style="text-align:right;">
+-2.1679002
+</td>
+<td style="text-align:right;">
+-0.8550940
+</td>
+<td style="text-align:right;">
+-0.9026145
+</td>
+<td style="text-align:right;">
+-1.4519278
+</td>
+<td style="text-align:right;">
+-0.3158081
+</td>
+<td style="text-align:right;">
+-0.4056811
+</td>
+<td style="text-align:right;">
+-0.4644758
+</td>
+<td style="text-align:right;">
+-0.2805080
+</td>
+<td style="text-align:right;">
+-0.9023044
+</td>
+<td style="text-align:right;">
+-1.0482424
+</td>
+<td style="text-align:right;">
+-0.8052899
+</td>
+<td style="text-align:right;">
+-0.6675429
+</td>
+<td style="text-align:right;">
+-0.3959923
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AP_004900.1
+</td>
+<td style="text-align:right;">
+-0.3806966
+</td>
+<td style="text-align:right;">
+-0.3441177
+</td>
+<td style="text-align:right;">
+-0.5883203
+</td>
+<td style="text-align:right;">
+-0.0902205
+</td>
+<td style="text-align:right;">
+-0.8263700
+</td>
+<td style="text-align:right;">
+-0.7060111
+</td>
+<td style="text-align:right;">
+-1.0978191
+</td>
+<td style="text-align:right;">
+-0.8570849
+</td>
+<td style="text-align:right;">
+-1.0769673
+</td>
+<td style="text-align:right;">
+-0.1566909
+</td>
+<td style="text-align:right;">
+-0.2565750
+</td>
+<td style="text-align:right;">
+-0.5707603
+</td>
+<td style="text-align:right;">
+-0.5960161
+</td>
+<td style="text-align:right;">
+-0.6380722
+</td>
+<td style="text-align:right;">
+-0.5524057
+</td>
+<td style="text-align:right;">
+-0.6422737
+</td>
+<td style="text-align:right;">
+-0.5140577
+</td>
+<td style="text-align:right;">
+-0.1386396
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AP_004901.1
+</td>
+<td style="text-align:right;">
+-0.2839471
+</td>
+<td style="text-align:right;">
+-0.5758177
+</td>
+<td style="text-align:right;">
+-0.0216835
+</td>
+<td style="text-align:right;">
+-0.2468966
+</td>
+<td style="text-align:right;">
+0.3802436
+</td>
+<td style="text-align:right;">
+-0.7852805
+</td>
+<td style="text-align:right;">
+-1.2036962
+</td>
+<td style="text-align:right;">
+-1.0623455
+</td>
+<td style="text-align:right;">
+-1.3738888
+</td>
+<td style="text-align:right;">
+0.0884387
+</td>
+<td style="text-align:right;">
+-0.5271134
+</td>
+<td style="text-align:right;">
+-0.3024421
+</td>
+<td style="text-align:right;">
+-0.8704195
+</td>
+<td style="text-align:right;">
+-0.5130666
+</td>
+<td style="text-align:right;">
+-0.8245858
+</td>
+<td style="text-align:right;">
+-0.3465590
+</td>
+<td style="text-align:right;">
+-0.3041638
+</td>
+<td style="text-align:right;">
+-0.0778906
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NP_001000613.1
+</td>
+<td style="text-align:right;">
+0.0642942
+</td>
+<td style="text-align:right;">
+-0.2044263
+</td>
+<td style="text-align:right;">
+-0.4935404
+</td>
+<td style="text-align:right;">
+0.1065480
+</td>
+<td style="text-align:right;">
+-0.3240158
+</td>
+<td style="text-align:right;">
+0.0233030
+</td>
+<td style="text-align:right;">
+-0.7883731
+</td>
+<td style="text-align:right;">
+-0.5831656
+</td>
+<td style="text-align:right;">
+-1.1649507
+</td>
+<td style="text-align:right;">
+-0.0969739
+</td>
+<td style="text-align:right;">
+-0.2298260
+</td>
+<td style="text-align:right;">
+-0.5051282
+</td>
+<td style="text-align:right;">
+-0.9489927
+</td>
+<td style="text-align:right;">
+-0.7860575
+</td>
+<td style="text-align:right;">
+-0.4803511
+</td>
+<td style="text-align:right;">
+-0.4824157
+</td>
+<td style="text-align:right;">
+-0.8430505
+</td>
+<td style="text-align:right;">
+-0.4220978
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NP_001001512.2
+</td>
+<td style="text-align:right;">
+-0.2155278
+</td>
+<td style="text-align:right;">
+-0.1288367
+</td>
+<td style="text-align:right;">
+-0.4900798
+</td>
+<td style="text-align:right;">
+-0.2239173
+</td>
+<td style="text-align:right;">
+-0.4303687
+</td>
+<td style="text-align:right;">
+-0.2496957
+</td>
+<td style="text-align:right;">
+-0.9165473
+</td>
+<td style="text-align:right;">
+-0.4952781
+</td>
+<td style="text-align:right;">
+-1.0160964
+</td>
+<td style="text-align:right;">
+-0.1256882
+</td>
+<td style="text-align:right;">
+-0.2742136
+</td>
+<td style="text-align:right;">
+-0.2713873
+</td>
+<td style="text-align:right;">
+-0.5914317
+</td>
+<td style="text-align:right;">
+-0.4021118
+</td>
+<td style="text-align:right;">
+-0.8604247
+</td>
+<td style="text-align:right;">
+-0.6648978
+</td>
+<td style="text-align:right;">
+-0.6082902
+</td>
+<td style="text-align:right;">
+-0.1742713
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p></br></p>
+<p>In order to demonstrate prioritized inference in Section <a href="phosphoproteomics-data.html#phosphoproteomics-data">2.2</a>, we need to save the row names of this cross-tab.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="global-proteomics-data.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save protein names</span></span>
+<span id="cb30-2"><a href="global-proteomics-data.html#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(<span class="fu">rownames</span>(crosstab), <span class="at">file =</span> <span class="st">&quot;data/3442_global_protein_names.rds&quot;</span>)</span></code></pre></div>
+<p>We should save the cross-tab as well. To do so, we need to convert the row names to a column called <code>protein</code>.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="global-proteomics-data.html#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify cross-tab for saving</span></span>
+<span id="cb31-2"><a href="global-proteomics-data.html#cb31-2" aria-hidden="true" tabindex="-1"></a>crosstab <span class="ot">&lt;-</span> crosstab <span class="sc">%&gt;%</span> </span>
+<span id="cb31-3"><a href="global-proteomics-data.html#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb31-4"><a href="global-proteomics-data.html#cb31-4" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(<span class="st">&quot;protein&quot;</span>)</span>
+<span id="cb31-5"><a href="global-proteomics-data.html#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="global-proteomics-data.html#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Save cross-tab</span></span>
+<span id="cb31-7"><a href="global-proteomics-data.html#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(crosstab, <span class="at">file =</span> <span class="st">&quot;data/global_quant_crosstab.txt&quot;</span>,</span>
+<span id="cb31-8"><a href="global-proteomics-data.html#cb31-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="isobaric-quantification-pipelines.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="phosphoproteomics-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

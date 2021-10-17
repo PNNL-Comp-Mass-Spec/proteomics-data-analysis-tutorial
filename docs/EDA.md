@@ -1,6 +1,9 @@
 # Exploratory Data Analysis
 
+<!---
+TODO:
 * What is exploratory data analysis? Explain.
+--->
 
 
 
@@ -19,7 +22,7 @@ data(cptac_oca)
 ```
 
 
-## Number of Features Identified in Each Sample
+## Count Features in Samples
 
 To count the number of features identified in each sample, we use `colSums` to tally the number of entries that are not `NA`.
 
@@ -115,11 +118,15 @@ ggplot(plot_data) +
 While outliers in a boxplot appear as points beyond the whiskers, outliers in density plots will appear as small bumps in the tails of the distribution.
 While there are no outliers, in this case, we can see that there are two peaks where the number of identified proteins are concentrated. This is not something that could be captured with a boxplot, so it is useful to try different plot types.
 
+
 ## Estimate Blood Contamination
 
+<!---
+TODO:
 * What are the major blood proteins?
 
 * Hemoglobin alpha, beta, delta, gamma 1; fibrinogen alpha, beta, gamma; albumin, spectrin, 
+--->
 
 
 ```r
@@ -134,7 +141,6 @@ m1$blood_contamination <-
   apply(exprs(m1)[grepl(blood_proteins, featureNames(m1)), ],
         2, mean, na.rm = TRUE)
 ```
-
 
 
 ## PCA

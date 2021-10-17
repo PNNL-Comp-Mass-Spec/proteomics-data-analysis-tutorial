@@ -5,3 +5,4 @@
 01-intro.Rmd
 .Rbuildignore
 proteomics-data-analysis-tutorial.Rproj
+.Rcache

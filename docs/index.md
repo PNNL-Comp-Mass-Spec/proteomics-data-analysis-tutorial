@@ -1,7 +1,7 @@
 --- 
-title: "A Tutorial for Proteomics Data Analysis with R/Bioconductor"
+title: "Proteomics Data Analysis in R/Bioconductor"
 author: "Tyler Sagendorf"
-date: "October 12, 2021"
+date: "October 17, 2021"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: 
@@ -13,7 +13,7 @@ nocite: '@*'
 description: "This is a comprehensive tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor."
 ---
 
-# Welcome!
+# Welcome! {-}
 
 This tutorial is very much a work-in progress. Even sections that appear finished are likely to be changed. I will update this when significant progress is made. Thank you for your patience.
 

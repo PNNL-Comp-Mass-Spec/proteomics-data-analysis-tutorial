@@ -1,28 +1,15 @@
-# Pathway Analysis {#patha}
+# Pathway Analysis {#pathway-analysis}
 
-<!---
-TODO
-* Explain why I am talking about genes instead of proteins.
-* Instead talk about DEA and then talk about making it gene-centric.
-* Create a better hook for this chapter. The transition feels too abrupt.
---->
-
-In the previous section (Section \@ref(DEA)), we covered analysis at the individual feature level (protein, peptide, phosphoprotein, etc.). While DEA is useful, it is not without its own set of shortcomings. For instance, there may be no features that pass the significance threshold after correcting for multiple hypothesis testing. Alternatively, there may be many features that are statistically significant, and interpreting this list can be tedious and "prone to investigator bias toward a hypothesis of interest" [@maleki_gene_2020]. Another issue is that single-feature analysis fails to detect subtle, yet coordinated changes in groups of related features [@subramanian_gene_2005]. 
+In Section \@ref(DEA), we covered analysis at the individual feature level (protein, peptide, phosphoprotein, etc.). While DEA is useful, it is not without its own set of shortcomings. For instance, there may be no features that pass the significance threshold after correcting for multiple hypothesis testing. Alternatively, there may be many features that are statistically significant, and interpreting this list can be tedious and "prone to investigator bias toward a hypothesis of interest" [@maleki_gene_2020]. Another issue is that single-feature analysis fails to detect subtle, yet coordinated changes in groups of related features [@subramanian_gene_2005]. 
 
 In order to address these, and other, issues, pathway analysis instead examines *a priori* defined **gene sets**—groups of genes that participate in the same biological pathway, share the same cellular location, etc. In this section, we will explore some common annotation databases, as well as two pathway analysis methods: Over-Representation Analysis (ORA) and Gene Set Enrichment Analysis (GSEA).
 
-<!---
-TODO:
-* Talk about "General principle of enrichment analysis"
-* Transition into databases before the methods
---->
 
-
-## Annotation Databases {#enrichdb}
+## Annotation Databases {#annotation-databases}
 
 In this section, we will explore some of the common annotation databases used for pathway analysis.
 
-### Gene Ontology
+### Gene Ontology {#gene-ontology}
 
 The Gene Ontology (GO) database is divided into three separate domains: Biological Process, Cellular Component, and Molecular Function (see the <a href="http://geneontology.org/docs/ontology-documentation/" title = "Gene Ontology overview">Gene Ontology overview</a> for more details regarding each domain). Each domain is structured as a directed acyclic graph (DAG) where nodes are terms and edges are the <a href="http://geneontology.org/docs/ontology-relations/#:~:text=Main%20relations%20used%20in%20GO" title = "Main relations used in GO">relations</a> between the terms (part of, is a, has part, regulates). Nodes can be connected to multiple child and parent nodes, where the group of genes annotated to a child node is a subset of those that are annotated to its parent node(s) [@noauthor_relations_2021; @goeman_multiple_2008].
 
@@ -37,7 +24,7 @@ library(org.Hs.eg.db)
 
 # GO DATA for measuring semantic similarity.
 # keytype is "ENTREZID" by default and 
-# information criteria is calculated (computeIC = TRUE)
+# information content is calculated (computeIC = TRUE)
 semData <- godata(OrgDb = "org.Hs.eg.db", ont = "BP")
 terms <- c("GO:0006119", "GO:0009060", "GO:0046034")
 # measure = "Rel" is the default for clusterProfiler::simplify
@@ -63,7 +50,7 @@ Now that we have the semantic similarities, we can remove redundant terms. `clus
 
 #### GO Subsets/Slims {-}
 
-Another way to handle the redundancy of GO terms is to use a <a href="http://geneontology.org/docs/go-subset-guide/" title = "Guide to GO subsets">GO slim</a>, which is a subset of more generic or research-relevant terms from the GO. GO slims can be <a href="http://geneontology.org/docs/download-ontology/#subsets" title = "Download the ontology">downloaded</a> or accessed with the `biomaRt` package as shown below.
+Another way to handle the redundancy of GO terms is to use a <a href="http://geneontology.org/docs/go-subset-guide/" title = "Guide to GO subsets">GO slim</a>, which is a subset of more general or research-relevant terms from the GO. GO slims can be <a href="http://geneontology.org/docs/download-ontology/#subsets" title = "Download the ontology">downloaded</a> or the `biomaRt` package can be used to access GO slim accessions.
 
 ```{r go-slim, message=FALSE}
 ## Create human GO slim
@@ -132,9 +119,11 @@ Over-Representation Analysis (ORA) is used to determine which *a priori* defined
 
 For each gene set, an enrichment p-value is calculated using the Binomial distribution, Hypergeometric distribution, the Fisher exact test, or the Chi-square test. Although this list is not all-encompassing, these are the most popular statistical methods [@huang_bioinformatics_2009]. Below is the formula for calculating the enrichment p-value for a particular gene set using the Hypergeometric distribution.
 
+<div class="math">
 \[
 P(X\geq x) = 1 - P(X \leq x-1) = 1 - \sum\limits_{i=0}^{x-1}\frac{\hphantom{}{M \choose i }{N - M \choose n-i}}{N \choose n}
 \]
+</div>
 
 In this equation, $N$ is the number of background genes, $n$ is the number of "interesting" (i.e. statistically-significant) genes, $M$ is the number of genes that are annotated to a particular gene set $S$, and $x$ is the number of "interesting" genes that are annotated to $S$. The numerator of the sum is the number of samples of $n$ genes that can be taken from a population of $N$ genes where exactly $i$ of the genes are annotated to $S$ and $n-i$ are not annotated to $S$. The denominator of the sum is the total number of samples of size $n$ that can be taken from a population of size $N$.
 
@@ -154,7 +143,7 @@ After a p-value has been calculated for each of the applicable gene sets, a mult
 
 ### Examples {#ora-examples}
 
-For these examples, we will show how to perform ORA with the GOstats, clusterProfiler, and ReactomePA packages. The databases that we will cover are Gene Ontology, Reactome, and Pfam. For details on these different annotation databases, please see Section \@ref(enrichdb). 
+For these examples, we will show how to perform ORA with the GOstats, clusterProfiler, and ReactomePA packages. The databases that we will cover are Gene Ontology, Reactome, and Pfam. For details on these different annotation databases, please see Section \@ref(annotation-databases). 
 
 ```{r ora-setup, message = FALSE}
 ## Setup
@@ -261,7 +250,7 @@ Notice that <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aer
 
 Instead of retaining terms based on adjusted p-value, we could ignore significance and instead retain either parent or child terms (`select_fun = min` and `select_fun = max`, respectively). The code to do so is provided <a href="https://github.com/YuLab-SMU/clusterProfiler/issues/372" title = "New feature: simplify to parent GO terms #372">here</a>.
 
-Another alternative would be to use a gene ID to <a href="http://geneontology.org/docs/go-subset-guide/" title = "Guide to GO subsets">GO slim</a> ID conversion table. See the Semantic Similarity subsection of Section \@ref(enrichdb) for more details.
+Another alternative would be to use a gene ID to <a href="http://geneontology.org/docs/go-subset-guide/" title = "Guide to GO subsets">GO slim</a> ID conversion table. See the Semantic Similarity subsection of Section \@ref(annotation-databases) for more details.
 
 Now, we will perform GO ORA with the GOstats package. We begin by creating an object of class `GOHyperGParams` and passing it to `hyperGTest` for calculation of Hypergeometric p-values. We do not filter by p-value, since adjusted p-values are not provided and we must calculate them ourselves.
 
@@ -595,6 +584,7 @@ To assess the statistical significance of each $ES(S)$, we permute the phenotype
 
 Let $x = \{x_1, ..., x_N : x_i > x_j \ \forall i < j\}$ be the vector of ranking metric values. Also let $S$ be a particular gene set of size $k$ and $NS = \sum\limits_{i \in S}|x_i|$. We define the value of the running sum at gene $i$ as
 
+<div class="math">
 \[
 r_i = \begin{cases}
 0 & \text{if } i = 0, \\
@@ -602,6 +592,7 @@ r_{i-1} + \frac{1}{NS}|x_i| & \text{if } 1 \leq i \leq N \text{ and } i \in S, \
 r_{i-1} - \frac{1}{N-k} & \text{if } 1 \leq i \leq N \text{ and } i \not\in S
 \end{cases}
 \]
+</div>
 
 $ES(S)$ is the largest (in terms of absolute value) element of $r_N$. This notation is a slightly modified version of what is presented in the paper by @korotkevich_fast_2016.
 
@@ -617,7 +608,7 @@ $ES(S)$ is the largest (in terms of absolute value) element of $r_N$. This notat
 ### Considerations
 
 1. GSEA is not influenced by an arbitrary cutoff for statistical significance. This is especially useful when only a few features pass this threshold after adjustment for multiple testing, and it also means that it does not depend on the choice of p-value adjustment.
-2. All genes in an experiment are allowed to "contribute to the enrichment analysis in differing degrees" [@huang_bioinformatics_2009]. This addresses the point brought up at the beginning of Section \@ref(patha) that biological changes may be the result of small changes in many related genes. GSEA allows for the detection of such changes.
+2. All genes in an experiment are allowed to "contribute to the enrichment analysis in differing degrees" [@huang_bioinformatics_2009]. This addresses the point brought up at the beginning of Section \@ref(pathway-analysis) that biological changes may be the result of small changes in many related genes. GSEA allows for the detection of such changes.
 3. The sign of the enrichment score tell us in which category a set of genes is primarily up- or down-regulated. For example, suppose we test the difference between the means of two groups for each gene using the <a href="https://doi.org/doi:10.18129/B9.bioc.limma" title = "limma: Linear Models for Microarray Data">limma</a> package. Since ranking metrics incorporate the direction of change, a positive enrichment score would mean that the majority of genes in that particular set are up-regulated in A relative to B/down-regulated in B relative to A.
 4. The choice of ranking metric is important.
 <!---
