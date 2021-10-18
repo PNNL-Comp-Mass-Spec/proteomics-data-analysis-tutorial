@@ -32,7 +32,7 @@ library(dplyr)
 
 ### Prepare MS/MS Identifications {#prepare-MS2-IDs-global}
 
-#### Read MS-GF+ Data {-}
+#### Read MS-GF+ Data 
 
 
 ```r
@@ -108,7 +108,7 @@ nrow(x_acc[x_acc$isDecoy == TRUE, ]) /
 
 Now that we have an `MSnID` object, we need to process it. 
 
-#### Correct Isotope Selection Error {-}
+#### Correct Isotope Selection Error 
 
 Occasionally, the instrument selects a peak with +1 or more C13 atoms, rather than the monoisotopic (lowest mass) peak. While MS-FG+ is still capable of correctly identifying those, the downstream calculations of mass measurement error need to be fixed. The `correct_peak_selection` method corrects for these mass measurement errors.
 
@@ -118,7 +118,7 @@ Occasionally, the instrument selects a peak with +1 or more C13 atoms, rather th
 msnid <- correct_peak_selection(msnid)
 ```
 
-#### Remove Contaminants {-}
+#### Remove Contaminants 
 
 Now, we will remove contaminants such as the pig trypsin that was used for protein digestion. We can use `grepl` to search for all accessions that contain "Contaminant".
 
@@ -162,7 +162,7 @@ show(msnid)
 ## #accessions: 128353 at 98 % FDR
 ```
 
-#### MS/MS ID Filter: Peptide Level {-}
+#### MS/MS ID Filter: Peptide Level 
 
 The next step is to use the `PepQValue` column from the MSnID object and the absolute deviation of the mass measurement error of parent ions (in ppm) to maximize the number of PSMs while ensuring that the empirical peptide-level FDR is at most 1%.
 
@@ -179,14 +179,14 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  48 
-## #PSMs: 464542 at 0.45 % FDR
-## #peptides: 96493 at 1 % FDR
+## #PSMs: 464482 at 0.45 % FDR
+## #peptides: 96486 at 1 % FDR
 ## #accessions: 27120 at 9.2 % FDR
 ```
 
 We can see that filtering drastically reduces the number of PSMs, and the empirical peptide-level FDR is now 1%. However, notice that the empirical protein-level FDR is still fairly high.
 
-#### MS/MS ID Filter: Protein Level {-}
+#### MS/MS ID Filter: Protein Level 
 
 A while ago, the proteomics field established the hard-and-fast two-peptides-per-protein rule. That is, we can not be confident if a protein is identified by the detection of only one peptide. This rule penalizes short proteins and doesn't consider that there are some very long proteins (e.g. Titin 3.8 MDa) that easily have more then two matching peptides even in reversed sequence. Thus, we propose to normalize the number of peptides per protein length and use that as a filtering criterion.
 
@@ -215,11 +215,11 @@ show(msnid)
 ## Working directory: "."
 ## #Spectrum Files:  48 
 ## #PSMs: 458097 at 0.16 % FDR
-## #peptides: 92024 at 0.32 % FDR
-## #accessions: 15620 at 0.98 % FDR
+## #peptides: 92036 at 0.32 % FDR
+## #accessions: 15630 at 1 % FDR
 ```
 
-#### Inference of Parsimonious Protein Set {-}
+#### Inference of Parsimonious Protein Set 
 
 The situation when a certain peptide sequence matches multiple proteins adds complication to the downstream quantitative analysis, as it is not clear which protein this peptide is originating from. There are common ways for dealing with this. One is to simply retain uniquely matching peptides and discard shared peptides (`unique_only = TRUE`). Alternatively (in case of `unique_only = FALSE`) assign the shared peptides to the proteins with the larger number of uniquely mapping peptides. If there is a choice between multiple proteins with equal numbers of uniquely mapping peptides, the shared peptides are assigned to the first protein according to alphanumeric order. This step could be done prior to filtering at the accession level, but the removal of an accession will completely remove its associated peptides.
 
@@ -239,9 +239,9 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  48 
-## #PSMs: 445003 at 0.15 % FDR
-## #peptides: 90466 at 0.27 % FDR
-## #accessions: 5246 at 1.1 % FDR
+## #PSMs: 445006 at 0.15 % FDR
+## #peptides: 90478 at 0.27 % FDR
+## #accessions: 5251 at 1.1 % FDR
 ```
 
 Notice that the protein-level FDR increased above the acceptable threshold, so we need to reapply the filter.
@@ -259,9 +259,9 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  48 
-## #PSMs: 444857 at 0.14 % FDR
-## #peptides: 90357 at 0.26 % FDR
-## #accessions: 5211 at 0.99 % FDR
+## #PSMs: 444850 at 0.14 % FDR
+## #peptides: 90384 at 0.25 % FDR
+## #accessions: 5222 at 0.99 % FDR
 ```
 
 Once all filtering is done, we can remove the decoy accessions. We use the `apply_filter` function again and only keep entries where `isDecoy` is `FALSE`.
@@ -277,50 +277,50 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  48 
-## #PSMs: 444216 at 0 % FDR
-## #peptides: 90126 at 0 % FDR
-## #accessions: 5160 at 0 % FDR
+## #PSMs: 444213 at 0 % FDR
+## #peptides: 90156 at 0 % FDR
+## #accessions: 5171 at 0 % FDR
 ```
 
 After processing, we are left with 318,448 PSMs, 81,048 peptides, and 5,143 proteins. The empirical FDRs are the same as before, but can not be calculated because we removed the decoys.
 
-<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; overflow-x: scroll; width:100%; "><table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">(\#tab:global-msnid-table)<left>First 10 rows of the processed MS-GF+ results.</left>
+<table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">(\#tab:global-msnid-table)<left>First 6 rows of the processed MS-GF+ results.</left>
 </caption>
  <thead>
   <tr>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Dataset </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> ResultID </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Scan </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> FragMethod </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> SpecIndex </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Charge </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> PrecursorMZ </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> DelM </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> DelM_PPM </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> MH </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> peptide </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Protein </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> NTT </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> DeNovoScore </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> MSGFScore </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> MSGFDB_SpecEValue </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Rank_MSGFDB_SpecEValue </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> EValue </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> QValue </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> PepQValue </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> IsotopeError </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> accession </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> calculatedMassToCharge </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> chargeState </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> experimentalMassToCharge </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> isDecoy </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> spectrumFile </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> spectrumID </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> pepSeq </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> msmsScore </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> absParentMassErrorPPM </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> peptides_per_1000aa </th>
+   <th style="text-align:left;"> Dataset </th>
+   <th style="text-align:right;"> ResultID </th>
+   <th style="text-align:right;"> Scan </th>
+   <th style="text-align:left;"> FragMethod </th>
+   <th style="text-align:right;"> SpecIndex </th>
+   <th style="text-align:right;"> Charge </th>
+   <th style="text-align:right;"> PrecursorMZ </th>
+   <th style="text-align:right;"> DelM </th>
+   <th style="text-align:right;"> DelM_PPM </th>
+   <th style="text-align:right;"> MH </th>
+   <th style="text-align:left;"> peptide </th>
+   <th style="text-align:left;"> Protein </th>
+   <th style="text-align:right;"> NTT </th>
+   <th style="text-align:right;"> DeNovoScore </th>
+   <th style="text-align:right;"> MSGFScore </th>
+   <th style="text-align:right;"> MSGFDB_SpecEValue </th>
+   <th style="text-align:right;"> Rank_MSGFDB_SpecEValue </th>
+   <th style="text-align:right;"> EValue </th>
+   <th style="text-align:right;"> QValue </th>
+   <th style="text-align:right;"> PepQValue </th>
+   <th style="text-align:right;"> IsotopeError </th>
+   <th style="text-align:left;"> accession </th>
+   <th style="text-align:right;"> calculatedMassToCharge </th>
+   <th style="text-align:right;"> chargeState </th>
+   <th style="text-align:right;"> experimentalMassToCharge </th>
+   <th style="text-align:left;"> isDecoy </th>
+   <th style="text-align:left;"> spectrumFile </th>
+   <th style="text-align:right;"> spectrumID </th>
+   <th style="text-align:left;"> pepSeq </th>
+   <th style="text-align:right;"> msmsScore </th>
+   <th style="text-align:right;"> absParentMassErrorPPM </th>
+   <th style="text-align:right;"> peptides_per_1000aa </th>
   </tr>
  </thead>
 <tbody>
@@ -528,153 +528,17 @@ After processing, we are left with 318,448 PSMs, 81,048 peptides, and 5,143 prot
    <td style="text-align:right;"> 0.106 </td>
    <td style="text-align:right;"> 580.844 </td>
   </tr>
-  <tr>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S2_08_12Oct17_Elm_AQ-17-09-02 </td>
-   <td style="text-align:right;"> 18244 </td>
-   <td style="text-align:right;"> 10302 </td>
-   <td style="text-align:left;"> HCD </td>
-   <td style="text-align:right;"> 3724 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 653.695 </td>
-   <td style="text-align:right;"> -0.003 </td>
-   <td style="text-align:right;"> -1.649 </td>
-   <td style="text-align:right;"> 1958.071 </td>
-   <td style="text-align:left;"> A.AAAAATEQQGSNGPVK.K </td>
-   <td style="text-align:left;"> NP_001177997.1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 106 </td>
-   <td style="text-align:right;"> 85 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> NP_001177997.1 </td>
-   <td style="text-align:right;"> 653.362 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 653.361 </td>
-   <td style="text-align:left;"> FALSE </td>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S2_08_12Oct17_Elm_AQ-17-09-02 </td>
-   <td style="text-align:right;"> 10302 </td>
-   <td style="text-align:left;"> AAAAATEQQGSNGPVK </td>
-   <td style="text-align:right;"> 3.432 </td>
-   <td style="text-align:right;"> 1.685 </td>
-   <td style="text-align:right;"> 62.500 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S1_16_12Oct17_Elm_AQ-17-09-02 </td>
-   <td style="text-align:right;"> 13019 </td>
-   <td style="text-align:right;"> 8116 </td>
-   <td style="text-align:left;"> HCD </td>
-   <td style="text-align:right;"> 3103 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 613.301 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 0.100 </td>
-   <td style="text-align:right;"> 1837.888 </td>
-   <td style="text-align:left;"> R.AAAADGEPLHNEEER.T </td>
-   <td style="text-align:left;"> NP_001099982.1 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 112 </td>
-   <td style="text-align:right;"> 108 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:left;"> NP_001099982.1 </td>
-   <td style="text-align:right;"> 613.301 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 613.301 </td>
-   <td style="text-align:left;"> FALSE </td>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S1_16_12Oct17_Elm_AQ-17-09-02 </td>
-   <td style="text-align:right;"> 8116 </td>
-   <td style="text-align:left;"> AAAADGEPLHNEEER </td>
-   <td style="text-align:right;"> Inf </td>
-   <td style="text-align:right;"> 0.105 </td>
-   <td style="text-align:right;"> 14.749 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S2_16_12Oct17_Elm_AQ-17-09-02 </td>
-   <td style="text-align:right;"> 18313 </td>
-   <td style="text-align:right;"> 8217 </td>
-   <td style="text-align:left;"> HCD </td>
-   <td style="text-align:right;"> 3907 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 613.302 </td>
-   <td style="text-align:right;"> 0.003 </td>
-   <td style="text-align:right;"> 1.692 </td>
-   <td style="text-align:right;"> 1837.888 </td>
-   <td style="text-align:left;"> R.AAAADGEPLHNEEER.T </td>
-   <td style="text-align:left;"> NP_001099982.1 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 90 </td>
-   <td style="text-align:right;"> 68 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 0.001 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:left;"> NP_001099982.1 </td>
-   <td style="text-align:right;"> 613.301 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 613.302 </td>
-   <td style="text-align:left;"> FALSE </td>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S2_16_12Oct17_Elm_AQ-17-09-02 </td>
-   <td style="text-align:right;"> 8217 </td>
-   <td style="text-align:left;"> AAAADGEPLHNEEER </td>
-   <td style="text-align:right;"> 3.000 </td>
-   <td style="text-align:right;"> 1.703 </td>
-   <td style="text-align:right;"> 14.749 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S1_24_12Oct17_Elm_AQ-17-09-02 </td>
-   <td style="text-align:right;"> 16441 </td>
-   <td style="text-align:right;"> 6833 </td>
-   <td style="text-align:left;"> HCD </td>
-   <td style="text-align:right;"> 3438 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 795.928 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 1590.849 </td>
-   <td style="text-align:left;"> A.AAAAEAESGGGGGK.K </td>
-   <td style="text-align:left;"> NP_001128630.1 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 230 </td>
-   <td style="text-align:right;"> 192 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:left;"> NP_001128630.1 </td>
-   <td style="text-align:right;"> 795.928 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 795.928 </td>
-   <td style="text-align:left;"> FALSE </td>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S1_24_12Oct17_Elm_AQ-17-09-02 </td>
-   <td style="text-align:right;"> 6833 </td>
-   <td style="text-align:left;"> AAAAEAESGGGGGK </td>
-   <td style="text-align:right;"> Inf </td>
-   <td style="text-align:right;"> 0.104 </td>
-   <td style="text-align:right;"> 580.844 </td>
-  </tr>
 </tbody>
-</table></div>
+</table>
 
 </br>
 
-Table \@ref(tab:global-msnid-table) shows the first 10 rows of the processed MS-GF+ output.
+Table \@ref(tab:global-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
 
 
 ### Prepare Reporter Ion Intensities {#reporter-ion-intensities}
 
-#### Read MASIC Output {-}
+#### Read MASIC Output 
 
 MASIC is a tool for extracting ion intensities. With proper parameter settings, it can be used for extracting TMT (or iTRAQ) reporter ion intensities. In addition, it reports a number of other helpful metrics. Notably, the interference score at the parent ion level and the signal-to-noise ratio (S/N) at the reporter ion level (computed by Thermo software). The interference score reflects the proportion of the ion population that was isolated for fragmentation that is due to the targeted ion. In other words, 1 - InterferenceScore is due to co-isolated species that have similar elution time and parent ion m/z.
 
@@ -690,73 +554,73 @@ masic_data <- read_masic_data(path_to_MASIC_results, interference_score = TRUE)
 
 Normally, this would display two progress bars in the console as the data is being fetched. However, the output was suppressed to save space.
 
-<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; overflow-x: scroll; width:100%; "><table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">(\#tab:global-masic-table)<left>First 10 rows of the MASIC data.</left>
+<table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">(\#tab:global-masic-table)<left>First 6 rows of the MASIC data.</left>
 </caption>
  <thead>
   <tr>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Dataset </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> ScanNumber </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Collision.Mode </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> ParentIonMZ </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> BasePeakIntensity </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> BasePeakMZ </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> ReporterIonIntensityMax </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_126.128 </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_127.125 </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_127.131 </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_128.128 </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_128.134 </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_129.131 </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_129.138 </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_130.135 </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_130.141 </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_131.138 </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Weighted.Avg.Pct.Intensity.Correction </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_126.128_SignalToNoise </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_127.125_SignalToNoise </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_127.131_SignalToNoise </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_128.128_SignalToNoise </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_128.134_SignalToNoise </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_129.131_SignalToNoise </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_129.138_SignalToNoise </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_130.135_SignalToNoise </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_130.141_SignalToNoise </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_131.138_SignalToNoise </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_126.128_Resolution </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_127.125_Resolution </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_127.131_Resolution </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_128.128_Resolution </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_128.134_Resolution </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_129.131_Resolution </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_129.138_Resolution </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_130.135_Resolution </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_130.141_Resolution </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_131.138_Resolution </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> ParentIonIndex </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> MZ </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> SurveyScanNumber </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> OptimalPeakApexScanNumber </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> PeakApexOverrideParentIonIndex </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> CustomSICPeak </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> PeakScanStart </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> PeakScanEnd </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> PeakScanMaxIntensity </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> PeakMaxIntensity </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> PeakSignalToNoiseRatio </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> FWHMInScans </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> PeakArea </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> ParentIonIntensity </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> PeakBaselineNoiseLevel </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> PeakBaselineNoiseStDev </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> PeakBaselinePointsUsed </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> StatMomentsArea </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> CenterOfMassScan </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> PeakStDev </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> PeakSkew </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> PeakKSStat </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> StatMomentsDataCountUsed </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> InterferenceScore </th>
+   <th style="text-align:left;"> Dataset </th>
+   <th style="text-align:right;"> ScanNumber </th>
+   <th style="text-align:left;"> Collision.Mode </th>
+   <th style="text-align:right;"> ParentIonMZ </th>
+   <th style="text-align:right;"> BasePeakIntensity </th>
+   <th style="text-align:right;"> BasePeakMZ </th>
+   <th style="text-align:right;"> ReporterIonIntensityMax </th>
+   <th style="text-align:right;"> Ion_126.128 </th>
+   <th style="text-align:right;"> Ion_127.125 </th>
+   <th style="text-align:right;"> Ion_127.131 </th>
+   <th style="text-align:right;"> Ion_128.128 </th>
+   <th style="text-align:right;"> Ion_128.134 </th>
+   <th style="text-align:right;"> Ion_129.131 </th>
+   <th style="text-align:right;"> Ion_129.138 </th>
+   <th style="text-align:right;"> Ion_130.135 </th>
+   <th style="text-align:right;"> Ion_130.141 </th>
+   <th style="text-align:right;"> Ion_131.138 </th>
+   <th style="text-align:right;"> Weighted.Avg.Pct.Intensity.Correction </th>
+   <th style="text-align:right;"> Ion_126.128_SignalToNoise </th>
+   <th style="text-align:right;"> Ion_127.125_SignalToNoise </th>
+   <th style="text-align:right;"> Ion_127.131_SignalToNoise </th>
+   <th style="text-align:right;"> Ion_128.128_SignalToNoise </th>
+   <th style="text-align:right;"> Ion_128.134_SignalToNoise </th>
+   <th style="text-align:right;"> Ion_129.131_SignalToNoise </th>
+   <th style="text-align:right;"> Ion_129.138_SignalToNoise </th>
+   <th style="text-align:right;"> Ion_130.135_SignalToNoise </th>
+   <th style="text-align:right;"> Ion_130.141_SignalToNoise </th>
+   <th style="text-align:right;"> Ion_131.138_SignalToNoise </th>
+   <th style="text-align:right;"> Ion_126.128_Resolution </th>
+   <th style="text-align:right;"> Ion_127.125_Resolution </th>
+   <th style="text-align:right;"> Ion_127.131_Resolution </th>
+   <th style="text-align:right;"> Ion_128.128_Resolution </th>
+   <th style="text-align:right;"> Ion_128.134_Resolution </th>
+   <th style="text-align:right;"> Ion_129.131_Resolution </th>
+   <th style="text-align:right;"> Ion_129.138_Resolution </th>
+   <th style="text-align:right;"> Ion_130.135_Resolution </th>
+   <th style="text-align:right;"> Ion_130.141_Resolution </th>
+   <th style="text-align:right;"> Ion_131.138_Resolution </th>
+   <th style="text-align:right;"> ParentIonIndex </th>
+   <th style="text-align:right;"> MZ </th>
+   <th style="text-align:right;"> SurveyScanNumber </th>
+   <th style="text-align:right;"> OptimalPeakApexScanNumber </th>
+   <th style="text-align:right;"> PeakApexOverrideParentIonIndex </th>
+   <th style="text-align:right;"> CustomSICPeak </th>
+   <th style="text-align:right;"> PeakScanStart </th>
+   <th style="text-align:right;"> PeakScanEnd </th>
+   <th style="text-align:right;"> PeakScanMaxIntensity </th>
+   <th style="text-align:right;"> PeakMaxIntensity </th>
+   <th style="text-align:right;"> PeakSignalToNoiseRatio </th>
+   <th style="text-align:right;"> FWHMInScans </th>
+   <th style="text-align:right;"> PeakArea </th>
+   <th style="text-align:right;"> ParentIonIntensity </th>
+   <th style="text-align:right;"> PeakBaselineNoiseLevel </th>
+   <th style="text-align:right;"> PeakBaselineNoiseStDev </th>
+   <th style="text-align:right;"> PeakBaselinePointsUsed </th>
+   <th style="text-align:right;"> StatMomentsArea </th>
+   <th style="text-align:right;"> CenterOfMassScan </th>
+   <th style="text-align:right;"> PeakStDev </th>
+   <th style="text-align:right;"> PeakSkew </th>
+   <th style="text-align:right;"> PeakKSStat </th>
+   <th style="text-align:right;"> StatMomentsDataCountUsed </th>
+   <th style="text-align:right;"> InterferenceScore </th>
   </tr>
  </thead>
 <tbody>
@@ -1144,271 +1008,15 @@ Normally, this would display two progress bars in the console as the data is bei
    <td style="text-align:right;"> 18 </td>
    <td style="text-align:right;"> 0.969 </td>
   </tr>
-  <tr>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02 </td>
-   <td style="text-align:right;"> 9 </td>
-   <td style="text-align:left;"> hcd </td>
-   <td style="text-align:right;"> 403.21 </td>
-   <td style="text-align:right;"> 40667.64 </td>
-   <td style="text-align:right;"> 403.251 </td>
-   <td style="text-align:right;"> 5860.96 </td>
-   <td style="text-align:right;"> 4991.79 </td>
-   <td style="text-align:right;"> 1274.12 </td>
-   <td style="text-align:right;"> 5860.96 </td>
-   <td style="text-align:right;"> 4699.99 </td>
-   <td style="text-align:right;"> 4906.33 </td>
-   <td style="text-align:right;"> 1782.18 </td>
-   <td style="text-align:right;"> 4580.83 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 5.29 </td>
-   <td style="text-align:right;"> 1.35 </td>
-   <td style="text-align:right;"> 6.21 </td>
-   <td style="text-align:right;"> 4.98 </td>
-   <td style="text-align:right;"> 5.19 </td>
-   <td style="text-align:right;"> 1.89 </td>
-   <td style="text-align:right;"> 4.85 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> 41600 </td>
-   <td style="text-align:right;"> 21900 </td>
-   <td style="text-align:right;"> 38604 </td>
-   <td style="text-align:right;"> 39000 </td>
-   <td style="text-align:right;"> 36800 </td>
-   <td style="text-align:right;"> 26700 </td>
-   <td style="text-align:right;"> 39200 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> 6 </td>
-   <td style="text-align:right;"> 403.214 </td>
-   <td style="text-align:right;"> 7 </td>
-   <td style="text-align:right;"> 12 </td>
-   <td style="text-align:right;"> -1 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 54 </td>
-   <td style="text-align:right;"> 12 </td>
-   <td style="text-align:right;"> 309628 </td>
-   <td style="text-align:right;"> 18.930 </td>
-   <td style="text-align:right;"> 25 </td>
-   <td style="text-align:right;"> 13671000 </td>
-   <td style="text-align:right;"> 232858 </td>
-   <td style="text-align:right;"> 16353 </td>
-   <td style="text-align:right;"> 50315 </td>
-   <td style="text-align:right;"> 3379 </td>
-   <td style="text-align:right;"> 12441000 </td>
-   <td style="text-align:right;"> 27 </td>
-   <td style="text-align:right;"> 14.90 </td>
-   <td style="text-align:right;"> 0.086 </td>
-   <td style="text-align:right;"> 0.489 </td>
-   <td style="text-align:right;"> 41 </td>
-   <td style="text-align:right;"> 0.618 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02 </td>
-   <td style="text-align:right;"> 10 </td>
-   <td style="text-align:left;"> hcd </td>
-   <td style="text-align:right;"> 476.26 </td>
-   <td style="text-align:right;"> 14753.41 </td>
-   <td style="text-align:right;"> 577.352 </td>
-   <td style="text-align:right;"> 6170.43 </td>
-   <td style="text-align:right;"> 2622.09 </td>
-   <td style="text-align:right;"> 1825.23 </td>
-   <td style="text-align:right;"> 2987.08 </td>
-   <td style="text-align:right;"> 1852.17 </td>
-   <td style="text-align:right;"> 2309.64 </td>
-   <td style="text-align:right;"> 1348.42 </td>
-   <td style="text-align:right;"> 6170.43 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 1735.76 </td>
-   <td style="text-align:right;"> 5115.81 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 2.61 </td>
-   <td style="text-align:right;"> 1.80 </td>
-   <td style="text-align:right;"> 2.95 </td>
-   <td style="text-align:right;"> 1.81 </td>
-   <td style="text-align:right;"> 2.26 </td>
-   <td style="text-align:right;"> 1.31 </td>
-   <td style="text-align:right;"> 5.99 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> 1.67 </td>
-   <td style="text-align:right;"> 4.93 </td>
-   <td style="text-align:right;"> 30500 </td>
-   <td style="text-align:right;"> 28200 </td>
-   <td style="text-align:right;"> 29400 </td>
-   <td style="text-align:right;"> 28800 </td>
-   <td style="text-align:right;"> 29800 </td>
-   <td style="text-align:right;"> 23300 </td>
-   <td style="text-align:right;"> 39004 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> 31200 </td>
-   <td style="text-align:right;"> 39200 </td>
-   <td style="text-align:right;"> 7 </td>
-   <td style="text-align:right;"> 476.262 </td>
-   <td style="text-align:right;"> 7 </td>
-   <td style="text-align:right;"> 12 </td>
-   <td style="text-align:right;"> -1 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 18 </td>
-   <td style="text-align:right;"> 12 </td>
-   <td style="text-align:right;"> 276349 </td>
-   <td style="text-align:right;"> 3.873 </td>
-   <td style="text-align:right;"> 4 </td>
-   <td style="text-align:right;"> 4751000 </td>
-   <td style="text-align:right;"> 277210 </td>
-   <td style="text-align:right;"> 71355 </td>
-   <td style="text-align:right;"> 309842 </td>
-   <td style="text-align:right;"> 3361 </td>
-   <td style="text-align:right;"> 3027500 </td>
-   <td style="text-align:right;"> 11 </td>
-   <td style="text-align:right;"> 5.27 </td>
-   <td style="text-align:right;"> -0.363 </td>
-   <td style="text-align:right;"> 0.376 </td>
-   <td style="text-align:right;"> 9 </td>
-   <td style="text-align:right;"> 0.616 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02 </td>
-   <td style="text-align:right;"> 13 </td>
-   <td style="text-align:left;"> hcd </td>
-   <td style="text-align:right;"> 455.24 </td>
-   <td style="text-align:right;"> 22331.15 </td>
-   <td style="text-align:right;"> 207.407 </td>
-   <td style="text-align:right;"> 1521.09 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 1521.09 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> 1.54 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> 31600 </td>
-   <td style="text-align:right;"> 8 </td>
-   <td style="text-align:right;"> 455.243 </td>
-   <td style="text-align:right;"> 12 </td>
-   <td style="text-align:right;"> 12 </td>
-   <td style="text-align:right;"> -1 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 19 </td>
-   <td style="text-align:right;"> 12 </td>
-   <td style="text-align:right;"> 330250 </td>
-   <td style="text-align:right;"> 0.043 </td>
-   <td style="text-align:right;"> 5 </td>
-   <td style="text-align:right;"> 4566900 </td>
-   <td style="text-align:right;"> 330250 </td>
-   <td style="text-align:right;"> 7747800 </td>
-   <td style="text-align:right;"> 56200000 </td>
-   <td style="text-align:right;"> 10118 </td>
-   <td style="text-align:right;"> 2203700 </td>
-   <td style="text-align:right;"> 12 </td>
-   <td style="text-align:right;"> 2.99 </td>
-   <td style="text-align:right;"> -0.545 </td>
-   <td style="text-align:right;"> 0.373 </td>
-   <td style="text-align:right;"> 5 </td>
-   <td style="text-align:right;"> 0.948 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02 </td>
-   <td style="text-align:right;"> 14 </td>
-   <td style="text-align:left;"> hcd </td>
-   <td style="text-align:right;"> 411.72 </td>
-   <td style="text-align:right;"> 15172.97 </td>
-   <td style="text-align:right;"> 126.128 </td>
-   <td style="text-align:right;"> 15172.97 </td>
-   <td style="text-align:right;"> 15172.97 </td>
-   <td style="text-align:right;"> 7654.57 </td>
-   <td style="text-align:right;"> 10487.60 </td>
-   <td style="text-align:right;"> 9163.71 </td>
-   <td style="text-align:right;"> 9064.43 </td>
-   <td style="text-align:right;"> 5550.98 </td>
-   <td style="text-align:right;"> 6100.78 </td>
-   <td style="text-align:right;"> 6920.02 </td>
-   <td style="text-align:right;"> 5498.97 </td>
-   <td style="text-align:right;"> 9974.23 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 16.25 </td>
-   <td style="text-align:right;"> 8.21 </td>
-   <td style="text-align:right;"> 11.25 </td>
-   <td style="text-align:right;"> 9.85 </td>
-   <td style="text-align:right;"> 9.75 </td>
-   <td style="text-align:right;"> 5.98 </td>
-   <td style="text-align:right;"> 6.57 </td>
-   <td style="text-align:right;"> 7.47 </td>
-   <td style="text-align:right;"> 5.93 </td>
-   <td style="text-align:right;"> 10.83 </td>
-   <td style="text-align:right;"> 41906 </td>
-   <td style="text-align:right;"> 38300 </td>
-   <td style="text-align:right;"> 41200 </td>
-   <td style="text-align:right;"> 39900 </td>
-   <td style="text-align:right;"> 40500 </td>
-   <td style="text-align:right;"> 38800 </td>
-   <td style="text-align:right;"> 39600 </td>
-   <td style="text-align:right;"> 38600 </td>
-   <td style="text-align:right;"> 41800 </td>
-   <td style="text-align:right;"> 39002 </td>
-   <td style="text-align:right;"> 9 </td>
-   <td style="text-align:right;"> 411.719 </td>
-   <td style="text-align:right;"> 12 </td>
-   <td style="text-align:right;"> 34 </td>
-   <td style="text-align:right;"> -1 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 39 </td>
-   <td style="text-align:right;"> 34 </td>
-   <td style="text-align:right;"> 344633 </td>
-   <td style="text-align:right;"> 0.004 </td>
-   <td style="text-align:right;"> 15 </td>
-   <td style="text-align:right;"> 10577000 </td>
-   <td style="text-align:right;"> 257141 </td>
-   <td style="text-align:right;"> 86211000 </td>
-   <td style="text-align:right;"> 507000000 </td>
-   <td style="text-align:right;"> 9997 </td>
-   <td style="text-align:right;"> 1705500 </td>
-   <td style="text-align:right;"> 34 </td>
-   <td style="text-align:right;"> 1.93 </td>
-   <td style="text-align:right;"> -0.722 </td>
-   <td style="text-align:right;"> 0.397 </td>
-   <td style="text-align:right;"> 5 </td>
-   <td style="text-align:right;"> 1.000 </td>
-  </tr>
 </tbody>
-</table></div>
+</table>
 
 </br>
 
-Table \@ref(tab:global-masic-table) shows the first 10 rows of `masic_data`.
+Table \@ref(tab:global-masic-table) shows the first 6 rows of `masic_data`.
 
 
-#### Filter MASIC Data {-}
+#### Filter MASIC Data 
 
 Currently, we recommend keeping entries where at least 50% of the ion population is due to the targeted ion (interference score $\geq$ 0.5) and not filtering by S/N.
 
@@ -1442,7 +1050,7 @@ references <- study_design$references
 ```
 
 
-#### Fractions {-}
+#### Fractions 
 
 The fractions table consists of two columns: `Dataset` and `PlexID`. The `Dataset` column contains all of the unique datasets from `msnid$Dataset` or `masic_data$Dataset`. The `PlexID` column contains the plex ID associated with each dataset, and is typically an "S" followed by a number ("S1", "S2", etc.). We can extract the plex ID from the datasets. In this case, the plex ID always comes after "_W_", so we can use a regular expression (regex) to capture it (the first argument of `gsub`). The regex below says to capture an "S" followed by a single digit that appears after "_W_" and before an underscore.
 
@@ -1453,7 +1061,7 @@ fractions <- data.frame(Dataset = unique(masic_data$Dataset)) %>%
   mutate(PlexID = gsub(".*_W_(S\\d{1})_.*", "\\1", Dataset))
 ```
 
-<table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">(\#tab:fractions-table)<left>First 10 rows of the fractions table.</left>
 </caption>
  <thead>
@@ -1511,7 +1119,7 @@ fractions <- data.frame(Dataset = unique(masic_data$Dataset)) %>%
 Table \@ref(tab:fractions-table) shows the first 10 rows of `fractions`.
 
 
-#### Samples {-}
+#### Samples 
 
 The samples table contains columns `PlexID`, `QuantBlock`, `ReporterName`, `ReporterAlias`, and `MeasurementName`. The plex ID must be the same as the plex ID in the `fractions` table. `ReporterName` is the reporter ion name ("126", "127N", "127C", etc.). `ReporterAlias` is the intermediate between `ReporterName` and `MeasurementName` and is used for defining the reference. `MeasurementName` determines the column names for the final cross-tab, and must be unique and begin with a letter. `MeasurementName` is easily constructed by prepending `PlexID` to the `ReporterName`. Finally, `QuantBlock` can be thought of as a way of defining sub-plex. In a typical TMT experiment, `QuantBlock` is always 1. In case of 5 pairwise comparisons within TMT10, there will be 5 QuantBlocks (1-5) with a reference for each `QuantBlock`.
 
@@ -1540,7 +1148,7 @@ samples <- data.frame(PlexID = rep(plexes, each = nrow(conv)),
   )
 ```
 
-<table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">(\#tab:samples-table)<left>First 10 rows of the samples table.</left>
 </caption>
  <thead>
@@ -1631,7 +1239,7 @@ samples <- data.frame(PlexID = rep(plexes, each = nrow(conv)),
 Table \@ref(tab:samples-table) shows the first 10 rows of `samples`.
 
 
-#### References {-}
+#### References 
 
 Reference can be a certain channel, average of multiple channels, or 1. The general form is an expression with `ReporterAlias` names as variables. It is evaluated for each `PlexID`/`QuantBlock` combination and applied to divide reporter ion intensities within corresponding `PlexID`/`QuantBlock`.
 
@@ -1645,7 +1253,7 @@ references <- samples %>%
   select(PlexID, Reference = ReporterAlias, QuantBlock)
 ```
 
-<table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">(\#tab:references-table)<left>References table.</left>
 </caption>
  <thead>
@@ -1720,30 +1328,30 @@ crosstab <- create_crosstab(msnid, masic_data,
                             fractions, samples, references)
 ```
 
-<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; overflow-x: scroll; width:100%; "><table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">(\#tab:unnamed-chunk-21)<left>First 10 rows of the global quantitative cross-tab.</left>
+<table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">(\#tab:unnamed-chunk-21)<left>First 6 rows of the global quantitative cross-tab.</left>
 </caption>
  <thead>
   <tr>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">   </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_126 </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_127C </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_127N </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_128C </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_128N </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_129C </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_129N </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_130C </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_130N </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_126 </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_127C </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_127N </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_128C </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_128N </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_129C </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_129N </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_130C </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_130N </th>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> S1_126 </th>
+   <th style="text-align:right;"> S1_127C </th>
+   <th style="text-align:right;"> S1_127N </th>
+   <th style="text-align:right;"> S1_128C </th>
+   <th style="text-align:right;"> S1_128N </th>
+   <th style="text-align:right;"> S1_129C </th>
+   <th style="text-align:right;"> S1_129N </th>
+   <th style="text-align:right;"> S1_130C </th>
+   <th style="text-align:right;"> S1_130N </th>
+   <th style="text-align:right;"> S2_126 </th>
+   <th style="text-align:right;"> S2_127C </th>
+   <th style="text-align:right;"> S2_127N </th>
+   <th style="text-align:right;"> S2_128C </th>
+   <th style="text-align:right;"> S2_128N </th>
+   <th style="text-align:right;"> S2_129C </th>
+   <th style="text-align:right;"> S2_129N </th>
+   <th style="text-align:right;"> S2_130C </th>
+   <th style="text-align:right;"> S2_130N </th>
   </tr>
  </thead>
 <tbody>
@@ -1873,92 +1481,8 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> -0.6675429 </td>
    <td style="text-align:right;"> -0.3959923 </td>
   </tr>
-  <tr>
-   <td style="text-align:left;"> AP_004900.1 </td>
-   <td style="text-align:right;"> -0.3806966 </td>
-   <td style="text-align:right;"> -0.3441177 </td>
-   <td style="text-align:right;"> -0.5883203 </td>
-   <td style="text-align:right;"> -0.0902205 </td>
-   <td style="text-align:right;"> -0.8263700 </td>
-   <td style="text-align:right;"> -0.7060111 </td>
-   <td style="text-align:right;"> -1.0978191 </td>
-   <td style="text-align:right;"> -0.8570849 </td>
-   <td style="text-align:right;"> -1.0769673 </td>
-   <td style="text-align:right;"> -0.1566909 </td>
-   <td style="text-align:right;"> -0.2565750 </td>
-   <td style="text-align:right;"> -0.5707603 </td>
-   <td style="text-align:right;"> -0.5960161 </td>
-   <td style="text-align:right;"> -0.6380722 </td>
-   <td style="text-align:right;"> -0.5524057 </td>
-   <td style="text-align:right;"> -0.6422737 </td>
-   <td style="text-align:right;"> -0.5140577 </td>
-   <td style="text-align:right;"> -0.1386396 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> AP_004901.1 </td>
-   <td style="text-align:right;"> -0.2839471 </td>
-   <td style="text-align:right;"> -0.5758177 </td>
-   <td style="text-align:right;"> -0.0216835 </td>
-   <td style="text-align:right;"> -0.2468966 </td>
-   <td style="text-align:right;"> 0.3802436 </td>
-   <td style="text-align:right;"> -0.7852805 </td>
-   <td style="text-align:right;"> -1.2036962 </td>
-   <td style="text-align:right;"> -1.0623455 </td>
-   <td style="text-align:right;"> -1.3738888 </td>
-   <td style="text-align:right;"> 0.0884387 </td>
-   <td style="text-align:right;"> -0.5271134 </td>
-   <td style="text-align:right;"> -0.3024421 </td>
-   <td style="text-align:right;"> -0.8704195 </td>
-   <td style="text-align:right;"> -0.5130666 </td>
-   <td style="text-align:right;"> -0.8245858 </td>
-   <td style="text-align:right;"> -0.3465590 </td>
-   <td style="text-align:right;"> -0.3041638 </td>
-   <td style="text-align:right;"> -0.0778906 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> NP_001000613.1 </td>
-   <td style="text-align:right;"> 0.0642942 </td>
-   <td style="text-align:right;"> -0.2044263 </td>
-   <td style="text-align:right;"> -0.4935404 </td>
-   <td style="text-align:right;"> 0.1065480 </td>
-   <td style="text-align:right;"> -0.3240158 </td>
-   <td style="text-align:right;"> 0.0233030 </td>
-   <td style="text-align:right;"> -0.7883731 </td>
-   <td style="text-align:right;"> -0.5831656 </td>
-   <td style="text-align:right;"> -1.1649507 </td>
-   <td style="text-align:right;"> -0.0969739 </td>
-   <td style="text-align:right;"> -0.2298260 </td>
-   <td style="text-align:right;"> -0.5051282 </td>
-   <td style="text-align:right;"> -0.9489927 </td>
-   <td style="text-align:right;"> -0.7860575 </td>
-   <td style="text-align:right;"> -0.4803511 </td>
-   <td style="text-align:right;"> -0.4824157 </td>
-   <td style="text-align:right;"> -0.8430505 </td>
-   <td style="text-align:right;"> -0.4220978 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> NP_001001512.2 </td>
-   <td style="text-align:right;"> -0.2155278 </td>
-   <td style="text-align:right;"> -0.1288367 </td>
-   <td style="text-align:right;"> -0.4900798 </td>
-   <td style="text-align:right;"> -0.2239173 </td>
-   <td style="text-align:right;"> -0.4303687 </td>
-   <td style="text-align:right;"> -0.2496957 </td>
-   <td style="text-align:right;"> -0.9165473 </td>
-   <td style="text-align:right;"> -0.4952781 </td>
-   <td style="text-align:right;"> -1.0160964 </td>
-   <td style="text-align:right;"> -0.1256882 </td>
-   <td style="text-align:right;"> -0.2742136 </td>
-   <td style="text-align:right;"> -0.2713873 </td>
-   <td style="text-align:right;"> -0.5914317 </td>
-   <td style="text-align:right;"> -0.4021118 </td>
-   <td style="text-align:right;"> -0.8604247 </td>
-   <td style="text-align:right;"> -0.6648978 </td>
-   <td style="text-align:right;"> -0.6082902 </td>
-   <td style="text-align:right;"> -0.1742713 </td>
-  </tr>
 </tbody>
-</table></div>
+</table>
 
 </br>
 
@@ -2001,7 +1525,7 @@ library(dplyr) # %>%
 
 ### Prepare MS/MS Identifications {#prepare-MS2-IDs-phospho}
 
-#### Read MS-GF+ Output {-}
+#### Read MS-GF+ Output 
 
 
 ```r
@@ -2025,7 +1549,7 @@ show(msnid)
 ```
 
 
-#### Remove Non-Phosphorylated Peptides {-}
+#### Remove Non-Phosphorylated Peptides 
 
 In this case, the phosphorylation of an amino acid is marked by a `*` appearing after the amino acid. We will not consider unmodified peptides, so we can filter them out. The `*` is a special character that must be escaped with backslashes, and the backslashes must also be escaped.
 
@@ -2047,7 +1571,7 @@ show(msnid)
 ```
 
 
-#### Correct Isotope Selection Error {-}
+#### Correct Isotope Selection Error 
 
 
 ```r
@@ -2056,7 +1580,7 @@ msnid <- correct_peak_selection(msnid)
 ```
 
 
-#### Remove Contaminants {-}
+#### Remove Contaminants 
 
 
 ```r
@@ -2075,7 +1599,7 @@ show(msnid)
 ```
 
 
-#### AScore {-}
+#### AScore 
 
 Phospho datasets involve AScore jobs for improving phosphosite localization. There should be one AScore job per data package. The fetched object is a data.frame that links datasets, scans and original PTM localization to newly suggested locations. Importantly, it contains `AScore` column that signifies the confidence of PTM assignment. AScore > 17 is considered confident.
 
@@ -2101,7 +1625,7 @@ show(msnid)
 ```
 
 
-#### MS/MS ID Filter: Peptide Level {-}
+#### MS/MS ID Filter: Peptide Level 
 
 
 ```r
@@ -2121,7 +1645,7 @@ show(msnid)
 ## #accessions: 16090 at 4.7 % FDR
 ```
 
-#### MS/MS ID Filter: Protein Level {-}
+#### MS/MS ID Filter: Protein Level 
 
 
 ```r
@@ -2142,12 +1666,12 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  23 
-## #PSMs: 72471 at 0.12 % FDR
-## #peptides: 21261 at 0.25 % FDR
-## #accessions: 9413 at 0.95 % FDR
+## #PSMs: 72481 at 0.12 % FDR
+## #peptides: 21266 at 0.26 % FDR
+## #accessions: 9424 at 0.98 % FDR
 ```
 
-#### Inference of Parsimonious Protein Set {-}
+#### Inference of Parsimonious Protein Set 
 
 <!---
 TODO:
@@ -2168,9 +1692,9 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  23 
-## #PSMs: 72471 at 0.12 % FDR
-## #peptides: 21261 at 0.25 % FDR
-## #accessions: 2890 at 1.6 % FDR
+## #PSMs: 72481 at 0.12 % FDR
+## #peptides: 21266 at 0.26 % FDR
+## #accessions: 2895 at 1.6 % FDR
 ```
 
 Notice that the protein-level FDR increased above the acceptable threshold, so we need to reapply the filter.
@@ -2188,9 +1712,9 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  23 
-## #PSMs: 70359 at 0.075 % FDR
-## #peptides: 20127 at 0.15 % FDR
-## #accessions: 2356 at 0.99 % FDR
+## #PSMs: 70340 at 0.075 % FDR
+## #peptides: 20117 at 0.15 % FDR
+## #accessions: 2351 at 0.99 % FDR
 ```
 
 
@@ -2204,12 +1728,12 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  23 
-## #PSMs: 70306 at 0 % FDR
-## #peptides: 20096 at 0 % FDR
-## #accessions: 2333 at 0 % FDR
+## #PSMs: 70287 at 0 % FDR
+## #peptides: 20086 at 0 % FDR
+## #accessions: 2328 at 0 % FDR
 ```
 
-#### Map Sites to Protein Sequences {-}
+#### Map Sites to Protein Sequences 
 
 Prepare FASTA to make sure entry names in FASTA file match MSnID accessions. The plan is to make this conversion automatic. `map_mod_sites` creates number of columns describing mapping of the site/s onto the protein sequences. The most important for the user is `SiteID`.
 
@@ -2258,57 +1782,57 @@ msnid <- map_mod_sites(object = msnid, fasta = fst,
                        site_delimiter = "lower")
 ```
 
-<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; overflow-x: scroll; width:100%; "><table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">(\#tab:phospho-msnid-table)<left>First 10 rows of the processed MS-GF+ results.</left>
+<table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">(\#tab:phospho-msnid-table)<left>First 6 rows of the processed MS-GF+ results.</left>
 </caption>
  <thead>
   <tr>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Dataset </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> ResultID </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Scan </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> FragMethod </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> SpecIndex </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Charge </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> PrecursorMZ </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> DelM </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> DelM_PPM </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> MH </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> OriginalPeptide </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Protein </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> NTT </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> DeNovoScore </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> MSGFScore </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> MSGFDB_SpecEValue </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Rank_MSGFDB_SpecEValue </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> EValue </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> QValue </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> PepQValue </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> IsotopeError </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> accession </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> calculatedMassToCharge </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> chargeState </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> experimentalMassToCharge </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> isDecoy </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> spectrumFile </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> spectrumID </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> pepSeq </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> peptide </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> maxAScore </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> msmsScore </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> absParentMassErrorPPM </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> peptides_per_1000aa </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> First_AA </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Last_AA </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> First_AA_First </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Last_AA_First </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> ProtLen </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> ModShift </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> ModAAs </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> SiteLoc </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Site </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> SiteCollapsed </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> SiteCollapsedFirst </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> SiteID </th>
+   <th style="text-align:left;"> Dataset </th>
+   <th style="text-align:right;"> ResultID </th>
+   <th style="text-align:right;"> Scan </th>
+   <th style="text-align:left;"> FragMethod </th>
+   <th style="text-align:right;"> SpecIndex </th>
+   <th style="text-align:right;"> Charge </th>
+   <th style="text-align:right;"> PrecursorMZ </th>
+   <th style="text-align:right;"> DelM </th>
+   <th style="text-align:right;"> DelM_PPM </th>
+   <th style="text-align:right;"> MH </th>
+   <th style="text-align:left;"> OriginalPeptide </th>
+   <th style="text-align:left;"> Protein </th>
+   <th style="text-align:right;"> NTT </th>
+   <th style="text-align:right;"> DeNovoScore </th>
+   <th style="text-align:right;"> MSGFScore </th>
+   <th style="text-align:right;"> MSGFDB_SpecEValue </th>
+   <th style="text-align:right;"> Rank_MSGFDB_SpecEValue </th>
+   <th style="text-align:right;"> EValue </th>
+   <th style="text-align:right;"> QValue </th>
+   <th style="text-align:right;"> PepQValue </th>
+   <th style="text-align:right;"> IsotopeError </th>
+   <th style="text-align:left;"> accession </th>
+   <th style="text-align:right;"> calculatedMassToCharge </th>
+   <th style="text-align:right;"> chargeState </th>
+   <th style="text-align:right;"> experimentalMassToCharge </th>
+   <th style="text-align:left;"> isDecoy </th>
+   <th style="text-align:left;"> spectrumFile </th>
+   <th style="text-align:right;"> spectrumID </th>
+   <th style="text-align:left;"> pepSeq </th>
+   <th style="text-align:left;"> peptide </th>
+   <th style="text-align:right;"> maxAScore </th>
+   <th style="text-align:right;"> msmsScore </th>
+   <th style="text-align:right;"> absParentMassErrorPPM </th>
+   <th style="text-align:right;"> peptides_per_1000aa </th>
+   <th style="text-align:left;"> First_AA </th>
+   <th style="text-align:left;"> Last_AA </th>
+   <th style="text-align:right;"> First_AA_First </th>
+   <th style="text-align:right;"> Last_AA_First </th>
+   <th style="text-align:right;"> ProtLen </th>
+   <th style="text-align:left;"> ModShift </th>
+   <th style="text-align:left;"> ModAAs </th>
+   <th style="text-align:left;"> SiteLoc </th>
+   <th style="text-align:left;"> Site </th>
+   <th style="text-align:left;"> SiteCollapsed </th>
+   <th style="text-align:left;"> SiteCollapsedFirst </th>
+   <th style="text-align:left;"> SiteID </th>
   </tr>
  </thead>
 <tbody>
@@ -2330,9 +1854,9 @@ msnid <- map_mod_sites(object = msnid, fasta = fst,
    <td style="text-align:right;"> 58 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 0.000 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 2 </td>
    <td style="text-align:left;"> NP_001071138.1 </td>
    <td style="text-align:right;"> 1044.454 </td>
@@ -2378,9 +1902,9 @@ msnid <- map_mod_sites(object = msnid, fasta = fst,
    <td style="text-align:right;"> 129 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 0.000 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:left;"> XP_006232986.1 </td>
    <td style="text-align:right;"> 952.142 </td>
@@ -2426,9 +1950,9 @@ msnid <- map_mod_sites(object = msnid, fasta = fst,
    <td style="text-align:right;"> 81 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 0.000 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:left;"> XP_006232986.1 </td>
    <td style="text-align:right;"> 714.358 </td>
@@ -2474,9 +1998,9 @@ msnid <- map_mod_sites(object = msnid, fasta = fst,
    <td style="text-align:right;"> 104 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 0.000 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 1 </td>
    <td style="text-align:left;"> XP_006232986.1 </td>
    <td style="text-align:right;"> 714.358 </td>
@@ -2522,9 +2046,9 @@ msnid <- map_mod_sites(object = msnid, fasta = fst,
    <td style="text-align:right;"> 114 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 0.000 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 2 </td>
    <td style="text-align:left;"> NP_112621.1 </td>
    <td style="text-align:right;"> 799.900 </td>
@@ -2570,9 +2094,9 @@ msnid <- map_mod_sites(object = msnid, fasta = fst,
    <td style="text-align:right;"> 94 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 0.000 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 1 </td>
    <td style="text-align:left;"> NP_112621.1 </td>
    <td style="text-align:right;"> 1066.197 </td>
@@ -2600,209 +2124,17 @@ msnid <- map_mod_sites(object = msnid, fasta = fst,
    <td style="text-align:left;"> T253 </td>
    <td style="text-align:left;"> NP_112621.1-T253t </td>
   </tr>
-  <tr>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_P_S1_09_DIL_28Oct17_Elm_AQ-17-10-03 </td>
-   <td style="text-align:right;"> 4625 </td>
-   <td style="text-align:right;"> 20810 </td>
-   <td style="text-align:left;"> HCD </td>
-   <td style="text-align:right;"> 736 </td>
-   <td style="text-align:right;"> 4 </td>
-   <td style="text-align:right;"> 800.150 </td>
-   <td style="text-align:right;"> -0.002 </td>
-   <td style="text-align:right;"> -0.743 </td>
-   <td style="text-align:right;"> 3196.577 </td>
-   <td style="text-align:left;"> R.AAAASAAEAGIATPGT\*EGERDSDDALLK.M </td>
-   <td style="text-align:left;"> NP_112621.1 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 156 </td>
-   <td style="text-align:right;"> 93 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> NP_112621.1 </td>
-   <td style="text-align:right;"> 799.900 </td>
-   <td style="text-align:right;"> 4 </td>
-   <td style="text-align:right;"> 799.899 </td>
-   <td style="text-align:left;"> FALSE </td>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_P_S1_09_DIL_28Oct17_Elm_AQ-17-10-03 </td>
-   <td style="text-align:right;"> 20810 </td>
-   <td style="text-align:left;"> AAAASAAEAGIATPGTEGERDSDDALLK </td>
-   <td style="text-align:left;"> R.AAAASAAEAGIATPGTEGERDS\*DDALLK.M </td>
-   <td style="text-align:right;"> 5.771 </td>
-   <td style="text-align:right;"> Inf </td>
-   <td style="text-align:right;"> 0.712 </td>
-   <td style="text-align:right;"> 10.526 </td>
-   <td style="text-align:left;"> 238 </td>
-   <td style="text-align:left;"> 265 </td>
-   <td style="text-align:right;"> 238 </td>
-   <td style="text-align:right;"> 265 </td>
-   <td style="text-align:right;"> 380 </td>
-   <td style="text-align:left;"> 21 </td>
-   <td style="text-align:left;"> S </td>
-   <td style="text-align:left;"> 259 </td>
-   <td style="text-align:left;"> S259 </td>
-   <td style="text-align:left;"> S259 </td>
-   <td style="text-align:left;"> S259 </td>
-   <td style="text-align:left;"> NP_112621.1-S259s </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_P_S1_09_DIL_28Oct17_Elm_AQ-17-10-03 </td>
-   <td style="text-align:right;"> 16605 </td>
-   <td style="text-align:right;"> 20839 </td>
-   <td style="text-align:left;"> HCD </td>
-   <td style="text-align:right;"> 2489 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 1066.530 </td>
-   <td style="text-align:right;"> -0.006 </td>
-   <td style="text-align:right;"> -1.812 </td>
-   <td style="text-align:right;"> 3196.577 </td>
-   <td style="text-align:left;"> R.AAAASAAEAGIATPGTEGERDS\*DDALLK.M </td>
-   <td style="text-align:left;"> NP_112621.1 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 159 </td>
-   <td style="text-align:right;"> 48 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.01 </td>
-   <td style="text-align:right;"> 0.005 </td>
-   <td style="text-align:right;"> 0.007 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> NP_112621.1 </td>
-   <td style="text-align:right;"> 1066.197 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 1066.195 </td>
-   <td style="text-align:left;"> FALSE </td>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_P_S1_09_DIL_28Oct17_Elm_AQ-17-10-03 </td>
-   <td style="text-align:right;"> 20839 </td>
-   <td style="text-align:left;"> AAAASAAEAGIATPGTEGERDSDDALLK </td>
-   <td style="text-align:left;"> R.AAAASAAEAGIATPGTEGERDS\*DDALLK.M </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 2.148 </td>
-   <td style="text-align:right;"> 1.673 </td>
-   <td style="text-align:right;"> 10.526 </td>
-   <td style="text-align:left;"> 238 </td>
-   <td style="text-align:left;"> 265 </td>
-   <td style="text-align:right;"> 238 </td>
-   <td style="text-align:right;"> 265 </td>
-   <td style="text-align:right;"> 380 </td>
-   <td style="text-align:left;"> 21 </td>
-   <td style="text-align:left;"> S </td>
-   <td style="text-align:left;"> 259 </td>
-   <td style="text-align:left;"> S259 </td>
-   <td style="text-align:left;"> S259 </td>
-   <td style="text-align:left;"> S259 </td>
-   <td style="text-align:left;"> NP_112621.1-S259s </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_P_S2_07_3Nov17_Elm_AQ-17-10-03 </td>
-   <td style="text-align:right;"> 433 </td>
-   <td style="text-align:right;"> 21424 </td>
-   <td style="text-align:left;"> HCD </td>
-   <td style="text-align:right;"> 54 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 1066.531 </td>
-   <td style="text-align:right;"> -0.004 </td>
-   <td style="text-align:right;"> -1.125 </td>
-   <td style="text-align:right;"> 3196.577 </td>
-   <td style="text-align:left;"> R.AAAASAAEAGIAT\*PGTEGERDSDDALLK.M </td>
-   <td style="text-align:left;"> NP_112621.1 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 241 </td>
-   <td style="text-align:right;"> 168 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> NP_112621.1 </td>
-   <td style="text-align:right;"> 1066.197 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 1066.196 </td>
-   <td style="text-align:left;"> FALSE </td>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_P_S2_07_3Nov17_Elm_AQ-17-10-03 </td>
-   <td style="text-align:right;"> 21424 </td>
-   <td style="text-align:left;"> AAAASAAEAGIATPGTEGERDSDDALLK </td>
-   <td style="text-align:left;"> R.AAAASAAEAGIAT\*PGTEGERDSDDALLK.M </td>
-   <td style="text-align:right;"> 32.347 </td>
-   <td style="text-align:right;"> Inf </td>
-   <td style="text-align:right;"> 0.989 </td>
-   <td style="text-align:right;"> 10.526 </td>
-   <td style="text-align:left;"> 238 </td>
-   <td style="text-align:left;"> 265 </td>
-   <td style="text-align:right;"> 238 </td>
-   <td style="text-align:right;"> 265 </td>
-   <td style="text-align:right;"> 380 </td>
-   <td style="text-align:left;"> 12 </td>
-   <td style="text-align:left;"> T </td>
-   <td style="text-align:left;"> 250 </td>
-   <td style="text-align:left;"> T250 </td>
-   <td style="text-align:left;"> T250 </td>
-   <td style="text-align:left;"> T250 </td>
-   <td style="text-align:left;"> NP_112621.1-T250t </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_P_S2_07_3Nov17_Elm_AQ-17-10-03 </td>
-   <td style="text-align:right;"> 434 </td>
-   <td style="text-align:right;"> 21424 </td>
-   <td style="text-align:left;"> HCD </td>
-   <td style="text-align:right;"> 54 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 1066.531 </td>
-   <td style="text-align:right;"> -0.004 </td>
-   <td style="text-align:right;"> -1.125 </td>
-   <td style="text-align:right;"> 3196.577 </td>
-   <td style="text-align:left;"> R.AAAASAAEAGIATPGT\*EGERDSDDALLK.M </td>
-   <td style="text-align:left;"> NP_112621.1 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 241 </td>
-   <td style="text-align:right;"> 168 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0.00 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> NP_112621.1 </td>
-   <td style="text-align:right;"> 1066.197 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 1066.196 </td>
-   <td style="text-align:left;"> FALSE </td>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_P_S2_07_3Nov17_Elm_AQ-17-10-03 </td>
-   <td style="text-align:right;"> 21424 </td>
-   <td style="text-align:left;"> AAAASAAEAGIATPGTEGERDSDDALLK </td>
-   <td style="text-align:left;"> R.AAAASAAEAGIAT\*PGTEGERDSDDALLK.M </td>
-   <td style="text-align:right;"> 32.347 </td>
-   <td style="text-align:right;"> Inf </td>
-   <td style="text-align:right;"> 0.989 </td>
-   <td style="text-align:right;"> 10.526 </td>
-   <td style="text-align:left;"> 238 </td>
-   <td style="text-align:left;"> 265 </td>
-   <td style="text-align:right;"> 238 </td>
-   <td style="text-align:right;"> 265 </td>
-   <td style="text-align:right;"> 380 </td>
-   <td style="text-align:left;"> 12 </td>
-   <td style="text-align:left;"> T </td>
-   <td style="text-align:left;"> 250 </td>
-   <td style="text-align:left;"> T250 </td>
-   <td style="text-align:left;"> T250 </td>
-   <td style="text-align:left;"> T250 </td>
-   <td style="text-align:left;"> NP_112621.1-T250t </td>
-  </tr>
 </tbody>
-</table></div>
+</table>
 
 </br>
 
-Table \@ref(tab:phospho-msnid-table) shows the first 10 rows of the processed MS-GF+ output.
+Table \@ref(tab:phospho-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
 
 
 ### Prepare Reporter Ion Intensities {#phospho-reporter-ion-intensities}
 
-#### Read MASIC Output {-}
+#### Read MASIC Output 
 
 
 ```r
@@ -2812,7 +2144,7 @@ masic_data <- read_masic_data_from_DMS(data_package_num,
 ```
 
 
-#### Filter MASIC Data {-}
+#### Filter MASIC Data 
 
 
 ```r
@@ -2825,7 +2157,7 @@ masic_data <- filter_masic_data(masic_data,
 
 ### Create Study Design Tables
 
-#### Fractions {-}
+#### Fractions 
 
 
 ```r
@@ -2835,7 +2167,7 @@ fractions <- data.frame(Dataset = unique(masic_data$Dataset)) %>%
 ```
 
 
-#### Samples {-}
+#### Samples 
 
 
 ```r
@@ -2860,7 +2192,7 @@ samples <- data.frame(PlexID = rep(plexes, each = nrow(conv)),
   )
 ```
 
-#### References {-}
+#### References 
 
 
 ```r
@@ -2878,49 +2210,49 @@ references <- samples %>%
 
 ```r
 # Set aggregation level
-aggregation_level <- c("accession", "peptide")
+aggregation_level <- c("SiteID")
 # Create cross-tab
 crosstab <- create_crosstab(msnid, masic_data,
                             aggregation_level = aggregation_level,
                             fractions, samples, references)
 ```
 
-<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; overflow-x: scroll; width:100%; "><table class="table" style="font-size: 12px; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">(\#tab:unnamed-chunk-46)<left>First 10 rows of the phospho quantitative cross-tab.</left>
+<table class="table table-hover table-condensed" style="font-size: 12px; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">(\#tab:unnamed-chunk-46)<left>First 6 rows of the phospho quantitative cross-tab.</left>
 </caption>
  <thead>
   <tr>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">   </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_126 </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_127C </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_127N </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_128C </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_128N </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_129C </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_129N </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_130C </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S1_130N </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_126 </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_127C </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_127N </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_128C </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_128N </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_129C </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_129N </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_130C </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> S2_130N </th>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:right;"> S1_126 </th>
+   <th style="text-align:right;"> S1_127C </th>
+   <th style="text-align:right;"> S1_127N </th>
+   <th style="text-align:right;"> S1_128C </th>
+   <th style="text-align:right;"> S1_128N </th>
+   <th style="text-align:right;"> S1_129C </th>
+   <th style="text-align:right;"> S1_129N </th>
+   <th style="text-align:right;"> S1_130C </th>
+   <th style="text-align:right;"> S1_130N </th>
+   <th style="text-align:right;"> S2_126 </th>
+   <th style="text-align:right;"> S2_127C </th>
+   <th style="text-align:right;"> S2_127N </th>
+   <th style="text-align:right;"> S2_128C </th>
+   <th style="text-align:right;"> S2_128N </th>
+   <th style="text-align:right;"> S2_129C </th>
+   <th style="text-align:right;"> S2_129N </th>
+   <th style="text-align:right;"> S2_130C </th>
+   <th style="text-align:right;"> S2_130N </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> NP_001001512.2@\hphantom{}K.S\*SEPPPPPPVPEPTNAGK.R </td>
+   <td style="text-align:left;"> NP_001001512.2-S241s </td>
    <td style="text-align:right;"> -0.5441083 </td>
    <td style="text-align:right;"> -0.0291611 </td>
    <td style="text-align:right;"> -0.5540885 </td>
    <td style="text-align:right;"> -0.1812456 </td>
    <td style="text-align:right;"> -0.5675833 </td>
    <td style="text-align:right;"> -0.0427948 </td>
-   <td style="text-align:right;"> -0.8030560 </td>
+   <td style="text-align:right;"> -0.803056 </td>
    <td style="text-align:right;"> -0.5236890 </td>
    <td style="text-align:right;"> -1.0398773 </td>
    <td style="text-align:right;"> NA </td>
@@ -2934,14 +2266,14 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> NA </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> NP_001001512.2@\hphantom{}K.SS\*EPPPPPPVPEPTNAGK.R </td>
+   <td style="text-align:left;"> NP_001001512.2-S242s </td>
    <td style="text-align:right;"> -0.2806018 </td>
    <td style="text-align:right;"> -0.2939827 </td>
    <td style="text-align:right;"> -0.3923442 </td>
    <td style="text-align:right;"> -0.3242804 </td>
    <td style="text-align:right;"> -0.6512914 </td>
    <td style="text-align:right;"> -0.4914234 </td>
-   <td style="text-align:right;"> -1.2105927 </td>
+   <td style="text-align:right;"> -1.210593 </td>
    <td style="text-align:right;"> -0.6421375 </td>
    <td style="text-align:right;"> -0.8869142 </td>
    <td style="text-align:right;"> -0.3079991 </td>
@@ -2955,49 +2287,7 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> -0.3091972 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> NP_001001512.2@\hphantom{}K.TNSS\*PSVNTTASGVEDLNIIQVTIPDDDNER.L </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> -1.4611181 </td>
-   <td style="text-align:right;"> -2.2975481 </td>
-   <td style="text-align:right;"> -1.6828088 </td>
-   <td style="text-align:right;"> -2.3039510 </td>
-   <td style="text-align:right;"> -1.8632844 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> -1.5981389 </td>
-   <td style="text-align:right;"> -2.4732843 </td>
-   <td style="text-align:right;"> -0.4736739 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> NP_001001512.2@\hphantom{}K.TNSSPS\*VNTTASGVEDLNIIQVTIPDDDNER.L </td>
-   <td style="text-align:right;"> -1.2580276 </td>
-   <td style="text-align:right;"> -1.3182692 </td>
-   <td style="text-align:right;"> -2.1938861 </td>
-   <td style="text-align:right;"> -2.0017857 </td>
-   <td style="text-align:right;"> 0.0219220 </td>
-   <td style="text-align:right;"> -0.7086501 </td>
-   <td style="text-align:right;"> -1.6940153 </td>
-   <td style="text-align:right;"> -1.4681967 </td>
-   <td style="text-align:right;"> -1.5795032 </td>
-   <td style="text-align:right;"> 0.3139811 </td>
-   <td style="text-align:right;"> -0.6805752 </td>
-   <td style="text-align:right;"> -0.8132341 </td>
-   <td style="text-align:right;"> -1.7933771 </td>
-   <td style="text-align:right;"> 0.0127816 </td>
-   <td style="text-align:right;"> 0.2726023 </td>
-   <td style="text-align:right;"> 0.2266855 </td>
-   <td style="text-align:right;"> 0.5058189 </td>
-   <td style="text-align:right;"> 0.9332038 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> NP_001001512.2@\hphantom{}R.RPS\*TFGIPR.L </td>
+   <td style="text-align:left;"> NP_001001512.2-S699s </td>
    <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
@@ -3018,7 +2308,7 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> 0.2867235 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> NP_001001514.1@\hphantom{}K.ET\*RTSSES\*IVSVPASSTSGSPSR.V </td>
+   <td style="text-align:left;"> NP_001001512.2-S746s </td>
    <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
@@ -3028,102 +2318,60 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> -0.5242609 </td>
-   <td style="text-align:right;"> -0.2564000 </td>
-   <td style="text-align:right;"> -0.1703421 </td>
-   <td style="text-align:right;"> -0.8016035 </td>
-   <td style="text-align:right;"> -0.6177977 </td>
-   <td style="text-align:right;"> -1.8986707 </td>
-   <td style="text-align:right;"> -0.9217045 </td>
-   <td style="text-align:right;"> -1.1410773 </td>
-   <td style="text-align:right;"> -0.4219050 </td>
+   <td style="text-align:right;"> -1.4611181 </td>
+   <td style="text-align:right;"> -2.2975481 </td>
+   <td style="text-align:right;"> -1.6828088 </td>
+   <td style="text-align:right;"> -2.3039510 </td>
+   <td style="text-align:right;"> -1.8632844 </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> -1.5981389 </td>
+   <td style="text-align:right;"> -2.4732843 </td>
+   <td style="text-align:right;"> -0.4736739 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> NP_001001514.1@\hphantom{}K.ETRTSS\*ESIVSVPASSTSGSPSR.V </td>
-   <td style="text-align:right;"> -0.3952598 </td>
-   <td style="text-align:right;"> -0.3773814 </td>
-   <td style="text-align:right;"> -0.1113785 </td>
-   <td style="text-align:right;"> -0.2246094 </td>
-   <td style="text-align:right;"> -0.5676749 </td>
-   <td style="text-align:right;"> -0.7561756 </td>
-   <td style="text-align:right;"> -0.9173361 </td>
-   <td style="text-align:right;"> -1.0505509 </td>
-   <td style="text-align:right;"> -1.4130691 </td>
-   <td style="text-align:right;"> -0.2275133 </td>
-   <td style="text-align:right;"> -0.8394326 </td>
-   <td style="text-align:right;"> -0.3245755 </td>
-   <td style="text-align:right;"> -0.9394990 </td>
-   <td style="text-align:right;"> -0.5237369 </td>
-   <td style="text-align:right;"> -0.8749379 </td>
-   <td style="text-align:right;"> -0.7834843 </td>
-   <td style="text-align:right;"> -0.5268181 </td>
-   <td style="text-align:right;"> -0.2208240 </td>
+   <td style="text-align:left;"> NP_001001512.2-S748s </td>
+   <td style="text-align:right;"> -1.2580276 </td>
+   <td style="text-align:right;"> -1.3182692 </td>
+   <td style="text-align:right;"> -2.1938861 </td>
+   <td style="text-align:right;"> -2.0017857 </td>
+   <td style="text-align:right;"> 0.0219220 </td>
+   <td style="text-align:right;"> -0.7086501 </td>
+   <td style="text-align:right;"> -1.694015 </td>
+   <td style="text-align:right;"> -1.4681967 </td>
+   <td style="text-align:right;"> -1.5795032 </td>
+   <td style="text-align:right;"> 0.3139811 </td>
+   <td style="text-align:right;"> -0.6805752 </td>
+   <td style="text-align:right;"> -0.8132341 </td>
+   <td style="text-align:right;"> -1.7933771 </td>
+   <td style="text-align:right;"> 0.0127816 </td>
+   <td style="text-align:right;"> 0.2726023 </td>
+   <td style="text-align:right;"> 0.2266855 </td>
+   <td style="text-align:right;"> 0.5058189 </td>
+   <td style="text-align:right;"> 0.9332038 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> NP_001001514.1@\hphantom{}K.ETRTSSES\*IVS\*VPASSTSGSPSR.V </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> -0.1167323 </td>
-   <td style="text-align:right;"> 0.0249531 </td>
-   <td style="text-align:right;"> 0.1045728 </td>
-   <td style="text-align:right;"> -0.6020616 </td>
-   <td style="text-align:right;"> -0.1762188 </td>
-   <td style="text-align:right;"> -0.3440353 </td>
-   <td style="text-align:right;"> -0.2297419 </td>
-   <td style="text-align:right;"> 0.1989361 </td>
-   <td style="text-align:right;"> 0.4882626 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> NP_001001514.1@\hphantom{}K.GDADT\*RTNSPDLDSQS\*LSLSSGADQEPLQR.M </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> -0.0742108 </td>
-   <td style="text-align:right;"> -0.2566411 </td>
-   <td style="text-align:right;"> -0.4073881 </td>
-   <td style="text-align:right;"> -1.1553706 </td>
-   <td style="text-align:right;"> -0.7643052 </td>
-   <td style="text-align:right;"> -1.3815904 </td>
-   <td style="text-align:right;"> -1.3611955 </td>
-   <td style="text-align:right;"> -1.0650441 </td>
-   <td style="text-align:right;"> -0.0341310 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> NP_001001514.1@\hphantom{}K.GDADTRTNSPDLDS\*QS\*LSLSSGADQEPLQR.M </td>
-   <td style="text-align:right;"> -0.8822947 </td>
-   <td style="text-align:right;"> -0.7983921 </td>
-   <td style="text-align:right;"> -0.6040902 </td>
-   <td style="text-align:right;"> -1.0568789 </td>
-   <td style="text-align:right;"> -0.5751194 </td>
-   <td style="text-align:right;"> -0.4792532 </td>
-   <td style="text-align:right;"> -1.1417354 </td>
-   <td style="text-align:right;"> -0.9907350 </td>
-   <td style="text-align:right;"> -0.8330389 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
+   <td style="text-align:left;"> NP_001001514.1-S279s </td>
+   <td style="text-align:right;"> 0.0224073 </td>
+   <td style="text-align:right;"> -0.1412578 </td>
+   <td style="text-align:right;"> -0.4939068 </td>
+   <td style="text-align:right;"> -0.3322896 </td>
+   <td style="text-align:right;"> -0.6624270 </td>
+   <td style="text-align:right;"> 0.0686814 </td>
+   <td style="text-align:right;"> -0.711781 </td>
+   <td style="text-align:right;"> -1.0613940 </td>
+   <td style="text-align:right;"> -1.5813449 </td>
+   <td style="text-align:right;"> -0.1489704 </td>
+   <td style="text-align:right;"> -0.4580319 </td>
+   <td style="text-align:right;"> -0.5889714 </td>
+   <td style="text-align:right;"> -0.8708282 </td>
+   <td style="text-align:right;"> -0.5066630 </td>
+   <td style="text-align:right;"> -0.7469875 </td>
+   <td style="text-align:right;"> -0.3374105 </td>
+   <td style="text-align:right;"> -0.3842025 </td>
+   <td style="text-align:right;"> -0.1701473 </td>
   </tr>
 </tbody>
-</table></div>
+</table>
 
 </br>
 
@@ -3134,7 +2382,7 @@ We will save the cross-tab for later sections.
 # Modify cross-tab for saving
 crosstab <- crosstab %>% 
   as.data.frame() %>% 
-  tibble::rownames_to_column("phospho_peptide")
+  tibble::rownames_to_column("phosphosite")
 
 # Save cross-tab
 write.table(crosstab, file = "data/phospho_quant_crosstab.txt",

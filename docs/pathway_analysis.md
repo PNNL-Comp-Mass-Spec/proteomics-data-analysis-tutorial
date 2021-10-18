@@ -13,7 +13,7 @@ In this section, we will explore some of the common annotation databases used fo
 
 The Gene Ontology (GO) database is divided into three separate domains: Biological Process, Cellular Component, and Molecular Function (see the <a href="http://geneontology.org/docs/ontology-documentation/" title = "Gene Ontology overview">Gene Ontology overview</a> for more details regarding each domain). Each domain is structured as a directed acyclic graph (DAG) where nodes are terms and edges are the <a href="http://geneontology.org/docs/ontology-relations/#:~:text=Main%20relations%20used%20in%20GO" title = "Main relations used in GO">relations</a> between the terms (part of, is a, has part, regulates). Nodes can be connected to multiple child and parent nodes, where the group of genes annotated to a child node is a subset of those that are annotated to its parent node(s) [@noauthor_relations_2021; @goeman_multiple_2008].
 
-#### Semantic Similarity {-}
+#### Semantic Similarity 
 
 Due to the DAG structure of each domain, there is often redundancy in pathway analysis results. For example, suppose terms <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a>, <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a>, and  <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0046034" title = "ATP metabolic process">GO:0046034</a> are significantly over-represented biological processes. <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a> and  <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0046034" title = "ATP metabolic process">GO:0046034</a> are the parent terms of <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a>. Due to this relationship, the terms likely provide much of the same information, so the inclusion of all three terms in the output is unnecessary. In order to resolve this redundancy, we can calculate the **semantic similarity** between pairs of GO terms, which "assesses the likeness in meaning of two concepts" [@pesquita_semantic_2017]. Basically, if two terms are highly related, we can use some other criteria (such as adjusted p-value or level in the DAG) to retain only one of the terms. Below, we use the `GOSemSim` package to calculate the semantic similarity between the terms.
 
@@ -34,7 +34,7 @@ sim <- mgoSim(GO1 = terms, GO2 = terms, semData = semData,
               measure = "Rel", combine = NULL) 
 ```
 
-<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<table class="table table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>(\#tab:sem-sim-table)Semantic Similarity of select GO terms</caption>
  <thead>
   <tr>
@@ -74,7 +74,7 @@ We can see from Table \@ref(tab:sem-sim-table) that <a href="https://www.ebi.ac.
 Now that we have the semantic similarities, we can remove redundant terms. `clusterProfiler` has a function called `simplify` that will calculate semantic similarity and remove terms. By default, if there are two terms with a semantic similarity greater than 0.7, `simplify` retains the term with the lowest adjusted p-value. See <a href="https://guangchuangyu.github.io/2015/10/use-simplify-to-remove-redundancy-of-enriched-go-terms/" title = "use simplify to remove redundancy of enriched GO terms">this post</a> by Guangchuang Yu for more details on `clusterProfiler::simplify`.
 
 
-#### GO Subsets/Slims {-}
+#### GO Subsets/Slims 
 
 Another way to handle the redundancy of GO terms is to use a <a href="http://geneontology.org/docs/go-subset-guide/" title = "Guide to GO subsets">GO slim</a>, which is a subset of more general or research-relevant terms from the GO. GO slims can be <a href="http://geneontology.org/docs/download-ontology/#subsets" title = "Download the ontology">downloaded</a> or the `biomaRt` package can be used to access GO slim accessions.
 
@@ -183,9 +183,11 @@ In this equation, $N$ is the number of background genes, $n$ is the number of "i
 
 For example, suppose we have a list of 8000 genes, of which 400 are differentially expressed. Also suppose that 100 of the 8000 genes are annotated to a particular gene set $S$. Of these 100 genes, 20 are differentially expressed. The probability that 20 or more (up to 100) genes annotated to $S$ are differentially expressed by chance is given by
 
+<div class="math">
 \[
 P(X\geq 20) = 1 - P(X \leq 19) = 1-\sum \limits_{i=0}^{19}\frac{\hphantom{}{100 \choose i}{8000 - 100 \choose 400-i}}{8000 \choose 400} = 7.88 \times 10^{-8}
 \]
+</div>
 
 That is, it is extremely unlikely that 20 of the 100 genes from this set are significantly differentially expressed by chance (at least, prior to adjustment for multiple comparisons). The code to calculate this p-value is
 
@@ -226,7 +228,7 @@ It is important to note that the genes should be unique from the start. The term
 
 
 
-#### Gene Ontology {-}
+#### Gene Ontology 
 
 We will first use the clusterProfiler package to test which biological processes are over-represented in the set of interesting genes. For this example, we will only consider gene sets of size 20 to 500. In order to test either molecular functions, cellular components, or all three ontologies at once, set `ont` to `"MF"`, `"CC"`, or `"ALL"`, respectively.
 
@@ -790,7 +792,7 @@ We will process the results the same as before and compare.
 Now, only 2953 terms showed up in the summary. Of these, 1445 passed the size filter, and 31 were significantly over-represented after multiple testing correction. The top 10 are shown in Table \@ref(tab:cp-go-ora-simple-table). The major difference between these results and the ones from `enrichGO` after using `simplify` is that p-value adjustment is not affected by `simplify`, as redundant GO terms are removed after. The conditional method is actually more akin to performing modular enrichment analysis (MEA) than ORA (also called singular enrichment analysis)
 
 
-#### Reactome {-}
+#### Reactome 
 
 GOstats does not have a dedicated class to test for Reactome pathway over-representation, but we can use ReactomePA. For this example, we will only consider pathways of size 20 to 500. `enrichPathway` only accepts Entrez gene IDs as input. In cases where the Entrez ID is not readily available, we must convert to them. Alternatively, we could use the custom ORA function `enricher`, which allows us to use any ID type (use demonstrated in Pfam example).
 
@@ -942,7 +944,7 @@ use_internal_data = FALSE
 ```
 --->
 
-#### Pfam {-}
+#### Pfam 
 
 <!---
 First, we will perform Pfam ORA with the GOstats package using the org.Hs.eg.db human annotation database; however, it is a good idea to check the number of Pfam entries that are provided by this database before doing so. Ideally, it should be close to the number shown at the top of the <a href="http://pfam.xfam.org">main Pfam page</a>. We can accomplish this with functions in AnnotationDbi.

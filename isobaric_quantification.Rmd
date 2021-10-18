@@ -36,7 +36,7 @@ library(kableExtra)
 
 ### Prepare MS/MS Identifications {#prepare-MS2-IDs-global}
 
-#### Read MS-GF+ Data {-}
+#### Read MS-GF+ Data 
 
 ```{r read-msgf, results='hide'}
 # Get file path
@@ -100,7 +100,7 @@ nrow(x_acc[x_acc$isDecoy == TRUE, ]) /
 
 Now that we have an `MSnID` object, we need to process it. 
 
-#### Correct Isotope Selection Error {-}
+#### Correct Isotope Selection Error 
 
 Occasionally, the instrument selects a peak with +1 or more C13 atoms, rather than the monoisotopic (lowest mass) peak. While MS-FG+ is still capable of correctly identifying those, the downstream calculations of mass measurement error need to be fixed. The `correct_peak_selection` method corrects for these mass measurement errors.
 
@@ -109,7 +109,7 @@ Occasionally, the instrument selects a peak with +1 or more C13 atoms, rather th
 msnid <- correct_peak_selection(msnid)
 ```
 
-#### Remove Contaminants {-}
+#### Remove Contaminants 
 
 Now, we will remove contaminants such as the pig trypsin that was used for protein digestion. We can use `grepl` to search for all accessions that contain "Contaminant".
 
@@ -126,7 +126,7 @@ msnid <- apply_filter(msnid, "!grepl('Contaminant', accession)")
 show(msnid)
 ```
 
-#### MS/MS ID Filter: Peptide Level {-}
+#### MS/MS ID Filter: Peptide Level 
 
 The next step is to use the `PepQValue` column from the MSnID object and the absolute deviation of the mass measurement error of parent ions (in ppm) to maximize the number of PSMs while ensuring that the empirical peptide-level FDR is at most 1%.
 
@@ -140,7 +140,7 @@ show(msnid)
 
 We can see that filtering drastically reduces the number of PSMs, and the empirical peptide-level FDR is now 1%. However, notice that the empirical protein-level FDR is still fairly high.
 
-#### MS/MS ID Filter: Protein Level {-}
+#### MS/MS ID Filter: Protein Level 
 
 A while ago, the proteomics field established the hard-and-fast two-peptides-per-protein rule. That is, we can not be confident if a protein is identified by the detection of only one peptide. This rule penalizes short proteins and doesn't consider that there are some very long proteins (e.g. Titin 3.8 MDa) that easily have more then two matching peptides even in reversed sequence. Thus, we propose to normalize the number of peptides per protein length and use that as a filtering criterion.
 
@@ -163,7 +163,7 @@ msnid <- filter_msgf_data(msnid,
 show(msnid)
 ```
 
-#### Inference of Parsimonious Protein Set {-}
+#### Inference of Parsimonious Protein Set 
 
 The situation when a certain peptide sequence matches multiple proteins adds complication to the downstream quantitative analysis, as it is not clear which protein this peptide is originating from. There are common ways for dealing with this. One is to simply retain uniquely matching peptides and discard shared peptides (`unique_only = TRUE`). Alternatively (in case of `unique_only = FALSE`) assign the shared peptides to the proteins with the larger number of uniquely mapping peptides. If there is a choice between multiple proteins with equal numbers of uniquely mapping peptides, the shared peptides are assigned to the first protein according to alphanumeric order. This step could be done prior to filtering at the accession level, but the removal of an accession will completely remove its associated peptides.
 
@@ -199,21 +199,21 @@ show(msnid)
 After processing, we are left with 318,448 PSMs, 81,048 peptides, and 5,143 proteins. The empirical FDRs are the same as before, but can not be calculated because we removed the decoys.
 
 ```{r global-msnid-table, echo=FALSE}
-kable(head(psms(msnid), 10), digits = 3, row.names = FALSE, 
-      caption = "<left>First 10 rows of the processed MS-GF+ results.</left>",
+kable(head(psms(msnid), 6), digits = 3, row.names = FALSE, 
+      caption = "<left>First 6 rows of the processed MS-GF+ results.</left>",
       escape = FALSE, format = "html") %>% 
-  kable_styling(full_width = FALSE, font_size = 12) %>%
-  scroll_box(height = "20em", width = "100%")
+  kable_styling(full_width = FALSE, font_size = 12,
+                bootstrap_options = c("hover", "condensed"))
 ```
 
 </br>
 
-Table \@ref(tab:global-msnid-table) shows the first 10 rows of the processed MS-GF+ output.
+Table \@ref(tab:global-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
 
 
 ### Prepare Reporter Ion Intensities {#reporter-ion-intensities}
 
-#### Read MASIC Output {-}
+#### Read MASIC Output 
 
 MASIC is a tool for extracting ion intensities. With proper parameter settings, it can be used for extracting TMT (or iTRAQ) reporter ion intensities. In addition, it reports a number of other helpful metrics. Notably, the interference score at the parent ion level and the signal-to-noise ratio (S/N) at the reporter ion level (computed by Thermo software). The interference score reflects the proportion of the ion population that was isolated for fragmentation that is due to the targeted ion. In other words, 1 - InterferenceScore is due to co-isolated species that have similar elution time and parent ion m/z.
 
@@ -229,19 +229,19 @@ masic_data <- read_masic_data(path_to_MASIC_results, interference_score = TRUE)
 Normally, this would display two progress bars in the console as the data is being fetched. However, the output was suppressed to save space.
 
 ```{r global-masic-table, echo=FALSE}
-kable(head(masic_data, 10), digits = 3, row.names = FALSE, 
-      caption = "<left>First 10 rows of the MASIC data.</left>",
+kable(head(masic_data, 6), digits = 3, row.names = FALSE, 
+      caption = "<left>First 6 rows of the MASIC data.</left>",
       escape = FALSE, format = "html") %>% 
-  kable_styling(full_width = FALSE, font_size = 12) %>%
-  scroll_box(height = "20em", width = "100%")
+  kable_styling(full_width = FALSE, font_size = 12,
+                bootstrap_options = c("hover", "condensed"))
 ```
 
 </br>
 
-Table \@ref(tab:global-masic-table) shows the first 10 rows of `masic_data`.
+Table \@ref(tab:global-masic-table) shows the first 6 rows of `masic_data`.
 
 
-#### Filter MASIC Data {-}
+#### Filter MASIC Data 
 
 Currently, we recommend keeping entries where at least 50% of the ion population is due to the targeted ion (interference score $\geq$ 0.5) and not filtering by S/N.
 
@@ -273,7 +273,7 @@ references <- study_design$references
 ```
 
 
-#### Fractions {-}
+#### Fractions 
 
 The fractions table consists of two columns: `Dataset` and `PlexID`. The `Dataset` column contains all of the unique datasets from `msnid$Dataset` or `masic_data$Dataset`. The `PlexID` column contains the plex ID associated with each dataset, and is typically an "S" followed by a number ("S1", "S2", etc.). We can extract the plex ID from the datasets. In this case, the plex ID always comes after "_W_", so we can use a regular expression (regex) to capture it (the first argument of `gsub`). The regex below says to capture an "S" followed by a single digit that appears after "_W_" and before an underscore.
 
@@ -287,7 +287,8 @@ fractions <- data.frame(Dataset = unique(masic_data$Dataset)) %>%
 kable(head(fractions, 10), row.names = FALSE, 
       caption = "<left>First 10 rows of the fractions table.</left>",
       escape = FALSE, format = "html") %>% 
-  kable_styling(full_width = FALSE, font_size = 12)
+  kable_styling(full_width = FALSE, font_size = 12,
+                bootstrap_options = c("hover", "condensed"))
 ```
 
 </br>
@@ -295,7 +296,7 @@ kable(head(fractions, 10), row.names = FALSE,
 Table \@ref(tab:fractions-table) shows the first 10 rows of `fractions`.
 
 
-#### Samples {-}
+#### Samples 
 
 The samples table contains columns `PlexID`, `QuantBlock`, `ReporterName`, `ReporterAlias`, and `MeasurementName`. The plex ID must be the same as the plex ID in the `fractions` table. `ReporterName` is the reporter ion name ("126", "127N", "127C", etc.). `ReporterAlias` is the intermediate between `ReporterName` and `MeasurementName` and is used for defining the reference. `MeasurementName` determines the column names for the final cross-tab, and must be unique and begin with a letter. `MeasurementName` is easily constructed by prepending `PlexID` to the `ReporterName`. Finally, `QuantBlock` can be thought of as a way of defining sub-plex. In a typical TMT experiment, `QuantBlock` is always 1. In case of 5 pairwise comparisons within TMT10, there will be 5 QuantBlocks (1-5) with a reference for each `QuantBlock`.
 
@@ -327,7 +328,8 @@ samples <- data.frame(PlexID = rep(plexes, each = nrow(conv)),
 kable(head(samples, 10), row.names = FALSE, 
       caption = "<left>First 10 rows of the samples table.</left>",
       escape = FALSE, format = "html") %>% 
-  kable_styling(full_width = FALSE, font_size = 12)
+  kable_styling(full_width = FALSE, font_size = 12,
+                bootstrap_options = c("hover", "condensed"))
 ```
 
 </br>
@@ -335,7 +337,7 @@ kable(head(samples, 10), row.names = FALSE,
 Table \@ref(tab:samples-table) shows the first 10 rows of `samples`.
 
 
-#### References {-}
+#### References 
 
 Reference can be a certain channel, average of multiple channels, or 1. The general form is an expression with `ReporterAlias` names as variables. It is evaluated for each `PlexID`/`QuantBlock` combination and applied to divide reporter ion intensities within corresponding `PlexID`/`QuantBlock`.
 
@@ -352,7 +354,8 @@ references <- samples %>%
 kable(references, row.names = FALSE, 
       caption = "<left>References table.</left>",
       escape = FALSE, format = "html") %>% 
-  kable_styling(full_width = FALSE, font_size = 12)
+  kable_styling(full_width = FALSE, font_size = 12,
+                bootstrap_options = c("hover", "condensed"))
 ```
 
 </br>
@@ -404,11 +407,11 @@ crosstab <- create_crosstab(msnid, masic_data,
 ```
 
 ```{r echo=FALSE}
-kable(head(crosstab, 10), row.names = TRUE, 
-      caption = "<left>First 10 rows of the global quantitative cross-tab.</left>",
+kable(head(crosstab, 6), row.names = TRUE, 
+      caption = "<left>First 6 rows of the global quantitative cross-tab.</left>",
       escape = FALSE, format = "html") %>% 
-  kable_styling(full_width = FALSE, font_size = 12) %>% 
-  scroll_box(height = "20em", width = "100%")
+  kable_styling(full_width = FALSE, font_size = 12,
+                bootstrap_options = c("hover", "condensed"))
 ```
 
 </br>
@@ -449,7 +452,7 @@ library(dplyr) # %>%
 
 ### Prepare MS/MS Identifications {#prepare-MS2-IDs-phospho}
 
-#### Read MS-GF+ Output {-}
+#### Read MS-GF+ Output 
 
 ```{r results='hide'}
 # Read MS-GF+ data
@@ -462,7 +465,7 @@ show(msnid)
 ```
 
 
-#### Remove Non-Phosphorylated Peptides {-}
+#### Remove Non-Phosphorylated Peptides 
 
 In this case, the phosphorylation of an amino acid is marked by a `*` appearing after the amino acid. We will not consider unmodified peptides, so we can filter them out. The `*` is a special character that must be escaped with backslashes, and the backslashes must also be escaped.
 
@@ -474,7 +477,7 @@ show(msnid)
 ```
 
 
-#### Correct Isotope Selection Error {-}
+#### Correct Isotope Selection Error 
 
 ```{r}
 # Correct for isotope selection error
@@ -482,7 +485,7 @@ msnid <- correct_peak_selection(msnid)
 ```
 
 
-#### Remove Contaminants {-}
+#### Remove Contaminants 
 
 ```{r}
 # Remove contaminants
@@ -491,7 +494,7 @@ show(msnid)
 ```
 
 
-#### AScore {-}
+#### AScore 
 
 Phospho datasets involve AScore jobs for improving phosphosite localization. There should be one AScore job per data package. The fetched object is a data.frame that links datasets, scans and original PTM localization to newly suggested locations. Importantly, it contains `AScore` column that signifies the confidence of PTM assignment. AScore > 17 is considered confident.
 
@@ -506,7 +509,7 @@ show(msnid)
 ```
 
 
-#### MS/MS ID Filter: Peptide Level {-}
+#### MS/MS ID Filter: Peptide Level 
 
 ```{r}
 # 1% FDR filter at the peptide level
@@ -516,7 +519,7 @@ msnid <- filter_msgf_data(msnid,
 show(msnid)
 ```
 
-#### MS/MS ID Filter: Protein Level {-}
+#### MS/MS ID Filter: Protein Level 
 
 ```{r message=FALSE, warning=FALSE}
 # Get path to FASTA file
@@ -532,7 +535,7 @@ msnid <- filter_msgf_data(msnid,
 show(msnid)
 ```
 
-#### Inference of Parsimonious Protein Set {-}
+#### Inference of Parsimonious Protein Set 
 
 <!---
 TODO:
@@ -564,7 +567,7 @@ msnid <- apply_filter(msnid, "!isDecoy")
 show(msnid)
 ```
 
-#### Map Sites to Protein Sequences {-}
+#### Map Sites to Protein Sequences 
 
 Prepare FASTA to make sure entry names in FASTA file match MSnID accessions. The plan is to make this conversion automatic. `map_mod_sites` creates number of columns describing mapping of the site/s onto the protein sequences. The most important for the user is `SiteID`.
 
@@ -600,23 +603,23 @@ msnid <- map_mod_sites(object = msnid, fasta = fst,
 fix_phos <- function(x) {
   gsub("\\*", "\\\\*", x)
 }
-x <- head(psms(msnid), 10) %>% 
+x <- head(psms(msnid), 6) %>% 
   mutate_if(is.character, fix_phos)
 kable(x, digits = 3, row.names = FALSE, 
-      caption = "<left>First 10 rows of the processed MS-GF+ results.</left>",
+      caption = "<left>First 6 rows of the processed MS-GF+ results.</left>",
       escape = FALSE, format = "html") %>% 
-  kable_styling(full_width = FALSE, font_size = 12) %>%
-  scroll_box(height = "20em", width = "100%")
+  kable_styling(full_width = FALSE, font_size = 12,
+                bootstrap_options = c("hover", "condensed"))
 ```
 
 </br>
 
-Table \@ref(tab:phospho-msnid-table) shows the first 10 rows of the processed MS-GF+ output.
+Table \@ref(tab:phospho-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
 
 
 ### Prepare Reporter Ion Intensities {#phospho-reporter-ion-intensities}
 
-#### Read MASIC Output {-}
+#### Read MASIC Output 
 
 ```{r results='hide'}
 # Read MASIC data
@@ -625,7 +628,7 @@ masic_data <- read_masic_data_from_DMS(data_package_num,
 ```
 
 
-#### Filter MASIC Data {-}
+#### Filter MASIC Data 
 
 ```{r}
 # Filter MASIC data
@@ -637,7 +640,7 @@ masic_data <- filter_masic_data(masic_data,
 
 ### Create Study Design Tables
 
-#### Fractions {-}
+#### Fractions 
 
 ```{r}
 # Create fractions table
@@ -646,7 +649,7 @@ fractions <- data.frame(Dataset = unique(masic_data$Dataset)) %>%
 ```
 
 
-#### Samples {-}
+#### Samples 
 
 ```{r}
 # TMT10 Reporter Converter table from MSnID package
@@ -670,7 +673,7 @@ samples <- data.frame(PlexID = rep(plexes, each = nrow(conv)),
   )
 ```
 
-#### References {-}
+#### References 
 
 ```{r}
 # Create references table
@@ -686,7 +689,7 @@ references <- samples %>%
 
 ```{r}
 # Set aggregation level
-aggregation_level <- c("accession", "peptide")
+aggregation_level <- c("SiteID")
 # Create cross-tab
 crosstab <- create_crosstab(msnid, masic_data,
                             aggregation_level = aggregation_level,
@@ -694,14 +697,14 @@ crosstab <- create_crosstab(msnid, masic_data,
 ```
 
 ```{r echo=FALSE}
-x <- head(crosstab, 10)
-rownames(x) <- gsub("\\*", "\\\\*", rownames(x))
-rownames(x) <- gsub("\\@", "\\@\\\\hphantom{}", rownames(x))
+x <- head(crosstab)
+# rownames(x) <- gsub("\\*", "\\\\*", rownames(x))
+# rownames(x) <- gsub("\\@", "\\@\\\\hphantom{}", rownames(x))
 kable(x, row.names = TRUE, 
-      caption = "<left>First 10 rows of the phospho quantitative cross-tab.</left>", format = "html",
+      caption = "<left>First 6 rows of the phospho quantitative cross-tab.</left>", format = "html",
       escape = FALSE) %>% 
-  kable_styling(font_size = 12) %>% 
-  scroll_box(height = "20em", width = "100%")
+  kable_styling(font_size = 12,
+                bootstrap_options = c("hover", "condensed"))
 ```
 
 </br>
@@ -712,7 +715,7 @@ We will save the cross-tab for later sections.
 # Modify cross-tab for saving
 crosstab <- crosstab %>% 
   as.data.frame() %>% 
-  tibble::rownames_to_column("phospho_peptide")
+  tibble::rownames_to_column("phosphosite")
 
 # Save cross-tab
 write.table(crosstab, file = "data/phospho_quant_crosstab.txt",
