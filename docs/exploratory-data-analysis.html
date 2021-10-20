@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Section 2 Exploratory Data Analysis | Proteomics Data Analysis in R/Bioconductor</title>
 <meta name="author" content="Tyler Sagendorf">
-<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.9/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
 <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.5.1/tabs.js"></script><script src="libs/bs3compat-0.2.5.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
 <script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
@@ -53,7 +53,7 @@
 TODO:
 * What is exploratory data analysis? Explain.
 --->
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">MSnSet.utils</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
@@ -69,7 +69,7 @@ TODO:
 <span class="header-section-number">2.1</span> Count Features in Samples<a class="anchor" aria-label="anchor" href="#count-features-in-samples"><i class="fas fa-link"></i></a>
 </h2>
 <p>To count the number of features identified in each sample, we use <code>colSums</code> to tally the number of entries that are not <code>NA</code>.</p>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Calculate the number of proteins </span>
 <span class="co"># identified (not NA) in each sample</span>
 <span class="va">plot_data</span> <span class="op">&lt;-</span> <span class="fu">pData</span><span class="op">(</span><span class="va">oca.set</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -91,7 +91,7 @@ TODO:
 <span class="header-section-number">2.1.1</span> Lollipop Plot<a class="anchor" aria-label="anchor" href="#lollipop-plot"><i class="fas fa-link"></i></a>
 </h3>
 <p>Lollipop plots are similar to bar graphs, but they are composed of line segments terminating in points. They are a good alternative to bar graphs because they better minimize the amount of non-data ink. This doesn’t matter too much when figures are only made for digital media, but it still reduces the visual clutter that comes with bars; however, it is not a good alternative to stacked bar graphs. In ggplot, we can construct lollipop plots by combining a <code><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html">geom_segment()</a></code> and a <code><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point()</a></code> layer.</p>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Lollipop plot</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">plot_data</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_segment.html">geom_segment</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0</span>, xend <span class="op">=</span> <span class="va">num_proteins</span>, 
@@ -112,7 +112,7 @@ TODO:
 <span class="header-section-number">2.1.2</span> Boxplot<a class="anchor" aria-label="anchor" href="#boxplot"><i class="fas fa-link"></i></a>
 </h3>
 <p>A boxplot is good for identifying and labeling potential outliers, but it is limited to displaying a summary of the data. We will be using <code><a href="https://rdrr.io/r/graphics/boxplot.html">graphics::boxplot()</a></code> for this example, rather than the ggplot2 equivalent, because it is easier and the y-axis is uncluttered.</p>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Boxplot</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/boxplot.html">boxplot</a></span><span class="op">(</span><span class="va">plot_data</span><span class="op">$</span><span class="va">num_proteins</span>, horizontal <span class="op">=</span> <span class="cn">TRUE</span>,
         xlab <span class="op">=</span> <span class="st">"Number of Proteins Detected"</span>, col <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></code></pre></div>
@@ -124,7 +124,7 @@ TODO:
 <span class="header-section-number">2.1.3</span> Density Plot<a class="anchor" aria-label="anchor" href="#density-plot"><i class="fas fa-link"></i></a>
 </h3>
 <p>A density plot is like a smoothed histogram. In fact, one of the benefits over the histogram is that we don’t have to deal with bins, as the choice of the number of bins can drastically change the overall shape of a histogram.</p>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">plot_data</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html">geom_density</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">num_proteins</span><span class="op">)</span>, 
                <span class="co"># Change fill color, make it translucent, remove outline</span>
@@ -157,7 +157,7 @@ TODO:
 
 * Hemoglobin alpha, beta, delta, gamma 1; fibrinogen alpha, beta, gamma; albumin, spectrin, 
 --->
-<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># NOTE: eval set to FALSE</span>
 <span class="va">blood_proteins</span> <span class="op">&lt;-</span> <span class="st">"HBA_HUMAN HBB_HUMAN HBD_HUMAN HBG1_HUMAN FIBA_HUMAN
 FIBB_HUMAN FIBG_HUMAN SPTB1_HUMAN THRB_HUMAN ALBU_HUMAN A1AG1_HUMAN
@@ -183,11 +183,11 @@ A1AG2_HUMAN CAH1_HUMAN GLPA_HUMAN GLPB_HUMAN GLPC_HUMAN"</span>
 <h3>
 <span class="header-section-number">2.3.2</span> PCA Plots<a class="anchor" aria-label="anchor" href="#pca-plots"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Default plot</span>
 <span class="fu"><a href="https://rdrr.io/pkg/MSnSet.utils/man/plot_pca_v1.html">plot_pca_v3</a></span><span class="op">(</span><span class="va">oca.set</span>, phenotype <span class="op">=</span> <span class="st">"SUBTYPE"</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="EDA_files/figure-html/pca_plot_base-1.png" width="75%" style="display: block; margin: auto;"></div>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># New legend title</span>
 <span class="va">legend.title</span> <span class="op">&lt;-</span> <span class="st">"Subtype"</span>
 
@@ -211,7 +211,7 @@ Figure 2.1: This is the figure caption
 <span class="header-section-number">2.3.3</span> List Top-Contributing Features<a class="anchor" aria-label="anchor" href="#list-top-contributing-features"><i class="fas fa-link"></i></a>
 </h3>
 <p>In MSnSet.utils, there is a function that allows us to determine which features contribute the most to each principal component. This is the main part of the code to do this.</p>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># V is the matrix of eigenvectors that have been scaled to unit vectors.</span>
 <span class="va">cutoff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="fl">1</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">V</span><span class="op">)</span><span class="op">)</span>
 
@@ -318,7 +318,7 @@ Figure 2.1: This is the figure caption
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Proteomics Data Analysis in R/Bioconductor</strong>" was written by Tyler Sagendorf. It was last built on October 17, 2021.</p>
+    <p>"<strong>Proteomics Data Analysis in R/Bioconductor</strong>" was written by Tyler Sagendorf. It was last built on October 19, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

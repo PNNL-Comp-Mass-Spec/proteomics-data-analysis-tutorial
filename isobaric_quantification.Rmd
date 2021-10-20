@@ -18,7 +18,7 @@ For these examples, we need two packages: PlexedPiper and PlexedPiperTestData. T
 
 ```{r include=FALSE}
 # Global chunk options
-knitr::opts_chunk$set(message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.align='center')
 ```
 
 
@@ -27,6 +27,8 @@ knitr::opts_chunk$set(message = FALSE, warning = FALSE)
 library(PlexedPiper)
 library(PlexedPiperTestData)
 library(dplyr)
+library(ggplot2) # plotting
+library(knitr) # embed images
 ```
 
 ```{r include=FALSE}
@@ -102,12 +104,47 @@ Now that we have an `MSnID` object, we need to process it.
 
 #### Correct Isotope Selection Error 
 
-Occasionally, the instrument selects a peak with +1 or more C13 atoms, rather than the monoisotopic (lowest mass) peak. While MS-FG+ is still capable of correctly identifying those, the downstream calculations of mass measurement error need to be fixed. The `correct_peak_selection` method corrects for these mass measurement errors.
+Occasionally, the instrument selects the non-monoisotopic peak of parent ions for fragmentation, so peptides that are off by about 1 or more Daltons are considered. (To be exact, the difference is 1.0033548378 Da, or $^{13}\text{C}$-$^{12}\text{C}$.) While MS-FG+ is still capable of correctly identifying these peptides, the downstream calculations of mass measurement error need to be fixed (Figure \@ref(fig:mass-to-charge-diff)), as they are used for filtering later on (Section \@ref(global-peptide-filter)). The `correct_peak_selection` function corrects these mass measurement errors.
+
+```{r echo=FALSE}
+# m/z difference
+delta_mz_pre <- msnid$experimentalMassToCharge - msnid$calculatedMassToCharge
+# Mass difference
+delta_mass_pre <- delta_mz_pre * msnid$chargeState # m/z * z = m
+```
 
 ```{r}
 # Correct for isotope selection error
 msnid <- correct_peak_selection(msnid)
 ```
+
+```{r mass-to-charge-diff, fig.cap="Histogram of mass measurement errors before and after correction.", fig.asp=0.5, echo=FALSE}
+# m/z difference
+delta_mz_post <- msnid$experimentalMassToCharge - msnid$calculatedMassToCharge
+# Mass difference
+delta_mass_post <- delta_mz_post * msnid$chargeState # m/z * z = m
+
+delta_mass_df <- data.frame(delta_mass = c(delta_mass_pre, delta_mass_post),
+                            group = rep(c("pre", "post"), 
+                                        each = length(delta_mass_post))) %>% 
+  mutate(group = factor(group, levels = c("pre", "post")))
+
+facet_labs <- c("Before Correction", "After Correction")
+names(facet_labs) <- c("pre", "post")
+
+# # Plot mass measurement error
+ggplot(delta_mass_df) +
+  geom_histogram(aes(x = delta_mass), binwidth = 0.01) +
+  facet_grid(cols = vars(group), labeller = labeller(group = facet_labs),
+             scales = "free_x") +
+  scale_y_continuous(name = "Count", labels = scales::label_scientific(),
+                     expand = expansion(mult = c(0, 0.05))) +
+  labs(x = "Mass Measurement Error") +
+  theme_bw(base_size = 12) +
+  theme(strip.background = element_blank(),
+        strip.text = element_text(size = 14, face = "bold"))
+```
+
 
 #### Remove Contaminants 
 
@@ -126,9 +163,46 @@ msnid <- apply_filter(msnid, "!grepl('Contaminant', accession)")
 show(msnid)
 ```
 
-#### MS/MS ID Filter: Peptide Level 
+#### MS/MS ID Filter: Peptide Level {#global-peptide-filter}
 
-The next step is to use the `PepQValue` column from the MSnID object and the absolute deviation of the mass measurement error of parent ions (in ppm) to maximize the number of PSMs while ensuring that the empirical peptide-level FDR is at most 1%.
+The next step is to filter the MS/MS identifications such that the empirical pwptide-level FDR is less than some threshold and the number of MS/MS IDs is maximized. We will use the $-log_{10}$ of the `PepQValue` column as one of our filtering criteria and assign it to a new column in `psms(msnid)` called `msmsScore`. The `PepQValue` column is the MS-GF+ Spectrum E-value, which reflects how well the theoretical and experimental fragmentation spectra match; therefore, high values of `msmsScore` indicate a good match (see Figure \@ref(fig:plot-msmsScore)).
+
+```{r plot-msmsScore, fig.cap="Density plot of msmsScore with dashed line indicating the baseline, un-optimized cutoff.", echo=FALSE, fig.asp=0.6}
+# Plot default filters
+msmsScore <- -log10(msnid$PepQValue) # > 2
+absParentMassErrorPPM <- abs(mass_measurement_error(msnid)) # < 10
+isDecoy <- msnid$isDecoy
+
+# Plot msmsScore
+ggplot() +
+  geom_density(aes(x = msmsScore, color = isDecoy), 
+               fill = NA, na.rm = TRUE) +
+  geom_vline(xintercept = 2, lty = "longdash") +
+  annotate("segment", x = 2.2, xend = 2.7, y = 0.75, yend = 0.75,
+           colour = "darkgrey", size = 2, arrow = arrow(type = "open")) +
+  scale_y_continuous("Density", expand = expansion(mult = c(0, 0.05))) +
+  scale_x_continuous(expand = expansion(0)) +
+  theme_bw(base_size = 12)
+```
+</br>
+
+The other filtering criteria is the absolute deviation of the mass measurement error of the parent ions in parts-per-million (ppm), which is assigned to the `absParentMassErrorPPM` column in `psms(msnid)` (see Figure \@ref(fig:plot-mass-error)).
+
+```{r plot-mass-error, fig.cap="Density plot of absParentMassErrorPPM with dashed line indicating the baseline, un-optimized cutoff.", echo=FALSE, fig.asp=0.6}
+ggplot() +
+  geom_density(aes(x = absParentMassErrorPPM, color = isDecoy), 
+               fill = NA, na.rm = TRUE) +
+  geom_vline(xintercept = 10, lty = "longdash") +
+  annotate("segment", x = 9, xend = 5.5, y = 0.17, yend = 0.17,
+           colour = "darkgrey", size = 2, arrow = arrow(type = "open")) +
+  scale_y_continuous("Density", expand = expansion(mult = c(0, 0.05))) +
+  scale_x_continuous(expand = expansion(0)) +
+  theme_bw(base_size = 12)
+```
+
+</br>
+
+Now, we will filter the PSMs.
 
 ```{r global-fdr-filter-peptide}
 # 1% FDR filter at the peptide level
@@ -142,9 +216,17 @@ We can see that filtering drastically reduces the number of PSMs, and the empiri
 
 #### MS/MS ID Filter: Protein Level 
 
-A while ago, the proteomics field established the hard-and-fast two-peptides-per-protein rule. That is, we can not be confident if a protein is identified by the detection of only one peptide. This rule penalizes short proteins and doesn't consider that there are some very long proteins (e.g. Titin 3.8 MDa) that easily have more then two matching peptides even in reversed sequence. Thus, we propose to normalize the number of peptides per protein length and use that as a filtering criterion.
+Now, we need to filter proteins so that the FDR is at most 1%. A while ago, the proteomics field established the hard-and-fast two-peptides-per-protein rule. That is, the confident identification of a protein requires the confident identification of at least 2 peptides. This rule penalizes short proteins and doesn't consider that there are some very long proteins (e.g. Titin 3.8 MDa) that easily have more then two matching peptides even in the reversed sequence. Thus, we propose to normalize the number of peptides per protein length and use that as a filtering criterion (Figure \@ref(fig:plot-num-pep)).
 
-We need the FASTA (pronounced FAST-AYE) file to get the length of each protein, which we can then use to calculate the associated number of peptides per 1000 amino acids. This new `peptides_per_1000aa` column is used to filter the MSnID object so that the empirical accession-level FDR is at most 1%.
+In order to get the protein lengths, we need the FASTA (pronounced FAST-AYE) file that contains the protein sequences used in the database search. The first three entries of the FASTA file are shown in Figure \@ref(fig:fasta-ex).
+
+```{r fasta-ex, echo=FALSE, fig.cap="First three entries of the FASTA file."}
+include_graphics("images/FASTA_example_MoTrPAC.PNG")
+```
+
+</br>
+
+For each protein, we divide the number of associated peptides by the length of that protein and multiply this value by 1000. This new `peptides_per_1000aa` column is used as the filter criteria.
 
 ```{r message=FALSE, warning=FALSE}
 # Get path to FASTA file
@@ -155,7 +237,26 @@ path_to_FASTA <- system.file(
 
 # Compute number of peptides per 1000 amino acids
 msnid <- compute_num_peptides_per_1000aa(msnid, path_to_FASTA)
+```
 
+```{r plot-num-pep, fig.cap="Density plot of peptides_per_1000aa. Proteins with values greater than 1 are selected by default prior to optimization. The plot area has been zoomed in.", echo=FALSE, fig.asp=0.6}
+peptides_per_1000aa <- msnid$peptides_per_1000aa
+isDecoy <- msnid$isDecoy
+
+ggplot() +
+  geom_density(aes(x = peptides_per_1000aa, color = isDecoy), 
+               fill = NA, na.rm = TRUE) +
+  scale_y_continuous("Density", expand = expansion(mult = c(0, 0.05))) +
+  scale_x_continuous("peptides_per_1000aa", expand = expansion(0)) +
+  theme_bw(base_size = 12) +
+  coord_cartesian(xlim = c(0, 300)) +
+  guides(color = guide_legend(title = "isDecoy"))
+```
+</br>
+
+Now, we filter the proteins to 1% FDR.
+
+```{r message=FALSE, warning=FALSE}
 # 1% FDR filter at the protein level
 msnid <- filter_msgf_data(msnid,
                           level = "accession",
@@ -163,14 +264,16 @@ msnid <- filter_msgf_data(msnid,
 show(msnid)
 ```
 
+
 #### Inference of Parsimonious Protein Set 
 
-The situation when a certain peptide sequence matches multiple proteins adds complication to the downstream quantitative analysis, as it is not clear which protein this peptide is originating from. There are common ways for dealing with this. One is to simply retain uniquely matching peptides and discard shared peptides (`unique_only = TRUE`). Alternatively (in case of `unique_only = FALSE`) assign the shared peptides to the proteins with the larger number of uniquely mapping peptides. If there is a choice between multiple proteins with equal numbers of uniquely mapping peptides, the shared peptides are assigned to the first protein according to alphanumeric order. This step could be done prior to filtering at the accession level, but the removal of an accession will completely remove its associated peptides.
+The situation when a certain peptide sequence matches multiple proteins adds complication to the downstream quantitative analysis, as it is not clear which protein this peptide is originating from. There are common ways for dealing with this. One is to simply retain uniquely matching peptides and discard shared peptides (`unique_only = TRUE`). Alternatively, assign the shared peptides to the proteins with the larger number of uniquely mapping peptides (`unique_only = FALSE`). If there is a choice between multiple proteins with equal numbers of uniquely mapping peptides, the shared peptides are assigned to the first protein according to alphanumeric order (Figure \@ref(fig:parsimony)). This step could be done prior to filtering at the accession level, but if peptides are assigned to a low-confidence protein, and that protein is removed during filtering, those peptides will be lost. Instead, it is better to filter to the set of confidently-identified proteins and then determine the parsimonious set.
 
-<!---
-TODO:
-* Include a visual for inference of the parsimonious protein set.
---->
+```{r parsimony, echo=FALSE, fig.cap="Visual explanation of the inference of the parsimonious protein set."}
+include_graphics("images/parsimonious-protein-set-inference.PNG")
+```
+
+</br>
 
 ```{r}
 # Inference of parsimonious protein set
@@ -196,7 +299,7 @@ msnid <- apply_filter(msnid, "!isDecoy")
 show(msnid)
 ```
 
-After processing, we are left with 318,448 PSMs, 81,048 peptides, and 5,143 proteins. The empirical FDRs are the same as before, but can not be calculated because we removed the decoys.
+After processing, we are left with 444,213 PSMs, 90,156 peptides, and 5,171 proteins. Table \@ref(tab:global-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
 
 ```{r global-msnid-table, echo=FALSE}
 kable(head(psms(msnid), 6), digits = 3, row.names = FALSE, 
@@ -207,9 +310,6 @@ kable(head(psms(msnid), 6), digits = 3, row.names = FALSE,
 ```
 
 </br>
-
-Table \@ref(tab:global-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
-
 
 ### Prepare Reporter Ion Intensities {#reporter-ion-intensities}
 
@@ -298,7 +398,7 @@ Table \@ref(tab:fractions-table) shows the first 10 rows of `fractions`.
 
 #### Samples 
 
-The samples table contains columns `PlexID`, `QuantBlock`, `ReporterName`, `ReporterAlias`, and `MeasurementName`. The plex ID must be the same as the plex ID in the `fractions` table. `ReporterName` is the reporter ion name ("126", "127N", "127C", etc.). `ReporterAlias` is the intermediate between `ReporterName` and `MeasurementName` and is used for defining the reference. `MeasurementName` determines the column names for the final cross-tab, and must be unique and begin with a letter. `MeasurementName` is easily constructed by prepending `PlexID` to the `ReporterName`. Finally, `QuantBlock` can be thought of as a way of defining sub-plex. In a typical TMT experiment, `QuantBlock` is always 1. In case of 5 pairwise comparisons within TMT10, there will be 5 QuantBlocks (1-5) with a reference for each `QuantBlock`.
+The samples table contains columns `PlexID`, `QuantBlock`, `ReporterName`, `ReporterAlias`, and `MeasurementName`. The plex ID must be the same as the plex ID in the `fractions` table. `ReporterName` is the reporter ion name ("126", "127N", "127C", etc.). `ReporterAlias` is the intermediate between `ReporterName` and `MeasurementName` and is used for defining the reference. `MeasurementName` determines the column names for the final cross-tab, and must be unique and begin with a letter. `MeasurementName` is usually the sample names; however, we do not have that information, so we will instead prepend `PlexID` to the `ReporterName` to create `MeasurementName`. Finally, `QuantBlock` can be thought of as a way of defining sub-plex. In a typical TMT experiment, `QuantBlock` is always 1. In case of 5 pairwise comparisons within TMT10, there will be 5 QuantBlocks (1-5) with a reference for each `QuantBlock`.
 
 For this experiment, channel 131 will serve as the reference, so we set `MeasurementName` to `NA` when `ReporterName` is `"131"`. This will make the reference channel absent from the quantitative cross-tab. In cases where reporter ion intensities are not normalized by a reference channel (reference = 1) or they are normalized by the average of select channels, do not set any `MeasurementName` to `NA`.
 
@@ -494,7 +594,7 @@ show(msnid)
 ```
 
 
-#### AScore 
+#### Filter by AScore 
 
 Phospho datasets involve AScore jobs for improving phosphosite localization. There should be one AScore job per data package. The fetched object is a data.frame that links datasets, scans and original PTM localization to newly suggested locations. Importantly, it contains `AScore` column that signifies the confidence of PTM assignment. AScore > 17 is considered confident.
 
@@ -715,7 +815,7 @@ We will save the cross-tab for later sections.
 # Modify cross-tab for saving
 crosstab <- crosstab %>% 
   as.data.frame() %>% 
-  tibble::rownames_to_column("phosphosite")
+  tibble::rownames_to_column("SiteID")
 
 # Save cross-tab
 write.table(crosstab, file = "data/phospho_quant_crosstab.txt",

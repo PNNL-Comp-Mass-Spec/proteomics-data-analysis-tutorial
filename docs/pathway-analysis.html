@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Section 4 Pathway Analysis | Proteomics Data Analysis in R/Bioconductor</title>
 <meta name="author" content="Tyler Sagendorf">
-<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.9/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
 <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.5.1/tabs.js"></script><script src="libs/bs3compat-0.2.5.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
 <script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
@@ -66,7 +66,7 @@
 <span class="header-section-number">4.1.1.1</span> Semantic Similarity<a class="anchor" aria-label="anchor" href="#semantic-similarity"><i class="fas fa-link"></i></a>
 </h4>
 <p>Due to the DAG structure of each domain, there is often redundancy in pathway analysis results. For example, suppose terms <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title="oxidative phosphorylation">GO:0006119</a>, <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title="aerobic respiration">GO:0009060</a>, and <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0046034" title="ATP metabolic process">GO:0046034</a> are significantly over-represented biological processes. <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title="aerobic respiration">GO:0009060</a> and <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0046034" title="ATP metabolic process">GO:0046034</a> are the parent terms of <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title="oxidative phosphorylation">GO:0006119</a>. Due to this relationship, the terms likely provide much of the same information, so the inclusion of all three terms in the output is unnecessary. In order to resolve this redundancy, we can calculate the <strong>semantic similarity</strong> between pairs of GO terms, which “assesses the likeness in meaning of two concepts” <span class="citation">(<a href="references-2.html#ref-pesquita_semantic_2017" role="doc-biblioref">Pesquita, 2017</a>)</span>. Basically, if two terms are highly related, we can use some other criteria (such as adjusted p-value or level in the DAG) to retain only one of the terms. Below, we use the <code>GOSemSim</code> package to calculate the semantic similarity between the terms.</p>
-<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Calculate semantic similarity between GO terms</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yulab-smu.top/biomedical-knowledge-mining-book/">GOSemSim</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">org.Hs.eg.db</span><span class="op">)</span>
@@ -151,7 +151,7 @@
 <span class="header-section-number">4.1.1.2</span> GO Subsets/Slims<a class="anchor" aria-label="anchor" href="#go-subsetsslims"><i class="fas fa-link"></i></a>
 </h4>
 <p>Another way to handle the redundancy of GO terms is to use a <a href="http://geneontology.org/docs/go-subset-guide/" title="Guide to GO subsets">GO slim</a>, which is a subset of more general or research-relevant terms from the GO. GO slims can be <a href="http://geneontology.org/docs/download-ontology/#subsets" title="Download the ontology">downloaded</a> or the <code>biomaRt</code> package can be used to access GO slim accessions.</p>
-<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Create human GO slim</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">biomaRt</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yulab-smu.top/biomedical-knowledge-mining-book/">clusterProfiler</a></span><span class="op">)</span> <span class="co"># gcSample data</span>
@@ -302,7 +302,7 @@ P(X\geq 20) = 1 - P(X \leq 19) = 1-\sum \limits_{i=0}^{19}\frac{\hphantom{}{100 
 \]</span></p>
 </div>
 <p>That is, it is extremely unlikely that 20 of the 100 genes from this set are significantly differentially expressed by chance (at least, prior to adjustment for multiple comparisons). The code to calculate this p-value is</p>
-<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/Hypergeometric.html">phyper</a></span><span class="op">(</span>q <span class="op">=</span> <span class="fl">20</span> <span class="op">-</span> <span class="fl">1</span>, m <span class="op">=</span> <span class="fl">400</span>, n <span class="op">=</span> <span class="fl">8000</span> <span class="op">-</span> <span class="fl">400</span>, k <span class="op">=</span> <span class="fl">100</span>, lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <p>After a p-value has been calculated for each of the applicable gene sets, a multiple comparison adjustment should be performed.</p>
 </div>
@@ -311,7 +311,7 @@ P(X\geq 20) = 1 - P(X \leq 19) = 1-\sum \limits_{i=0}^{19}\frac{\hphantom{}{100 
 <span class="header-section-number">4.2.2</span> Examples<a class="anchor" aria-label="anchor" href="#ora-examples"><i class="fas fa-link"></i></a>
 </h3>
 <p>For these examples, we will show how to perform ORA with the GOstats, clusterProfiler, and ReactomePA packages. The databases that we will cover are Gene Ontology, Reactome, and Pfam. For details on these different annotation databases, please see Section <a href="pathway-analysis.html#annotation-databases">4.1</a>.</p>
-<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Setup</span>
 <span class="co"># Required packages</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yulab-smu.top/biomedical-knowledge-mining-book/">clusterProfiler</a></span><span class="op">)</span> <span class="co"># GO, KEGG, and custom ORA</span>
@@ -322,7 +322,7 @@ P(X\geq 20) = 1 - P(X \leq 19) = 1-\sum \limits_{i=0}^{19}\frac{\hphantom{}{100 
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://haozhu233.github.io/kableExtra/">kableExtra</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></code></pre></div>
 <p>Normally, we would use a DEA table to create two character vectors: one for the significantly expressed genes and the other for all genes that were tested (referred to as the “background” or “universe”); instead, we will use the <code>gcSample</code> data that comes with clusterProfiler and treat the eighth cluster as our vector of significant genes and the entire list as the gene universe. Each gene is represented by a human Entrez gene ID, which is the default keytype used by the clusterProfiler functions and the only keytype compatible with <code><a href="https://rdrr.io/pkg/ReactomePA/man/enrichPathway.html">ReactomePA::enrichPathway</a></code>.</p>
-<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"gcSample"</span><span class="op">)</span> <span class="co"># Data for examples</span>
 <span class="va">sig_genes</span> <span class="op">&lt;-</span> <span class="va">gcSample</span><span class="op">[[</span><span class="fl">8</span><span class="op">]</span><span class="op">]</span> <span class="co"># significant genes</span>
 <span class="va">universe</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">gcSample</span><span class="op">)</span><span class="op">)</span> <span class="co"># universe</span></code></pre></div>
@@ -332,7 +332,7 @@ P(X\geq 20) = 1 - P(X \leq 19) = 1-\sum \limits_{i=0}^{19}\frac{\hphantom{}{100 
 <span class="header-section-number">4.2.2.1</span> Gene Ontology<a class="anchor" aria-label="anchor" href="#gene-ontology-1"><i class="fas fa-link"></i></a>
 </h4>
 <p>We will first use the clusterProfiler package to test which biological processes are over-represented in the set of interesting genes. For this example, we will only consider gene sets of size 20 to 500. In order to test either molecular functions, cellular components, or all three ontologies at once, set <code>ont</code> to <code>"MF"</code>, <code>"CC"</code>, or <code>"ALL"</code>, respectively.</p>
-<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## GO BP ORA with clusterProfiler</span>
 <span class="co"># This takes a while</span>
 <span class="va">cp_ora_go</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/clusterProfiler/man/enrichGO.html">enrichGO</a></span><span class="op">(</span>
@@ -614,7 +614,7 @@ COX4I1/COX8A/COX7C…
 <p>There were 4436 biological processes that were tested. Of these, 2049 passed the size filter, and only 182 were significantly over-represented after multiple testing correction. The top 10 are shown in Table <a href="pathway-analysis.html#tab:cp-ora-go-table">4.2</a>.</p>
 <p><strong>Remove Redundant GO Terms</strong></p>
 <p>By default, if two terms have a semantic similarity above 0.7, <code><a href="https://rdrr.io/pkg/clusterProfiler/man/simplify-methods.html">clusterProfiler::simplify</a></code> retains the more significantly over-represented term.</p>
-<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Remove redundant GO terms with simplify</span>
 <span class="va">cp_ora_go_sim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/clusterProfiler/man/simplify-methods.html">simplify</a></span><span class="op">(</span><span class="va">cp_ora_go</span><span class="op">)</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; ">
@@ -884,7 +884,7 @@ HNRNPU/YWHAZ/SLC25A5…
 <p>Instead of retaining terms based on adjusted p-value, we could ignore significance and instead retain either parent or child terms (<code>select_fun = min</code> and <code>select_fun = max</code>, respectively). The code to do so is provided <a href="https://github.com/YuLab-SMU/clusterProfiler/issues/372" title="New feature: simplify to parent GO terms #372">here</a>.</p>
 <p>Another alternative would be to use a gene ID to <a href="http://geneontology.org/docs/go-subset-guide/" title="Guide to GO subsets">GO slim</a> ID conversion table. See the Semantic Similarity subsection of Section <a href="pathway-analysis.html#annotation-databases">4.1</a> for more details.</p>
 <p>Now, we will perform GO ORA with the GOstats package. We begin by creating an object of class <code>GOHyperGParams</code> and passing it to <code>hyperGTest</code> for calculation of Hypergeometric p-values. We do not filter by p-value, since adjusted p-values are not provided and we must calculate them ourselves.</p>
-<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## GO BP ORA with GOstats</span>
 <span class="va">hyperg_ora_go</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span>
   Class <span class="op">=</span> <span class="st">"GOHyperGParams"</span>,
@@ -898,7 +898,7 @@ HNRNPU/YWHAZ/SLC25A5…
 <span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/GOstats/man/hyperGTest.html">hyperGTest</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># Hypergeometric testing</span></code></pre></div>
 <p>Now, we need to filter by gene set size (limit 20 to 500), adjust the p-values, and filter based on the adjusted p-values.</p>
-<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res_go_ora</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">hyperg_ora_go</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="co"># Filter by size</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Size</span> <span class="op">&gt;=</span> <span class="fl">20</span>, <span class="va">Size</span> <span class="op">&lt;=</span> <span class="fl">500</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -1206,7 +1206,7 @@ ATP synthesis coupled electron transport
 <p>There were 4435 biological processes that were tested. Of these, 2049 passed the size filter, and only 182 were significantly over-represented after multiple testing correction. The top 10 are shown in Table <a href="pathway-analysis.html#tab:cp-go-ora-table">4.4</a>. The total number of biological processes that were tested is 1 less than the number reported from the <code>enrichGO</code> results. This is because <code>enrichGO</code> includes the “biological_process” root <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0008150" title="biological process">GO:0008150</a>.</p>
 <p><strong>Remove Redundant GO Terms</strong></p>
 <p>While there is no function akin to <code><a href="https://rdrr.io/pkg/clusterProfiler/man/simplify-methods.html">clusterProfiler::simplify</a></code> to process results, there is an argument called <code>conditional</code>. Setting <code>conditional</code> to <code>TRUE</code> tells <code>hyperGTest</code> to use the term-term relationships when calculating p-values <span class="citation">(<a href="references-2.html#ref-falcon_how_2021" role="doc-biblioref">Falcon et al., 2021</a>)</span>. This approach is actually more akin to Modular Enrichment Analysis (MEA) than Over-Representation Analysis (also called Singular Enrichment Analysis; <span class="citation"><a href="references-2.html#ref-huang_bioinformatics_2009" role="doc-biblioref">Huang et al.</a> (<a href="references-2.html#ref-huang_bioinformatics_2009" role="doc-biblioref">2009</a>)</span>).</p>
-<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Conditional GO BP ORA with GOstats</span>
 <span class="va">hyperg_ora_go_sim</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span>
   Class <span class="op">=</span> <span class="st">"GOHyperGParams"</span>,
@@ -1523,7 +1523,7 @@ antigen processing and presentation of peptide antigen
 <span class="header-section-number">4.2.2.2</span> Reactome<a class="anchor" aria-label="anchor" href="#reactome-1"><i class="fas fa-link"></i></a>
 </h4>
 <p>GOstats does not have a dedicated class to test for Reactome pathway over-representation, but we can use ReactomePA. For this example, we will only consider pathways of size 20 to 500. <code>enrichPathway</code> only accepts Entrez gene IDs as input. In cases where the Entrez ID is not readily available, we must convert to them. Alternatively, we could use the custom ORA function <code>enricher</code>, which allows us to use any ID type (use demonstrated in Pfam example).</p>
-<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Reactome ORA with ReactomePA</span>
 <span class="va">cp_ora_reactome</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ReactomePA/man/enrichPathway.html">enrichPathway</a></span><span class="op">(</span>
   gene <span class="op">=</span> <span class="va">sig_genes</span>, 
@@ -1879,7 +1879,7 @@ kable_styling(full_width = FALSE, font_size = 12)
 In this data frame, there are only 6186 Pfam entries. This is not even close to the most up-to-date number. We will continue for the sake of demonstration, but the results are unlikely to be reliable. 
 --->
 <p>While there is no dedicated ORA function for Pfam entries in clusterProfiler, there is a general ORA function called <code>enricher</code> that can be used with any term to gene conversion table. This function is also much faster than the dedicated <code>enrichGO</code> and <code>enrichPathway</code> functions, so it may be preferred if running many separate over-representation analyses. The conversion table is generated with the biomaRt package as follows.</p>
-<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># NOT RUN ---</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">biomaRt</span><span class="op">)</span>
 
@@ -1895,7 +1895,7 @@ In this data frame, there are only 6186 Pfam entries. This is not even close to 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html">mutate_all</a></span><span class="op">(</span><span class="va">as.character</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="va">conv_tbl</span>, file <span class="op">=</span> <span class="st">"data/pfam_conv_tbl.rds"</span><span class="op">)</span></code></pre></div>
 <p>In addition to the term to gene conversion table, we can supply a term to name table that maps Pfam IDs to human-readable descriptions. While org.Hs.eg.db does not provide Pfam descriptions, the <a href="https://doi.org/doi:10.18129/B9.bioc.PFAM.db" title="PFAM.db: A set of protein ID mappings for PFAM">PFAM.db</a> annotation data package has a Bimap with this information. Now that we have the two conversion tables, we will perform ORA and limit the output to Pfam entries of size 15 to 500.</p>
-<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Entrez to Pfam ID mapping file created with biomaRt package</span>
 <span class="va">TERM2GENE</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"data/pfam_conv_tbl.rds"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="co"># Remove blank terms</span>
@@ -2187,7 +2187,7 @@ Homeodomain
 <p></p>
 <p>There were 275 Pfam entries that were tested. Of these, 24 passed the size filter, and 0 were significantly over-represented after multiple testing correction. While none were significant, the top 10 are shown in Table <a href="pathway-analysis.html#tab:cp-ora-pfam-table">4.7</a> so that we can compare it to the results from <code>hyperGTest</code>.</p>
 <p>Now, we will perform Pfam ORA with the GOstats package. We begin by constructing a new object of class <code>PFAMHyperGParams</code> and then passing it to <code>hyperGTest</code> for calculation of Hypergeometric p-values. We do not filter by p-value, since adjusted p-values are not provided and we must calculate them ourselves.</p>
-<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">## Pfam ORA with GOstats</span>
 <span class="va">hyperg_pfam_ora</span> <span class="op">&lt;-</span> <span class="fu">new</span><span class="op">(</span>
   Class <span class="op">=</span> <span class="st">"PFAMHyperGParams"</span>,
@@ -2199,7 +2199,7 @@ Homeodomain
 <span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://rdrr.io/pkg/GOstats/man/hyperGTest.html">hyperGTest</a></span><span class="op">(</span><span class="op">)</span> <span class="co"># Hypergeometric testing</span></code></pre></div>
 <p>Now, we need to filter by gene set size (limit 15 to 500) and adjust the p-values. Normally, we would also filter based on the adjusted p-values, but we will skip this step so that we can compare the output with that of <code><a href="https://rdrr.io/pkg/clusterProfiler/man/enricher.html">clusterProfiler::enricher</a></code>.</p>
-<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res_pfam_ora</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">hyperg_pfam_ora</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="co"># Filter by Pfam entry size</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Size</span> <span class="op">&gt;=</span> <span class="fl">15</span>, <span class="va">Size</span> <span class="op">&lt;=</span> <span class="fl">500</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -2208,7 +2208,7 @@ Homeodomain
   <span class="co"># Sort by adjusted p-values</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">p.adjust</span><span class="op">)</span></code></pre></div>
 <p>The last step is to add the human-readable Pfam descriptions. We will use the <code>TERM2NAME</code> data frame from before and just change the column names for easy joining.</p>
-<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Pfam entries to descriptions</span>
 <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">TERM2NAME</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PFAMID"</span>, <span class="st">"Description"</span><span class="op">)</span>
 <span class="va">res_pfam_ora</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">res_pfam_ora</span>, <span class="va">TERM2NAME</span><span class="op">)</span></code></pre></div>
@@ -2634,7 +2634,7 @@ Talk more about ranking metrics and include sources!!!
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Proteomics Data Analysis in R/Bioconductor</strong>" was written by Tyler Sagendorf. It was last built on October 17, 2021.</p>
+    <p>"<strong>Proteomics Data Analysis in R/Bioconductor</strong>" was written by Tyler Sagendorf. It was last built on October 19, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
