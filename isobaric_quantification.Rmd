@@ -4,34 +4,30 @@
 TODO:
 * Overview of isobaric labeling
 --->
-
-Section summary to be added later. Please continue to subsections.
+<!---
+Keep in mind that there are many other functions available in `PlexedPiper` and `MSnID` that will not be covered that can be used to add additional columns or further filter the results. This section just showcases the foundations of the pipelines.
+--->
 
 
 ## Global Proteomics Data {#global-proteomics-data}
 
-This pipeline shows how to process TMT data that is processed outside of PNNL's DMS. Section \@ref(phosphoproteomics-data) shows how to process data from the DMS. For convenience, the results of MS-GF+ and MASIC processing are provided in a companion `PlexedPiperTestData` package. For this section, we need three packages: `PlexedPiper` for isobaric quantification, `PlexedPiperTestData`, and `dplyr` to manipulate data frames.
-
-<!---
-For these examples, we need two packages: PlexedPiper and PlexedPiperTestData. The former is used to interface with the DMS, while the latter is tailored to isobaric quantification.
---->
+This pipeline shows how to process TMT data that is processed outside of PNNL's DMS. Section \@ref(phosphoproteomics-data) shows how to process data from the DMS. For convenience, the results of MS-GF+ and MASIC processing are provided in a companion `PlexedPiperTestData` package. In addition, we will need `PlexedPiper` for isobaric quantification and `dplyr` to manipulate data frames.
 
 ```{r include=FALSE}
 # Global chunk options
 knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.align='center')
 ```
 
-
 ```{r iso-lab-setup}
 # Setup
 library(PlexedPiper)
 library(PlexedPiperTestData)
 library(dplyr)
-library(ggplot2) # plotting
-library(knitr) # embed images
 ```
 
 ```{r include=FALSE}
+library(ggplot2) # plotting
+library(knitr) # embed images
 library(kableExtra)
 ```
 
@@ -167,7 +163,7 @@ show(msnid)
 
 The next step is to filter the MS/MS identifications such that the empirical pwptide-level FDR is less than some threshold and the number of MS/MS IDs is maximized. We will use the $-log_{10}$ of the `PepQValue` column as one of our filtering criteria and assign it to a new column in `psms(msnid)` called `msmsScore`. The `PepQValue` column is the MS-GF+ Spectrum E-value, which reflects how well the theoretical and experimental fragmentation spectra match; therefore, high values of `msmsScore` indicate a good match (see Figure \@ref(fig:plot-msmsScore)).
 
-```{r plot-msmsScore, fig.cap="Density plot of msmsScore with dashed line indicating the baseline, un-optimized cutoff.", echo=FALSE, fig.asp=0.6}
+```{r plot-msmsScore, fig.cap="Density plot of msmsScore.", fig.asp=0.5, echo=FALSE}
 # Plot default filters
 msmsScore <- -log10(msnid$PepQValue) # > 2
 absParentMassErrorPPM <- abs(mass_measurement_error(msnid)) # < 10
@@ -176,28 +172,30 @@ isDecoy <- msnid$isDecoy
 # Plot msmsScore
 ggplot() +
   geom_density(aes(x = msmsScore, color = isDecoy), 
-               fill = NA, na.rm = TRUE) +
-  geom_vline(xintercept = 2, lty = "longdash") +
-  annotate("segment", x = 2.2, xend = 2.7, y = 0.75, yend = 0.75,
-           colour = "darkgrey", size = 2, arrow = arrow(type = "open")) +
+               fill = NA, na.rm = TRUE, size = 1.6) +
+  # geom_vline(xintercept = 2, lty = "longdash") +
+  # annotate("segment", x = 2.2, xend = 2.7, y = 0.75, yend = 0.75,
+  #          colour = "darkgrey", size = 2, arrow = arrow(type = "open")) +
   scale_y_continuous("Density", expand = expansion(mult = c(0, 0.05))) +
   scale_x_continuous(expand = expansion(0)) +
-  theme_bw(base_size = 12)
+  scale_color_manual(values = c("orange", "blue"), breaks = c(TRUE, FALSE)) +
+  theme_minimal(base_size = 12)
 ```
 </br>
 
 The other filtering criteria is the absolute deviation of the mass measurement error of the parent ions in parts-per-million (ppm), which is assigned to the `absParentMassErrorPPM` column in `psms(msnid)` (see Figure \@ref(fig:plot-mass-error)).
 
-```{r plot-mass-error, fig.cap="Density plot of absParentMassErrorPPM with dashed line indicating the baseline, un-optimized cutoff.", echo=FALSE, fig.asp=0.6}
+```{r plot-mass-error, fig.cap="Density plot of absParentMassErrorPPM.", echo=FALSE, fig.asp=0.5}
 ggplot() +
   geom_density(aes(x = absParentMassErrorPPM, color = isDecoy), 
-               fill = NA, na.rm = TRUE) +
-  geom_vline(xintercept = 10, lty = "longdash") +
-  annotate("segment", x = 9, xend = 5.5, y = 0.17, yend = 0.17,
-           colour = "darkgrey", size = 2, arrow = arrow(type = "open")) +
+               fill = NA, na.rm = TRUE, size = 1.6) +
+  # geom_vline(xintercept = 10, lty = "longdash") +
+  # annotate("segment", x = 9, xend = 5.5, y = 0.17, yend = 0.17,
+  #          colour = "darkgrey", size = 2, arrow = arrow(type = "open")) +
   scale_y_continuous("Density", expand = expansion(mult = c(0, 0.05))) +
   scale_x_continuous(expand = expansion(0)) +
-  theme_bw(base_size = 12)
+  scale_color_manual(values = c("orange", "blue"), breaks = c(TRUE, FALSE)) +
+  theme_minimal(base_size = 12)
 ```
 
 </br>
@@ -239,17 +237,18 @@ path_to_FASTA <- system.file(
 msnid <- compute_num_peptides_per_1000aa(msnid, path_to_FASTA)
 ```
 
-```{r plot-num-pep, fig.cap="Density plot of peptides_per_1000aa. Proteins with values greater than 1 are selected by default prior to optimization. The plot area has been zoomed in.", echo=FALSE, fig.asp=0.6}
+```{r plot-num-pep, fig.cap="Density plot of peptides_per_1000aa. The plot area has been zoomed in.", echo=FALSE, fig.asp=0.5}
 peptides_per_1000aa <- msnid$peptides_per_1000aa
 isDecoy <- msnid$isDecoy
 
 ggplot() +
   geom_density(aes(x = peptides_per_1000aa, color = isDecoy), 
-               fill = NA, na.rm = TRUE) +
+               fill = NA, na.rm = TRUE, size = 1.6) +
   scale_y_continuous("Density", expand = expansion(mult = c(0, 0.05))) +
   scale_x_continuous("peptides_per_1000aa", expand = expansion(0)) +
-  theme_bw(base_size = 12) +
-  coord_cartesian(xlim = c(0, 300)) +
+  scale_color_manual(values = c("orange", "blue"), breaks = c(TRUE, FALSE)) +
+  theme_minimal(base_size = 12) +
+  coord_cartesian(xlim = c(0, 250)) +
   guides(color = guide_legend(title = "isDecoy"))
 ```
 </br>
@@ -267,7 +266,11 @@ show(msnid)
 
 #### Inference of Parsimonious Protein Set 
 
-The situation when a certain peptide sequence matches multiple proteins adds complication to the downstream quantitative analysis, as it is not clear which protein this peptide is originating from. There are common ways for dealing with this. One is to simply retain uniquely matching peptides and discard shared peptides (`unique_only = TRUE`). Alternatively, assign the shared peptides to the proteins with the larger number of uniquely mapping peptides (`unique_only = FALSE`). If there is a choice between multiple proteins with equal numbers of uniquely mapping peptides, the shared peptides are assigned to the first protein according to alphanumeric order (Figure \@ref(fig:parsimony)). This step could be done prior to filtering at the accession level, but if peptides are assigned to a low-confidence protein, and that protein is removed during filtering, those peptides will be lost. Instead, it is better to filter to the set of confidently-identified proteins and then determine the parsimonious set.
+The situation when a certain peptide sequence matches multiple proteins adds complication to the downstream quantitative analysis, as it is not clear which protein this peptide is originating from. There are common ways for dealing with this. One is to simply retain uniquely matching peptides and discard shared peptides (`unique_only = TRUE`). Alternatively, assign the shared peptides to the proteins with the larger number of uniquely mapping peptides (`unique_only = FALSE`). If there is a choice between multiple proteins with equal numbers of uniquely mapping peptides, the shared peptides are assigned to the first protein according to alphanumeric order (Figure \@ref(fig:parsimony)). 
+
+<!---
+This step could be done prior to filtering at the accession level, but if peptides are assigned to a low-confidence protein, and that protein is removed during filtering, those peptides will be lost. Instead, it is better to filter to the set of confidently-identified proteins and then determine the parsimonious set.
+--->
 
 ```{r parsimony, echo=FALSE, fig.cap="Visual explanation of the inference of the parsimonious protein set."}
 include_graphics("images/parsimonious-protein-set-inference.PNG")
@@ -281,25 +284,23 @@ msnid <- infer_parsimonious_accessions(msnid, unique_only = FALSE)
 show(msnid)
 ```
 
-Notice that the protein-level FDR increased above the acceptable threshold, so we need to reapply the filter.
+Notice that the protein-level FDR increased slightly above the 1% threshold. In this case, the difference isn't significant, so we can ignore it. 
+
+:::{.rmdnote}
+If the peptide or accession-level FDR increases significantly above 1% after inference of the parsimonious protein set, consider lowering the FDR cutoff (for example, to 0.9%) and redoing the previous processing steps. Filtering at the peptide and accession level should each be done a single time.
+:::
+
+#### Remove Decoy PSMs
+
+The final step is to remove the decoy PSMs. We use the `apply_filter` function again and only keep entries where `isDecoy` is `FALSE`.
 
 ```{r}
-# 1% FDR filter at the protein level
-msnid <- filter_msgf_data(msnid,
-                          level = "accession",
-                          fdr.max = 0.01)
-show(msnid)
-```
-
-Once all filtering is done, we can remove the decoy accessions. We use the `apply_filter` function again and only keep entries where `isDecoy` is `FALSE`.
-
-```{r}
-# Remove Decoy Accessions
+# Remove Decoy PSMs
 msnid <- apply_filter(msnid, "!isDecoy")
 show(msnid)
 ```
 
-After processing, we are left with 444,213 PSMs, 90,156 peptides, and 5,171 proteins. Table \@ref(tab:global-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
+After processing, we are left with 444,345 PSMs, 90,232 peptides, and 5,196 proteins. Table \@ref(tab:global-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
 
 ```{r global-msnid-table, echo=FALSE}
 kable(head(psms(msnid), 6), digits = 3, row.names = FALSE, 
@@ -311,11 +312,12 @@ kable(head(psms(msnid), 6), digits = 3, row.names = FALSE,
 
 </br>
 
+
 ### Prepare Reporter Ion Intensities {#reporter-ion-intensities}
 
 #### Read MASIC Output 
 
-MASIC is a tool for extracting ion intensities. With proper parameter settings, it can be used for extracting TMT (or iTRAQ) reporter ion intensities. In addition, it reports a number of other helpful metrics. Notably, the interference score at the parent ion level and the signal-to-noise ratio (S/N) at the reporter ion level (computed by Thermo software). The interference score reflects the proportion of the ion population that was isolated for fragmentation that is due to the targeted ion. In other words, 1 - InterferenceScore is due to co-isolated species that have similar elution time and parent ion m/z.
+MASIC is a tool for extracting ion intensities. With proper parameter settings, it can be used for extracting TMT (or iTRAQ) reporter ion intensities. In addition, it reports a number of other helpful metrics. Notably, the interference score at the parent ion level and the signal-to-noise ratio (S/N) at the reporter ion level (computed by Thermo software). The interference score reflects the proportion of the ion population that was isolated for fragmentation that is due to the targeted ion. In other words, `1 - InterferenceScore` is due to co-isolated species that have similar elution time and parent ion m/z.
 
 ```{r results='hide'}
 # Path to MASIC data
@@ -326,7 +328,7 @@ path_to_MASIC_results <- system.file("extdata/global/masic_output",
 masic_data <- read_masic_data(path_to_MASIC_results, interference_score = TRUE)
 ```
 
-Normally, this would display two progress bars in the console as the data is being fetched. However, the output was suppressed to save space.
+Normally, this would display progress bars in the console as the data is being fetched. However, the output was suppressed to save space.
 
 ```{r global-masic-table, echo=FALSE}
 kable(head(masic_data, 6), digits = 3, row.names = FALSE, 
@@ -354,24 +356,7 @@ masic_data <- filter_masic_data(masic_data,
 
 ### Create Study Design Tables {#fetch-study-design-tables}
 
-To convert from PSMs and reporter ion intensities to meaningful quantitative data, it is necessary to know what are the samples in the reporter channels and what is the intended reference channel (or combination of channels). The entire study design is captured by three tables - fractions, samples, references. With newly processed data, these typically do not exist, and must be created. If the tables already exist, the code to access them is as follows.
-
-```{r eval=FALSE}
-# Read tables from folder:
-fractions <- read_tsv(system.file("extdata/study_design/fractions.txt", 
-                                  package = "PlexedPiperTestData"))
-samples <- read_tsv(system.file("extdata/study_design/samples.txt", 
-                                package = "PlexedPiperTestData"))
-references <- read_tsv(system.file("extdata/study_design/references.txt", 
-                                   package = "PlexedPiperTestData"))
-
-# If using a data package from the DMS:
-study_design <- read_study_design_from_DMS(data_package_num)
-fractions <- study_design$fractions
-samples <- study_design$samples
-references <- study_design$references
-```
-
+To convert from PSMs and reporter ion intensities to meaningful quantitative data, it is necessary to know what are the samples in the reporter channels and what is the intended reference channel (or combination of channels). The entire study design is captured by three tables - fractions, samples, references. With newly processed data, these typically do not exist, and must be created.
 
 #### Fractions 
 
@@ -403,25 +388,12 @@ The samples table contains columns `PlexID`, `QuantBlock`, `ReporterName`, `Repo
 For this experiment, channel 131 will serve as the reference, so we set `MeasurementName` to `NA` when `ReporterName` is `"131"`. This will make the reference channel absent from the quantitative cross-tab. In cases where reporter ion intensities are not normalized by a reference channel (reference = 1) or they are normalized by the average of select channels, do not set any `MeasurementName` to `NA`.
 
 ```{r}
-# TMT10 Reporter Converter table from MSnID package
-conv <- reporter_converter$tmt10
-plexes <- unique(fractions$PlexID)
-
-# Reference channel
-ref_channel <- "131"
-
 # Create samples table
-samples <- data.frame(PlexID = rep(plexes, each = nrow(conv)),  
-                      ReporterName = rep(conv$ReporterName, 
-                                         length(plexes))) %>% 
-  mutate(ReporterAlias = sprintf("%s_%s", PlexID, ReporterName),
-         MeasurementName = ReporterAlias,
-         QuantBlock = 1,
-         # Comment out this next part if the reference
-         # is not one of the reporter ion channels.
-         MeasurementName = ifelse(ReporterName == ref_channel,
-                                  NA, MeasurementName)
-  )
+samples <- read.delim("data/MoTrPAC_pilot_TMT_labeling.txt") %>% 
+  dplyr::rename(ReporterName = TMT10_channel, 
+                ReporterAlias = sample_ID) %>% 
+  mutate(QuantBlock = 1,
+         MeasurementName = ifelse(ReporterAlias == "ref", NA, ReporterAlias))
 ```
 
 ```{r samples-table, echo=FALSE}
@@ -444,8 +416,8 @@ Reference can be a certain channel, average of multiple channels, or 1. The gene
 ```{r}
 # Create references table
 references <- samples %>% 
-  # Filter to reference channel
-  filter(ReporterName == ref_channel) %>% 
+  # Filter to reference channel (ReporterName == "131", ReporterAlias == "ref")
+  filter(ReporterName == "131") %>% 
   # Select required columns and rename ReporterAlias to Reference
   select(PlexID, Reference = ReporterAlias, QuantBlock)
 ```
@@ -482,13 +454,13 @@ TODO:
 Explain how to add the study design tables to the DMS.
 --->
 
-```{r eval=FALSE}
+```{r}
 # Save study design tables
-write.table(fractions, file = "fractions.txt",
+write.table(fractions, file = "data/fractions.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
-write.table(samples, file = "samples.txt",
+write.table(samples, file = "data/samples.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
-write.table(references, file = "references.txt",
+write.table(references, file = "data/references.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 ```
 
@@ -516,30 +488,29 @@ kable(head(crosstab, 6), row.names = TRUE,
 
 </br>
 
-In order to demonstrate prioritized inference in Section \@ref(phosphoproteomics-data), we need to save the row names of this cross-tab.
+Now that we have the cross-tab, we should save it.
 
 ```{r}
-# Save protein names
-saveRDS(rownames(crosstab), file = "data/3442_global_protein_names.rds")
-```
-
-We should save the cross-tab as well. To do so, we need to convert the row names to a column called `protein`.
-
-```{r}
-# Modify cross-tab for saving
-crosstab <- crosstab %>% 
-  as.data.frame() %>% 
-  tibble::rownames_to_column("protein")
-
 # Save cross-tab
 write.table(crosstab, file = "data/global_quant_crosstab.txt",
-            sep = "\t", quote = FALSE, row.names = FALSE)
+            sep = "\t", quote = FALSE, row.names = TRUE)
 ```
+
+We will also save the proteins (row names) of this cross-tab in order to demonstrate prioritized inference in Section \@ref(phosphoproteomics-data).
+
+```{r}
+# Save global proteins
+global_proteins <- rownames(crosstab)
+save(global_proteins, file = "data/3442_global_proteins.RData")
+```
+
 
 
 ## Phosphoproteomics Data {#phosphoproteomics-data}
 
-This pipeline shows how to process data from the DMS. The number of the data package is `3626`. For this section, we need the `PlexedPiper` package for isobaric quantification and `PNNL.DMS.utils` to interface with the DMS. Also, some details will be omitted if they were already provided in Section \@ref(global-proteomics-data).
+This pipeline shows how to process phosphoproteomics data from the DMS. Phosphoproteomics deals with proteins that have been phosphorylated. Phosphorylation is a type of reversible post-translational modification (PTM; a protein modification that occurs after protein synthesis) in which a protein kinase attaches a phosphate group to an amino acid residue. This change in a protein's structure can completely alter aspects such as its biological activity and protein-protein interactions, and "abnormal phosphorylation is now recognized as a cause or consequence of many human diseases" [@cohen_origins_2002]. The most commonly phosphorylated amino acids are serine (S), threonine (T), and tyrosine (Y).
+
+For this section, we will use data package number `3626`. We will need the `PlexedPiper` package for isobaric quantification and `PNNL.DMS.utils` to interface with the DMS. Also, details will be omitted if they were already provided in Section \@ref(global-proteomics-data).
 
 ```{r message=FALSE}
 # Setup
@@ -565,23 +536,23 @@ show(msnid)
 ```
 
 
+#### Correct Isotope Selection Error 
+
+```{r}
+# Correct for isotope selection error
+msnid <- correct_peak_selection(msnid)
+```
+
+
 #### Remove Non-Phosphorylated Peptides 
 
-In this case, the phosphorylation of an amino acid is marked by a `*` appearing after the amino acid. We will not consider unmodified peptides, so we can filter them out. The `*` is a special character that must be escaped with backslashes, and the backslashes must also be escaped.
+In this case, the phosphorylation of an amino acid is marked by a `*` inserted into the sequence after said amino acid. We will not consider unmodified peptides, so we can filter out peptides that do not contain this symbol with `apply_filter`. The `*` is a special character that must be escaped with backslashes, and the backslashes must also be escaped, since they are enclosed within a nested string (`"''"`).
 
 ```{r}
 # Remove non-phosphorylated peptides
 # (peptides that do not contain a *)
 msnid <- apply_filter(msnid, "grepl('\\\\*', peptide)")
 show(msnid)
-```
-
-
-#### Correct Isotope Selection Error 
-
-```{r}
-# Correct for isotope selection error
-msnid <- correct_peak_selection(msnid)
 ```
 
 
@@ -594,15 +565,19 @@ show(msnid)
 ```
 
 
-#### Filter by AScore 
+#### Improve Phosphosite Localization
 
 Phospho datasets involve AScore jobs for improving phosphosite localization. There should be one AScore job per data package. The fetched object is a data.frame that links datasets, scans and original PTM localization to newly suggested locations. Importantly, it contains `AScore` column that signifies the confidence of PTM assignment. AScore > 17 is considered confident.
 
 ```{r results='hide'}
-# Filter PTMs by AScore
+# Filter PTMs by Ascore
 ascore <- get_AScore_results(data_package_num)
 msnid <- best_PTM_location_by_ascore(msnid, ascore)
 ```
+
+<!---
+Why are some of the original sequences in ascore not phosphorylated? (AScore = -1)
+--->
 
 ```{r}
 show(msnid)
@@ -651,25 +626,17 @@ msnid <- infer_parsimonious_accessions(msnid, unique_only = FALSE,
 show(msnid)
 ```
 
-Notice that the protein-level FDR increased above the acceptable threshold, so we need to reapply the filter.
+#### Remove Decoy PSMs
 
 ```{r}
-# 1% FDR filter at the protein level
-msnid <- filter_msgf_data(msnid,
-                          level = "accession",
-                          fdr.max = 0.01)
-show(msnid)
-```
-
-```{r}
-# Remove Decoy Accessions
+# Remove Decoy PSMs
 msnid <- apply_filter(msnid, "!isDecoy")
 show(msnid)
 ```
 
 #### Map Sites to Protein Sequences 
 
-Prepare FASTA to make sure entry names in FASTA file match MSnID accessions. The plan is to make this conversion automatic. `map_mod_sites` creates number of columns describing mapping of the site/s onto the protein sequences. The most important for the user is `SiteID`.
+Prepare FASTA to make sure entry names in FASTA file match MSnID accessions. The plan is to make this conversion automatic. `map_mod_sites` creates a number of columns describing mapping of the site/s onto the protein sequences. The most important for the user is `SiteID`.
 
 ```{r}
 # Create AAStringSet
@@ -740,48 +707,24 @@ masic_data <- filter_masic_data(masic_data,
 
 ### Create Study Design Tables
 
-#### Fractions 
+If study design tables are on the DMS, they can be accessed in the following way.
+
+```{r eval=FALSE}
+# Read study design tables from DMS
+study_design <- read_study_design_from_DMS(data_package_num)
+fractions <- study_design$fractions
+samples <- study_design$samples
+references <- study_design$references
+```
+
+While the study design tables are not on the DMS, we already created them in Section \@ref(fetch-study-design-tables). We just need to recreate the fractions table because the dataset names are different.
 
 ```{r}
-# Create fractions table
+# Read tables from folder
+samples <- read.delim("data/samples.txt")
+references <- read.delim("data/references.txt")
 fractions <- data.frame(Dataset = unique(masic_data$Dataset)) %>% 
   mutate(PlexID = gsub(".*_P_(S\\d{1})_.*", "\\1", Dataset))
-```
-
-
-#### Samples 
-
-```{r}
-# TMT10 Reporter Converter table from MSnID package
-conv <- reporter_converter$tmt10
-plexes <- unique(fractions$PlexID)
-
-# Reference channel
-ref_channel <- "131"
-
-# Create samples table
-samples <- data.frame(PlexID = rep(plexes, each = nrow(conv)),  
-                      ReporterName = rep(conv$ReporterName, 
-                                         length(plexes))) %>% 
-  mutate(ReporterAlias = sprintf("%s_%s", PlexID, ReporterName),
-         MeasurementName = ReporterAlias,
-         QuantBlock = 1,
-         # Comment out this next part if the reference
-         # is not one of the reporter ion channels.
-         MeasurementName = ifelse(ReporterName == ref_channel,
-                                  NA, MeasurementName)
-  )
-```
-
-#### References 
-
-```{r}
-# Create references table
-references <- samples %>% 
-  # Filter to reference channel
-  filter(ReporterName == ref_channel) %>% 
-  # Select required columns and rename ReporterAlias to Reference
-  select(PlexID, Reference = ReporterAlias, QuantBlock)
 ```
 
 
@@ -818,7 +761,7 @@ crosstab <- crosstab %>%
   tibble::rownames_to_column("SiteID")
 
 # Save cross-tab
-write.table(crosstab, file = "data/phospho_quant_crosstab.txt",
+write.table(crosstab, file = "data/phosphosite_quant_crosstab.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 ```
 

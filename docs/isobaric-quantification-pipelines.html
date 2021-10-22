@@ -37,7 +37,7 @@
 <li><a class="" href="exploratory-data-analysis.html"><span class="header-section-number">2</span> Exploratory Data Analysis</a></li>
 <li><a class="" href="DEA.html"><span class="header-section-number">3</span> Differential Expression Analysis</a></li>
 <li><a class="" href="pathway-analysis.html"><span class="header-section-number">4</span> Pathway Analysis</a></li>
-<li><a class="" href="references-2.html">References</a></li>
+<li><a class="" href="references-1.html">References</a></li>
 </ul>
 
         <div class="book-extra">
@@ -53,22 +53,19 @@
 TODO:
 * Overview of isobaric labeling
 --->
-<p>Section summary to be added later. Please continue to subsections.</p>
+<!---
+Keep in mind that there are many other functions available in `PlexedPiper` and `MSnID` that will not be covered that can be used to add additional columns or further filter the results. This section just showcases the foundations of the pipelines.
+--->
 <div id="global-proteomics-data" class="section level2" number="1.1">
 <h2>
 <span class="header-section-number">1.1</span> Global Proteomics Data<a class="anchor" aria-label="anchor" href="#global-proteomics-data"><i class="fas fa-link"></i></a>
 </h2>
-<p>This pipeline shows how to process TMT data that is processed outside of PNNL’s DMS. Section <a href="isobaric-quantification-pipelines.html#phosphoproteomics-data">1.2</a> shows how to process data from the DMS. For convenience, the results of MS-GF+ and MASIC processing are provided in a companion <code>PlexedPiperTestData</code> package. For this section, we need three packages: <code>PlexedPiper</code> for isobaric quantification, <code>PlexedPiperTestData</code>, and <code>dplyr</code> to manipulate data frames.</p>
-<!---
-For these examples, we need two packages: PlexedPiper and PlexedPiperTestData. The former is used to interface with the DMS, while the latter is tailored to isobaric quantification.
---->
+<p>This pipeline shows how to process TMT data that is processed outside of PNNL’s DMS. Section <a href="isobaric-quantification-pipelines.html#phosphoproteomics-data">1.2</a> shows how to process data from the DMS. For convenience, the results of MS-GF+ and MASIC processing are provided in a companion <code>PlexedPiperTestData</code> package. In addition, we will need <code>PlexedPiper</code> for isobaric quantification and <code>dplyr</code> to manipulate data frames.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Setup</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">PlexedPiper</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">PlexedPiperTestData</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span> <span class="co"># plotting</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/">knitr</a></span><span class="op">)</span> <span class="co"># embed images</span></code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org">dplyr</a></span><span class="op">)</span></code></pre></div>
 <div id="prepare-MS2-IDs-global" class="section level3" number="1.1.1">
 <h3>
 <span class="header-section-number">1.1.1</span> Prepare MS/MS Identifications<a class="anchor" aria-label="anchor" href="#prepare-MS2-IDs-global"><i class="fas fa-link"></i></a>
@@ -192,16 +189,16 @@ Figure 1.1: Histogram of mass measurement errors before and after correction.
 <p>The next step is to filter the MS/MS identifications such that the empirical pwptide-level FDR is less than some threshold and the number of MS/MS IDs is maximized. We will use the <span class="math inline">\(-log_{10}\)</span> of the <code>PepQValue</code> column as one of our filtering criteria and assign it to a new column in <code>psms(msnid)</code> called <code>msmsScore</code>. The <code>PepQValue</code> column is the MS-GF+ Spectrum E-value, which reflects how well the theoretical and experimental fragmentation spectra match; therefore, high values of <code>msmsScore</code> indicate a good match (see Figure <a href="isobaric-quantification-pipelines.html#fig:plot-msmsScore">1.2</a>).</p>
 <div class="figure" style="text-align: center">
 <span id="fig:plot-msmsScore"></span>
-<img src="isobaric_quantification_files/figure-html/plot-msmsScore-1.png" alt="Density plot of msmsScore with dashed line indicating the baseline, un-optimized cutoff." width="672"><p class="caption">
-Figure 1.2: Density plot of msmsScore with dashed line indicating the baseline, un-optimized cutoff.
+<img src="isobaric_quantification_files/figure-html/plot-msmsScore-1.png" alt="Density plot of msmsScore." width="672"><p class="caption">
+Figure 1.2: Density plot of msmsScore.
 </p>
 </div>
 <p></p>
 <p>The other filtering criteria is the absolute deviation of the mass measurement error of the parent ions in parts-per-million (ppm), which is assigned to the <code>absParentMassErrorPPM</code> column in <code>psms(msnid)</code> (see Figure <a href="isobaric-quantification-pipelines.html#fig:plot-mass-error">1.3</a>).</p>
 <div class="figure" style="text-align: center">
 <span id="fig:plot-mass-error"></span>
-<img src="isobaric_quantification_files/figure-html/plot-mass-error-1.png" alt="Density plot of absParentMassErrorPPM with dashed line indicating the baseline, un-optimized cutoff." width="672"><p class="caption">
-Figure 1.3: Density plot of absParentMassErrorPPM with dashed line indicating the baseline, un-optimized cutoff.
+<img src="isobaric_quantification_files/figure-html/plot-mass-error-1.png" alt="Density plot of absParentMassErrorPPM." width="672"><p class="caption">
+Figure 1.3: Density plot of absParentMassErrorPPM.
 </p>
 </div>
 <p></p>
@@ -245,8 +242,8 @@ Figure 1.4: First three entries of the FASTA file.
 <span class="va">msnid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/PlexedPiper/man/compute_num_peptides_per_1000aa.html">compute_num_peptides_per_1000aa</a></span><span class="op">(</span><span class="va">msnid</span>, <span class="va">path_to_FASTA</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
 <span id="fig:plot-num-pep"></span>
-<img src="isobaric_quantification_files/figure-html/plot-num-pep-1.png" alt="Density plot of peptides_per_1000aa. Proteins with values greater than 1 are selected by default prior to optimization. The plot area has been zoomed in." width="672"><p class="caption">
-Figure 1.5: Density plot of peptides_per_1000aa. Proteins with values greater than 1 are selected by default prior to optimization. The plot area has been zoomed in.
+<img src="isobaric_quantification_files/figure-html/plot-num-pep-1.png" alt="Density plot of peptides_per_1000aa. The plot area has been zoomed in." width="672"><p class="caption">
+Figure 1.5: Density plot of peptides_per_1000aa. The plot area has been zoomed in.
 </p>
 </div>
 <p></p>
@@ -268,7 +265,10 @@ Figure 1.5: Density plot of peptides_per_1000aa. Proteins with values greater th
 <h4>
 <span class="header-section-number">1.1.1.6</span> Inference of Parsimonious Protein Set<a class="anchor" aria-label="anchor" href="#inference-of-parsimonious-protein-set"><i class="fas fa-link"></i></a>
 </h4>
-<p>The situation when a certain peptide sequence matches multiple proteins adds complication to the downstream quantitative analysis, as it is not clear which protein this peptide is originating from. There are common ways for dealing with this. One is to simply retain uniquely matching peptides and discard shared peptides (<code>unique_only = TRUE</code>). Alternatively, assign the shared peptides to the proteins with the larger number of uniquely mapping peptides (<code>unique_only = FALSE</code>). If there is a choice between multiple proteins with equal numbers of uniquely mapping peptides, the shared peptides are assigned to the first protein according to alphanumeric order (Figure <a href="isobaric-quantification-pipelines.html#fig:parsimony">1.6</a>). This step could be done prior to filtering at the accession level, but if peptides are assigned to a low-confidence protein, and that protein is removed during filtering, those peptides will be lost. Instead, it is better to filter to the set of confidently-identified proteins and then determine the parsimonious set.</p>
+<p>The situation when a certain peptide sequence matches multiple proteins adds complication to the downstream quantitative analysis, as it is not clear which protein this peptide is originating from. There are common ways for dealing with this. One is to simply retain uniquely matching peptides and discard shared peptides (<code>unique_only = TRUE</code>). Alternatively, assign the shared peptides to the proteins with the larger number of uniquely mapping peptides (<code>unique_only = FALSE</code>). If there is a choice between multiple proteins with equal numbers of uniquely mapping peptides, the shared peptides are assigned to the first protein according to alphanumeric order (Figure <a href="isobaric-quantification-pipelines.html#fig:parsimony">1.6</a>).</p>
+<!---
+This step could be done prior to filtering at the accession level, but if peptides are assigned to a low-confidence protein, and that protein is removed during filtering, those peptides will be lost. Instead, it is better to filter to the set of confidently-identified proteins and then determine the parsimonious set.
+--->
 <div class="figure" style="text-align: center">
 <span id="fig:parsimony"></span>
 <img src="images/parsimonious-protein-set-inference.PNG" alt="Visual explanation of the inference of the parsimonious protein set." width="528"><p class="caption">
@@ -286,31 +286,27 @@ Figure 1.6: Visual explanation of the inference of the parsimonious protein set.
 ## #PSMs: 445006 at 0.15 % FDR
 ## #peptides: 90478 at 0.27 % FDR
 ## #accessions: 5251 at 1.1 % FDR</code></pre>
-<p>Notice that the protein-level FDR increased above the acceptable threshold, so we need to reapply the filter.</p>
+<p>Notice that the protein-level FDR increased slightly above the 1% threshold. In this case, the difference isn’t significant, so we can ignore it.</p>
+<div class="rmdnote">
+<p>If the peptide or accession-level FDR increases significantly above 1% after inference of the parsimonious protein set, consider lowering the FDR cutoff (for example, to 0.9%) and redoing the previous processing steps. Filtering at the peptide and accession level should each be done a single time.</p>
+</div>
+</div>
+<div id="remove-decoy-psms" class="section level4" number="1.1.1.7">
+<h4>
+<span class="header-section-number">1.1.1.7</span> Remove Decoy PSMs<a class="anchor" aria-label="anchor" href="#remove-decoy-psms"><i class="fas fa-link"></i></a>
+</h4>
+<p>The final step is to remove the decoy PSMs. We use the <code>apply_filter</code> function again and only keep entries where <code>isDecoy</code> is <code>FALSE</code>.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># 1% FDR filter at the protein level</span>
-<span class="va">msnid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/PlexedPiper/man/filter_msgf_data.html">filter_msgf_data</a></span><span class="op">(</span><span class="va">msnid</span>,
-                          level <span class="op">=</span> <span class="st">"accession"</span>,
-                          fdr.max <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span>
-<span class="fu">show</span><span class="op">(</span><span class="va">msnid</span><span class="op">)</span></code></pre></div>
-<pre><code>## MSnID object
-## Working directory: "."
-## #Spectrum Files:  48 
-## #PSMs: 444850 at 0.14 % FDR
-## #peptides: 90384 at 0.25 % FDR
-## #accessions: 5222 at 0.99 % FDR</code></pre>
-<p>Once all filtering is done, we can remove the decoy accessions. We use the <code>apply_filter</code> function again and only keep entries where <code>isDecoy</code> is <code>FALSE</code>.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Remove Decoy Accessions</span>
+<code class="sourceCode R"><span class="co"># Remove Decoy PSMs</span>
 <span class="va">msnid</span> <span class="op">&lt;-</span> <span class="fu">apply_filter</span><span class="op">(</span><span class="va">msnid</span>, <span class="st">"!isDecoy"</span><span class="op">)</span>
 <span class="fu">show</span><span class="op">(</span><span class="va">msnid</span><span class="op">)</span></code></pre></div>
 <pre><code>## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  48 
-## #PSMs: 444213 at 0 % FDR
-## #peptides: 90156 at 0 % FDR
-## #accessions: 5171 at 0 % FDR</code></pre>
-<p>After processing, we are left with 444,213 PSMs, 90,156 peptides, and 5,171 proteins. Table <a href="isobaric-quantification-pipelines.html#tab:global-msnid-table">1.1</a> shows the first 6 rows of the processed MS-GF+ output.</p>
+## #PSMs: 444345 at 0 % FDR
+## #peptides: 90232 at 0 % FDR
+## #accessions: 5196 at 0 % FDR</code></pre>
+<p>After processing, we are left with 444,345 PSMs, 90,232 peptides, and 5,196 proteins. Table <a href="isobaric-quantification-pipelines.html#tab:global-msnid-table">1.1</a> shows the first 6 rows of the processed MS-GF+ output.</p>
 <div class="inline-table"><table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
 <span id="tab:global-msnid-table">Table 1.1: </span><left>First 6 rows of the processed MS-GF+ results.</left>
@@ -1015,15 +1011,15 @@ AAAAAEAESGGGGGK
 <h4>
 <span class="header-section-number">1.1.2.1</span> Read MASIC Output<a class="anchor" aria-label="anchor" href="#read-masic-output"><i class="fas fa-link"></i></a>
 </h4>
-<p>MASIC is a tool for extracting ion intensities. With proper parameter settings, it can be used for extracting TMT (or iTRAQ) reporter ion intensities. In addition, it reports a number of other helpful metrics. Notably, the interference score at the parent ion level and the signal-to-noise ratio (S/N) at the reporter ion level (computed by Thermo software). The interference score reflects the proportion of the ion population that was isolated for fragmentation that is due to the targeted ion. In other words, 1 - InterferenceScore is due to co-isolated species that have similar elution time and parent ion m/z.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<p>MASIC is a tool for extracting ion intensities. With proper parameter settings, it can be used for extracting TMT (or iTRAQ) reporter ion intensities. In addition, it reports a number of other helpful metrics. Notably, the interference score at the parent ion level and the signal-to-noise ratio (S/N) at the reporter ion level (computed by Thermo software). The interference score reflects the proportion of the ion population that was isolated for fragmentation that is due to the targeted ion. In other words, <code>1 - InterferenceScore</code> is due to co-isolated species that have similar elution time and parent ion m/z.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Path to MASIC data</span>
 <span class="va">path_to_MASIC_results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/global/masic_output"</span>, 
                                      package <span class="op">=</span> <span class="st">"PlexedPiperTestData"</span><span class="op">)</span>
 
 <span class="co"># Read MASIC data</span>
 <span class="va">masic_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/PlexedPiper/man/read_masic_data.html">read_masic_data</a></span><span class="op">(</span><span class="va">path_to_MASIC_results</span>, interference_score <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p>Normally, this would display two progress bars in the console as the data is being fetched. However, the output was suppressed to save space.</p>
+<p>Normally, this would display progress bars in the console as the data is being fetched. However, the output was suppressed to save space.</p>
 <div class="inline-table"><table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
 <span id="tab:global-masic-table">Table 1.2: </span><left>First 6 rows of the MASIC data.</left>
@@ -2355,7 +2351,7 @@ NA
 <span class="header-section-number">1.1.2.2</span> Filter MASIC Data<a class="anchor" aria-label="anchor" href="#filter-masic-data"><i class="fas fa-link"></i></a>
 </h4>
 <p>Currently, we recommend keeping entries where at least 50% of the ion population is due to the targeted ion (interference score <span class="math inline">\(\geq\)</span> 0.5) and not filtering by S/N.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Filter MASIC data</span>
 <span class="va">masic_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/PlexedPiper/man/filter_masic_data.html">filter_masic_data</a></span><span class="op">(</span><span class="va">masic_data</span>, 
                                 interference_score_threshold <span class="op">=</span> <span class="fl">0.5</span>,
@@ -2366,27 +2362,13 @@ NA
 <h3>
 <span class="header-section-number">1.1.3</span> Create Study Design Tables<a class="anchor" aria-label="anchor" href="#fetch-study-design-tables"><i class="fas fa-link"></i></a>
 </h3>
-<p>To convert from PSMs and reporter ion intensities to meaningful quantitative data, it is necessary to know what are the samples in the reporter channels and what is the intended reference channel (or combination of channels). The entire study design is captured by three tables - fractions, samples, references. With newly processed data, these typically do not exist, and must be created. If the tables already exist, the code to access them is as follows.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Read tables from folder:</span>
-<span class="va">fractions</span> <span class="op">&lt;-</span> <span class="fu">read_tsv</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/study_design/fractions.txt"</span>, 
-                                  package <span class="op">=</span> <span class="st">"PlexedPiperTestData"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu">read_tsv</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/study_design/samples.txt"</span>, 
-                                package <span class="op">=</span> <span class="st">"PlexedPiperTestData"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">references</span> <span class="op">&lt;-</span> <span class="fu">read_tsv</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span><span class="op">(</span><span class="st">"extdata/study_design/references.txt"</span>, 
-                                   package <span class="op">=</span> <span class="st">"PlexedPiperTestData"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># If using a data package from the DMS:</span>
-<span class="va">study_design</span> <span class="op">&lt;-</span> <span class="fu">read_study_design_from_DMS</span><span class="op">(</span><span class="va">data_package_num</span><span class="op">)</span>
-<span class="va">fractions</span> <span class="op">&lt;-</span> <span class="va">study_design</span><span class="op">$</span><span class="va">fractions</span>
-<span class="va">samples</span> <span class="op">&lt;-</span> <span class="va">study_design</span><span class="op">$</span><span class="va">samples</span>
-<span class="va">references</span> <span class="op">&lt;-</span> <span class="va">study_design</span><span class="op">$</span><span class="va">references</span></code></pre></div>
+<p>To convert from PSMs and reporter ion intensities to meaningful quantitative data, it is necessary to know what are the samples in the reporter channels and what is the intended reference channel (or combination of channels). The entire study design is captured by three tables - fractions, samples, references. With newly processed data, these typically do not exist, and must be created.</p>
 <div id="fractions" class="section level4" number="1.1.3.1">
 <h4>
 <span class="header-section-number">1.1.3.1</span> Fractions<a class="anchor" aria-label="anchor" href="#fractions"><i class="fas fa-link"></i></a>
 </h4>
 <p>The fractions table consists of two columns: <code>Dataset</code> and <code>PlexID</code>. The <code>Dataset</code> column contains all of the unique datasets from <code>msnid$Dataset</code> or <code>masic_data$Dataset</code>. The <code>PlexID</code> column contains the plex ID associated with each dataset, and is typically an “S” followed by a number (“S1,” “S2,” etc.). We can extract the plex ID from the datasets. In this case, the plex ID always comes after “<em>W</em>,” so we can use a regular expression (regex) to capture it (the first argument of <code>gsub</code>). The regex below says to capture an “S” followed by a single digit that appears after “<em>W</em>” and before an underscore.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Create fractions table</span>
 <span class="va">fractions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Dataset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">masic_data</span><span class="op">$</span><span class="va">Dataset</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>PlexID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">".*_W_(S\\d{1})_.*"</span>, <span class="st">"\\1"</span>, <span class="va">Dataset</span><span class="op">)</span><span class="op">)</span></code></pre></div>
@@ -2494,216 +2476,203 @@ S1
 </h4>
 <p>The samples table contains columns <code>PlexID</code>, <code>QuantBlock</code>, <code>ReporterName</code>, <code>ReporterAlias</code>, and <code>MeasurementName</code>. The plex ID must be the same as the plex ID in the <code>fractions</code> table. <code>ReporterName</code> is the reporter ion name (“126,” “127N,” “127C,” etc.). <code>ReporterAlias</code> is the intermediate between <code>ReporterName</code> and <code>MeasurementName</code> and is used for defining the reference. <code>MeasurementName</code> determines the column names for the final cross-tab, and must be unique and begin with a letter. <code>MeasurementName</code> is usually the sample names; however, we do not have that information, so we will instead prepend <code>PlexID</code> to the <code>ReporterName</code> to create <code>MeasurementName</code>. Finally, <code>QuantBlock</code> can be thought of as a way of defining sub-plex. In a typical TMT experiment, <code>QuantBlock</code> is always 1. In case of 5 pairwise comparisons within TMT10, there will be 5 QuantBlocks (1-5) with a reference for each <code>QuantBlock</code>.</p>
 <p>For this experiment, channel 131 will serve as the reference, so we set <code>MeasurementName</code> to <code>NA</code> when <code>ReporterName</code> is <code>"131"</code>. This will make the reference channel absent from the quantitative cross-tab. In cases where reporter ion intensities are not normalized by a reference channel (reference = 1) or they are normalized by the average of select channels, do not set any <code>MeasurementName</code> to <code>NA</code>.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># TMT10 Reporter Converter table from MSnID package</span>
-<span class="va">conv</span> <span class="op">&lt;-</span> <span class="va">reporter_converter</span><span class="op">$</span><span class="va">tmt10</span>
-<span class="va">plexes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">fractions</span><span class="op">$</span><span class="va">PlexID</span><span class="op">)</span>
-
-<span class="co"># Reference channel</span>
-<span class="va">ref_channel</span> <span class="op">&lt;-</span> <span class="st">"131"</span>
-
-<span class="co"># Create samples table</span>
-<span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>PlexID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">plexes</span>, each <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">conv</span><span class="op">)</span><span class="op">)</span>,  
-                      ReporterName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">conv</span><span class="op">$</span><span class="va">ReporterName</span>, 
-                                         <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">plexes</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>ReporterAlias <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"%s_%s"</span>, <span class="va">PlexID</span>, <span class="va">ReporterName</span><span class="op">)</span>,
-         MeasurementName <span class="op">=</span> <span class="va">ReporterAlias</span>,
-         QuantBlock <span class="op">=</span> <span class="fl">1</span>,
-         <span class="co"># Comment out this next part if the reference</span>
-         <span class="co"># is not one of the reporter ion channels.</span>
-         MeasurementName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">ReporterName</span> <span class="op">==</span> <span class="va">ref_channel</span>,
-                                  <span class="cn">NA</span>, <span class="va">MeasurementName</span><span class="op">)</span>
-  <span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Create samples table</span>
+<span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span><span class="st">"data/MoTrPAC_pilot_TMT_labeling.txt"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>ReporterName <span class="op">=</span> <span class="va">TMT10_channel</span>, 
+                ReporterAlias <span class="op">=</span> <span class="va">sample_ID</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>QuantBlock <span class="op">=</span> <span class="fl">1</span>,
+         MeasurementName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">ReporterAlias</span> <span class="op">==</span> <span class="st">"ref"</span>, <span class="cn">NA</span>, <span class="va">ReporterAlias</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div class="inline-table"><table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
 <span id="tab:samples-table">Table 1.4: </span><left>First 10 rows of the samples table.</left>
 </caption>
 <thead><tr>
 <th style="text-align:left;">
-PlexID
+ReporterAlias
 </th>
 <th style="text-align:left;">
 ReporterName
 </th>
 <th style="text-align:left;">
-ReporterAlias
-</th>
-<th style="text-align:left;">
-MeasurementName
+PlexID
 </th>
 <th style="text-align:right;">
 QuantBlock
+</th>
+<th style="text-align:left;">
+MeasurementName
 </th>
 </tr></thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-S1
-</td>
-<td style="text-align:left;">
-126
-</td>
-<td style="text-align:left;">
-S1_126
-</td>
-<td style="text-align:left;">
-S1_126
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-S1
-</td>
-<td style="text-align:left;">
-127N
-</td>
-<td style="text-align:left;">
-S1_127N
-</td>
-<td style="text-align:left;">
-S1_127N
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-S1
-</td>
-<td style="text-align:left;">
-127C
-</td>
-<td style="text-align:left;">
-S1_127C
-</td>
-<td style="text-align:left;">
-S1_127C
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-S1
-</td>
-<td style="text-align:left;">
-128N
-</td>
-<td style="text-align:left;">
-S1_128N
-</td>
-<td style="text-align:left;">
-S1_128N
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-S1
-</td>
-<td style="text-align:left;">
-128C
-</td>
-<td style="text-align:left;">
-S1_128C
-</td>
-<td style="text-align:left;">
-S1_128C
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-S1
-</td>
-<td style="text-align:left;">
-129N
-</td>
-<td style="text-align:left;">
-S1_129N
-</td>
-<td style="text-align:left;">
-S1_129N
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-S1
+S_01
 </td>
 <td style="text-align:left;">
 129C
 </td>
 <td style="text-align:left;">
-S1_129C
-</td>
-<td style="text-align:left;">
-S1_129C
+S1
 </td>
 <td style="text-align:right;">
 1
 </td>
+<td style="text-align:left;">
+S_01
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
+S_02
+</td>
+<td style="text-align:left;">
+129N
+</td>
+<td style="text-align:left;">
 S1
-</td>
-<td style="text-align:left;">
-130N
-</td>
-<td style="text-align:left;">
-S1_130N
-</td>
-<td style="text-align:left;">
-S1_130N
 </td>
 <td style="text-align:right;">
 1
 </td>
+<td style="text-align:left;">
+S_02
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
-S1
+S_03
 </td>
 <td style="text-align:left;">
 130C
 </td>
 <td style="text-align:left;">
-S1_130C
-</td>
-<td style="text-align:left;">
-S1_130C
+S1
 </td>
 <td style="text-align:right;">
 1
 </td>
+<td style="text-align:left;">
+S_03
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
+S_04
+</td>
+<td style="text-align:left;">
+130N
+</td>
+<td style="text-align:left;">
 S1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S_04
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+S_05
+</td>
+<td style="text-align:left;">
+126
+</td>
+<td style="text-align:left;">
+S2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S_05
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+S_06
+</td>
+<td style="text-align:left;">
+127C
+</td>
+<td style="text-align:left;">
+S2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S_06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+S_07
+</td>
+<td style="text-align:left;">
+127N
+</td>
+<td style="text-align:left;">
+S2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S_07
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+S_08
+</td>
+<td style="text-align:left;">
+128C
+</td>
+<td style="text-align:left;">
+S2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S_08
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+S_09
+</td>
+<td style="text-align:left;">
+128N
+</td>
+<td style="text-align:left;">
+S2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S_09
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ref
 </td>
 <td style="text-align:left;">
 131
 </td>
 <td style="text-align:left;">
-S1_131
-</td>
-<td style="text-align:left;">
-NA
+S1
 </td>
 <td style="text-align:right;">
 1
+</td>
+<td style="text-align:left;">
+NA
 </td>
 </tr>
 </tbody>
@@ -2716,11 +2685,11 @@ NA
 <span class="header-section-number">1.1.3.3</span> References<a class="anchor" aria-label="anchor" href="#references"><i class="fas fa-link"></i></a>
 </h4>
 <p>Reference can be a certain channel, average of multiple channels, or 1. The general form is an expression with <code>ReporterAlias</code> names as variables. It is evaluated for each <code>PlexID</code>/<code>QuantBlock</code> combination and applied to divide reporter ion intensities within corresponding <code>PlexID</code>/<code>QuantBlock</code>.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Create references table</span>
 <span class="va">references</span> <span class="op">&lt;-</span> <span class="va">samples</span> <span class="op">%&gt;%</span> 
-  <span class="co"># Filter to reference channel</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">ReporterName</span> <span class="op">==</span> <span class="va">ref_channel</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="co"># Filter to reference channel (ReporterName == "131", ReporterAlias == "ref")</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">ReporterName</span> <span class="op">==</span> <span class="st">"131"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="co"># Select required columns and rename ReporterAlias to Reference</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">PlexID</span>, Reference <span class="op">=</span> <span class="va">ReporterAlias</span>, <span class="va">QuantBlock</span><span class="op">)</span></code></pre></div>
 <div class="inline-table"><table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
@@ -2744,7 +2713,7 @@ QuantBlock
 S1
 </td>
 <td style="text-align:left;">
-S1_131
+ref
 </td>
 <td style="text-align:right;">
 1
@@ -2755,7 +2724,7 @@ S1_131
 S2
 </td>
 <td style="text-align:left;">
-S2_131
+ref
 </td>
 <td style="text-align:right;">
 1
@@ -2765,7 +2734,7 @@ S2_131
 </table></div>
 <p></p>
 <p>Table <a href="isobaric-quantification-pipelines.html#tab:references-table">1.5</a> shows the first 10 rows of <code>references</code>. The code to use the geometric average instead of a single channel as the reference is shown below. The geometric average is the product of the reporter ion channels to the power of (1/number of channels). For each <code>PlexID</code> group, collapse the vector of reporter ion names with <code><a href="https://rdrr.io/r/base/Arithmetic.html">*</a></code>, surround them in parentheses, and raise to the power of (1/number of channels).</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Use geometric average as reference</span>
 <span class="va">references</span> <span class="op">&lt;-</span> <span class="va">samples</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">PlexID</span>, <span class="va">QuantBlock</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -2781,13 +2750,13 @@ S2_131
 TODO:
 Explain how to add the study design tables to the DMS.
 --->
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Save study design tables</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">fractions</span>, file <span class="op">=</span> <span class="st">"fractions.txt"</span>,
+<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">fractions</span>, file <span class="op">=</span> <span class="st">"data/fractions.txt"</span>,
             sep <span class="op">=</span> <span class="st">"\t"</span>, quote <span class="op">=</span> <span class="cn">FALSE</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">samples</span>, file <span class="op">=</span> <span class="st">"samples.txt"</span>,
+<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">samples</span>, file <span class="op">=</span> <span class="st">"data/samples.txt"</span>,
             sep <span class="op">=</span> <span class="st">"\t"</span>, quote <span class="op">=</span> <span class="cn">FALSE</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">references</span>, file <span class="op">=</span> <span class="st">"references.txt"</span>,
+<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">references</span>, file <span class="op">=</span> <span class="st">"data/references.txt"</span>,
             sep <span class="op">=</span> <span class="st">"\t"</span>, quote <span class="op">=</span> <span class="cn">FALSE</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
@@ -2796,7 +2765,7 @@ Explain how to add the study design tables to the DMS.
 <span class="header-section-number">1.1.4</span> Create Quantitative Cross-tab<a class="anchor" aria-label="anchor" href="#global-quant-crosstab"><i class="fas fa-link"></i></a>
 </h3>
 <p>This is the final step where MS/MS IDs and reporter ions are linked together and aggregated to the peptide or accession (i.e. protein) level. To retain protein IDs while aggregating to peptide level, set <code>aggregation_level &lt;- c("accession","peptide")</code>. The entries are <span class="math inline">\(log_2\)</span>-transformed after being normalized by the reference.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Set aggregation level</span>
 <span class="va">aggregation_level</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"accession"</span><span class="op">)</span>
 <span class="co"># Create cross-tab</span>
@@ -2805,64 +2774,64 @@ Explain how to add the study design tables to the DMS.
                             <span class="va">fractions</span>, <span class="va">samples</span>, <span class="va">references</span><span class="op">)</span></code></pre></div>
 <div class="inline-table"><table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-<span id="tab:unnamed-chunk-23">Table 1.6: </span><left>First 6 rows of the global quantitative cross-tab.</left>
+<span id="tab:unnamed-chunk-21">Table 1.6: </span><left>First 6 rows of the global quantitative cross-tab.</left>
 </caption>
 <thead><tr>
 <th style="text-align:left;">
 </th>
 <th style="text-align:right;">
-S1_126
+R_01
 </th>
 <th style="text-align:right;">
-S1_127C
+R_02
 </th>
 <th style="text-align:right;">
-S1_127N
+R_03
 </th>
 <th style="text-align:right;">
-S1_128C
+R_04
 </th>
 <th style="text-align:right;">
-S1_128N
+R_05
 </th>
 <th style="text-align:right;">
-S1_129C
+R_06
 </th>
 <th style="text-align:right;">
-S1_129N
+R_07
 </th>
 <th style="text-align:right;">
-S1_130C
+R_08
 </th>
 <th style="text-align:right;">
-S1_130N
+R_09
 </th>
 <th style="text-align:right;">
-S2_126
+S_01
 </th>
 <th style="text-align:right;">
-S2_127C
+S_02
 </th>
 <th style="text-align:right;">
-S2_127N
+S_03
 </th>
 <th style="text-align:right;">
-S2_128C
+S_04
 </th>
 <th style="text-align:right;">
-S2_128N
+S_05
 </th>
 <th style="text-align:right;">
-S2_129C
+S_06
 </th>
 <th style="text-align:right;">
-S2_129N
+S_07
 </th>
 <th style="text-align:right;">
-S2_130C
+S_08
 </th>
 <th style="text-align:right;">
-S2_130N
+S_09
 </th>
 </tr></thead>
 <tbody>
@@ -2884,6 +2853,18 @@ AP_004893.1
 </td>
 <td style="text-align:right;">
 0.9453172
+</td>
+<td style="text-align:right;">
+-0.8794712
+</td>
+<td style="text-align:right;">
+-0.1912097
+</td>
+<td style="text-align:right;">
+0.3964607
+</td>
+<td style="text-align:right;">
+-0.2440478
 </td>
 <td style="text-align:right;">
 -0.6460065
@@ -2912,18 +2893,6 @@ AP_004893.1
 <td style="text-align:right;">
 -0.7029685
 </td>
-<td style="text-align:right;">
--0.8794712
-</td>
-<td style="text-align:right;">
--0.1912097
-</td>
-<td style="text-align:right;">
-0.3964607
-</td>
-<td style="text-align:right;">
--0.2440478
-</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -2943,6 +2912,18 @@ AP_004894.1
 </td>
 <td style="text-align:right;">
 0.2171255
+</td>
+<td style="text-align:right;">
+-1.3515366
+</td>
+<td style="text-align:right;">
+-0.7462995
+</td>
+<td style="text-align:right;">
+-0.8338103
+</td>
+<td style="text-align:right;">
+-0.2227493
 </td>
 <td style="text-align:right;">
 -0.3678781
@@ -2971,18 +2952,6 @@ AP_004894.1
 <td style="text-align:right;">
 -0.6711809
 </td>
-<td style="text-align:right;">
--1.3515366
-</td>
-<td style="text-align:right;">
--0.7462995
-</td>
-<td style="text-align:right;">
--0.8338103
-</td>
-<td style="text-align:right;">
--0.2227493
-</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -3002,6 +2971,18 @@ AP_004895.1
 </td>
 <td style="text-align:right;">
 -0.3840271
+</td>
+<td style="text-align:right;">
+-0.6780284
+</td>
+<td style="text-align:right;">
+-0.6102404
+</td>
+<td style="text-align:right;">
+-0.3896190
+</td>
+<td style="text-align:right;">
+-0.1548544
 </td>
 <td style="text-align:right;">
 -1.1240967
@@ -3030,18 +3011,6 @@ AP_004895.1
 <td style="text-align:right;">
 -0.4287771
 </td>
-<td style="text-align:right;">
--0.6780284
-</td>
-<td style="text-align:right;">
--0.6102404
-</td>
-<td style="text-align:right;">
--0.3896190
-</td>
-<td style="text-align:right;">
--0.1548544
-</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -3061,6 +3030,18 @@ AP_004896.1
 </td>
 <td style="text-align:right;">
 -0.5352280
+</td>
+<td style="text-align:right;">
+-0.6543311
+</td>
+<td style="text-align:right;">
+-0.6741064
+</td>
+<td style="text-align:right;">
+-0.3994149
+</td>
+<td style="text-align:right;">
+-0.0441485
 </td>
 <td style="text-align:right;">
 -1.2945071
@@ -3089,18 +3070,6 @@ AP_004896.1
 <td style="text-align:right;">
 -0.4222698
 </td>
-<td style="text-align:right;">
--0.6543311
-</td>
-<td style="text-align:right;">
--0.6741064
-</td>
-<td style="text-align:right;">
--0.3994149
-</td>
-<td style="text-align:right;">
--0.0441485
-</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -3120,6 +3089,18 @@ AP_004898.1
 </td>
 <td style="text-align:right;">
 1.1580326
+</td>
+<td style="text-align:right;">
+-1.8439756
+</td>
+<td style="text-align:right;">
+-0.1774225
+</td>
+<td style="text-align:right;">
+-1.1083199
+</td>
+<td style="text-align:right;">
+-0.4175363
 </td>
 <td style="text-align:right;">
 0.1211536
@@ -3148,18 +3129,6 @@ AP_004898.1
 <td style="text-align:right;">
 -0.9449498
 </td>
-<td style="text-align:right;">
--1.8439756
-</td>
-<td style="text-align:right;">
--0.1774225
-</td>
-<td style="text-align:right;">
--1.1083199
-</td>
-<td style="text-align:right;">
--0.4175363
-</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -3179,6 +3148,18 @@ AP_004899.1
 </td>
 <td style="text-align:right;">
 -0.0615626
+</td>
+<td style="text-align:right;">
+-1.0482424
+</td>
+<td style="text-align:right;">
+-0.8052899
+</td>
+<td style="text-align:right;">
+-0.6675429
+</td>
+<td style="text-align:right;">
+-0.3959923
 </td>
 <td style="text-align:right;">
 -2.1679002
@@ -3207,44 +3188,29 @@ AP_004899.1
 <td style="text-align:right;">
 -0.9023044
 </td>
-<td style="text-align:right;">
--1.0482424
-</td>
-<td style="text-align:right;">
--0.8052899
-</td>
-<td style="text-align:right;">
--0.6675429
-</td>
-<td style="text-align:right;">
--0.3959923
-</td>
 </tr>
 </tbody>
 </table></div>
 <p></p>
-<p>In order to demonstrate prioritized inference in Section <a href="isobaric-quantification-pipelines.html#phosphoproteomics-data">1.2</a>, we need to save the row names of this cross-tab.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Save protein names</span>
-<span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">saveRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">crosstab</span><span class="op">)</span>, file <span class="op">=</span> <span class="st">"data/3442_global_protein_names.rds"</span><span class="op">)</span></code></pre></div>
-<p>We should save the cross-tab as well. To do so, we need to convert the row names to a column called <code>protein</code>.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Modify cross-tab for saving</span>
-<span class="va">crosstab</span> <span class="op">&lt;-</span> <span class="va">crosstab</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames_to_column</a></span><span class="op">(</span><span class="st">"protein"</span><span class="op">)</span>
-
-<span class="co"># Save cross-tab</span>
+<p>Now that we have the cross-tab, we should save it.</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Save cross-tab</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">crosstab</span>, file <span class="op">=</span> <span class="st">"data/global_quant_crosstab.txt"</span>,
-            sep <span class="op">=</span> <span class="st">"\t"</span>, quote <span class="op">=</span> <span class="cn">FALSE</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+            sep <span class="op">=</span> <span class="st">"\t"</span>, quote <span class="op">=</span> <span class="cn">FALSE</span>, row.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p>We will also save the proteins (row names) of this cross-tab in order to demonstrate prioritized inference in Section <a href="isobaric-quantification-pipelines.html#phosphoproteomics-data">1.2</a>.</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Save global proteins</span>
+<span class="va">global_proteins</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">crosstab</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/save.html">save</a></span><span class="op">(</span><span class="va">global_proteins</span>, file <span class="op">=</span> <span class="st">"data/3442_global_proteins.RData"</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 <div id="phosphoproteomics-data" class="section level2" number="1.2">
 <h2>
 <span class="header-section-number">1.2</span> Phosphoproteomics Data<a class="anchor" aria-label="anchor" href="#phosphoproteomics-data"><i class="fas fa-link"></i></a>
 </h2>
-<p>This pipeline shows how to process data from the DMS. The number of the data package is <code>3626</code>. For this section, we need the <code>PlexedPiper</code> package for isobaric quantification and <code>PNNL.DMS.utils</code> to interface with the DMS. Also, some details will be omitted if they were already provided in Section <a href="isobaric-quantification-pipelines.html#global-proteomics-data">1.1</a>.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<p>This pipeline shows how to process phosphoproteomics data from the DMS. Phosphoproteomics deals with proteins that have been phosphorylated. Phosphorylation is a type of reversible post-translational modification (PTM; a protein modification that occurs after protein synthesis) in which a protein kinase attaches a phosphate group to an amino acid residue. This change in a protein’s structure can completely alter aspects such as its biological activity and protein-protein interactions, and “abnormal phosphorylation is now recognized as a cause or consequence of many human diseases” <span class="citation">(<a href="references-1.html#ref-cohen_origins_2002" role="doc-biblioref">Cohen, 2002</a>)</span>. The most commonly phosphorylated amino acids are serine (S), threonine (T), and tyrosine (Y).</p>
+<p>For this section, we will use data package number <code>3626</code>. We will need the <code>PlexedPiper</code> package for isobaric quantification and <code>PNNL.DMS.utils</code> to interface with the DMS. Also, details will be omitted if they were already provided in Section <a href="isobaric-quantification-pipelines.html#global-proteomics-data">1.1</a>.</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Setup</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">PNNL.DMS.utils</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">PlexedPiper</span><span class="op">)</span>
@@ -3258,11 +3224,11 @@ AP_004899.1
 <h4>
 <span class="header-section-number">1.2.1.1</span> Read MS-GF+ Output<a class="anchor" aria-label="anchor" href="#read-ms-gf-output"><i class="fas fa-link"></i></a>
 </h4>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Read MS-GF+ data</span>
 <span class="va">data_package_num</span> <span class="op">&lt;-</span> <span class="fl">3626</span>
 <span class="va">msnid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/PNNL.DMS.utils/man/read_msgf_data_from_DMS.html">read_msgf_data_from_DMS</a></span><span class="op">(</span><span class="va">data_package_num</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">show</span><span class="op">(</span><span class="va">msnid</span><span class="op">)</span></code></pre></div>
 <pre><code>## MSnID object
 ## Working directory: "."
@@ -3271,12 +3237,20 @@ AP_004899.1
 ## #peptides: 396540 at 75 % FDR
 ## #accessions: 121521 at 98 % FDR</code></pre>
 </div>
-<div id="remove-non-phosphorylated-peptides" class="section level4" number="1.2.1.2">
+<div id="correct-isotope-selection-error-1" class="section level4" number="1.2.1.2">
 <h4>
-<span class="header-section-number">1.2.1.2</span> Remove Non-Phosphorylated Peptides<a class="anchor" aria-label="anchor" href="#remove-non-phosphorylated-peptides"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.2.1.2</span> Correct Isotope Selection Error<a class="anchor" aria-label="anchor" href="#correct-isotope-selection-error-1"><i class="fas fa-link"></i></a>
 </h4>
-<p>In this case, the phosphorylation of an amino acid is marked by a <code><a href="https://rdrr.io/r/base/Arithmetic.html">*</a></code> appearing after the amino acid. We will not consider unmodified peptides, so we can filter them out. The <code><a href="https://rdrr.io/r/base/Arithmetic.html">*</a></code> is a special character that must be escaped with backslashes, and the backslashes must also be escaped.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Correct for isotope selection error</span>
+<span class="va">msnid</span> <span class="op">&lt;-</span> <span class="fu">correct_peak_selection</span><span class="op">(</span><span class="va">msnid</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="remove-non-phosphorylated-peptides" class="section level4" number="1.2.1.3">
+<h4>
+<span class="header-section-number">1.2.1.3</span> Remove Non-Phosphorylated Peptides<a class="anchor" aria-label="anchor" href="#remove-non-phosphorylated-peptides"><i class="fas fa-link"></i></a>
+</h4>
+<p>In this case, the phosphorylation of an amino acid is marked by a <code><a href="https://rdrr.io/r/base/Arithmetic.html">*</a></code> inserted into the sequence after said amino acid. We will not consider unmodified peptides, so we can filter out peptides that do not contain this symbol with <code>apply_filter</code>. The <code><a href="https://rdrr.io/r/base/Arithmetic.html">*</a></code> is a special character that must be escaped with backslashes, and the backslashes must also be escaped, since they are enclosed within a nested string (<code>"''"</code>).</p>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Remove non-phosphorylated peptides</span>
 <span class="co"># (peptides that do not contain a *)</span>
 <span class="va">msnid</span> <span class="op">&lt;-</span> <span class="fu">apply_filter</span><span class="op">(</span><span class="va">msnid</span>, <span class="st">"grepl('\\\\*', peptide)"</span><span class="op">)</span>
@@ -3288,19 +3262,11 @@ AP_004899.1
 ## #peptides: 353634 at 76 % FDR
 ## #accessions: 118817 at 98 % FDR</code></pre>
 </div>
-<div id="correct-isotope-selection-error-1" class="section level4" number="1.2.1.3">
-<h4>
-<span class="header-section-number">1.2.1.3</span> Correct Isotope Selection Error<a class="anchor" aria-label="anchor" href="#correct-isotope-selection-error-1"><i class="fas fa-link"></i></a>
-</h4>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Correct for isotope selection error</span>
-<span class="va">msnid</span> <span class="op">&lt;-</span> <span class="fu">correct_peak_selection</span><span class="op">(</span><span class="va">msnid</span><span class="op">)</span></code></pre></div>
-</div>
 <div id="remove-contaminants-1" class="section level4" number="1.2.1.4">
 <h4>
 <span class="header-section-number">1.2.1.4</span> Remove Contaminants<a class="anchor" aria-label="anchor" href="#remove-contaminants-1"><i class="fas fa-link"></i></a>
 </h4>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Remove contaminants</span>
 <span class="va">msnid</span> <span class="op">&lt;-</span> <span class="fu">apply_filter</span><span class="op">(</span><span class="va">msnid</span>, <span class="st">"!grepl('Contaminant', accession)"</span><span class="op">)</span>
 <span class="fu">show</span><span class="op">(</span><span class="va">msnid</span><span class="op">)</span></code></pre></div>
@@ -3311,16 +3277,19 @@ AP_004899.1
 ## #peptides: 353489 at 76 % FDR
 ## #accessions: 118797 at 98 % FDR</code></pre>
 </div>
-<div id="filter-by-ascore" class="section level4" number="1.2.1.5">
+<div id="improve-phosphosite-localization" class="section level4" number="1.2.1.5">
 <h4>
-<span class="header-section-number">1.2.1.5</span> Filter by AScore<a class="anchor" aria-label="anchor" href="#filter-by-ascore"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.2.1.5</span> Improve Phosphosite Localization<a class="anchor" aria-label="anchor" href="#improve-phosphosite-localization"><i class="fas fa-link"></i></a>
 </h4>
 <p>Phospho datasets involve AScore jobs for improving phosphosite localization. There should be one AScore job per data package. The fetched object is a data.frame that links datasets, scans and original PTM localization to newly suggested locations. Importantly, it contains <code>AScore</code> column that signifies the confidence of PTM assignment. AScore &gt; 17 is considered confident.</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Filter PTMs by AScore</span>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Filter PTMs by Ascore</span>
 <span class="va">ascore</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/PNNL.DMS.utils/man/pnnl_dms_utils.html">get_AScore_results</a></span><span class="op">(</span><span class="va">data_package_num</span><span class="op">)</span>
 <span class="va">msnid</span> <span class="op">&lt;-</span> <span class="fu">best_PTM_location_by_ascore</span><span class="op">(</span><span class="va">msnid</span>, <span class="va">ascore</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<!---
+Why are some of the original sequences in ascore not phosphorylated? (AScore = -1)
+--->
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">show</span><span class="op">(</span><span class="va">msnid</span><span class="op">)</span></code></pre></div>
 <pre><code>## MSnID object
 ## Working directory: "."
@@ -3333,7 +3302,7 @@ AP_004899.1
 <h4>
 <span class="header-section-number">1.2.1.6</span> MS/MS ID Filter: Peptide Level<a class="anchor" aria-label="anchor" href="#msms-id-filter-peptide-level"><i class="fas fa-link"></i></a>
 </h4>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># 1% FDR filter at the peptide level</span>
 <span class="va">msnid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/PlexedPiper/man/filter_msgf_data.html">filter_msgf_data</a></span><span class="op">(</span><span class="va">msnid</span>,
                           level <span class="op">=</span> <span class="st">"peptide"</span>,
@@ -3350,7 +3319,7 @@ AP_004899.1
 <h4>
 <span class="header-section-number">1.2.1.7</span> MS/MS ID Filter: Protein Level<a class="anchor" aria-label="anchor" href="#msms-id-filter-protein-level-1"><i class="fas fa-link"></i></a>
 </h4>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Get path to FASTA file</span>
 <span class="va">path_to_FASTA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/PNNL.DMS.utils/man/pnnl_dms_utils.html">path_to_FASTA_used_by_DMS</a></span><span class="op">(</span><span class="va">data_package_num</span><span class="op">)</span>
 
@@ -3377,7 +3346,7 @@ AP_004899.1
 TODO:
 * Talk about using prior information from global cross-tab to improve inference of the parsimonious protein set for phospho data.
 --->
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Load proteins from global crosstab</span>
 <span class="va">global_proteins</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html">readRDS</a></span><span class="op">(</span><span class="st">"data/3442_global_protein_names.rds"</span><span class="op">)</span>
 <span class="co"># Inference of parsimonious protein set</span>
@@ -3390,36 +3359,28 @@ TODO:
 ## #PSMs: 72481 at 0.12 % FDR
 ## #peptides: 21266 at 0.26 % FDR
 ## #accessions: 2895 at 1.6 % FDR</code></pre>
-<p>Notice that the protein-level FDR increased above the acceptable threshold, so we need to reapply the filter.</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># 1% FDR filter at the protein level</span>
-<span class="va">msnid</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/PlexedPiper/man/filter_msgf_data.html">filter_msgf_data</a></span><span class="op">(</span><span class="va">msnid</span>,
-                          level <span class="op">=</span> <span class="st">"accession"</span>,
-                          fdr.max <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span>
-<span class="fu">show</span><span class="op">(</span><span class="va">msnid</span><span class="op">)</span></code></pre></div>
-<pre><code>## MSnID object
-## Working directory: "."
-## #Spectrum Files:  23 
-## #PSMs: 70340 at 0.075 % FDR
-## #peptides: 20117 at 0.15 % FDR
-## #accessions: 2351 at 0.99 % FDR</code></pre>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Remove Decoy Accessions</span>
+</div>
+<div id="remove-decoy-psms-1" class="section level4" number="1.2.1.9">
+<h4>
+<span class="header-section-number">1.2.1.9</span> Remove Decoy PSMs<a class="anchor" aria-label="anchor" href="#remove-decoy-psms-1"><i class="fas fa-link"></i></a>
+</h4>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Remove Decoy PSMs</span>
 <span class="va">msnid</span> <span class="op">&lt;-</span> <span class="fu">apply_filter</span><span class="op">(</span><span class="va">msnid</span>, <span class="st">"!isDecoy"</span><span class="op">)</span>
 <span class="fu">show</span><span class="op">(</span><span class="va">msnid</span><span class="op">)</span></code></pre></div>
 <pre><code>## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  23 
-## #PSMs: 70287 at 0 % FDR
-## #peptides: 20086 at 0 % FDR
-## #accessions: 2328 at 0 % FDR</code></pre>
+## #PSMs: 72391 at 0 % FDR
+## #peptides: 21211 at 0 % FDR
+## #accessions: 2849 at 0 % FDR</code></pre>
 </div>
-<div id="map-sites-to-protein-sequences" class="section level4" number="1.2.1.9">
+<div id="map-sites-to-protein-sequences" class="section level4" number="1.2.1.10">
 <h4>
-<span class="header-section-number">1.2.1.9</span> Map Sites to Protein Sequences<a class="anchor" aria-label="anchor" href="#map-sites-to-protein-sequences"><i class="fas fa-link"></i></a>
+<span class="header-section-number">1.2.1.10</span> Map Sites to Protein Sequences<a class="anchor" aria-label="anchor" href="#map-sites-to-protein-sequences"><i class="fas fa-link"></i></a>
 </h4>
-<p>Prepare FASTA to make sure entry names in FASTA file match MSnID accessions. The plan is to make this conversion automatic. <code>map_mod_sites</code> creates number of columns describing mapping of the site/s onto the protein sequences. The most important for the user is <code>SiteID</code>.</p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<p>Prepare FASTA to make sure entry names in FASTA file match MSnID accessions. The plan is to make this conversion automatic. <code>map_mod_sites</code> creates a number of columns describing mapping of the site/s onto the protein sequences. The most important for the user is <code>SiteID</code>.</p>
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Create AAStringSet</span>
 <span class="va">fst</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Biostrings/man/XStringSet-io.html">readAAStringSet</a></span><span class="op">(</span><span class="va">path_to_FASTA</span><span class="op">)</span>
 <span class="co"># Remove contaminants</span>
@@ -3432,7 +3393,7 @@ TODO:
 ## [4] "NP_714948.1 Ly-49 stimulatory receptor 3 [Rattus norvegicus]"             
 ## [5] "NP_001000704.1 olfactory receptor Olr931 [Rattus norvegicus]"             
 ## [6] "NP_001000638.1 olfactory receptor Olr652 [Rattus norvegicus]"</code></pre>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Modify names to match accessions(msnid)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">fst</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/strsplit.html">strsplit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">fst</span><span class="op">)</span>, split <span class="op">=</span> <span class="st">" "</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="co"># Select text before first space</span>
@@ -3442,7 +3403,7 @@ TODO:
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">fst</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "NP_783171.2"    "NP_001101862.2" "NP_113721.4"    "NP_714948.1"   
 ## [5] "NP_001000704.1" "NP_001000638.1"</code></pre>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Main mapping call</span>
 <span class="va">msnid</span> <span class="op">&lt;-</span> <span class="fu">map_mod_sites</span><span class="op">(</span>object <span class="op">=</span> <span class="va">msnid</span>, fasta <span class="op">=</span> <span class="va">fst</span>, 
                        accession_col <span class="op">=</span> <span class="st">"accession"</span>, 
@@ -4448,7 +4409,7 @@ NP_112621.1-T253t
 <h4>
 <span class="header-section-number">1.2.2.1</span> Read MASIC Output<a class="anchor" aria-label="anchor" href="#read-masic-output-1"><i class="fas fa-link"></i></a>
 </h4>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Read MASIC data</span>
 <span class="va">masic_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/PNNL.DMS.utils/man/read_masic_data_from_DMS.html">read_masic_data_from_DMS</a></span><span class="op">(</span><span class="va">data_package_num</span>, 
                                        interference_score <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -4457,7 +4418,7 @@ NP_112621.1-T253t
 <h4>
 <span class="header-section-number">1.2.2.2</span> Filter MASIC Data<a class="anchor" aria-label="anchor" href="#filter-masic-data-1"><i class="fas fa-link"></i></a>
 </h4>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Filter MASIC data</span>
 <span class="va">masic_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/PlexedPiper/man/filter_masic_data.html">filter_masic_data</a></span><span class="op">(</span><span class="va">masic_data</span>, 
                                 interference_score_threshold <span class="op">=</span> <span class="fl">0.5</span>,
@@ -4468,58 +4429,26 @@ NP_112621.1-T253t
 <h3>
 <span class="header-section-number">1.2.3</span> Create Study Design Tables<a class="anchor" aria-label="anchor" href="#create-study-design-tables"><i class="fas fa-link"></i></a>
 </h3>
-<div id="fractions-1" class="section level4" number="1.2.3.1">
-<h4>
-<span class="header-section-number">1.2.3.1</span> Fractions<a class="anchor" aria-label="anchor" href="#fractions-1"><i class="fas fa-link"></i></a>
-</h4>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Create fractions table</span>
+<p>If study design tables are on the DMS, they can be accessed in the following way.</p>
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Read study design tables from DMS</span>
+<span class="va">study_design</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/PNNL.DMS.utils/man/read_study_design.html">read_study_design_from_DMS</a></span><span class="op">(</span><span class="va">data_package_num</span><span class="op">)</span>
+<span class="va">fractions</span> <span class="op">&lt;-</span> <span class="va">study_design</span><span class="op">$</span><span class="va">fractions</span>
+<span class="va">samples</span> <span class="op">&lt;-</span> <span class="va">study_design</span><span class="op">$</span><span class="va">samples</span>
+<span class="va">references</span> <span class="op">&lt;-</span> <span class="va">study_design</span><span class="op">$</span><span class="va">references</span></code></pre></div>
+<p>While the study design tables are not on the DMS, we already created them in Section <a href="isobaric-quantification-pipelines.html#fetch-study-design-tables">1.1.3</a>. We just need to recreate the fractions table because the dataset names are different.</p>
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Read tables from folder</span>
+<span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span><span class="st">"data/samples.txt"</span><span class="op">)</span>
+<span class="va">references</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span><span class="op">(</span><span class="st">"data/references.txt"</span><span class="op">)</span>
 <span class="va">fractions</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Dataset <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">masic_data</span><span class="op">$</span><span class="va">Dataset</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>PlexID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html">gsub</a></span><span class="op">(</span><span class="st">".*_P_(S\\d{1})_.*"</span>, <span class="st">"\\1"</span>, <span class="va">Dataset</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="samples-1" class="section level4" number="1.2.3.2">
-<h4>
-<span class="header-section-number">1.2.3.2</span> Samples<a class="anchor" aria-label="anchor" href="#samples-1"><i class="fas fa-link"></i></a>
-</h4>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># TMT10 Reporter Converter table from MSnID package</span>
-<span class="va">conv</span> <span class="op">&lt;-</span> <span class="va">reporter_converter</span><span class="op">$</span><span class="va">tmt10</span>
-<span class="va">plexes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="va">fractions</span><span class="op">$</span><span class="va">PlexID</span><span class="op">)</span>
-
-<span class="co"># Reference channel</span>
-<span class="va">ref_channel</span> <span class="op">&lt;-</span> <span class="st">"131"</span>
-
-<span class="co"># Create samples table</span>
-<span class="va">samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>PlexID <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">plexes</span>, each <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">conv</span><span class="op">)</span><span class="op">)</span>,  
-                      ReporterName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">conv</span><span class="op">$</span><span class="va">ReporterName</span>, 
-                                         <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">plexes</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>ReporterAlias <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html">sprintf</a></span><span class="op">(</span><span class="st">"%s_%s"</span>, <span class="va">PlexID</span>, <span class="va">ReporterName</span><span class="op">)</span>,
-         MeasurementName <span class="op">=</span> <span class="va">ReporterAlias</span>,
-         QuantBlock <span class="op">=</span> <span class="fl">1</span>,
-         <span class="co"># Comment out this next part if the reference</span>
-         <span class="co"># is not one of the reporter ion channels.</span>
-         MeasurementName <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span><span class="op">(</span><span class="va">ReporterName</span> <span class="op">==</span> <span class="va">ref_channel</span>,
-                                  <span class="cn">NA</span>, <span class="va">MeasurementName</span><span class="op">)</span>
-  <span class="op">)</span></code></pre></div>
-</div>
-<div id="references-1" class="section level4" number="1.2.3.3">
-<h4>
-<span class="header-section-number">1.2.3.3</span> References<a class="anchor" aria-label="anchor" href="#references-1"><i class="fas fa-link"></i></a>
-</h4>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Create references table</span>
-<span class="va">references</span> <span class="op">&lt;-</span> <span class="va">samples</span> <span class="op">%&gt;%</span> 
-  <span class="co"># Filter to reference channel</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">ReporterName</span> <span class="op">==</span> <span class="va">ref_channel</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="co"># Select required columns and rename ReporterAlias to Reference</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">PlexID</span>, Reference <span class="op">=</span> <span class="va">ReporterAlias</span>, <span class="va">QuantBlock</span><span class="op">)</span></code></pre></div>
-</div>
 </div>
 <div id="phospho-create-crosstab" class="section level3" number="1.2.4">
 <h3>
 <span class="header-section-number">1.2.4</span> Create Quantitative Cross-tab<a class="anchor" aria-label="anchor" href="#phospho-create-crosstab"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Set aggregation level</span>
 <span class="va">aggregation_level</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"SiteID"</span><span class="op">)</span>
 <span class="co"># Create cross-tab</span>
@@ -4528,67 +4457,185 @@ NP_112621.1-T253t
                             <span class="va">fractions</span>, <span class="va">samples</span>, <span class="va">references</span><span class="op">)</span></code></pre></div>
 <div class="inline-table"><table class="table table-hover table-condensed" style="font-size: 12px; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-<span id="tab:unnamed-chunk-48">Table 1.8: </span><left>First 6 rows of the phospho quantitative cross-tab.</left>
+<span id="tab:unnamed-chunk-44">Table 1.8: </span><left>First 6 rows of the phospho quantitative cross-tab.</left>
 </caption>
 <thead><tr>
 <th style="text-align:left;">
 </th>
 <th style="text-align:right;">
-S1_126
+R_01
 </th>
 <th style="text-align:right;">
-S1_127C
+R_02
 </th>
 <th style="text-align:right;">
-S1_127N
+R_03
 </th>
 <th style="text-align:right;">
-S1_128C
+R_04
 </th>
 <th style="text-align:right;">
-S1_128N
+R_05
 </th>
 <th style="text-align:right;">
-S1_129C
+R_06
 </th>
 <th style="text-align:right;">
-S1_129N
+R_07
 </th>
 <th style="text-align:right;">
-S1_130C
+R_08
 </th>
 <th style="text-align:right;">
-S1_130N
+R_09
 </th>
 <th style="text-align:right;">
-S2_126
+S_01
 </th>
 <th style="text-align:right;">
-S2_127C
+S_02
 </th>
 <th style="text-align:right;">
-S2_127N
+S_03
 </th>
 <th style="text-align:right;">
-S2_128C
+S_04
 </th>
 <th style="text-align:right;">
-S2_128N
+S_05
 </th>
 <th style="text-align:right;">
-S2_129C
+S_06
 </th>
 <th style="text-align:right;">
-S2_129N
+S_07
 </th>
 <th style="text-align:right;">
-S2_130C
+S_08
 </th>
 <th style="text-align:right;">
-S2_130N
+S_09
 </th>
 </tr></thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+NP_001000283.1-Y132yS137s
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+-0.7653521
+</td>
+<td style="text-align:right;">
+-0.5428785
+</td>
+<td style="text-align:right;">
+-0.2119856
+</td>
+<td style="text-align:right;">
+-0.1239261
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+0.0038421
+</td>
+<td style="text-align:right;">
+-0.2425074
+</td>
+<td style="text-align:right;">
+-0.7416622
+</td>
+<td style="text-align:right;">
+-0.7497171
+</td>
+<td style="text-align:right;">
+-0.4879016
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+NP_001001064.1-Y129y
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+-1.0408865
+</td>
+<td style="text-align:right;">
+-0.2976259
+</td>
+<td style="text-align:right;">
+-0.7301538
+</td>
+<td style="text-align:right;">
+-0.1385762
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+0.1594274
+</td>
+<td style="text-align:right;">
+-0.6587720
+</td>
+<td style="text-align:right;">
+0.1932351
+</td>
+<td style="text-align:right;">
+-0.6370354
+</td>
+<td style="text-align:right;">
+-0.4461276
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 NP_001001512.2-S241s
@@ -4609,6 +4656,18 @@ NP_001001512.2-S241s
 -0.5675833
 </td>
 <td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
 -0.0427948
 </td>
 <td style="text-align:right;">
@@ -4619,18 +4678,6 @@ NP_001001512.2-S241s
 </td>
 <td style="text-align:right;">
 -1.0398773
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
-NA
 </td>
 <td style="text-align:right;">
 NA
@@ -4668,6 +4715,18 @@ NP_001001512.2-S242s
 -0.6512914
 </td>
 <td style="text-align:right;">
+-1.3958746
+</td>
+<td style="text-align:right;">
+-0.6640721
+</td>
+<td style="text-align:right;">
+-0.7046127
+</td>
+<td style="text-align:right;">
+-0.3091972
+</td>
+<td style="text-align:right;">
 -0.4914234
 </td>
 <td style="text-align:right;">
@@ -4694,18 +4753,6 @@ NP_001001512.2-S242s
 <td style="text-align:right;">
 -0.7588038
 </td>
-<td style="text-align:right;">
--1.3958746
-</td>
-<td style="text-align:right;">
--0.6640721
-</td>
-<td style="text-align:right;">
--0.7046127
-</td>
-<td style="text-align:right;">
--0.3091972
-</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -4725,6 +4772,18 @@ NA
 </td>
 <td style="text-align:right;">
 NA
+</td>
+<td style="text-align:right;">
+-0.8584401
+</td>
+<td style="text-align:right;">
+-0.4918316
+</td>
+<td style="text-align:right;">
+-0.2745069
+</td>
+<td style="text-align:right;">
+0.2867235
 </td>
 <td style="text-align:right;">
 NA
@@ -4753,18 +4812,6 @@ NA
 <td style="text-align:right;">
 -0.8004630
 </td>
-<td style="text-align:right;">
--0.8584401
-</td>
-<td style="text-align:right;">
--0.4918316
-</td>
-<td style="text-align:right;">
--0.2745069
-</td>
-<td style="text-align:right;">
-0.2867235
-</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -4784,6 +4831,18 @@ NA
 </td>
 <td style="text-align:right;">
 NA
+</td>
+<td style="text-align:right;">
+NA
+</td>
+<td style="text-align:right;">
+-1.5981389
+</td>
+<td style="text-align:right;">
+-2.4732843
+</td>
+<td style="text-align:right;">
+-0.4736739
 </td>
 <td style="text-align:right;">
 NA
@@ -4812,149 +4871,19 @@ NA
 <td style="text-align:right;">
 -1.8632844
 </td>
-<td style="text-align:right;">
-NA
-</td>
-<td style="text-align:right;">
--1.5981389
-</td>
-<td style="text-align:right;">
--2.4732843
-</td>
-<td style="text-align:right;">
--0.4736739
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-NP_001001512.2-S748s
-</td>
-<td style="text-align:right;">
--1.2580276
-</td>
-<td style="text-align:right;">
--1.3182692
-</td>
-<td style="text-align:right;">
--2.1938861
-</td>
-<td style="text-align:right;">
--2.0017857
-</td>
-<td style="text-align:right;">
-0.0219220
-</td>
-<td style="text-align:right;">
--0.7086501
-</td>
-<td style="text-align:right;">
--1.694015
-</td>
-<td style="text-align:right;">
--1.4681967
-</td>
-<td style="text-align:right;">
--1.5795032
-</td>
-<td style="text-align:right;">
-0.3139811
-</td>
-<td style="text-align:right;">
--0.6805752
-</td>
-<td style="text-align:right;">
--0.8132341
-</td>
-<td style="text-align:right;">
--1.7933771
-</td>
-<td style="text-align:right;">
-0.0127816
-</td>
-<td style="text-align:right;">
-0.2726023
-</td>
-<td style="text-align:right;">
-0.2266855
-</td>
-<td style="text-align:right;">
-0.5058189
-</td>
-<td style="text-align:right;">
-0.9332038
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-NP_001001514.1-S279s
-</td>
-<td style="text-align:right;">
-0.0224073
-</td>
-<td style="text-align:right;">
--0.1412578
-</td>
-<td style="text-align:right;">
--0.4939068
-</td>
-<td style="text-align:right;">
--0.3322896
-</td>
-<td style="text-align:right;">
--0.6624270
-</td>
-<td style="text-align:right;">
-0.0686814
-</td>
-<td style="text-align:right;">
--0.711781
-</td>
-<td style="text-align:right;">
--1.0613940
-</td>
-<td style="text-align:right;">
--1.5813449
-</td>
-<td style="text-align:right;">
--0.1489704
-</td>
-<td style="text-align:right;">
--0.4580319
-</td>
-<td style="text-align:right;">
--0.5889714
-</td>
-<td style="text-align:right;">
--0.8708282
-</td>
-<td style="text-align:right;">
--0.5066630
-</td>
-<td style="text-align:right;">
--0.7469875
-</td>
-<td style="text-align:right;">
--0.3374105
-</td>
-<td style="text-align:right;">
--0.3842025
-</td>
-<td style="text-align:right;">
--0.1701473
-</td>
 </tr>
 </tbody>
 </table></div>
 <p></p>
 <p>We will save the cross-tab for later sections.</p>
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Modify cross-tab for saving</span>
 <span class="va">crosstab</span> <span class="op">&lt;-</span> <span class="va">crosstab</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/rownames.html">rownames_to_column</a></span><span class="op">(</span><span class="st">"SiteID"</span><span class="op">)</span>
 
 <span class="co"># Save cross-tab</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">crosstab</span>, file <span class="op">=</span> <span class="st">"data/phospho_quant_crosstab.txt"</span>,
+<span class="fu"><a href="https://rdrr.io/r/utils/write.table.html">write.table</a></span><span class="op">(</span><span class="va">crosstab</span>, file <span class="op">=</span> <span class="st">"data/phosphosite_quant_crosstab.txt"</span>,
             sep <span class="op">=</span> <span class="st">"\t"</span>, quote <span class="op">=</span> <span class="cn">FALSE</span>, row.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 
 </div>
@@ -5000,7 +4929,7 @@ NP_001001514.1-S279s
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Proteomics Data Analysis in R/Bioconductor</strong>" was written by Tyler Sagendorf. It was last built on October 19, 2021.</p>
+    <p>"<strong>Proteomics Data Analysis in R/Bioconductor</strong>" was written by Tyler Sagendorf. It was last built on October 21, 2021.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

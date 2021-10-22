@@ -4,18 +4,14 @@
 TODO:
 * Overview of isobaric labeling
 --->
-
-Section summary to be added later. Please continue to subsections.
+<!---
+Keep in mind that there are many other functions available in `PlexedPiper` and `MSnID` that will not be covered that can be used to add additional columns or further filter the results. This section just showcases the foundations of the pipelines.
+--->
 
 
 ## Global Proteomics Data {#global-proteomics-data}
 
-This pipeline shows how to process TMT data that is processed outside of PNNL's DMS. Section \@ref(phosphoproteomics-data) shows how to process data from the DMS. For convenience, the results of MS-GF+ and MASIC processing are provided in a companion `PlexedPiperTestData` package. For this section, we need three packages: `PlexedPiper` for isobaric quantification, `PlexedPiperTestData`, and `dplyr` to manipulate data frames.
-
-<!---
-For these examples, we need two packages: PlexedPiper and PlexedPiperTestData. The former is used to interface with the DMS, while the latter is tailored to isobaric quantification.
---->
-
+This pipeline shows how to process TMT data that is processed outside of PNNL's DMS. Section \@ref(phosphoproteomics-data) shows how to process data from the DMS. For convenience, the results of MS-GF+ and MASIC processing are provided in a companion `PlexedPiperTestData` package. In addition, we will need `PlexedPiper` for isobaric quantification and `dplyr` to manipulate data frames.
 
 
 
@@ -25,8 +21,6 @@ For these examples, we need two packages: PlexedPiper and PlexedPiperTestData. T
 library(PlexedPiper)
 library(PlexedPiperTestData)
 library(dplyr)
-library(ggplot2) # plotting
-library(knitr) # embed images
 ```
 
 
@@ -177,16 +171,16 @@ show(msnid)
 The next step is to filter the MS/MS identifications such that the empirical pwptide-level FDR is less than some threshold and the number of MS/MS IDs is maximized. We will use the $-log_{10}$ of the `PepQValue` column as one of our filtering criteria and assign it to a new column in `psms(msnid)` called `msmsScore`. The `PepQValue` column is the MS-GF+ Spectrum E-value, which reflects how well the theoretical and experimental fragmentation spectra match; therefore, high values of `msmsScore` indicate a good match (see Figure \@ref(fig:plot-msmsScore)).
 
 <div class="figure" style="text-align: center">
-<img src="isobaric_quantification_files/figure-html/plot-msmsScore-1.png" alt="Density plot of msmsScore with dashed line indicating the baseline, un-optimized cutoff." width="672" />
-<p class="caption">(\#fig:plot-msmsScore)Density plot of msmsScore with dashed line indicating the baseline, un-optimized cutoff.</p>
+<img src="isobaric_quantification_files/figure-html/plot-msmsScore-1.png" alt="Density plot of msmsScore." width="672" />
+<p class="caption">(\#fig:plot-msmsScore)Density plot of msmsScore.</p>
 </div>
 </br>
 
 The other filtering criteria is the absolute deviation of the mass measurement error of the parent ions in parts-per-million (ppm), which is assigned to the `absParentMassErrorPPM` column in `psms(msnid)` (see Figure \@ref(fig:plot-mass-error)).
 
 <div class="figure" style="text-align: center">
-<img src="isobaric_quantification_files/figure-html/plot-mass-error-1.png" alt="Density plot of absParentMassErrorPPM with dashed line indicating the baseline, un-optimized cutoff." width="672" />
-<p class="caption">(\#fig:plot-mass-error)Density plot of absParentMassErrorPPM with dashed line indicating the baseline, un-optimized cutoff.</p>
+<img src="isobaric_quantification_files/figure-html/plot-mass-error-1.png" alt="Density plot of absParentMassErrorPPM." width="672" />
+<p class="caption">(\#fig:plot-mass-error)Density plot of absParentMassErrorPPM.</p>
 </div>
 
 </br>
@@ -241,8 +235,8 @@ msnid <- compute_num_peptides_per_1000aa(msnid, path_to_FASTA)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="isobaric_quantification_files/figure-html/plot-num-pep-1.png" alt="Density plot of peptides_per_1000aa. Proteins with values greater than 1 are selected by default prior to optimization. The plot area has been zoomed in." width="672" />
-<p class="caption">(\#fig:plot-num-pep)Density plot of peptides_per_1000aa. Proteins with values greater than 1 are selected by default prior to optimization. The plot area has been zoomed in.</p>
+<img src="isobaric_quantification_files/figure-html/plot-num-pep-1.png" alt="Density plot of peptides_per_1000aa. The plot area has been zoomed in." width="672" />
+<p class="caption">(\#fig:plot-num-pep)Density plot of peptides_per_1000aa. The plot area has been zoomed in.</p>
 </div>
 </br>
 
@@ -269,7 +263,11 @@ show(msnid)
 
 #### Inference of Parsimonious Protein Set 
 
-The situation when a certain peptide sequence matches multiple proteins adds complication to the downstream quantitative analysis, as it is not clear which protein this peptide is originating from. There are common ways for dealing with this. One is to simply retain uniquely matching peptides and discard shared peptides (`unique_only = TRUE`). Alternatively, assign the shared peptides to the proteins with the larger number of uniquely mapping peptides (`unique_only = FALSE`). If there is a choice between multiple proteins with equal numbers of uniquely mapping peptides, the shared peptides are assigned to the first protein according to alphanumeric order (Figure \@ref(fig:parsimony)). This step could be done prior to filtering at the accession level, but if peptides are assigned to a low-confidence protein, and that protein is removed during filtering, those peptides will be lost. Instead, it is better to filter to the set of confidently-identified proteins and then determine the parsimonious set.
+The situation when a certain peptide sequence matches multiple proteins adds complication to the downstream quantitative analysis, as it is not clear which protein this peptide is originating from. There are common ways for dealing with this. One is to simply retain uniquely matching peptides and discard shared peptides (`unique_only = TRUE`). Alternatively, assign the shared peptides to the proteins with the larger number of uniquely mapping peptides (`unique_only = FALSE`). If there is a choice between multiple proteins with equal numbers of uniquely mapping peptides, the shared peptides are assigned to the first protein according to alphanumeric order (Figure \@ref(fig:parsimony)). 
+
+<!---
+This step could be done prior to filtering at the accession level, but if peptides are assigned to a low-confidence protein, and that protein is removed during filtering, those peptides will be lost. Instead, it is better to filter to the set of confidently-identified proteins and then determine the parsimonious set.
+--->
 
 <div class="figure" style="text-align: center">
 <img src="images/parsimonious-protein-set-inference.PNG" alt="Visual explanation of the inference of the parsimonious protein set." width="528" />
@@ -294,31 +292,19 @@ show(msnid)
 ## #accessions: 5251 at 1.1 % FDR
 ```
 
-Notice that the protein-level FDR increased above the acceptable threshold, so we need to reapply the filter.
+Notice that the protein-level FDR increased slightly above the 1% threshold. In this case, the difference isn't significant, so we can ignore it. 
+
+:::{.rmdnote}
+If the peptide or accession-level FDR increases significantly above 1% after inference of the parsimonious protein set, consider lowering the FDR cutoff (for example, to 0.9%) and redoing the previous processing steps. Filtering at the peptide and accession level should each be done a single time.
+:::
+
+#### Remove Decoy PSMs
+
+The final step is to remove the decoy PSMs. We use the `apply_filter` function again and only keep entries where `isDecoy` is `FALSE`.
 
 
 ```r
-# 1% FDR filter at the protein level
-msnid <- filter_msgf_data(msnid,
-                          level = "accession",
-                          fdr.max = 0.01)
-show(msnid)
-```
-
-```
-## MSnID object
-## Working directory: "."
-## #Spectrum Files:  48 
-## #PSMs: 444850 at 0.14 % FDR
-## #peptides: 90384 at 0.25 % FDR
-## #accessions: 5222 at 0.99 % FDR
-```
-
-Once all filtering is done, we can remove the decoy accessions. We use the `apply_filter` function again and only keep entries where `isDecoy` is `FALSE`.
-
-
-```r
-# Remove Decoy Accessions
+# Remove Decoy PSMs
 msnid <- apply_filter(msnid, "!isDecoy")
 show(msnid)
 ```
@@ -327,12 +313,12 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  48 
-## #PSMs: 444213 at 0 % FDR
-## #peptides: 90156 at 0 % FDR
-## #accessions: 5171 at 0 % FDR
+## #PSMs: 444345 at 0 % FDR
+## #peptides: 90232 at 0 % FDR
+## #accessions: 5196 at 0 % FDR
 ```
 
-After processing, we are left with 444,213 PSMs, 90,156 peptides, and 5,171 proteins. Table \@ref(tab:global-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
+After processing, we are left with 444,345 PSMs, 90,232 peptides, and 5,196 proteins. Table \@ref(tab:global-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
 
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">(\#tab:global-msnid-table)<left>First 6 rows of the processed MS-GF+ results.</left>
@@ -583,11 +569,12 @@ After processing, we are left with 444,213 PSMs, 90,156 peptides, and 5,171 prot
 
 </br>
 
+
 ### Prepare Reporter Ion Intensities {#reporter-ion-intensities}
 
 #### Read MASIC Output 
 
-MASIC is a tool for extracting ion intensities. With proper parameter settings, it can be used for extracting TMT (or iTRAQ) reporter ion intensities. In addition, it reports a number of other helpful metrics. Notably, the interference score at the parent ion level and the signal-to-noise ratio (S/N) at the reporter ion level (computed by Thermo software). The interference score reflects the proportion of the ion population that was isolated for fragmentation that is due to the targeted ion. In other words, 1 - InterferenceScore is due to co-isolated species that have similar elution time and parent ion m/z.
+MASIC is a tool for extracting ion intensities. With proper parameter settings, it can be used for extracting TMT (or iTRAQ) reporter ion intensities. In addition, it reports a number of other helpful metrics. Notably, the interference score at the parent ion level and the signal-to-noise ratio (S/N) at the reporter ion level (computed by Thermo software). The interference score reflects the proportion of the ion population that was isolated for fragmentation that is due to the targeted ion. In other words, `1 - InterferenceScore` is due to co-isolated species that have similar elution time and parent ion m/z.
 
 
 ```r
@@ -599,7 +586,7 @@ path_to_MASIC_results <- system.file("extdata/global/masic_output",
 masic_data <- read_masic_data(path_to_MASIC_results, interference_score = TRUE)
 ```
 
-Normally, this would display two progress bars in the console as the data is being fetched. However, the output was suppressed to save space.
+Normally, this would display progress bars in the console as the data is being fetched. However, the output was suppressed to save space.
 
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">(\#tab:global-masic-table)<left>First 6 rows of the MASIC data.</left>
@@ -1077,25 +1064,7 @@ masic_data <- filter_masic_data(masic_data,
 
 ### Create Study Design Tables {#fetch-study-design-tables}
 
-To convert from PSMs and reporter ion intensities to meaningful quantitative data, it is necessary to know what are the samples in the reporter channels and what is the intended reference channel (or combination of channels). The entire study design is captured by three tables - fractions, samples, references. With newly processed data, these typically do not exist, and must be created. If the tables already exist, the code to access them is as follows.
-
-
-```r
-# Read tables from folder:
-fractions <- read_tsv(system.file("extdata/study_design/fractions.txt", 
-                                  package = "PlexedPiperTestData"))
-samples <- read_tsv(system.file("extdata/study_design/samples.txt", 
-                                package = "PlexedPiperTestData"))
-references <- read_tsv(system.file("extdata/study_design/references.txt", 
-                                   package = "PlexedPiperTestData"))
-
-# If using a data package from the DMS:
-study_design <- read_study_design_from_DMS(data_package_num)
-fractions <- study_design$fractions
-samples <- study_design$samples
-references <- study_design$references
-```
-
+To convert from PSMs and reporter ion intensities to meaningful quantitative data, it is necessary to know what are the samples in the reporter channels and what is the intended reference channel (or combination of channels). The entire study design is captured by three tables - fractions, samples, references. With newly processed data, these typically do not exist, and must be created.
 
 #### Fractions 
 
@@ -1174,25 +1143,12 @@ For this experiment, channel 131 will serve as the reference, so we set `Measure
 
 
 ```r
-# TMT10 Reporter Converter table from MSnID package
-conv <- reporter_converter$tmt10
-plexes <- unique(fractions$PlexID)
-
-# Reference channel
-ref_channel <- "131"
-
 # Create samples table
-samples <- data.frame(PlexID = rep(plexes, each = nrow(conv)),  
-                      ReporterName = rep(conv$ReporterName, 
-                                         length(plexes))) %>% 
-  mutate(ReporterAlias = sprintf("%s_%s", PlexID, ReporterName),
-         MeasurementName = ReporterAlias,
-         QuantBlock = 1,
-         # Comment out this next part if the reference
-         # is not one of the reporter ion channels.
-         MeasurementName = ifelse(ReporterName == ref_channel,
-                                  NA, MeasurementName)
-  )
+samples <- read.delim("data/MoTrPAC_pilot_TMT_labeling.txt") %>% 
+  dplyr::rename(ReporterName = TMT10_channel, 
+                ReporterAlias = sample_ID) %>% 
+  mutate(QuantBlock = 1,
+         MeasurementName = ifelse(ReporterAlias == "ref", NA, ReporterAlias))
 ```
 
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
@@ -1200,83 +1156,83 @@ samples <- data.frame(PlexID = rep(plexes, each = nrow(conv)),
 </caption>
  <thead>
   <tr>
-   <th style="text-align:left;"> PlexID </th>
-   <th style="text-align:left;"> ReporterName </th>
    <th style="text-align:left;"> ReporterAlias </th>
-   <th style="text-align:left;"> MeasurementName </th>
+   <th style="text-align:left;"> ReporterName </th>
+   <th style="text-align:left;"> PlexID </th>
    <th style="text-align:right;"> QuantBlock </th>
+   <th style="text-align:left;"> MeasurementName </th>
   </tr>
  </thead>
 <tbody>
   <tr>
-   <td style="text-align:left;"> S1 </td>
-   <td style="text-align:left;"> 126 </td>
-   <td style="text-align:left;"> S1_126 </td>
-   <td style="text-align:left;"> S1_126 </td>
-   <td style="text-align:right;"> 1 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> S1 </td>
-   <td style="text-align:left;"> 127N </td>
-   <td style="text-align:left;"> S1_127N </td>
-   <td style="text-align:left;"> S1_127N </td>
-   <td style="text-align:right;"> 1 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> S1 </td>
-   <td style="text-align:left;"> 127C </td>
-   <td style="text-align:left;"> S1_127C </td>
-   <td style="text-align:left;"> S1_127C </td>
-   <td style="text-align:right;"> 1 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> S1 </td>
-   <td style="text-align:left;"> 128N </td>
-   <td style="text-align:left;"> S1_128N </td>
-   <td style="text-align:left;"> S1_128N </td>
-   <td style="text-align:right;"> 1 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> S1 </td>
-   <td style="text-align:left;"> 128C </td>
-   <td style="text-align:left;"> S1_128C </td>
-   <td style="text-align:left;"> S1_128C </td>
-   <td style="text-align:right;"> 1 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> S1 </td>
-   <td style="text-align:left;"> 129N </td>
-   <td style="text-align:left;"> S1_129N </td>
-   <td style="text-align:left;"> S1_129N </td>
-   <td style="text-align:right;"> 1 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> S1 </td>
+   <td style="text-align:left;"> S_01 </td>
    <td style="text-align:left;"> 129C </td>
-   <td style="text-align:left;"> S1_129C </td>
-   <td style="text-align:left;"> S1_129C </td>
+   <td style="text-align:left;"> S1 </td>
    <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> S_01 </td>
   </tr>
   <tr>
+   <td style="text-align:left;"> S_02 </td>
+   <td style="text-align:left;"> 129N </td>
    <td style="text-align:left;"> S1 </td>
-   <td style="text-align:left;"> 130N </td>
-   <td style="text-align:left;"> S1_130N </td>
-   <td style="text-align:left;"> S1_130N </td>
    <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> S_02 </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> S1 </td>
+   <td style="text-align:left;"> S_03 </td>
    <td style="text-align:left;"> 130C </td>
-   <td style="text-align:left;"> S1_130C </td>
-   <td style="text-align:left;"> S1_130C </td>
+   <td style="text-align:left;"> S1 </td>
    <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> S_03 </td>
   </tr>
   <tr>
+   <td style="text-align:left;"> S_04 </td>
+   <td style="text-align:left;"> 130N </td>
    <td style="text-align:left;"> S1 </td>
-   <td style="text-align:left;"> 131 </td>
-   <td style="text-align:left;"> S1_131 </td>
-   <td style="text-align:left;"> NA </td>
    <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> S_04 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S_05 </td>
+   <td style="text-align:left;"> 126 </td>
+   <td style="text-align:left;"> S2 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> S_05 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S_06 </td>
+   <td style="text-align:left;"> 127C </td>
+   <td style="text-align:left;"> S2 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> S_06 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S_07 </td>
+   <td style="text-align:left;"> 127N </td>
+   <td style="text-align:left;"> S2 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> S_07 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S_08 </td>
+   <td style="text-align:left;"> 128C </td>
+   <td style="text-align:left;"> S2 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> S_08 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S_09 </td>
+   <td style="text-align:left;"> 128N </td>
+   <td style="text-align:left;"> S2 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> S_09 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ref </td>
+   <td style="text-align:left;"> 131 </td>
+   <td style="text-align:left;"> S1 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> NA </td>
   </tr>
 </tbody>
 </table>
@@ -1294,8 +1250,8 @@ Reference can be a certain channel, average of multiple channels, or 1. The gene
 ```r
 # Create references table
 references <- samples %>% 
-  # Filter to reference channel
-  filter(ReporterName == ref_channel) %>% 
+  # Filter to reference channel (ReporterName == "131", ReporterAlias == "ref")
+  filter(ReporterName == "131") %>% 
   # Select required columns and rename ReporterAlias to Reference
   select(PlexID, Reference = ReporterAlias, QuantBlock)
 ```
@@ -1313,12 +1269,12 @@ references <- samples %>%
 <tbody>
   <tr>
    <td style="text-align:left;"> S1 </td>
-   <td style="text-align:left;"> S1_131 </td>
+   <td style="text-align:left;"> ref </td>
    <td style="text-align:right;"> 1 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> S2 </td>
-   <td style="text-align:left;"> S2_131 </td>
+   <td style="text-align:left;"> ref </td>
    <td style="text-align:right;"> 1 </td>
   </tr>
 </tbody>
@@ -1352,11 +1308,11 @@ Explain how to add the study design tables to the DMS.
 
 ```r
 # Save study design tables
-write.table(fractions, file = "fractions.txt",
+write.table(fractions, file = "data/fractions.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
-write.table(samples, file = "samples.txt",
+write.table(samples, file = "data/samples.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
-write.table(references, file = "references.txt",
+write.table(references, file = "data/references.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 ```
 
@@ -1376,29 +1332,29 @@ crosstab <- create_crosstab(msnid, masic_data,
 ```
 
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">(\#tab:unnamed-chunk-23)<left>First 6 rows of the global quantitative cross-tab.</left>
+<caption style="font-size: initial !important;">(\#tab:unnamed-chunk-21)<left>First 6 rows of the global quantitative cross-tab.</left>
 </caption>
  <thead>
   <tr>
    <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> S1_126 </th>
-   <th style="text-align:right;"> S1_127C </th>
-   <th style="text-align:right;"> S1_127N </th>
-   <th style="text-align:right;"> S1_128C </th>
-   <th style="text-align:right;"> S1_128N </th>
-   <th style="text-align:right;"> S1_129C </th>
-   <th style="text-align:right;"> S1_129N </th>
-   <th style="text-align:right;"> S1_130C </th>
-   <th style="text-align:right;"> S1_130N </th>
-   <th style="text-align:right;"> S2_126 </th>
-   <th style="text-align:right;"> S2_127C </th>
-   <th style="text-align:right;"> S2_127N </th>
-   <th style="text-align:right;"> S2_128C </th>
-   <th style="text-align:right;"> S2_128N </th>
-   <th style="text-align:right;"> S2_129C </th>
-   <th style="text-align:right;"> S2_129N </th>
-   <th style="text-align:right;"> S2_130C </th>
-   <th style="text-align:right;"> S2_130N </th>
+   <th style="text-align:right;"> R_01 </th>
+   <th style="text-align:right;"> R_02 </th>
+   <th style="text-align:right;"> R_03 </th>
+   <th style="text-align:right;"> R_04 </th>
+   <th style="text-align:right;"> R_05 </th>
+   <th style="text-align:right;"> R_06 </th>
+   <th style="text-align:right;"> R_07 </th>
+   <th style="text-align:right;"> R_08 </th>
+   <th style="text-align:right;"> R_09 </th>
+   <th style="text-align:right;"> S_01 </th>
+   <th style="text-align:right;"> S_02 </th>
+   <th style="text-align:right;"> S_03 </th>
+   <th style="text-align:right;"> S_04 </th>
+   <th style="text-align:right;"> S_05 </th>
+   <th style="text-align:right;"> S_06 </th>
+   <th style="text-align:right;"> S_07 </th>
+   <th style="text-align:right;"> S_08 </th>
+   <th style="text-align:right;"> S_09 </th>
   </tr>
  </thead>
 <tbody>
@@ -1409,6 +1365,10 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> 0.1653552 </td>
    <td style="text-align:right;"> 0.8662554 </td>
    <td style="text-align:right;"> 0.9453172 </td>
+   <td style="text-align:right;"> -0.8794712 </td>
+   <td style="text-align:right;"> -0.1912097 </td>
+   <td style="text-align:right;"> 0.3964607 </td>
+   <td style="text-align:right;"> -0.2440478 </td>
    <td style="text-align:right;"> -0.6460065 </td>
    <td style="text-align:right;"> -1.9294467 </td>
    <td style="text-align:right;"> -0.4321433 </td>
@@ -1418,10 +1378,6 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> 0.4883309 </td>
    <td style="text-align:right;"> -1.7148628 </td>
    <td style="text-align:right;"> -0.7029685 </td>
-   <td style="text-align:right;"> -0.8794712 </td>
-   <td style="text-align:right;"> -0.1912097 </td>
-   <td style="text-align:right;"> 0.3964607 </td>
-   <td style="text-align:right;"> -0.2440478 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> AP_004894.1 </td>
@@ -1430,6 +1386,10 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> -0.3113350 </td>
    <td style="text-align:right;"> 0.3215692 </td>
    <td style="text-align:right;"> 0.2171255 </td>
+   <td style="text-align:right;"> -1.3515366 </td>
+   <td style="text-align:right;"> -0.7462995 </td>
+   <td style="text-align:right;"> -0.8338103 </td>
+   <td style="text-align:right;"> -0.2227493 </td>
    <td style="text-align:right;"> -0.3678781 </td>
    <td style="text-align:right;"> -0.1638689 </td>
    <td style="text-align:right;"> -0.6696829 </td>
@@ -1439,10 +1399,6 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> -0.4428327 </td>
    <td style="text-align:right;"> -1.3730408 </td>
    <td style="text-align:right;"> -0.6711809 </td>
-   <td style="text-align:right;"> -1.3515366 </td>
-   <td style="text-align:right;"> -0.7462995 </td>
-   <td style="text-align:right;"> -0.8338103 </td>
-   <td style="text-align:right;"> -0.2227493 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> AP_004895.1 </td>
@@ -1451,6 +1407,10 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> -0.6089756 </td>
    <td style="text-align:right;"> -0.1162062 </td>
    <td style="text-align:right;"> -0.3840271 </td>
+   <td style="text-align:right;"> -0.6780284 </td>
+   <td style="text-align:right;"> -0.6102404 </td>
+   <td style="text-align:right;"> -0.3896190 </td>
+   <td style="text-align:right;"> -0.1548544 </td>
    <td style="text-align:right;"> -1.1240967 </td>
    <td style="text-align:right;"> -0.6908468 </td>
    <td style="text-align:right;"> -0.6652575 </td>
@@ -1460,10 +1420,6 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> -0.1200736 </td>
    <td style="text-align:right;"> -0.6435709 </td>
    <td style="text-align:right;"> -0.4287771 </td>
-   <td style="text-align:right;"> -0.6780284 </td>
-   <td style="text-align:right;"> -0.6102404 </td>
-   <td style="text-align:right;"> -0.3896190 </td>
-   <td style="text-align:right;"> -0.1548544 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> AP_004896.1 </td>
@@ -1472,6 +1428,10 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> -0.7314368 </td>
    <td style="text-align:right;"> -0.1742391 </td>
    <td style="text-align:right;"> -0.5352280 </td>
+   <td style="text-align:right;"> -0.6543311 </td>
+   <td style="text-align:right;"> -0.6741064 </td>
+   <td style="text-align:right;"> -0.3994149 </td>
+   <td style="text-align:right;"> -0.0441485 </td>
    <td style="text-align:right;"> -1.2945071 </td>
    <td style="text-align:right;"> -1.0372327 </td>
    <td style="text-align:right;"> -0.7060783 </td>
@@ -1481,10 +1441,6 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> -0.1688422 </td>
    <td style="text-align:right;"> -0.5251264 </td>
    <td style="text-align:right;"> -0.4222698 </td>
-   <td style="text-align:right;"> -0.6543311 </td>
-   <td style="text-align:right;"> -0.6741064 </td>
-   <td style="text-align:right;"> -0.3994149 </td>
-   <td style="text-align:right;"> -0.0441485 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> AP_004898.1 </td>
@@ -1493,6 +1449,10 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> 0.4252227 </td>
    <td style="text-align:right;"> 0.4913660 </td>
    <td style="text-align:right;"> 1.1580326 </td>
+   <td style="text-align:right;"> -1.8439756 </td>
+   <td style="text-align:right;"> -0.1774225 </td>
+   <td style="text-align:right;"> -1.1083199 </td>
+   <td style="text-align:right;"> -0.4175363 </td>
    <td style="text-align:right;"> 0.1211536 </td>
    <td style="text-align:right;"> -0.3640632 </td>
    <td style="text-align:right;"> -0.3019505 </td>
@@ -1502,10 +1462,6 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> -0.4130732 </td>
    <td style="text-align:right;"> -1.5747761 </td>
    <td style="text-align:right;"> -0.9449498 </td>
-   <td style="text-align:right;"> -1.8439756 </td>
-   <td style="text-align:right;"> -0.1774225 </td>
-   <td style="text-align:right;"> -1.1083199 </td>
-   <td style="text-align:right;"> -0.4175363 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> AP_004899.1 </td>
@@ -1514,6 +1470,10 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> -0.3732752 </td>
    <td style="text-align:right;"> 0.3494902 </td>
    <td style="text-align:right;"> -0.0615626 </td>
+   <td style="text-align:right;"> -1.0482424 </td>
+   <td style="text-align:right;"> -0.8052899 </td>
+   <td style="text-align:right;"> -0.6675429 </td>
+   <td style="text-align:right;"> -0.3959923 </td>
    <td style="text-align:right;"> -2.1679002 </td>
    <td style="text-align:right;"> -0.8550940 </td>
    <td style="text-align:right;"> -0.9026145 </td>
@@ -1523,42 +1483,37 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> -0.4644758 </td>
    <td style="text-align:right;"> -0.2805080 </td>
    <td style="text-align:right;"> -0.9023044 </td>
-   <td style="text-align:right;"> -1.0482424 </td>
-   <td style="text-align:right;"> -0.8052899 </td>
-   <td style="text-align:right;"> -0.6675429 </td>
-   <td style="text-align:right;"> -0.3959923 </td>
   </tr>
 </tbody>
 </table>
 
 </br>
 
-In order to demonstrate prioritized inference in Section \@ref(phosphoproteomics-data), we need to save the row names of this cross-tab.
+Now that we have the cross-tab, we should save it.
 
 
 ```r
-# Save protein names
-saveRDS(rownames(crosstab), file = "data/3442_global_protein_names.rds")
-```
-
-We should save the cross-tab as well. To do so, we need to convert the row names to a column called `protein`.
-
-
-```r
-# Modify cross-tab for saving
-crosstab <- crosstab %>% 
-  as.data.frame() %>% 
-  tibble::rownames_to_column("protein")
-
 # Save cross-tab
 write.table(crosstab, file = "data/global_quant_crosstab.txt",
-            sep = "\t", quote = FALSE, row.names = FALSE)
+            sep = "\t", quote = FALSE, row.names = TRUE)
 ```
+
+We will also save the proteins (row names) of this cross-tab in order to demonstrate prioritized inference in Section \@ref(phosphoproteomics-data).
+
+
+```r
+# Save global proteins
+global_proteins <- rownames(crosstab)
+save(global_proteins, file = "data/3442_global_proteins.RData")
+```
+
 
 
 ## Phosphoproteomics Data {#phosphoproteomics-data}
 
-This pipeline shows how to process data from the DMS. The number of the data package is `3626`. For this section, we need the `PlexedPiper` package for isobaric quantification and `PNNL.DMS.utils` to interface with the DMS. Also, some details will be omitted if they were already provided in Section \@ref(global-proteomics-data).
+This pipeline shows how to process phosphoproteomics data from the DMS. Phosphoproteomics deals with proteins that have been phosphorylated. Phosphorylation is a type of reversible post-translational modification (PTM; a protein modification that occurs after protein synthesis) in which a protein kinase attaches a phosphate group to an amino acid residue. This change in a protein's structure can completely alter aspects such as its biological activity and protein-protein interactions, and "abnormal phosphorylation is now recognized as a cause or consequence of many human diseases" [@cohen_origins_2002]. The most commonly phosphorylated amino acids are serine (S), threonine (T), and tyrosine (Y).
+
+For this section, we will use data package number `3626`. We will need the `PlexedPiper` package for isobaric quantification and `PNNL.DMS.utils` to interface with the DMS. Also, details will be omitted if they were already provided in Section \@ref(global-proteomics-data).
 
 
 ```r
@@ -1596,9 +1551,18 @@ show(msnid)
 ```
 
 
+#### Correct Isotope Selection Error 
+
+
+```r
+# Correct for isotope selection error
+msnid <- correct_peak_selection(msnid)
+```
+
+
 #### Remove Non-Phosphorylated Peptides 
 
-In this case, the phosphorylation of an amino acid is marked by a `*` appearing after the amino acid. We will not consider unmodified peptides, so we can filter them out. The `*` is a special character that must be escaped with backslashes, and the backslashes must also be escaped.
+In this case, the phosphorylation of an amino acid is marked by a `*` inserted into the sequence after said amino acid. We will not consider unmodified peptides, so we can filter out peptides that do not contain this symbol with `apply_filter`. The `*` is a special character that must be escaped with backslashes, and the backslashes must also be escaped, since they are enclosed within a nested string (`"''"`).
 
 
 ```r
@@ -1615,15 +1579,6 @@ show(msnid)
 ## #PSMs: 537749 at 57 % FDR
 ## #peptides: 353634 at 76 % FDR
 ## #accessions: 118817 at 98 % FDR
-```
-
-
-#### Correct Isotope Selection Error 
-
-
-```r
-# Correct for isotope selection error
-msnid <- correct_peak_selection(msnid)
 ```
 
 
@@ -1646,16 +1601,20 @@ show(msnid)
 ```
 
 
-#### Filter by AScore 
+#### Improve Phosphosite Localization
 
 Phospho datasets involve AScore jobs for improving phosphosite localization. There should be one AScore job per data package. The fetched object is a data.frame that links datasets, scans and original PTM localization to newly suggested locations. Importantly, it contains `AScore` column that signifies the confidence of PTM assignment. AScore > 17 is considered confident.
 
 
 ```r
-# Filter PTMs by AScore
+# Filter PTMs by Ascore
 ascore <- get_AScore_results(data_package_num)
 msnid <- best_PTM_location_by_ascore(msnid, ascore)
 ```
+
+<!---
+Why are some of the original sequences in ascore not phosphorylated? (AScore = -1)
+--->
 
 
 ```r
@@ -1744,29 +1703,11 @@ show(msnid)
 ## #accessions: 2895 at 1.6 % FDR
 ```
 
-Notice that the protein-level FDR increased above the acceptable threshold, so we need to reapply the filter.
+#### Remove Decoy PSMs
 
 
 ```r
-# 1% FDR filter at the protein level
-msnid <- filter_msgf_data(msnid,
-                          level = "accession",
-                          fdr.max = 0.01)
-show(msnid)
-```
-
-```
-## MSnID object
-## Working directory: "."
-## #Spectrum Files:  23 
-## #PSMs: 70340 at 0.075 % FDR
-## #peptides: 20117 at 0.15 % FDR
-## #accessions: 2351 at 0.99 % FDR
-```
-
-
-```r
-# Remove Decoy Accessions
+# Remove Decoy PSMs
 msnid <- apply_filter(msnid, "!isDecoy")
 show(msnid)
 ```
@@ -1775,14 +1716,14 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  23 
-## #PSMs: 70287 at 0 % FDR
-## #peptides: 20086 at 0 % FDR
-## #accessions: 2328 at 0 % FDR
+## #PSMs: 72391 at 0 % FDR
+## #peptides: 21211 at 0 % FDR
+## #accessions: 2849 at 0 % FDR
 ```
 
 #### Map Sites to Protein Sequences 
 
-Prepare FASTA to make sure entry names in FASTA file match MSnID accessions. The plan is to make this conversion automatic. `map_mod_sites` creates number of columns describing mapping of the site/s onto the protein sequences. The most important for the user is `SiteID`.
+Prepare FASTA to make sure entry names in FASTA file match MSnID accessions. The plan is to make this conversion automatic. `map_mod_sites` creates a number of columns describing mapping of the site/s onto the protein sequences. The most important for the user is `SiteID`.
 
 
 ```r
@@ -2204,51 +2145,26 @@ masic_data <- filter_masic_data(masic_data,
 
 ### Create Study Design Tables
 
-#### Fractions 
+If study design tables are on the DMS, they can be accessed in the following way.
 
 
 ```r
-# Create fractions table
+# Read study design tables from DMS
+study_design <- read_study_design_from_DMS(data_package_num)
+fractions <- study_design$fractions
+samples <- study_design$samples
+references <- study_design$references
+```
+
+While the study design tables are not on the DMS, we already created them in Section \@ref(fetch-study-design-tables). We just need to recreate the fractions table because the dataset names are different.
+
+
+```r
+# Read tables from folder
+samples <- read.delim("data/samples.txt")
+references <- read.delim("data/references.txt")
 fractions <- data.frame(Dataset = unique(masic_data$Dataset)) %>% 
   mutate(PlexID = gsub(".*_P_(S\\d{1})_.*", "\\1", Dataset))
-```
-
-
-#### Samples 
-
-
-```r
-# TMT10 Reporter Converter table from MSnID package
-conv <- reporter_converter$tmt10
-plexes <- unique(fractions$PlexID)
-
-# Reference channel
-ref_channel <- "131"
-
-# Create samples table
-samples <- data.frame(PlexID = rep(plexes, each = nrow(conv)),  
-                      ReporterName = rep(conv$ReporterName, 
-                                         length(plexes))) %>% 
-  mutate(ReporterAlias = sprintf("%s_%s", PlexID, ReporterName),
-         MeasurementName = ReporterAlias,
-         QuantBlock = 1,
-         # Comment out this next part if the reference
-         # is not one of the reporter ion channels.
-         MeasurementName = ifelse(ReporterName == ref_channel,
-                                  NA, MeasurementName)
-  )
-```
-
-#### References 
-
-
-```r
-# Create references table
-references <- samples %>% 
-  # Filter to reference channel
-  filter(ReporterName == ref_channel) %>% 
-  # Select required columns and rename ReporterAlias to Reference
-  select(PlexID, Reference = ReporterAlias, QuantBlock)
 ```
 
 
@@ -2265,32 +2181,74 @@ crosstab <- create_crosstab(msnid, masic_data,
 ```
 
 <table class="table table-hover table-condensed" style="font-size: 12px; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">(\#tab:unnamed-chunk-48)<left>First 6 rows of the phospho quantitative cross-tab.</left>
+<caption style="font-size: initial !important;">(\#tab:unnamed-chunk-44)<left>First 6 rows of the phospho quantitative cross-tab.</left>
 </caption>
  <thead>
   <tr>
    <th style="text-align:left;">   </th>
-   <th style="text-align:right;"> S1_126 </th>
-   <th style="text-align:right;"> S1_127C </th>
-   <th style="text-align:right;"> S1_127N </th>
-   <th style="text-align:right;"> S1_128C </th>
-   <th style="text-align:right;"> S1_128N </th>
-   <th style="text-align:right;"> S1_129C </th>
-   <th style="text-align:right;"> S1_129N </th>
-   <th style="text-align:right;"> S1_130C </th>
-   <th style="text-align:right;"> S1_130N </th>
-   <th style="text-align:right;"> S2_126 </th>
-   <th style="text-align:right;"> S2_127C </th>
-   <th style="text-align:right;"> S2_127N </th>
-   <th style="text-align:right;"> S2_128C </th>
-   <th style="text-align:right;"> S2_128N </th>
-   <th style="text-align:right;"> S2_129C </th>
-   <th style="text-align:right;"> S2_129N </th>
-   <th style="text-align:right;"> S2_130C </th>
-   <th style="text-align:right;"> S2_130N </th>
+   <th style="text-align:right;"> R_01 </th>
+   <th style="text-align:right;"> R_02 </th>
+   <th style="text-align:right;"> R_03 </th>
+   <th style="text-align:right;"> R_04 </th>
+   <th style="text-align:right;"> R_05 </th>
+   <th style="text-align:right;"> R_06 </th>
+   <th style="text-align:right;"> R_07 </th>
+   <th style="text-align:right;"> R_08 </th>
+   <th style="text-align:right;"> R_09 </th>
+   <th style="text-align:right;"> S_01 </th>
+   <th style="text-align:right;"> S_02 </th>
+   <th style="text-align:right;"> S_03 </th>
+   <th style="text-align:right;"> S_04 </th>
+   <th style="text-align:right;"> S_05 </th>
+   <th style="text-align:right;"> S_06 </th>
+   <th style="text-align:right;"> S_07 </th>
+   <th style="text-align:right;"> S_08 </th>
+   <th style="text-align:right;"> S_09 </th>
   </tr>
  </thead>
 <tbody>
+  <tr>
+   <td style="text-align:left;"> NP_001000283.1-Y132yS137s </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> -0.7653521 </td>
+   <td style="text-align:right;"> -0.5428785 </td>
+   <td style="text-align:right;"> -0.2119856 </td>
+   <td style="text-align:right;"> -0.1239261 </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> 0.0038421 </td>
+   <td style="text-align:right;"> -0.2425074 </td>
+   <td style="text-align:right;"> -0.7416622 </td>
+   <td style="text-align:right;"> -0.7497171 </td>
+   <td style="text-align:right;"> -0.4879016 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> NP_001001064.1-Y129y </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> -1.0408865 </td>
+   <td style="text-align:right;"> -0.2976259 </td>
+   <td style="text-align:right;"> -0.7301538 </td>
+   <td style="text-align:right;"> -0.1385762 </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> 0.1594274 </td>
+   <td style="text-align:right;"> -0.6587720 </td>
+   <td style="text-align:right;"> 0.1932351 </td>
+   <td style="text-align:right;"> -0.6370354 </td>
+   <td style="text-align:right;"> -0.4461276 </td>
+  </tr>
   <tr>
    <td style="text-align:left;"> NP_001001512.2-S241s </td>
    <td style="text-align:right;"> -0.5441083 </td>
@@ -2298,14 +2256,14 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> -0.5540885 </td>
    <td style="text-align:right;"> -0.1812456 </td>
    <td style="text-align:right;"> -0.5675833 </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> -0.0427948 </td>
    <td style="text-align:right;"> -0.803056 </td>
    <td style="text-align:right;"> -0.5236890 </td>
    <td style="text-align:right;"> -1.0398773 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
@@ -2319,6 +2277,10 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> -0.3923442 </td>
    <td style="text-align:right;"> -0.3242804 </td>
    <td style="text-align:right;"> -0.6512914 </td>
+   <td style="text-align:right;"> -1.3958746 </td>
+   <td style="text-align:right;"> -0.6640721 </td>
+   <td style="text-align:right;"> -0.7046127 </td>
+   <td style="text-align:right;"> -0.3091972 </td>
    <td style="text-align:right;"> -0.4914234 </td>
    <td style="text-align:right;"> -1.210593 </td>
    <td style="text-align:right;"> -0.6421375 </td>
@@ -2328,10 +2290,6 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> -0.4801256 </td>
    <td style="text-align:right;"> -0.4458455 </td>
    <td style="text-align:right;"> -0.7588038 </td>
-   <td style="text-align:right;"> -1.3958746 </td>
-   <td style="text-align:right;"> -0.6640721 </td>
-   <td style="text-align:right;"> -0.7046127 </td>
-   <td style="text-align:right;"> -0.3091972 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> NP_001001512.2-S699s </td>
@@ -2340,6 +2298,10 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> -0.8584401 </td>
+   <td style="text-align:right;"> -0.4918316 </td>
+   <td style="text-align:right;"> -0.2745069 </td>
+   <td style="text-align:right;"> 0.2867235 </td>
    <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
@@ -2349,10 +2311,6 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> -0.4608541 </td>
    <td style="text-align:right;"> -1.2596689 </td>
    <td style="text-align:right;"> -0.8004630 </td>
-   <td style="text-align:right;"> -0.8584401 </td>
-   <td style="text-align:right;"> -0.4918316 </td>
-   <td style="text-align:right;"> -0.2745069 </td>
-   <td style="text-align:right;"> 0.2867235 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> NP_001001512.2-S746s </td>
@@ -2362,6 +2320,10 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
+   <td style="text-align:right;"> -1.5981389 </td>
+   <td style="text-align:right;"> -2.4732843 </td>
+   <td style="text-align:right;"> -0.4736739 </td>
+   <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
    <td style="text-align:right;"> NA </td>
@@ -2370,52 +2332,6 @@ crosstab <- create_crosstab(msnid, masic_data,
    <td style="text-align:right;"> -1.6828088 </td>
    <td style="text-align:right;"> -2.3039510 </td>
    <td style="text-align:right;"> -1.8632844 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> -1.5981389 </td>
-   <td style="text-align:right;"> -2.4732843 </td>
-   <td style="text-align:right;"> -0.4736739 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> NP_001001512.2-S748s </td>
-   <td style="text-align:right;"> -1.2580276 </td>
-   <td style="text-align:right;"> -1.3182692 </td>
-   <td style="text-align:right;"> -2.1938861 </td>
-   <td style="text-align:right;"> -2.0017857 </td>
-   <td style="text-align:right;"> 0.0219220 </td>
-   <td style="text-align:right;"> -0.7086501 </td>
-   <td style="text-align:right;"> -1.694015 </td>
-   <td style="text-align:right;"> -1.4681967 </td>
-   <td style="text-align:right;"> -1.5795032 </td>
-   <td style="text-align:right;"> 0.3139811 </td>
-   <td style="text-align:right;"> -0.6805752 </td>
-   <td style="text-align:right;"> -0.8132341 </td>
-   <td style="text-align:right;"> -1.7933771 </td>
-   <td style="text-align:right;"> 0.0127816 </td>
-   <td style="text-align:right;"> 0.2726023 </td>
-   <td style="text-align:right;"> 0.2266855 </td>
-   <td style="text-align:right;"> 0.5058189 </td>
-   <td style="text-align:right;"> 0.9332038 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> NP_001001514.1-S279s </td>
-   <td style="text-align:right;"> 0.0224073 </td>
-   <td style="text-align:right;"> -0.1412578 </td>
-   <td style="text-align:right;"> -0.4939068 </td>
-   <td style="text-align:right;"> -0.3322896 </td>
-   <td style="text-align:right;"> -0.6624270 </td>
-   <td style="text-align:right;"> 0.0686814 </td>
-   <td style="text-align:right;"> -0.711781 </td>
-   <td style="text-align:right;"> -1.0613940 </td>
-   <td style="text-align:right;"> -1.5813449 </td>
-   <td style="text-align:right;"> -0.1489704 </td>
-   <td style="text-align:right;"> -0.4580319 </td>
-   <td style="text-align:right;"> -0.5889714 </td>
-   <td style="text-align:right;"> -0.8708282 </td>
-   <td style="text-align:right;"> -0.5066630 </td>
-   <td style="text-align:right;"> -0.7469875 </td>
-   <td style="text-align:right;"> -0.3374105 </td>
-   <td style="text-align:right;"> -0.3842025 </td>
-   <td style="text-align:right;"> -0.1701473 </td>
   </tr>
 </tbody>
 </table>
@@ -2432,7 +2348,7 @@ crosstab <- crosstab %>%
   tibble::rownames_to_column("SiteID")
 
 # Save cross-tab
-write.table(crosstab, file = "data/phospho_quant_crosstab.txt",
+write.table(crosstab, file = "data/phosphosite_quant_crosstab.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 ```
 

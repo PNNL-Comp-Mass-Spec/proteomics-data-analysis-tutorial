@@ -1,7 +1,7 @@
 --- 
 title: "Proteomics Data Analysis in R/Bioconductor"
 author: "Tyler Sagendorf"
-date: "October 19, 2021"
+date: "October 21, 2021"
 site: bookdown::bookdown_site
 output: bookdown::bs4_book
 documentclass: book
