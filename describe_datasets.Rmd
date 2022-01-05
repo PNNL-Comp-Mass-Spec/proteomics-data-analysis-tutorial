@@ -1,0 +1,14 @@
+# Descriptions of Datasets
+
+## MoTrPAC Pilot Data
+
+* all females
+* 9 rats that didn't run (S for sedentary)
+* 9 rats that hit the treadmill once (R for run)
+
+
+:::{.rmdwarning}
+Need to properly credit MoTrPAC data! Check consortium website.
+:::
+
+Maybe put this in the index.

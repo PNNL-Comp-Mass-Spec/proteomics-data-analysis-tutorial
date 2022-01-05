@@ -1,5 +1,8 @@
 # Pathway Analysis {#pathway-analysis}
 
+
+
+
 In Section \@ref(DEA), we covered analysis at the individual feature level (protein, peptide, phosphoprotein, etc.). While DEA is useful, it is not without its own set of shortcomings. For instance, there may be no features that pass the significance threshold after correcting for multiple hypothesis testing. Alternatively, there may be many features that are statistically significant, and interpreting this list can be tedious and "prone to investigator bias toward a hypothesis of interest" [@maleki_gene_2020]. Another issue is that single-feature analysis fails to detect subtle, yet coordinated changes in groups of related features [@subramanian_gene_2005]. 
 
 In order to address these, and other, issues, pathway analysis instead examines *a priori* defined **gene sets**—groups of genes that participate in the same biological pathway, share the same cellular location, etc. In this section, we will explore some common annotation databases, as well as two pathway analysis methods: Over-Representation Analysis (ORA) and Gene Set Enrichment Analysis (GSEA).
@@ -13,7 +16,7 @@ In this section, we will explore some of the common annotation databases used fo
 
 The Gene Ontology (GO) database is divided into three separate domains: Biological Process, Cellular Component, and Molecular Function (see the <a href="http://geneontology.org/docs/ontology-documentation/" title = "Gene Ontology overview">Gene Ontology overview</a> for more details regarding each domain). Each domain is structured as a directed acyclic graph (DAG) where nodes are terms and edges are the <a href="http://geneontology.org/docs/ontology-relations/#:~:text=Main%20relations%20used%20in%20GO" title = "Main relations used in GO">relations</a> between the terms (part of, is a, has part, regulates). Nodes can be connected to multiple child and parent nodes, where the group of genes annotated to a child node is a subset of those that are annotated to its parent node(s) [@noauthor_relations_2021; @goeman_multiple_2008].
 
-#### Semantic Similarity 
+#### Semantic Similarity {#semantic-similarity}
 
 Due to the DAG structure of each domain, there is often redundancy in pathway analysis results. For example, suppose terms <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a>, <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a>, and  <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0046034" title = "ATP metabolic process">GO:0046034</a> are significantly over-represented biological processes. <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a> and  <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0046034" title = "ATP metabolic process">GO:0046034</a> are the parent terms of <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a>. Due to this relationship, the terms likely provide much of the same information, so the inclusion of all three terms in the output is unnecessary. In order to resolve this redundancy, we can calculate the **semantic similarity** between pairs of GO terms, which "assesses the likeness in meaning of two concepts" [@pesquita_semantic_2017]. Basically, if two terms are highly related, we can use some other criteria (such as adjusted p-value or level in the DAG) to retain only one of the terms. Below, we use the `GOSemSim` package to calculate the semantic similarity between the terms.
 
@@ -74,7 +77,7 @@ We can see from Table \@ref(tab:sem-sim-table) that <a href="https://www.ebi.ac.
 Now that we have the semantic similarities, we can remove redundant terms. `clusterProfiler` has a function called `simplify` that will calculate semantic similarity and remove terms. By default, if there are two terms with a semantic similarity greater than 0.7, `simplify` retains the term with the lowest adjusted p-value. See <a href="https://guangchuangyu.github.io/2015/10/use-simplify-to-remove-redundancy-of-enriched-go-terms/" title = "use simplify to remove redundancy of enriched GO terms">this post</a> by Guangchuang Yu for more details on `clusterProfiler::simplify`.
 
 
-#### GO Subsets/Slims 
+#### GO Subsets/Slims {#go-slim}
 
 Another way to handle the redundancy of GO terms is to use a <a href="http://geneontology.org/docs/go-subset-guide/" title = "Guide to GO subsets">GO slim</a>, which is a subset of more general or research-relevant terms from the GO. GO slims can be <a href="http://geneontology.org/docs/download-ontology/#subsets" title = "Download the ontology">downloaded</a> or the `biomaRt` package can be used to access GO slim accessions.
 
@@ -103,6 +106,7 @@ GO_slim <- getBM(filters = "entrezgene_id",
   # Convert entrezgene_id from integer to character
   mutate_all(as.character)
 ```
+
 
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
  <thead>
@@ -198,6 +202,28 @@ phyper(q = 20 - 1, m = 400, n = 8000 - 400, k = 100, lower.tail = FALSE)
 
 After a p-value has been calculated for each of the applicable gene sets, a multiple comparison adjustment should be performed.
 
+#### Important Considerations {-}
+
+<ol>
+<li>
+The choice of the threshold for statistical significance and the multiple comparison adjustment method can greatly impact the analysis [@huang_bioinformatics_2009].
+</li>
+<li>
+ORA fails to incorporate direction of gene regulation. (Are the genes in a given set mainly up or down-regulated?). It is not a good idea to split DEA results by the sign of the logFC and apply ORA to the two sets. Use GSEA instead.
+</li>
+<!--- 
+TODO:
+Fact-check #3
+--->
+<li>
+If few genes are differentially expressed, ORA may not yield useful or reliable results. For example, suppose 30 out of 8000 genes are significant. 100 of the genes are annotated to a particular gene set, of which 3 are significant. The associated Hypergeometric p-value is 0.006, and this set would be considered significantly over-represented at the 0.01 level (at least, prior to adjustment for multiple comparisons); however, if only 2 of the genes in this set are significant, this p-value increases 10-fold to 0.0536 and is no longer significant even at the 0.05 level.
+</li>
+<li>
+If the DEA results are not gene-centric (i.e. DEA was performed at the protein or phosphosite level), then there may be cases where two proteins are associated with the same gene, but only one is significantly differentially abundant. In this case, there is no way to categorize the gene as significant or not, so ORA should not be used. The other problem that could arise if the DEA results are not gene-centric is that the same gene may be counted as significant multiple times, which leads to artificial over-representation. In these cases, GSEA may be a good alternative.
+</li>
+</ol>
+
+
 ### Examples {#ora-examples}
 
 For these examples, we will show how to perform ORA with the GOstats, clusterProfiler, and ReactomePA packages. The databases that we will cover are Gene Ontology, Reactome, and Pfam. For details on these different annotation databases, please see Section \@ref(annotation-databases). 
@@ -215,7 +241,7 @@ library(kableExtra)
 library(dplyr)
 ```
 
-Normally, we would use a DEA table to create two character vectors: one for the significantly expressed genes and the other for all genes that were tested (referred to as the "background" or "universe"); instead, we will use the `gcSample` data that comes with clusterProfiler and treat the eighth cluster as our vector of significant genes and the entire list as the gene universe. Each gene is represented by a human Entrez gene ID, which is the default keytype used by the clusterProfiler functions and the only keytype compatible with `ReactomePA::enrichPathway`.
+Normally, we would use a DEA table to create two character vectors: one for the significantly expressed genes and the other for all genes that were tested (referred to as the "background" or "universe"); instead, we will use the `gcSample` data that comes with clusterProfiler and treat the eighth cluster as our vector of significant genes and the entire list as the gene universe. Each gene is represented by a human Entrez gene ID, which is the default keytype used by the clusterProfiler functions (and the only keytype compatible with `ReactomePA::enrichPathway`).
 
 
 ```r
@@ -228,7 +254,7 @@ It is important to note that the genes should be unique from the start. The term
 
 
 
-#### Gene Ontology 
+#### Gene Ontology {#ora-go}
 
 We will first use the clusterProfiler package to test which biological processes are over-represented in the set of interesting genes. For this example, we will only consider gene sets of size 20 to 500. In order to test either molecular functions, cellular components, or all three ontologies at once, set `ont` to `"MF"`, `"CC"`, or `"ALL"`, respectively.
 
@@ -481,7 +507,7 @@ cp_ora_go_sim <- simplify(cp_ora_go)
 
 </br>
 
-Notice that <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a> is not present in Table \@ref(tab:simplify-cp-ora-bp-table) anymore, since it was highly similar to <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a>, and the latter was more significant. After removing redundant GO terms, 96 pass the significance threshold.
+Notice that <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a> is not present in Table \@ref(tab:simplify-cp-ora-bp-table) anymore, since it was highly similar to <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a>, and the latter was more significant. After removing redundant GO terms, 95 pass the significance threshold.
 
 Instead of retaining terms based on adjusted p-value, we could ignore significance and instead retain either parent or child terms (`select_fun = min` and `select_fun = max`, respectively). The code to do so is provided <a href="https://github.com/YuLab-SMU/clusterProfiler/issues/372" title = "New feature: simplify to parent GO terms #372">here</a>.
 
@@ -792,7 +818,7 @@ We will process the results the same as before and compare.
 Now, only 2953 terms showed up in the summary. Of these, 1445 passed the size filter, and 31 were significantly over-represented after multiple testing correction. The top 10 are shown in Table \@ref(tab:cp-go-ora-simple-table). The major difference between these results and the ones from `enrichGO` after using `simplify` is that p-value adjustment is not affected by `simplify`, as redundant GO terms are removed after. The conditional method is actually more akin to performing modular enrichment analysis (MEA) than ORA (also called singular enrichment analysis)
 
 
-#### Reactome 
+#### Reactome {#ora-reactome}
 
 GOstats does not have a dedicated class to test for Reactome pathway over-representation, but we can use ReactomePA. For this example, we will only consider pathways of size 20 to 500. `enrichPathway` only accepts Entrez gene IDs as input. In cases where the Entrez ID is not readily available, we must convert to them. Alternatively, we could use the custom ORA function `enricher`, which allows us to use any ID type (use demonstrated in Pfam example).
 
@@ -944,7 +970,340 @@ use_internal_data = FALSE
 ```
 --->
 
-#### Pfam 
+#### Pfam {#ora-pfam}
+
+Now, we will perform Pfam ORA with the GOstats package. We begin by constructing a new object of class `PFAMHyperGParams` and then passing it to `hyperGTest` for calculation of Hypergeometric p-values. We do not filter by p-value, since adjusted p-values are not provided and we must calculate them ourselves.
+
+
+```r
+## Pfam ORA with GOstats
+hyperg_pfam_ora <- new(
+  Class = "PFAMHyperGParams",
+  geneIds = sig_genes,
+  universeGeneIds = universe,
+  annotation = "org.Hs.eg.db",
+  pvalueCutoff = 1,
+  testDirection = "over"
+) %>%
+  hyperGTest() # Hypergeometric testing
+```
+
+Now, we need to filter by gene set size (limit 15 to 500) and adjust the p-values. Normally, we would also filter based on the adjusted p-values, but we will skip this step so that we can compare the output with that of `clusterProfiler::enricher`.
+
+
+
+
+```r
+res_pfam_ora <- summary(hyperg_pfam_ora) %>%
+  # Filter by Pfam entry size
+  filter(Size >= 15, Size <= 500) %>%
+  # Adjust p-values
+  mutate(p.adjust = p.adjust(Pvalue, method = "BH")) %>%
+  # Sort by adjusted p-values
+  arrange(p.adjust)
+```
+
+<!---
+
+The last step is to add the human-readable Pfam descriptions. We will use the `TERM2NAME` data frame from before and just change the column names for easy joining.
+
+
+```r
+# Pfam entries to descriptions
+colnames(TERM2NAME) <- c("PFAMID", "Description")
+res_pfam_ora <- left_join(res_pfam_ora, TERM2NAME)
+```
+
+--->
+
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; "><table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">(\#tab:gostats-pfam-ora-table)Top Pfam entries obtained using the GOstats package.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> PFAMID </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> OddsRatio </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> ExpCount </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Count </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Size </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Pvalue </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> p.adjust </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF01391" style="     ">PF01391</a> </td>
+   <td style="text-align:right;"> 4.5163 </td>
+   <td style="text-align:right;"> 1.9368 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 30 </td>
+   <td style="text-align:right;"> 0.0024 </td>
+   <td style="text-align:right;"> 0.0530 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00076" style="     ">PF00076</a> </td>
+   <td style="text-align:right;"> 2.1478 </td>
+   <td style="text-align:right;"> 3.5509 </td>
+   <td style="text-align:right;"> 7 </td>
+   <td style="text-align:right;"> 55 </td>
+   <td style="text-align:right;"> 0.0613 </td>
+   <td style="text-align:right;"> 0.4980 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00092" style="     ">PF00092</a> </td>
+   <td style="text-align:right;"> 3.6568 </td>
+   <td style="text-align:right;"> 0.9684 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 15 </td>
+   <td style="text-align:right;"> 0.0679 </td>
+   <td style="text-align:right;"> 0.4980 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00071" style="     ">PF00071</a> </td>
+   <td style="text-align:right;"> 2.1888 </td>
+   <td style="text-align:right;"> 1.4849 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 23 </td>
+   <td style="text-align:right;"> 0.1824 </td>
+   <td style="text-align:right;"> 0.8976 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF07679" style="     ">PF07679</a> </td>
+   <td style="text-align:right;"> 1.9016 </td>
+   <td style="text-align:right;"> 1.6786 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 26 </td>
+   <td style="text-align:right;"> 0.2338 </td>
+   <td style="text-align:right;"> 0.8976 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF13499" style="     ">PF13499</a> </td>
+   <td style="text-align:right;"> 1.8182 </td>
+   <td style="text-align:right;"> 1.1621 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 18 </td>
+   <td style="text-align:right;"> 0.3256 </td>
+   <td style="text-align:right;"> 0.8976 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00271" style="     ">PF00271</a> </td>
+   <td style="text-align:right;"> 1.3200 </td>
+   <td style="text-align:right;"> 1.5495 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 24 </td>
+   <td style="text-align:right;"> 0.4652 </td>
+   <td style="text-align:right;"> 0.8976 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00412" style="     ">PF00412</a> </td>
+   <td style="text-align:right;"> 1.3200 </td>
+   <td style="text-align:right;"> 1.5495 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 24 </td>
+   <td style="text-align:right;"> 0.4652 </td>
+   <td style="text-align:right;"> 0.8976 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF13855" style="     ">PF13855</a> </td>
+   <td style="text-align:right;"> 1.1458 </td>
+   <td style="text-align:right;"> 2.6470 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 41 </td>
+   <td style="text-align:right;"> 0.4995 </td>
+   <td style="text-align:right;"> 0.8976 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00595" style="     ">PF00595</a> </td>
+   <td style="text-align:right;"> 1.2092 </td>
+   <td style="text-align:right;"> 1.6786 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 26 </td>
+   <td style="text-align:right;"> 0.5079 </td>
+   <td style="text-align:right;"> 0.8976 </td>
+  </tr>
+</tbody>
+</table></div>
+
+</br>
+
+260 Pfam entries were tested. Of these, 16 passed the size filter, and none were significantly over-represented after multiple testing correction. The top 10 are shown in Table \@ref(tab:gostats-pfam-ora-table).
+
+
+#### Other Databases {#ora-other}
+
+For databases without a dedicated ORA function, we use `clusterProfiler::enricher`, which is a general ORA function that can be used with any term to gene conversion table. This function is also much faster than the dedicated `enrichGO` and `enrichPathway` functions (since the conversion table does not need to be fetched), so it may be preferred if running many separate over-representation analyses.
+
+**NOTE: The term to gene conversion table must have exactly two columns: term and gene. They must also be in that exact order!**
+
+For this example, we will perform Pfam ORA. The conversion table can be generated with the biomaRt package as follows.
+
+
+```r
+library(biomaRt)
+
+mart <- useMart(biomart = "ENSEMBL_MART_ENSEMBL",
+                dataset = "hsapiens_gene_ensembl")
+View(listAttributes(mart)) # Determine which columns to return
+
+TERM2GENE <- getBM(filters = "entrezgene_id",
+                   attributes = c("entrezgene_id",
+                                  "pfam"),
+                   values = universe,
+                   mart = mart) %>%
+  mutate_all(as.character) %>% 
+  # !!! These specific column names must be in this exact order
+  dplyr::select(term = pfam, gene = entrezgene_id) %>% 
+  dplyr::filter(term != "") # remove empty terms
+```
+
+
+
+In addition to the required term to gene conversion table, we can supply an optional term to name table that maps Pfam IDs to human-readable descriptions. While org.Hs.eg.db does not provide Pfam descriptions, the <a href="https://doi.org/doi:10.18129/B9.bioc.PFAM.db" title = "PFAM.db: A set of protein ID mappings for PFAM">PFAM.db</a> annotation data package has a Bimap with this information. Like the `TERM2GENE` table, name and order of columns matters.
+
+
+```r
+library(PFAM.db)
+
+# Pfam IDs to descriptions
+TERM2NAME <- as.data.frame.Bimap(PFAMDE) %>% 
+  # !!! These specific column names must be used in this exact order
+  setNames(c("term", "name"))
+```
+
+
+
+Now that we have the two conversion tables, we will perform ORA and limit the output to Pfam entries of size 15 to 500.
+
+
+
+
+
+```r
+# Pfam ORA with clusterProfiler
+cp_ora_pfam <- enricher(
+  gene = sig_genes,
+  pvalueCutoff = 0.05,
+  pAdjustMethod = "BH",
+  universe = universe,
+  minGSSize = 15,
+  maxGSSize = 500,
+  qvalueCutoff = 1,
+  TERM2GENE = TERM2GENE,
+  TERM2NAME = TERM2NAME
+)
+```
+
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; "><table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">(\#tab:cp-ora-pfam-table)Top Pfam entries from enricher output.</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> ID </th>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Description </th>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> GeneRatio </th>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> BgRatio </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> pvalue </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> p.adjust </th>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> geneID </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF01391" style="     ">PF01391</a> </td>
+   <td style="text-align:left;"> Collagen triple helix repeat (20 copies) </td>
+   <td style="text-align:left;"> 7/236 </td>
+   <td style="text-align:left;"> 31/3676 </td>
+   <td style="text-align:right;"> 0.0029 </td>
+   <td style="text-align:right;"> 0.0686 </td>
+   <td style="text-align:left;"> 1293/1281/1277... </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00076" style="     ">PF00076</a> </td>
+   <td style="text-align:left;"> RNA recognition motif. (a.k.a. RRM, RBD, or RNP domain) </td>
+   <td style="text-align:left;"> 7/236 </td>
+   <td style="text-align:left;"> 55/3676 </td>
+   <td style="text-align:right;"> 0.0598 </td>
+   <td style="text-align:right;"> 0.5360 </td>
+   <td style="text-align:left;"> 1153/3182/5042... </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00092" style="     ">PF00092</a> </td>
+   <td style="text-align:left;"> von Willebrand factor type A domain </td>
+   <td style="text-align:left;"> 3/236 </td>
+   <td style="text-align:left;"> 15/3676 </td>
+   <td style="text-align:right;"> 0.0670 </td>
+   <td style="text-align:right;"> 0.5360 </td>
+   <td style="text-align:left;"> 1293/1292/1291 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00071" style="     ">PF00071</a> </td>
+   <td style="text-align:left;"> Ras family </td>
+   <td style="text-align:left;"> 3/236 </td>
+   <td style="text-align:left;"> 23/3676 </td>
+   <td style="text-align:right;"> 0.1803 </td>
+   <td style="text-align:right;"> 0.9021 </td>
+   <td style="text-align:left;"> 5901/6009/388 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF07679" style="     ">PF07679</a> </td>
+   <td style="text-align:left;"> Immunoglobulin I-set domain </td>
+   <td style="text-align:left;"> 3/236 </td>
+   <td style="text-align:left;"> 27/3676 </td>
+   <td style="text-align:right;"> 0.2488 </td>
+   <td style="text-align:right;"> 0.9021 </td>
+   <td style="text-align:left;"> 23022/3490/25878 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF13499" style="     ">PF13499</a> </td>
+   <td style="text-align:left;"> EF-hand domain pair </td>
+   <td style="text-align:left;"> 2/236 </td>
+   <td style="text-align:left;"> 20/3676 </td>
+   <td style="text-align:right;"> 0.3710 </td>
+   <td style="text-align:right;"> 0.9021 </td>
+   <td style="text-align:left;"> 6717/80303 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00271" style="     ">PF00271</a> </td>
+   <td style="text-align:left;"> Helicase conserved C-terminal domain </td>
+   <td style="text-align:left;"> 2/236 </td>
+   <td style="text-align:left;"> 24/3676 </td>
+   <td style="text-align:right;"> 0.4622 </td>
+   <td style="text-align:right;"> 0.9021 </td>
+   <td style="text-align:left;"> 1973/10521 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00412" style="     ">PF00412</a> </td>
+   <td style="text-align:left;"> LIM domain </td>
+   <td style="text-align:left;"> 2/236 </td>
+   <td style="text-align:left;"> 24/3676 </td>
+   <td style="text-align:right;"> 0.4622 </td>
+   <td style="text-align:right;"> 0.9021 </td>
+   <td style="text-align:left;"> 1396/9124 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF13855" style="     ">PF13855</a> </td>
+   <td style="text-align:left;"> Leucine rich repeat </td>
+   <td style="text-align:left;"> 3/236 </td>
+   <td style="text-align:left;"> 42/3676 </td>
+   <td style="text-align:right;"> 0.5121 </td>
+   <td style="text-align:right;"> 0.9021 </td>
+   <td style="text-align:left;"> 4060/1634/25878 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00046" style="     ">PF00046</a> </td>
+   <td style="text-align:left;"> Homeodomain </td>
+   <td style="text-align:left;"> 2/236 </td>
+   <td style="text-align:left;"> 27/3676 </td>
+   <td style="text-align:right;"> 0.5253 </td>
+   <td style="text-align:right;"> 0.9021 </td>
+   <td style="text-align:left;"> 5087/29956 </td>
+  </tr>
+</tbody>
+</table></div>
+
+</br>
+
+There were 275 Pfam entries that were tested. Of these, 24 passed the size filter, and 0 were significantly over-represented after multiple testing correction. While none were significant, the top 10 are shown in Table \@ref(tab:cp-ora-pfam-table).
+
+Notice that this table and Table \@ref(tab:gostats-pfam-ora-table) are different. For one, the sizes of the entries are not always the same. For example, <a href="http://pfam.xfam.org/family/PF01391" title = "Collagen triple helix repeat (20 copies)">PF01391</a> has size 31 according to the mapping file created from the `biomaRt` package, but only size 30 according to `org.Hs.eg.db` (used by GOstats). This has to do with how up-to-date the information is and leads to differences in the number of total Pfam entries that remain after filtering by size and, subsequently, differences in the adjusted p-values.
 
 <!---
 First, we will perform Pfam ORA with the GOstats package using the org.Hs.eg.db human annotation database; however, it is a good idea to check the number of Pfam entries that are provided by this database before doing so. Ideally, it should be close to the number shown at the top of the <a href="http://pfam.xfam.org">main Pfam page</a>. We can accomplish this with functions in AnnotationDbi.
@@ -1000,346 +1359,6 @@ kable_styling(full_width = FALSE, font_size = 12)
 In this data frame, there are only 6186 Pfam entries. This is not even close to the most up-to-date number. We will continue for the sake of demonstration, but the results are unlikely to be reliable. 
 --->
 
-While there is no dedicated ORA function for Pfam entries in clusterProfiler, there is a general ORA function called `enricher` that can be used with any term to gene conversion table. This function is also much faster than the dedicated `enrichGO` and `enrichPathway` functions, so it may be preferred if running many separate over-representation analyses. The conversion table is generated with the biomaRt package as follows.
-
-
-```r
-# NOT RUN ---
-library(biomaRt)
-
-mart <- useMart(biomart = "ENSEMBL_MART_ENSEMBL",
-                dataset = "hsapiens_gene_ensembl")
-View(listAttributes(mart)) # Determine which columns to return
-
-conv_tbl <- getBM(filters = "entrezgene_id",
-                  attributes = c("entrezgene_id",
-                                 "pfam"),
-                  values = universe,
-                  mart = mart) %>%
-  mutate_all(as.character)
-saveRDS(conv_tbl, file = "data/pfam_conv_tbl.rds")
-```
-
-In addition to the term to gene conversion table, we can supply a term to name table that maps Pfam IDs to human-readable descriptions. While org.Hs.eg.db does not provide Pfam descriptions, the <a href="https://doi.org/doi:10.18129/B9.bioc.PFAM.db" title = "PFAM.db: A set of protein ID mappings for PFAM">PFAM.db</a> annotation data package has a Bimap with this information. Now that we have the two conversion tables, we will perform ORA and limit the output to Pfam entries of size 15 to 500.
-
-
-```r
-# Entrez to Pfam ID mapping file created with biomaRt package
-TERM2GENE <- readRDS("data/pfam_conv_tbl.rds") %>% 
-  # Remove blank terms
-  filter(pfam != "") %>% 
-  # Reorder and rename columns. 
-  # ! These specific column names must be used in this exact order
-  dplyr::select(term = pfam, gene = entrezgene_id)
-
-# Pfam IDs to descriptions
-library(PFAM.db)
-TERM2NAME <- as.data.frame.Bimap(PFAMDE)
-# ! These specific column names must be used in this exact order
-colnames(TERM2NAME) <- c("term", "name")
-
-## Pfam ORA with clusterProfiler
-cp_ora_pfam <- enricher(
-  gene = sig_genes,
-  pvalueCutoff = 0.05,
-  pAdjustMethod = "BH",
-  universe = universe,
-  minGSSize = 15,
-  maxGSSize = 500,
-  qvalueCutoff = 1,
-  TERM2GENE = TERM2GENE,
-  TERM2NAME = TERM2NAME
-)
-```
-
-<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; "><table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">(\#tab:cp-ora-pfam-table)Top Pfam entries from enricher output.</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> ID </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Description </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> GeneRatio </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> BgRatio </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> pvalue </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> p.adjust </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> geneID </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF01391" style="     ">PF01391</a> </td>
-   <td style="text-align:left;"> Collagen triple helix repeat (20 copies) </td>
-   <td style="text-align:left;"> 7/236 </td>
-   <td style="text-align:left;"> 31/3675 </td>
-   <td style="text-align:right;"> 0.0029 </td>
-   <td style="text-align:right;"> 0.0687 </td>
-   <td style="text-align:left;"> 1293/1281/1277... </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00076" style="     ">PF00076</a> </td>
-   <td style="text-align:left;"> RNA recognition motif. (a.k.a. RRM, RBD, or RNP domain) </td>
-   <td style="text-align:left;"> 7/236 </td>
-   <td style="text-align:left;"> 55/3675 </td>
-   <td style="text-align:right;"> 0.0599 </td>
-   <td style="text-align:right;"> 0.5363 </td>
-   <td style="text-align:left;"> 1153/3182/5042... </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00092" style="     ">PF00092</a> </td>
-   <td style="text-align:left;"> von Willebrand factor type A domain </td>
-   <td style="text-align:left;"> 3/236 </td>
-   <td style="text-align:left;"> 15/3675 </td>
-   <td style="text-align:right;"> 0.0670 </td>
-   <td style="text-align:right;"> 0.5363 </td>
-   <td style="text-align:left;"> 1293/1292/1291 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00071" style="     ">PF00071</a> </td>
-   <td style="text-align:left;"> Ras family </td>
-   <td style="text-align:left;"> 3/236 </td>
-   <td style="text-align:left;"> 23/3675 </td>
-   <td style="text-align:right;"> 0.1804 </td>
-   <td style="text-align:right;"> 0.9022 </td>
-   <td style="text-align:left;"> 5901/6009/388 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF07679" style="     ">PF07679</a> </td>
-   <td style="text-align:left;"> Immunoglobulin I-set domain </td>
-   <td style="text-align:left;"> 3/236 </td>
-   <td style="text-align:left;"> 27/3675 </td>
-   <td style="text-align:right;"> 0.2489 </td>
-   <td style="text-align:right;"> 0.9022 </td>
-   <td style="text-align:left;"> 23022/3490/25878 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF13499" style="     ">PF13499</a> </td>
-   <td style="text-align:left;"> EF-hand domain pair </td>
-   <td style="text-align:left;"> 2/236 </td>
-   <td style="text-align:left;"> 20/3675 </td>
-   <td style="text-align:right;"> 0.3711 </td>
-   <td style="text-align:right;"> 0.9022 </td>
-   <td style="text-align:left;"> 6717/80303 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00271" style="     ">PF00271</a> </td>
-   <td style="text-align:left;"> Helicase conserved C-terminal domain </td>
-   <td style="text-align:left;"> 2/236 </td>
-   <td style="text-align:left;"> 24/3675 </td>
-   <td style="text-align:right;"> 0.4623 </td>
-   <td style="text-align:right;"> 0.9022 </td>
-   <td style="text-align:left;"> 1973/10521 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00412" style="     ">PF00412</a> </td>
-   <td style="text-align:left;"> LIM domain </td>
-   <td style="text-align:left;"> 2/236 </td>
-   <td style="text-align:left;"> 24/3675 </td>
-   <td style="text-align:right;"> 0.4623 </td>
-   <td style="text-align:right;"> 0.9022 </td>
-   <td style="text-align:left;"> 1396/9124 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF13855" style="     ">PF13855</a> </td>
-   <td style="text-align:left;"> Leucine rich repeat </td>
-   <td style="text-align:left;"> 3/236 </td>
-   <td style="text-align:left;"> 42/3675 </td>
-   <td style="text-align:right;"> 0.5123 </td>
-   <td style="text-align:right;"> 0.9022 </td>
-   <td style="text-align:left;"> 4060/1634/25878 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00046" style="     ">PF00046</a> </td>
-   <td style="text-align:left;"> Homeodomain </td>
-   <td style="text-align:left;"> 2/236 </td>
-   <td style="text-align:left;"> 27/3675 </td>
-   <td style="text-align:right;"> 0.5254 </td>
-   <td style="text-align:right;"> 0.9022 </td>
-   <td style="text-align:left;"> 5087/29956 </td>
-  </tr>
-</tbody>
-</table></div>
-
-</br>
-
-There were 275 Pfam entries that were tested. Of these, 24 passed the size filter, and 0 were significantly over-represented after multiple testing correction. While none were significant, the top 10 are shown in Table \@ref(tab:cp-ora-pfam-table) so that we can compare it to the results from `hyperGTest`.
-
-Now, we will perform Pfam ORA with the GOstats package. We begin by constructing a new object of class `PFAMHyperGParams` and then passing it to `hyperGTest` for calculation of Hypergeometric p-values. We do not filter by p-value, since adjusted p-values are not provided and we must calculate them ourselves.
-
-
-```r
-## Pfam ORA with GOstats
-hyperg_pfam_ora <- new(
-  Class = "PFAMHyperGParams",
-  geneIds = sig_genes,
-  universeGeneIds = universe,
-  annotation = "org.Hs.eg.db",
-  pvalueCutoff = 1,
-  testDirection = "over"
-) %>%
-  hyperGTest() # Hypergeometric testing
-```
-
-Now, we need to filter by gene set size (limit 15 to 500) and adjust the p-values. Normally, we would also filter based on the adjusted p-values, but we will skip this step so that we can compare the output with that of `clusterProfiler::enricher`.
-
-
-
-
-```r
-res_pfam_ora <- summary(hyperg_pfam_ora) %>%
-  # Filter by Pfam entry size
-  filter(Size >= 15, Size <= 500) %>%
-  # Adjust p-values
-  mutate(p.adjust = p.adjust(Pvalue, method = "BH")) %>%
-  # Sort by adjusted p-values
-  arrange(p.adjust)
-```
-
-The last step is to add the human-readable Pfam descriptions. We will use the `TERM2NAME` data frame from before and just change the column names for easy joining.
-
-
-```r
-# Pfam entries to descriptions
-colnames(TERM2NAME) <- c("PFAMID", "Description")
-res_pfam_ora <- left_join(res_pfam_ora, TERM2NAME)
-```
-
-<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; "><table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">(\#tab:gostats-pfam-ora-table)Top Pfam entries obtained using the GOstats package.</caption>
- <thead>
-  <tr>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> PFAMID </th>
-   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Description </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> OddsRatio </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> ExpCount </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Count </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Size </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Pvalue </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> p.adjust </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF01391" style="     ">PF01391</a> </td>
-   <td style="text-align:left;"> Collagen triple helix repeat (20 copies) </td>
-   <td style="text-align:right;"> 4.5163 </td>
-   <td style="text-align:right;"> 1.9368 </td>
-   <td style="text-align:right;"> 7 </td>
-   <td style="text-align:right;"> 30 </td>
-   <td style="text-align:right;"> 0.0024 </td>
-   <td style="text-align:right;"> 0.0530 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00076" style="     ">PF00076</a> </td>
-   <td style="text-align:left;"> RNA recognition motif. (a.k.a. RRM, RBD, or RNP domain) </td>
-   <td style="text-align:right;"> 2.1478 </td>
-   <td style="text-align:right;"> 3.5509 </td>
-   <td style="text-align:right;"> 7 </td>
-   <td style="text-align:right;"> 55 </td>
-   <td style="text-align:right;"> 0.0613 </td>
-   <td style="text-align:right;"> 0.4980 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00092" style="     ">PF00092</a> </td>
-   <td style="text-align:left;"> von Willebrand factor type A domain </td>
-   <td style="text-align:right;"> 3.6568 </td>
-   <td style="text-align:right;"> 0.9684 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 15 </td>
-   <td style="text-align:right;"> 0.0679 </td>
-   <td style="text-align:right;"> 0.4980 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00071" style="     ">PF00071</a> </td>
-   <td style="text-align:left;"> Ras family </td>
-   <td style="text-align:right;"> 2.1888 </td>
-   <td style="text-align:right;"> 1.4849 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 23 </td>
-   <td style="text-align:right;"> 0.1824 </td>
-   <td style="text-align:right;"> 0.8976 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF07679" style="     ">PF07679</a> </td>
-   <td style="text-align:left;"> Immunoglobulin I-set domain </td>
-   <td style="text-align:right;"> 1.9016 </td>
-   <td style="text-align:right;"> 1.6786 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 26 </td>
-   <td style="text-align:right;"> 0.2338 </td>
-   <td style="text-align:right;"> 0.8976 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF13499" style="     ">PF13499</a> </td>
-   <td style="text-align:left;"> EF-hand domain pair </td>
-   <td style="text-align:right;"> 1.8182 </td>
-   <td style="text-align:right;"> 1.1621 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 18 </td>
-   <td style="text-align:right;"> 0.3256 </td>
-   <td style="text-align:right;"> 0.8976 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00271" style="     ">PF00271</a> </td>
-   <td style="text-align:left;"> Helicase conserved C-terminal domain </td>
-   <td style="text-align:right;"> 1.3200 </td>
-   <td style="text-align:right;"> 1.5495 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 24 </td>
-   <td style="text-align:right;"> 0.4652 </td>
-   <td style="text-align:right;"> 0.8976 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00412" style="     ">PF00412</a> </td>
-   <td style="text-align:left;"> LIM domain </td>
-   <td style="text-align:right;"> 1.3200 </td>
-   <td style="text-align:right;"> 1.5495 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 24 </td>
-   <td style="text-align:right;"> 0.4652 </td>
-   <td style="text-align:right;"> 0.8976 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF13855" style="     ">PF13855</a> </td>
-   <td style="text-align:left;"> Leucine rich repeat </td>
-   <td style="text-align:right;"> 1.1458 </td>
-   <td style="text-align:right;"> 2.6470 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 41 </td>
-   <td style="text-align:right;"> 0.4995 </td>
-   <td style="text-align:right;"> 0.8976 </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00595" style="     ">PF00595</a> </td>
-   <td style="text-align:left;"> PDZ domain </td>
-   <td style="text-align:right;"> 1.2092 </td>
-   <td style="text-align:right;"> 1.6786 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 26 </td>
-   <td style="text-align:right;"> 0.5079 </td>
-   <td style="text-align:right;"> 0.8976 </td>
-  </tr>
-</tbody>
-</table></div>
-
-</br>
-
-260 Pfam entries were tested. Of these, 16 passed the size filter, and none were significantly over-represented after multiple testing correction. The top 10 are shown in Table \@ref(tab:gostats-pfam-ora-table).
-
-
-Notice that this table and Table \@ref(tab:cp-ora-pfam-table) are different. For one, the sizes of the entries are not always the same. For example, <a href="http://pfam.xfam.org/family/PF01391" title = "Collagen triple helix repeat (20 copies)">PF01391</a> has size 31 according to the mapping file created from the `biomaRt` package, but only size 30 according to `org.Hs.eg.db`. This leads to differences in the number of total Pfam entries that remain after filtering by size and, subsequently, differences in the adjusted p-values.
-
-
-### Considerations
-
-1. The choice of the threshold for statistical significance and the multiple comparison adjustment method can greatly impact the analysis [@huang_bioinformatics_2009].
-2. ORA fails to incorporate direction of gene regulation. (Are the genes in a given set mainly up or down-regulated?). It is not a good idea to split DEA results by the sign of the logFC and apply ORA to the two sets. Use GSEA instead.
-<!--- 
-TODO:
-Fact-check #3
---->
-3. If few genes are differentially expressed, ORA is unlikely to yield useful or reliable results. For example, suppose 30 out of 8000 genes are significant. 100 of the genes are annotated to a particular gene set, of which 3 are significant. The associated Hypergeometric p-value is 0.006, and this set would be considered significantly over-represented at the 0.01 level (at least, prior to adjustment for multiple comparisons); however, if only 2 of the genes in this set are significant, this p-value increases 10-fold to 0.0536 and is no longer significant even at the 0.05 level.
-4. If the DEA results are not gene-centric (i.e. DEA was performed at the protein or phosphosite level), then there may be cases where two proteins are associated with the same gene, but only one is significantly differentially abundant. In this case, there is no way to categorize the gene as significant or not, so ORA should not be used. The other problem that could arise if the DEA results are not gene-centric is that the same gene may be counted as significant multiple times, which leads to artificial over-representation.
-
 
 ## Gene Set Enrichment Analysis {#gsea}
 
@@ -1363,23 +1382,342 @@ r_{i-1} - \frac{1}{N-k} & \text{if } 1 \leq i \leq N \text{ and } i \not\in S
 
 $ES(S)$ is the largest (in terms of absolute value) element of $r_N$. This notation is a slightly modified version of what is presented in the paper by @korotkevich_fast_2016.
 
+#### Important Considerations {-}
+
+<ol>
+<li>
+GSEA is not influenced by an arbitrary cutoff for statistical significance. This is especially useful when only a few features pass this threshold after adjustment for multiple testing, and it also means that it does not depend on the choice of p-value adjustment.
+</li>
+<li>
+All genes in an experiment are allowed to "contribute to the enrichment analysis in differing degrees" [@huang_bioinformatics_2009]. This addresses the point brought up at the beginning of Section \@ref(pathway-analysis) that biological changes may be the result of small changes in many related genes. GSEA allows for the detection of such changes.
+</li>
+<li>
+The sign of the enrichment score tell us in which category a set of genes is primarily up- or down-regulated. For example, suppose we test the difference between the means of two groups for each gene using the <a href="https://doi.org/doi:10.18129/B9.bioc.limma" title = "limma: Linear Models for Microarray Data">limma</a> package. Since ranking metrics incorporate the direction of change, a positive enrichment score would mean that the majority of genes in that particular set are up-regulated in A relative to B/down-regulated in B relative to A.
+</li>
+<li>
+The choice of ranking metric is important: `-log10(p-value) * sign(logFC)`, `-log10(p-value) * logFC`, t-statistics, and Z-Scores are just a few possible choices.
+</li>
+</ol>
+
+
 ### Examples
+
+
+```r
+library(MSnID) # fetch_conversion_table
+library(MSnSet.utils) # oca.set data
+library(org.Hs.eg.db) # Human database package
+library(clusterProfiler) # GO and custom GSEA
+library(ReactomePA) # Reactome GSEA
+library(dplyr)
+
+data(cptac_oca) # data
+m <- oca.set
+```
+
+The input for the GSEA functions is a named vector of ranking metric values (t-statistics, F-statistics, -log10(p-value) * sign(logFC), etc.) where the names are typically unique Entrez gene IDs. We need to go from an MSnSet to differential analysis results to this named vector. First, we will get the Entrez IDs for each RefSeq and add this as a column in `fData`.
+
+
+```r
+# Get RefSeq to Entrez ID conversion table
+conv_tbl <- fetch_conversion_table(organism_name = "Homo sapiens", 
+                                   from = "REFSEQ", 
+                                   to = "ENTREZID") %>% 
+  setNames(c("RefSeq_no_iso", "entrez_gene")) # rename columns
+head(conv_tbl)
+```
+
+```
+##   RefSeq_no_iso entrez_gene
+## 1     NP_570602           1
+## 2     NP_000005           2
+## 3  NP_001334352           2
+## 4  NP_001334353           2
+## 5  NP_001334354           2
+## 6  XP_006719119           2
+```
+
+
+
+```r
+# Add RefSeq_no_iso and entrez_gene columns to fData(m)
+fData(m) <- mutate(fData(m),
+                   # Remove isoform number from RefSeq
+                   RefSeq_no_iso = gsub("(.*)\\.\\d{+}", "\\1", RefSeq)) %>% 
+  # Add entrez_gene column
+  left_join(conv_tbl, by = "RefSeq_no_iso") %>% 
+  # Set rownames to RefSeq column
+  {rownames(.) <- .[["RefSeq"]]; .}
+head(fData(m))
+```
+
+```
+##                  RefSeq RefSeq_no_iso entrez_gene
+## NP_000005.2 NP_000005.2     NP_000005           2
+## NP_000007.1 NP_000007.1     NP_000007          34
+## NP_000008.1 NP_000008.1     NP_000008          35
+## NP_000009.1 NP_000009.1     NP_000009          37
+## NP_000010.1 NP_000010.1     NP_000010          38
+## NP_000012.1 NP_000012.1     NP_000012        5663
+```
+
+Not every RefSeq mapped to an Entrez gene. We will not be able to use these features, and the code below shows how many were mapped/not mapped.
+
+
+```r
+table(!is.na(fData(m)$entrez_gene))
+```
+
+```
+## 
+## FALSE  TRUE 
+##   110  7993
+```
+
+110 proteins (~1.4% in table below) were not mapped to any gene. We will remove those rows.
+
+
+```r
+100 * prop.table(table(!is.na(fData(m)$entrez_gene)))
+```
+
+```
+## 
+##     FALSE      TRUE 
+##  1.357522 98.642478
+```
+
+Now that we have an Entrez ID column in the `fData`, we can move on to the next steps. I have combined all steps below so that the code is easier to copy. First, we need a table of differential analysis results. We combine it with the `fData` in order to include the Entrez gene column. From there, we subset to rows without any missing values. This removes proteins that did not map to a gene, as well as proteins with no test statistics or p-values. Then, we create a column for the ranking metric. We will use $-log10(\text{p-value}) \cdot sign(\text{log}_2 \text{ fold-change})$. We could have also used the moderated t-statistic, which is similar (see Figure \@ref(fig:rank-metric-comp)). Now, we need to make sure that there is only one value per gene. We do so by calculating the average ranking metric for each gene. The last step is to sort from high to low by ranking metric and convert to a named vector. We can see the first and last 6 entries of this named vector below.
+
+
+```r
+# Named vector for GSEA
+# Start with differential analysis results
+gsea_input <- limma_gen(m, model.str = "~ PLATINUM.STATUS", 
+                        coef.str = "PLATINUM.STATUS") %>% 
+  mutate(RefSeq = rownames(.)) %>% # Create RefSeq column
+  left_join(fData(m), by = "RefSeq") %>%  # Add columns from fData
+  .[complete.cases(.), ] %>% # Remove rows with any missing values
+  # Create GSEA ranking metric column: signed -log10 p-value
+  mutate(ranking_metric = -log10(P.Value) * sign(logFC)) %>% 
+  # Average ranking metric for each gene
+  group_by(entrez_gene) %>% 
+  summarise(ranking_metric = mean(ranking_metric)) %>% 
+  # Sort from high to low by ranking metric
+  arrange(-ranking_metric) %>%
+  # Convert to named vector
+  tibble::deframe()
+
+head(gsea_input)
+```
+
+```
+##     1729     3696    10313     1738    23277      178 
+## 3.714891 3.327848 3.303450 3.208326 2.908294 2.772761
+```
+
+```r
+tail(gsea_input)
+```
+
+```
+##     79969     79977      4925      2953     10970      3486 
+## -2.578652 -2.621050 -2.713811 -2.899121 -2.984474 -3.284757
+```
+
+<div class="figure" style="text-align: center">
+<img src="pathway_analysis_files/figure-html/rank-metric-comp-1.png" alt="Comparison of two common GSEA ranking metrics." width="75%" />
+<p class="caption">(\#fig:rank-metric-comp)Comparison of two common GSEA ranking metrics.</p>
+</div>
+
+Now that we have the input vector, we can move on to the examples.
+
+
+
 
 #### Gene Ontology
 
+
+```r
+# Biological Process GSEA
+go_gsea <- gseGO(geneList = gsea_input, 
+                 ont = "BP", 
+                 eps = 0,
+                 OrgDb = org.Hs.eg.db, 
+                 nPermSimple = 1000) # may need to increase nPermSimple
+```
+
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; "><table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">(\#tab:unnamed-chunk-19) </caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> ID </th>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Description </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> setSize </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> enrichmentScore </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> NES </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> pvalue </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> p.adjust </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> qvalues </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> rank </th>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> leading_edge </th>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> core_enrichment </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0031424" style="     ">GO:0031424</a> </td>
+   <td style="text-align:left;"> keratinization </td>
+   <td style="text-align:right;"> 54 </td>
+   <td style="text-align:right;"> 0.7794 </td>
+   <td style="text-align:right;"> 2.7035 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 990 </td>
+   <td style="text-align:left;"> tags=61%, list=13%, signal=54% </td>
+   <td style="text-align:left;"> 3855/3860/121391... </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0070268" style="     ">GO:0070268</a> </td>
+   <td style="text-align:left;"> cornification </td>
+   <td style="text-align:right;"> 50 </td>
+   <td style="text-align:right;"> 0.7820 </td>
+   <td style="text-align:right;"> 2.6888 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 990 </td>
+   <td style="text-align:left;"> tags=64%, list=13%, signal=56% </td>
+   <td style="text-align:left;"> 3855/3860/121391... </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0046034" style="     ">GO:0046034</a> </td>
+   <td style="text-align:left;"> ATP metabolic process </td>
+   <td style="text-align:right;"> 234 </td>
+   <td style="text-align:right;"> 0.5070 </td>
+   <td style="text-align:right;"> 2.2250 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1753 </td>
+   <td style="text-align:left;"> tags=41%, list=23%, signal=33% </td>
+   <td style="text-align:left;"> 1738/64802/11315... </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0007005" style="     ">GO:0007005</a> </td>
+   <td style="text-align:left;"> mitochondrion organization </td>
+   <td style="text-align:right;"> 370 </td>
+   <td style="text-align:right;"> 0.4318 </td>
+   <td style="text-align:right;"> 1.9836 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1530 </td>
+   <td style="text-align:left;"> tags=35%, list=20%, signal=30% </td>
+   <td style="text-align:left;"> 23277/54927/9141... </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" style="     ">GO:0006119</a> </td>
+   <td style="text-align:left;"> oxidative phosphorylation </td>
+   <td style="text-align:right;"> 112 </td>
+   <td style="text-align:right;"> 0.6049 </td>
+   <td style="text-align:right;"> 2.4078 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1916 </td>
+   <td style="text-align:left;"> tags=54%, list=25%, signal=41% </td>
+   <td style="text-align:left;"> 1738/11315/1340... </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0045229" style="     ">GO:0045229</a> </td>
+   <td style="text-align:left;"> external encapsulating structure organization </td>
+   <td style="text-align:right;"> 225 </td>
+   <td style="text-align:right;"> -0.4919 </td>
+   <td style="text-align:right;"> -2.1088 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1624 </td>
+   <td style="text-align:left;"> tags=46%, list=21%, signal=37% </td>
+   <td style="text-align:left;"> 780/9510/3687... </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0007007" style="     ">GO:0007007</a> </td>
+   <td style="text-align:left;"> inner mitochondrial membrane organization </td>
+   <td style="text-align:right;"> 47 </td>
+   <td style="text-align:right;"> 0.7458 </td>
+   <td style="text-align:right;"> 2.5613 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1450 </td>
+   <td style="text-align:left;"> tags=72%, list=19%, signal=59% </td>
+   <td style="text-align:left;"> 54927/10989/55735... </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0030198" style="     ">GO:0030198</a> </td>
+   <td style="text-align:left;"> extracellular matrix organization </td>
+   <td style="text-align:right;"> 224 </td>
+   <td style="text-align:right;"> -0.4933 </td>
+   <td style="text-align:right;"> -2.1138 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1624 </td>
+   <td style="text-align:left;"> tags=46%, list=21%, signal=37% </td>
+   <td style="text-align:left;"> 780/9510/3687... </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0043062" style="     ">GO:0043062</a> </td>
+   <td style="text-align:left;"> extracellular structure organization </td>
+   <td style="text-align:right;"> 224 </td>
+   <td style="text-align:right;"> -0.4933 </td>
+   <td style="text-align:right;"> -2.1138 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1624 </td>
+   <td style="text-align:left;"> tags=46%, list=21%, signal=37% </td>
+   <td style="text-align:left;"> 780/9510/3687... </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0045333" style="     ">GO:0045333</a> </td>
+   <td style="text-align:left;"> cellular respiration </td>
+   <td style="text-align:right;"> 146 </td>
+   <td style="text-align:right;"> 0.5398 </td>
+   <td style="text-align:right;"> 2.2240 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 916 </td>
+   <td style="text-align:left;"> tags=32%, list=12%, signal=28% </td>
+   <td style="text-align:left;"> 1738/1743/11315... </td>
+  </tr>
+</tbody>
+</table></div>
+
+
+
 #### Reactome
+
+
+```r
+# Reactome GSEA
+react_gsea <- gsePathway(geneList = gsea_input,
+                         organism = "human", 
+                         eps = 0,
+                         nPermSimple = 1000)
+```
+
 
 #### Pfam
 
+#### Other Databases
 
-### Considerations
 
-1. GSEA is not influenced by an arbitrary cutoff for statistical significance. This is especially useful when only a few features pass this threshold after adjustment for multiple testing, and it also means that it does not depend on the choice of p-value adjustment.
-2. All genes in an experiment are allowed to "contribute to the enrichment analysis in differing degrees" [@huang_bioinformatics_2009]. This addresses the point brought up at the beginning of Section \@ref(pathway-analysis) that biological changes may be the result of small changes in many related genes. GSEA allows for the detection of such changes.
-3. The sign of the enrichment score tell us in which category a set of genes is primarily up- or down-regulated. For example, suppose we test the difference between the means of two groups for each gene using the <a href="https://doi.org/doi:10.18129/B9.bioc.limma" title = "limma: Linear Models for Microarray Data">limma</a> package. Since ranking metrics incorporate the direction of change, a positive enrichment score would mean that the majority of genes in that particular set are up-regulated in A relative to B/down-regulated in B relative to A.
-4. The choice of ranking metric is important.
-<!---
-Talk more about ranking metrics and include sources!!!
---->
+
+
 
 

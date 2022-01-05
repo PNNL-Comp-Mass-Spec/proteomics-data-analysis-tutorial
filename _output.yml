@@ -1,9 +1,4 @@
-bookdown::bs4_book:
-  repo:
-    base: https://github.com/PNNL-Comp-Mass-Spec/proteomics-data-analysis-tutorial
-    branch: master
-  theme:
-    primary: "#5ea9ff"
+bookdown::gitbook:
   toc_depth: 4
   css: "style.css"
   split_by: section

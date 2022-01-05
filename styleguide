@@ -1,0 +1,5 @@
+* Do not enclose package names in backticks (``)
+* Enclose functions, function arguments, and variable names in backticks
+* Words in chunk names and section labels are separated by dashes (-)
+* No space on either side of equal signs in chunk options.
+  Example: message=FALSE

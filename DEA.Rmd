@@ -1,4 +1,4 @@
-# Differential Expression Analysis {#DEA}
+# Differential Analysis {#DEA}
 
 The overview goes here.
 
@@ -7,105 +7,168 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
                       fig.align='center', out.width='75%')
 ```
 
-For this chapter, we will need the following packages.
-
 ```{r DEA_setup, warning=FALSE, message=FALSE}
 library(MSnSet.utils)
-library(ggplot2)
 library(dplyr)
-library(tibble)
-library(scales)
+library(ggplot2)
 
-# Load the MSnSet
-data("longitudinal_biomarker_study")
+# MSnSet
+data("cptac_oca")
 ```
 
 
-## DEA with limma
-
-This section covers differential expression analysis with the limma package. The basic workflow for DEA with limma is to fit a linear model to each feature, then, empirical Bayesian methods are used to moderate the test statistics
-
-The <a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/limma/inst/doc/usersguide.pdf">limma user's guide</a> is an invaluable resource.
-
-### Dichotomous Predictors
+## Linear Regression
 
 ```{r}
-res1 <- limma_a_b(longitudinal_biomarker_study, 
-                  model.str = "~ Type",
-                  coef.str = "Type")
+res1 <- limma_a_b(oca.set, model.str = "~ AGE", coef.str = "AGE")
+head(res1)
 ```
 
-### Continuous Predictors
+## One-Way ANOVA
 
-### Reference Level Comparisons
+```{r}
+res2 <- limma_gen(oca.set, model.str = "~ SUBTYPE", coef.str = "SUBTYPE")
+head(res2)
+```
 
-### Custom Contrasts
 
+## t-tests
+
+### One Comparison
+
+`limma_a_b` is used when there are exactly two levels that are being compared. If the `coef.str` column of the phenotype data is a factor, the first level will be used as the reference. If the `coef.str` column is a character vector, the first unique category will be used as the reference.
+
+```{r}
+# Only two-groups
+res3 <- limma_a_b(oca.set, model.str = "~ PLATINUM.STATUS", 
+                  coef.str = "PLATINUM.STATUS")
+head(res3)
+```
+
+To count the number of significant features after adjustment, we can use `table` or `sum`.
+
+```{r}
+table(res3$adj.P.Val < 0.05)
+```
+
+No features are significantly different between the RESISTANT and SENSITIVE `PLATINUM.STATUS` levels after adjustment.
+
+### Multiple Comparisons
+
+`limma_contrasts` is used to perform multiple t-tests at the same time. We can use the `paircomp` function to generate contrasts to be used with `paircomp`.
+
+```{r}
+# Pairwise contrasts
+contrasts <- paircomp(oca.set$SUBTYPE, name = "SUBTYPE")
+contrasts
+```
+
+By default, `limma_contrasts` will generate diagnostic plots. We can prevent this by setting `plot` to `FALSE`.
+
+```{r}
+res4 <- limma_contrasts(oca.set, model.str = "~ 0 + SUBTYPE", 
+                        coef.str = "SUBTYPE", contrasts = contrasts,
+                        plot = FALSE)
+head(arrange(res4, feature))
+```
 
 ## p-value Histograms
 
 ```{r}
-hist(res1$P.Value, 
+hist(res3$P.Value, 
      breaks = seq(0, 1, 0.05), 
-     main = "Histogram of Case vs Control p-values", 
+     main = "Histogram of PLATINUM.STATUS ANOVA Results", 
      xlab = "p-value")
 ```
 
-The histogram is fairly uniform, which means that only a few of the features are likely to be significant after adjustment.
+The histogram is uniform, which means it is unlikely that any features will be significantly different between any two `PLATINUM.STATUS` groups after adjustment for multiple comparisons. Indeed, when we check with `table(res3$adj.P.Val < 0.05)`, none of the features pass the significance threshold after Benjamini-Hochberg (BH) adjustment.
 
-```{r}
-hist(res1$adj.P.Val, 
-     breaks = seq(0, 1, 0.05), 
-     main = "Histogram of Case vs Control Adjusted p-values", 
-     xlab = "BH-adjusted p-value")
+
+```{r fig.asp=0.6}
+# Histogram faceted by contrast
+ggplot(res4) +
+        geom_histogram(aes(x = P.Value), breaks = seq(0, 1, 0.05),
+                       color = "black", fill = "grey") +
+        facet_wrap(vars(contrast)) +
+        theme_bw()
 ```
 
-After adjustment, only `r sum(res1$adj.P.Val < 0.05)` proteins are significantly-different between the case and control groups.
+Based on the unadjusted p-values, it appears that there are more features that are significantly different between the Proliferative vs. Immunoreactive comparison than the other two comparisons. We can create a table of the number of features with adjusted p-values less than 0.05 in each comparison with the `table` function.
+
+```{r}
+table(res4$contrast, res4$adj.P.Val < 0.05)
+```
 
 ## Volcano Plots
 
-```{r volcano-plot-base}
-# Base volcano plot
-plot_volcano(logFC = res1$logFC, significance = res1$P.Value)
+```{r volcano-plot-base, fig.asp=0.6}
+# Basic volcano plot
+plot_volcano(df = res4, logFC = "logFC", pvals = "adj.P.Val", 
+             sig_threshold = 0.05) +
+        facet_wrap(vars(contrast)) +
+        labs(y = "BH-adjusted p-value")
+```
+
+
+It looks like there are more features that are significantly lower in the Proliferative group compared to the Immunoreactive group than there are features that are significantly higher. The Differentiated group appears to behave similarly, though with fewer features passing the significance cutoff of 0.05.
+
+Below is an example of how to color points based on sign of the fold-change and whether they are significant.
+
+```{r fig.asp = 0.6, message=FALSE}
+# Top 4 most significant features in each contrast
+feature_labels <- res4 %>% 
+        group_by(contrast) %>%
+        slice_min(order_by = adj.P.Val, n = 4, with_ties = FALSE) %>% 
+        mutate(feature_label = feature)
+
+res4 <- res4 %>% 
+        # Label 5 most significant features in each comparison group
+        left_join(feature_labels) %>% 
+        # Determine point colors based on significance and sign(logFC)
+        mutate(point_color = case_when(
+                adj.P.Val < 0.05 & logFC < 0 ~ "down",
+                adj.P.Val < 0.05 & logFC > 0 ~ "up",
+                TRUE ~ "NS"), 
+               point_color_sub = ifelse(!is.na(feature_label), 
+                                        point_color, NA))
+
+# Color points
+v1 <- plot_volcano(df = res4, logFC = "logFC", pvals = "adj.P.Val", 
+                   sig_threshold = 0.05, 
+                   point_args = list(mapping = aes(color = point_color))) +
+        facet_wrap(vars(contrast))
+v1
+```
+
+```{r fig.asp=0.6}
+# Change colors - do not include "NS"
+v1 + scale_color_manual(values = c("#5555ff", "red3", NA), 
+                        breaks = c("down", "up", "NS"), 
+                        limits = c("down", "up"), 
+                        na.value = "lightgrey") +
+        theme(legend.position = "none") # do not show legend
 ```
 
 
 ```{r}
-plot_data <- res1 %>%
-        rownames_to_column("feature") %>%
-        mutate(point_color = case_when(
-                logFC >= 0 & P.Value < 0.05 ~ "Up",
-                logFC < 0 & P.Value < 0.05 ~ "Down"))
-
-features_to_label <- plot_data %>% 
-        # Select top 3 most significant proteins in each group
-        filter(point_color != "NS") %>%
-        group_by(point_color) %>%
-        slice_min(order_by = P.Value, n = 3) %>% 
-        mutate(feature_label = feature)
-
-plot_data <- left_join(plot_data, features_to_label)
+# Label top 4 significant features in each contrast
+plot_volcano(df = res4, logFC = "logFC", pvals = "adj.P.Val", 
+             sig_threshold = 0.05, label = "feature_label",
+             num_features = nrow(res4),
+             # Change point and label color
+             label_args = list(mapping = aes(color = point_color),
+                               size = 2.5, box.padding = 0.75, 
+                               force_pull = 0, seed = 99), 
+             point_args = list(mapping = aes(color = point_color),
+                               alpha = 0.5)) +
+        facet_wrap(vars(contrast)) +
+        # Point colors
+        scale_color_manual(values = c("#5555ff", "red3", NA), 
+                           breaks = c("down", "up", "NS"), 
+                           limits = c("down", "up"), 
+                           na.value = "lightgrey") +
+        theme_bw() +
+        theme(legend.position = "none") # do not show legend
 ```
 
-
-```{r pretty-volcano-plot}
-# Add significance cutoff line, color points based on significance
-# and logFC, label the 3 most significant points for both positive 
-# and negative logFC.
-plot_volcano(logFC = plot_data$logFC, significance = plot_data$P.Value, 
-             sig_threshold = 0.05, threshold_line_color = "black",
-             point_color = plot_data$point_color, 
-             feature_labels = plot_data$feature_label, 
-             plot_theme = theme_bw(base_size = 14)) +
-        # Modify point colors
-        scale_color_manual(values = c("red3", "#5555ff"),
-                           breaks = c("Up", "Down"), 
-                           na.value = "grey70") +
-        # Remove legend
-        theme(legend.position = "none") +
-        # Modify plot labels
-        labs(x = expression(paste("log"[2],"(fold-change)")), 
-             y = "Unadjusted p-value")
-
-```
 

@@ -11,7 +11,7 @@ Keep in mind that there are many other functions available in `PlexedPiper` and 
 
 ## Global Proteomics Data {#global-proteomics-data}
 
-This pipeline shows how to process TMT data that is processed outside of PNNL's DMS. Section \@ref(phosphoproteomics-data) shows how to process data from the DMS. For convenience, the results of MS-GF+ and MASIC processing are provided in a companion `PlexedPiperTestData` package. In addition, we will need `PlexedPiper` for isobaric quantification and `dplyr` to manipulate data frames.
+This pipeline shows how to process TMT data that is processed outside of PNNL's DMS. Section \@ref(phosphoproteomics-data) shows how to process data from the DMS. For convenience, the results of MS-GF+ and MASIC processing are provided in a companion `PlexedPiperTestData` package. In addition, we will need `PlexedPiper` for isobaric quantification, `dplyr` to manipulate data frames, and `MSnbase` to create MSnSet objects.
 
 
 
@@ -25,10 +25,11 @@ library(dplyr)
 
 
 
+The pipeline can be broken up into 4 major chunks: prepare MS/MS identifications, prepare reporter ion intensities, create a quantitative cross-tab, and create an MSnSet object.
 
-### Prepare MS/MS Identifications {#prepare-MS2-IDs-global}
+### Read MS-GF+ Data
 
-#### Read MS-GF+ Data 
+The first step in the preparation of the MS/MS identifications is to fetch the data. In this case, the data exists in the PlexedPiperTestData package in a local folder, so we use `system.file` to get the file path and `read_msgf_data` to read the MS-GF+ output.
 
 
 ```r
@@ -55,18 +56,18 @@ show(msnid)
 ## #accessions: 128378 at 98 % FDR
 ```
 
-`msnid` consists of 4 spectrum files (datasets), and contains a total of 1,156,754 peptide-spectrum-matches (PSMs), 511,617 total peptides, and 128,378 total accessions (proteins). The reported FDR is the empirical **false-discovery rate**, which is calculated as the ratio of the number of false (decoy) PSMs, peptides, or accessions to their true (non-decoy) counterparts. Calculation of these counts and their FDRs is shown below.
+This summary tells us that `msnid` consists of 4 spectrum files (datasets), and contains a total of 1,156,754 peptide-spectrum-matches (PSMs), 511,617 total peptides, and 128,378 total accessions (proteins). The reported FDR is the empirical **false-discovery rate**, which is calculated as the ratio of the number of false (decoy) PSMs, peptides, or accessions to their true (non-decoy) counterparts. Calculation of these counts and their FDRs is shown below.
 
 
 ```r
-# Calculating the counts and FDRs from the show() output ---
-# Spectrum Files:
+# How to calculate the counts and FDRs from the show() output
+## Spectrum Files
 # Count
 psms(msnid) %>% 
   distinct(Dataset) %>%
   nrow() # 48
 
-# PSMs:
+## PSMs
 # Count
 psms(msnid) %>% 
   distinct(Dataset, Scan, peptide, isDecoy) %>%
@@ -78,7 +79,7 @@ nrow(x_psm[x_psm$isDecoy == TRUE, ]) /
   nrow(x_psm[x_psm$isDecoy == FALSE, ]) 
 # 0.3127463 = 31%
 
-# peptides:
+## peptides
 # Count
 psms(msnid) %>% 
   distinct(peptide, isDecoy) %>% 
@@ -89,7 +90,7 @@ nrow(x_peptide[x_peptide$isDecoy == TRUE, ]) /
   nrow(x_peptide[x_peptide$isDecoy == FALSE, ])
 # 0.611245 = 61%
 
-# Accessions:
+## accessions
 # Count
 length(accessions(msnid)) # or
 psms(msnid) %>% 
@@ -102,11 +103,18 @@ nrow(x_acc[x_acc$isDecoy == TRUE, ]) /
 # 0.9827024 = 98%
 ```
 
-Now that we have an `MSnID` object, we need to process it. 
+Now that we have an `MSnID` object, we need to process it. We begin by correcting for the isotope selection error.
 
-#### Correct Isotope Selection Error 
+### Correct Isotope Selection Error 
 
-Occasionally, the instrument selects the non-monoisotopic peak of parent ions for fragmentation, so peptides that are off by about 1 or more Daltons are considered. (To be exact, the difference is 1.0033548378 Da, or $^{13}\text{C}$-$^{12}\text{C}$.) While MS-FG+ is still capable of correctly identifying these peptides, the downstream calculations of mass measurement error need to be fixed (Figure \@ref(fig:mass-to-charge-diff)), as they are used for filtering later on (Section \@ref(global-peptide-filter)). The `correct_peak_selection` function corrects these mass measurement errors.
+Carbon has two stable isotopes: $^{12}\text{C}$ and $^{13}\text{C}$, with natural abundances of 98.93% and 1.07%, respectively. That is, we expect that about 1 out of every 100 carbon atoms is naturally going to be a $^{13}\text{C}$, while the rest are $^{12}\text{C}$. In larger peptides with many carbon atoms, it is more likely that at least one atom will be a $^{13}\text{C}$ than all atoms will be $^{12}\text{C}$. In cases such as these, a non-monoisotopic ion will be selected by the instrument for fragmentation.
+
+<div class="figure" style="text-align: center">
+<img src="images/MS1_non_monoisotopic.PNG" alt="MS1 spectra with peak at non-monoisotopic precursor ion." width="736" />
+<p class="caption">(\#fig:MS1_peak)MS1 spectra with peak at non-monoisotopic precursor ion.</p>
+</div>
+
+In Figure \@ref(fig:MS1_peak), the monoisotopic ion (m/z of 1427.29) is not the most abundant, so it is not selected as the precursor. Instead, the ion with a $^{13}\text{C}$ in place of a $^{12}\text{C}$ is selected for fragmentation. We calculate the mass difference between these two ions as the difference between the mass-to-charge ratios multiplied by the ion charge. In this case, the mass difference is 1 Dalton, or about the difference between $^{13}\text{C}$ and $^{12}\text{C}$. (More accurately, the difference between these isotopes is 1.0033548378 Da.) While MS-GF+ is still capable of correctly identifying these peptides, the downstream calculations of mass measurement error need to be fixed because they are used for filtering later on (Section \@ref(global-peptide-filter)). The `correct_peak_selection` function corrects these mass measurement errors, and Figure \@ref(fig:mass-to-charge-diff) shows the distribution of the mass measurement errors before and after correction.
 
 
 
@@ -122,14 +130,14 @@ msnid <- correct_peak_selection(msnid)
 </div>
 
 
-#### Remove Contaminants 
+### Remove Contaminants 
 
-Now, we will remove contaminants such as the pig trypsin that was used for protein digestion. We can use `grepl` to search for all accessions that contain "Contaminant".
+Now, we will remove contaminants such as the trypsin that was used for protein digestion. We can use `grepl` to search for all accessions that contain the string `"Contaminant"`. Displaying these contaminants is not necessary during processing. This is just for demonstration purposes to see what will be removed.
 
 
 ```r
 # All unique contaminants
-unique(msnid$accession[grepl("Contaminant", msnid$accession)])
+accessions(msnid)[grepl("Contaminant", accessions(msnid))]
 ```
 
 ```
@@ -166,9 +174,11 @@ show(msnid)
 ## #accessions: 128353 at 98 % FDR
 ```
 
-#### MS/MS ID Filter: Peptide Level {#global-peptide-filter}
+We can see that the number of PSMs decreased by about 1300, peptides by ~400, and proteins by 25 (the 25 contaminants that were displayed).
 
-The next step is to filter the MS/MS identifications such that the empirical pwptide-level FDR is less than some threshold and the number of MS/MS IDs is maximized. We will use the $-log_{10}$ of the `PepQValue` column as one of our filtering criteria and assign it to a new column in `psms(msnid)` called `msmsScore`. The `PepQValue` column is the MS-GF+ Spectrum E-value, which reflects how well the theoretical and experimental fragmentation spectra match; therefore, high values of `msmsScore` indicate a good match (see Figure \@ref(fig:plot-msmsScore)).
+### MS/MS ID Filter: Peptide Level {#global-peptide-filter}
+
+The next step is to filter the MS/MS identifications such that the empirical peptide-level FDR is less than some threshold and the number of MS/MS IDs is maximized. We will use the $-log_{10}$ of the `PepQValue` column as one of our filtering criteria and assign it to a new column in `psms(msnid)` called `msmsScore`. The `PepQValue` column is the MS-GF+ Spectrum E-value, which reflects how well the theoretical and experimental fragmentation spectra match; therefore, high values of `msmsScore` indicate a good match (see Figure \@ref(fig:plot-msmsScore)).
 
 <div class="figure" style="text-align: center">
 <img src="isobaric_quantification_files/figure-html/plot-msmsScore-1.png" alt="Density plot of msmsScore." width="672" />
@@ -176,7 +186,7 @@ The next step is to filter the MS/MS identifications such that the empirical pwp
 </div>
 </br>
 
-The other filtering criteria is the absolute deviation of the mass measurement error of the parent ions in parts-per-million (ppm), which is assigned to the `absParentMassErrorPPM` column in `psms(msnid)` (see Figure \@ref(fig:plot-mass-error)).
+The other filtering criteria is the absolute deviation of the mass measurement error of the precursor ions in parts-per-million (ppm), which is assigned to the `absParentMassErrorPPM` column in `psms(msnid)` (see Figure \@ref(fig:plot-mass-error)).
 
 <div class="figure" style="text-align: center">
 <img src="isobaric_quantification_files/figure-html/plot-mass-error-1.png" alt="Density plot of absParentMassErrorPPM." width="672" />
@@ -200,14 +210,14 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  48 
-## #PSMs: 464482 at 0.45 % FDR
-## #peptides: 96486 at 1 % FDR
-## #accessions: 27120 at 9.2 % FDR
+## #PSMs: 464474 at 0.45 % FDR
+## #peptides: 96485 at 1 % FDR
+## #accessions: 27119 at 9.2 % FDR
 ```
 
 We can see that filtering drastically reduces the number of PSMs, and the empirical peptide-level FDR is now 1%. However, notice that the empirical protein-level FDR is still fairly high.
 
-#### MS/MS ID Filter: Protein Level 
+### MS/MS ID Filter: Protein Level 
 
 Now, we need to filter proteins so that the FDR is at most 1%. A while ago, the proteomics field established the hard-and-fast two-peptides-per-protein rule. That is, the confident identification of a protein requires the confident identification of at least 2 peptides. This rule penalizes short proteins and doesn't consider that there are some very long proteins (e.g. Titin 3.8 MDa) that easily have more then two matching peptides even in the reversed sequence. Thus, we propose to normalize the number of peptides per protein length and use that as a filtering criterion (Figure \@ref(fig:plot-num-pep)).
 
@@ -255,13 +265,13 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  48 
-## #PSMs: 458097 at 0.16 % FDR
+## #PSMs: 458090 at 0.16 % FDR
 ## #peptides: 92036 at 0.32 % FDR
 ## #accessions: 15630 at 1 % FDR
 ```
 
 
-#### Inference of Parsimonious Protein Set 
+### Inference of Parsimonious Protein Set 
 
 The situation when a certain peptide sequence matches multiple proteins adds complication to the downstream quantitative analysis, as it is not clear which protein this peptide is originating from. There are common ways for dealing with this. One is to simply retain uniquely matching peptides and discard shared peptides (`unique_only = TRUE`). Alternatively, assign the shared peptides to the proteins with the larger number of uniquely mapping peptides (`unique_only = FALSE`). If there is a choice between multiple proteins with equal numbers of uniquely mapping peptides, the shared peptides are assigned to the first protein according to alphanumeric order (Figure \@ref(fig:parsimony)). 
 
@@ -287,20 +297,21 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  48 
-## #PSMs: 445006 at 0.15 % FDR
+## #PSMs: 444999 at 0.15 % FDR
 ## #peptides: 90478 at 0.27 % FDR
 ## #accessions: 5251 at 1.1 % FDR
 ```
 
 Notice that the protein-level FDR increased slightly above the 1% threshold. In this case, the difference isn't significant, so we can ignore it. 
 
-:::{.rmdnote}
+*Note:*
+
 If the peptide or accession-level FDR increases significantly above 1% after inference of the parsimonious protein set, consider lowering the FDR cutoff (for example, to 0.9%) and redoing the previous processing steps. Filtering at the peptide and accession level should each be done a single time.
-:::
 
-#### Remove Decoy PSMs
 
-The final step is to remove the decoy PSMs. We use the `apply_filter` function again and only keep entries where `isDecoy` is `FALSE`.
+### Remove Decoy PSMs
+
+The final step in preparing the MS/MS identifications is to remove the decoy PSMs. We use the `apply_filter` function again and only keep entries where `isDecoy` is `FALSE`.
 
 
 ```r
@@ -313,7 +324,7 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  48 
-## #PSMs: 444345 at 0 % FDR
+## #PSMs: 444338 at 0 % FDR
 ## #peptides: 90232 at 0 % FDR
 ## #accessions: 5196 at 0 % FDR
 ```
@@ -570,11 +581,9 @@ After processing, we are left with 444,345 PSMs, 90,232 peptides, and 5,196 prot
 </br>
 
 
-### Prepare Reporter Ion Intensities {#reporter-ion-intensities}
+### Read MASIC Output 
 
-#### Read MASIC Output 
-
-MASIC is a tool for extracting ion intensities. With proper parameter settings, it can be used for extracting TMT (or iTRAQ) reporter ion intensities. In addition, it reports a number of other helpful metrics. Notably, the interference score at the parent ion level and the signal-to-noise ratio (S/N) at the reporter ion level (computed by Thermo software). The interference score reflects the proportion of the ion population that was isolated for fragmentation that is due to the targeted ion. In other words, `1 - InterferenceScore` is due to co-isolated species that have similar elution time and parent ion m/z.
+MASIC is a tool for extracting ion intensities. With proper parameter settings, it can be used for extracting TMT (or iTRAQ) reporter ion intensities. In addition, it reports a number of other helpful metrics. Notably, the interference score at the precursor ion level and the signal-to-noise ratio (S/N) at the reporter ion level (computed by Thermo software). The interference score reflects the proportion of the ion population that was isolated for fragmentation that is due to the targeted ion. In other words, `1 - InterferenceScore` is due to co-isolated species that have similar elution time and precursor ion m/z. The first step in the preparation of the reporter ion intensity data is to read the MASIC results. We use a local file path and the `read_masic_data` function. By default, the interference score is not included, so we need to set that argument to `TRUE` in order to filter the results.
 
 
 ```r
@@ -1050,9 +1059,9 @@ Normally, this would display progress bars in the console as the data is being f
 Table \@ref(tab:global-masic-table) shows the first 6 rows of `masic_data`.
 
 
-#### Filter MASIC Data 
+### Filter MASIC Data 
 
-Currently, we recommend keeping entries where at least 50% of the ion population is due to the targeted ion (interference score $\geq$ 0.5) and not filtering by S/N.
+The only other step in reporter ion intensity data preparation is to filter the results. Currently, we recommend keeping entries where at least 50% of the ion population is due to the targeted ion (interference score $\geq$ 0.5) and not filtering by S/N.
 
 
 ```r
@@ -1064,9 +1073,9 @@ masic_data <- filter_masic_data(masic_data,
 
 ### Create Study Design Tables {#fetch-study-design-tables}
 
-To convert from PSMs and reporter ion intensities to meaningful quantitative data, it is necessary to know what are the samples in the reporter channels and what is the intended reference channel (or combination of channels). The entire study design is captured by three tables - fractions, samples, references. With newly processed data, these typically do not exist, and must be created.
+To convert from PSMs and reporter ion intensities to meaningful quantitative data, it is necessary to know what are the samples in the reporter channels and what is the intended reference channel (or combination of channels). The entire study design is captured by three tables - fractions, samples, references. With newly processed data, these typically do not exist, and must be created. The next sections show how to create these tables.
 
-#### Fractions 
+### Fractions 
 
 The fractions table consists of two columns: `Dataset` and `PlexID`. The `Dataset` column contains all of the unique datasets from `msnid$Dataset` or `masic_data$Dataset`. The `PlexID` column contains the plex ID associated with each dataset, and is typically an "S" followed by a number ("S1", "S2", etc.). We can extract the plex ID from the datasets. In this case, the plex ID always comes after "_W_", so we can use a regular expression (regex) to capture it (the first argument of `gsub`). The regex below says to capture an "S" followed by a single digit that appears after "_W_" and before an underscore.
 
@@ -1135,9 +1144,9 @@ fractions <- data.frame(Dataset = unique(masic_data$Dataset)) %>%
 Table \@ref(tab:fractions-table) shows the first 10 rows of `fractions`.
 
 
-#### Samples 
+### Samples 
 
-The samples table contains columns `PlexID`, `QuantBlock`, `ReporterName`, `ReporterAlias`, and `MeasurementName`. The plex ID must be the same as the plex ID in the `fractions` table. `ReporterName` is the reporter ion name ("126", "127N", "127C", etc.). `ReporterAlias` is the intermediate between `ReporterName` and `MeasurementName` and is used for defining the reference. `MeasurementName` determines the column names for the final cross-tab, and must be unique and begin with a letter. `MeasurementName` is usually the sample names; however, we do not have that information, so we will instead prepend `PlexID` to the `ReporterName` to create `MeasurementName`. Finally, `QuantBlock` can be thought of as a way of defining sub-plex. In a typical TMT experiment, `QuantBlock` is always 1. In case of 5 pairwise comparisons within TMT10, there will be 5 QuantBlocks (1-5) with a reference for each `QuantBlock`.
+The samples table contains columns `PlexID`, `QuantBlock`, `ReporterName`, `ReporterAlias`, and `MeasurementName`. The plex ID must be the same as the plex ID in the `fractions` table. `ReporterName` is the reporter ion name ("126", "127N", "127C", etc.). `ReporterAlias` is the intermediate between `ReporterName` and `MeasurementName` and is used for defining the reference. `MeasurementName` determines the column names for the final cross-tab, and must be unique and begin with a letter. Finally, `QuantBlock` can be thought of as a way of defining sub-plex. In a typical TMT experiment, `QuantBlock` is always 1. In case of 5 pairwise comparisons within TMT10, there will be 5 QuantBlocks (1-5) with a reference for each `QuantBlock`.
 
 For this experiment, channel 131 will serve as the reference, so we set `MeasurementName` to `NA` when `ReporterName` is `"131"`. This will make the reference channel absent from the quantitative cross-tab. In cases where reporter ion intensities are not normalized by a reference channel (reference = 1) or they are normalized by the average of select channels, do not set any `MeasurementName` to `NA`.
 
@@ -1242,7 +1251,7 @@ samples <- read.delim("data/MoTrPAC_pilot_TMT_labeling.txt") %>%
 Table \@ref(tab:samples-table) shows the first 10 rows of `samples`.
 
 
-#### References 
+### References 
 
 Reference can be a certain channel, average of multiple channels, or 1. The general form is an expression with `ReporterAlias` names as variables. It is evaluated for each `PlexID`/`QuantBlock` combination and applied to divide reporter ion intensities within corresponding `PlexID`/`QuantBlock`.
 
@@ -1319,7 +1328,7 @@ write.table(references, file = "data/references.txt",
 
 ### Create Quantitative Cross-tab {#global-quant-crosstab}
 
-This is the final step where MS/MS IDs and reporter ions are linked together and aggregated to the peptide or accession (i.e. protein) level. To retain protein IDs while aggregating to peptide level, set `aggregation_level <- c("accession","peptide")`. The entries are $log_2$-transformed after being normalized by the reference.
+This is the step where MS/MS IDs and reporter ions are linked together and aggregated to the peptide or accession (i.e. protein) level. To retain protein IDs while aggregating to peptide level, set `aggregation_level <- c("accession","peptide")`. The abundances are converted to relative abundances by dividing by the reference and then $log_2$-transformed.
 
 
 ```r
@@ -1507,6 +1516,154 @@ global_proteins <- rownames(crosstab)
 save(global_proteins, file = "data/3442_global_proteins.RData")
 ```
 
+### Create MSnSet Object
+
+The final step is to create an MSnSet object, which is necessary for downstream data analysis tools such as the `plot_pca_*` or `limma_*` functions in MSnSet.utils. An MSnSet combines three tables into one object: `exprs`, `fData`, and `pData.` `exprs` is a matrix of protein abundance data with proteins as rows and samples as columns. `fData` is used to convert between different feature IDs such as RefSeq, UniProt accession, Entrez gene ID, gene symbol, etc. It is optional, but the rownames of `fData` must be the same as the row names of `exprs`. Lastly, `pData` contains the metadata with samples as rows, and the row names must be the same as the column names of `exprs` (same order as well). For this example, we don't have an actual metadata table. We just know group assignment from the sample names. Samples with an "R" are part of the exeRcised group, while samples with an "S" are part of the Sedentary group. We can make a metadata table with a single column called `group`.
+
+
+```r
+metadata <- data.frame(group = gsub("([RS]).*", "\\1", colnames(crosstab))) %>% 
+  mutate(group = ifelse(group == "R", "exercised", "sedentary"))
+rownames(metadata) <- colnames(crosstab)
+```
+
+<table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">(\#tab:unnamed-chunk-25)<left>Metadata for MSnSet.</left>
+</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;">   </th>
+   <th style="text-align:left;"> group </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> R_01 </td>
+   <td style="text-align:left;"> exercised </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> R_02 </td>
+   <td style="text-align:left;"> exercised </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> R_03 </td>
+   <td style="text-align:left;"> exercised </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> R_04 </td>
+   <td style="text-align:left;"> exercised </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> R_05 </td>
+   <td style="text-align:left;"> exercised </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> R_06 </td>
+   <td style="text-align:left;"> exercised </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> R_07 </td>
+   <td style="text-align:left;"> exercised </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> R_08 </td>
+   <td style="text-align:left;"> exercised </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> R_09 </td>
+   <td style="text-align:left;"> exercised </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S_01 </td>
+   <td style="text-align:left;"> sedentary </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S_02 </td>
+   <td style="text-align:left;"> sedentary </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S_03 </td>
+   <td style="text-align:left;"> sedentary </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S_04 </td>
+   <td style="text-align:left;"> sedentary </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S_05 </td>
+   <td style="text-align:left;"> sedentary </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S_06 </td>
+   <td style="text-align:left;"> sedentary </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S_07 </td>
+   <td style="text-align:left;"> sedentary </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S_08 </td>
+   <td style="text-align:left;"> sedentary </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> S_09 </td>
+   <td style="text-align:left;"> sedentary </td>
+  </tr>
+</tbody>
+</table>
+
+Since we used the sample data to create the metadata, everything is in the right order; however, we usually need to reorder the rows of the metadata. We can do this with
+
+
+```r
+# Reorder rows of metadata to match sample order in crosstab
+# Need to add drop = FALSE if the metadata is a single column
+metadata <- metadata[colnames(crosstab), , drop = FALSE]
+```
+
+We have the metadata and protein abundance data, so we can now create the MSnSet. We will call it `m1` and we should save it as an .RData file.
+
+
+```r
+# Create MSnSet
+m1 <- MSnbase::MSnSet(exprs = as.matrix(crosstab), pData = metadata)
+validObject(m1)
+```
+
+```
+## [1] TRUE
+```
+
+If we type the name of the MSnSet in the console, a summary will be displayed. This will show information about each of the tables, and the MSnSet will keep track of all processing done such as filtering at the bottom under "Processing information".
+
+
+```r
+# Display summary
+m1
+```
+
+```
+## MSnSet (storageMode: lockedEnvironment)
+## assayData: 5178 features, 18 samples 
+##   element names: exprs 
+## protocolData: none
+## phenoData
+##   sampleNames: R_01 R_02 ... S_09 (18 total)
+##   varLabels: group
+##   varMetadata: labelDescription
+## featureData: none
+## experimentData: use 'experimentData(object)'
+## Annotation:  
+## - - - Processing information - - -
+##  MSnbase version: 2.18.0
+```
+
+
+
+```r
+# Save unprocessed MSnSet
+save(m1, file = "data/global_msnset.RData")
+```
 
 
 ## Phosphoproteomics Data {#phosphoproteomics-data}
@@ -1522,12 +1679,11 @@ library(PNNL.DMS.utils)
 library(PlexedPiper)
 library(Biostrings)
 library(dplyr) # %>%
+library(MSnbase)
 ```
 
 
-### Prepare MS/MS Identifications {#prepare-MS2-IDs-phospho}
-
-#### Read MS-GF+ Output 
+### Read MS-GF+ Output 
 
 
 ```r
@@ -1551,7 +1707,7 @@ show(msnid)
 ```
 
 
-#### Correct Isotope Selection Error 
+### Correct Isotope Selection Error 
 
 
 ```r
@@ -1560,7 +1716,7 @@ msnid <- correct_peak_selection(msnid)
 ```
 
 
-#### Remove Non-Phosphorylated Peptides 
+### Remove Non-Phosphorylated Peptides 
 
 In this case, the phosphorylation of an amino acid is marked by a `*` inserted into the sequence after said amino acid. We will not consider unmodified peptides, so we can filter out peptides that do not contain this symbol with `apply_filter`. The `*` is a special character that must be escaped with backslashes, and the backslashes must also be escaped, since they are enclosed within a nested string (`"''"`).
 
@@ -1582,7 +1738,7 @@ show(msnid)
 ```
 
 
-#### Remove Contaminants 
+### Remove Contaminants 
 
 
 ```r
@@ -1601,9 +1757,9 @@ show(msnid)
 ```
 
 
-#### Improve Phosphosite Localization
+### Improve Phosphosite Localization
 
-Phospho datasets involve AScore jobs for improving phosphosite localization. There should be one AScore job per data package. The fetched object is a data.frame that links datasets, scans and original PTM localization to newly suggested locations. Importantly, it contains `AScore` column that signifies the confidence of PTM assignment. AScore > 17 is considered confident.
+Phospho datasets involve AScore jobs for improving phosphosite localization. There should be one AScore job per data package. If the AScore job does not exist, see <a href="https://prismwiki.pnl.gov/wiki/AScore_Job_Creation">AScore Job Creation</a> for how to set it up. The fetched object is a data.frame that links datasets, scans and original PTM localization to newly suggested locations. Importantly, it contains `AScore` column that signifies the confidence of PTM assignment. AScore > 17 is considered confident.
 
 
 ```r
@@ -1631,7 +1787,7 @@ show(msnid)
 ```
 
 
-#### MS/MS ID Filter: Peptide Level 
+### MS/MS ID Filter: Peptide Level 
 
 
 ```r
@@ -1651,7 +1807,7 @@ show(msnid)
 ## #accessions: 16090 at 4.7 % FDR
 ```
 
-#### MS/MS ID Filter: Protein Level 
+### MS/MS ID Filter: Protein Level 
 
 
 ```r
@@ -1677,7 +1833,7 @@ show(msnid)
 ## #accessions: 9424 at 0.98 % FDR
 ```
 
-#### Inference of Parsimonious Protein Set 
+### Inference of Parsimonious Protein Set 
 
 <!---
 TODO:
@@ -1703,7 +1859,7 @@ show(msnid)
 ## #accessions: 2895 at 1.6 % FDR
 ```
 
-#### Remove Decoy PSMs
+### Remove Decoy PSMs
 
 
 ```r
@@ -1721,9 +1877,9 @@ show(msnid)
 ## #accessions: 2849 at 0 % FDR
 ```
 
-#### Map Sites to Protein Sequences 
+### Map Sites to Protein Sequences 
 
-Prepare FASTA to make sure entry names in FASTA file match MSnID accessions. The plan is to make this conversion automatic. `map_mod_sites` creates a number of columns describing mapping of the site/s onto the protein sequences. The most important for the user is `SiteID`.
+Prepare FASTA to make sure entry names in FASTA file match MSnID accessions. The plan is to make this conversion automatic. `map_mod_sites` creates a number of columns describing mapping of the sites onto the protein sequences. The most important for the user is `SiteID`.
 
 
 ```r
@@ -2120,9 +2276,7 @@ msnid <- map_mod_sites(object = msnid, fasta = fst,
 Table \@ref(tab:phospho-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
 
 
-### Prepare Reporter Ion Intensities {#phospho-reporter-ion-intensities}
-
-#### Read MASIC Output 
+### Read MASIC Output 
 
 
 ```r
@@ -2131,8 +2285,7 @@ masic_data <- read_masic_data_from_DMS(data_package_num,
                                        interference_score = TRUE)
 ```
 
-
-#### Filter MASIC Data 
+### Filter MASIC Data 
 
 
 ```r
@@ -2181,7 +2334,7 @@ crosstab <- create_crosstab(msnid, masic_data,
 ```
 
 <table class="table table-hover table-condensed" style="font-size: 12px; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">(\#tab:unnamed-chunk-44)<left>First 6 rows of the phospho quantitative cross-tab.</left>
+<caption style="font-size: initial !important;">(\#tab:unnamed-chunk-50)<left>First 6 rows of the phospho quantitative cross-tab.</left>
 </caption>
  <thead>
   <tr>

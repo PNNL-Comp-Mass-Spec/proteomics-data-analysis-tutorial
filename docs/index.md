@@ -1,17 +1,18 @@
 --- 
 title: "Proteomics Data Analysis in R/Bioconductor"
 author: "Tyler Sagendorf"
-date: "October 21, 2021"
+date: "January 04, 2022"
 site: bookdown::bookdown_site
-output: bookdown::bs4_book
+output: bookdown::gitbook
 documentclass: book
-bibliography: 
-  - references.bib
-  - r-packages.bib
+bibliography:
+- references.bib
+- r-packages.bib
 csl: begell-house-chicago-author-date.csl
 link-citations: yes
 nocite: '@*'
-description: "This is a comprehensive tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor."
+description: This is a tutorial for proteomics data analysis in R that utilizes packages
+  developed by researchers at PNNL and from Bioconductor.
 ---
 
 # Welcome! {-}
@@ -21,9 +22,7 @@ This tutorial is very much a work-in progress. Even sections that appear finishe
 
 
 
-## Miscellaneous Resources {-}
-
-It is highly recommended to review the resources presented in this section before continuing with the rest of the book.
+It is highly recommended to review the resources below before continuing with the rest of the tutorial.
 
 
 * Proteomics Overview
@@ -53,7 +52,7 @@ It is highly recommended to review the resources presented in this section befor
 * Universal Protein Resource (<a href="https://www.uniprot.org/help/about" title="About UniProt">UniProt</a>): protein sequence and annotation data
 
 
-* **False Discovery Rate** (FDR)
+* False Discovery Rate (FDR)
     * <a href="https://dx.doi.org/10.1002%2Fpmic.201500431">How to talk about protein‐level false discovery rates in shotgun proteomics</a>
     * <a href="https://pubs.acs.org/doi/10.1021/pr700739d">Posterior Error Probabilities and False Discovery Rates: Two Sides of the Same Coin</a>
     * <a href="https://www.bioinfor.com/fdr-tutorial/">False Discovery Rate: PEAKS FDR Estimation</a>
@@ -63,7 +62,7 @@ It is highly recommended to review the resources presented in this section befor
 * <a href = "https://www.rstudio.com/resources/cheatsheets/">RStudio Cheatsheets</a>
 
 
-* Pattern matching with **regular expressions**
+* Pattern matching with regular expressions
     * <a href = "https://r4ds.had.co.nz/strings.html">R for Data Science: Strings</a>
     * <a href="https://regexone.com/">RegexOne: Learn Regular Expressions with simple, interactive exercises.</a>
 

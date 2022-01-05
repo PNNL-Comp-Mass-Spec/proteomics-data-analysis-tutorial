@@ -2,7 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
-01-intro.Rmd
 .Rbuildignore
 proteomics-data-analysis-tutorial.Rproj
 .Rcache
+styleguide.txt

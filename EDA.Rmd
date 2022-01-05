@@ -1,9 +1,9 @@
 # Exploratory Data Analysis
 
-<!---
-TODO:
-* What is exploratory data analysis? Explain.
---->
+Exploratory Data Analysis (EDA) is an important step before any sort of statistical analyses. The goal of EDA is to get a big picture view of the data and identify potential outlier samples and batch effects that need to be corrected. For this section, we need to load the MSnSet.utils, dplyr, and car packages. MSnSet.utils contains the `cptac_oca` data that we will use to illustrate these EDA approaches, as well as the `plot_pca` function for creating PCA plots of samples. The dplyr package is used for data frame manipulation, though it is only used for the pipe operator (`%>%`) in this section. The car package is used to create density plots with the `plotDensity` function, though similar plots can be made by combining `stats::density` with `base::plot`.
+
+If creating figures for publications or presentations, it is recommended to use the ggplot2 package. For this section, however, I opted to use simpler plotting functions where possible because these initial plots are just to get a first impression of the data.
+
 
 ```{r EDA_chunk_opts, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
@@ -11,173 +11,169 @@ knitr::opts_chunk$set(warning = FALSE, message = FALSE,
 ```
 
 ```{r EDA_setup, warning=FALSE, message=FALSE}
+# Packages
 library(MSnSet.utils)
-library(ggplot2)
 library(dplyr)
-library(scales)
+library(car)
 
-# Set the theme for all plots. Base text size is set to 14 pts.
-theme_set(theme_bw(base_size = 14))
-
-# Load the MSnSet
+# Load the example MSnSet
 data(cptac_oca)
 ```
 
 
 ## Count Features in Samples
 
-To count the number of features identified in each sample, we use `colSums` to tally the number of entries that are not `NA`.
+To count the number of features identified in each sample, we use `colSums` to tally the number of entries that are not `NA` in each column of `exprs(oca.set)`.
 
-```{r}
-# Calculate the number of proteins 
-# identified (not NA) in each sample
-plot_data <- pData(oca.set) %>% 
-  mutate(num_proteins = colSums(!is.na(exprs(oca.set)))) %>% 
-  # For the lollipop plot, it is best to sort num_peptides
-  # and preserve the ordering by converting the sample names
-  # to a factor. This is how we can specify the order of categorical
-  # variables in plots.
-  arrange(num_proteins) %>% 
-  mutate(sample_name = rownames(.),
-         sample_name = factor(sample_name, levels = sample_name))
-
-# Could also be accomplished with
-# oca.set$num_proteins = colSums(!is.na(exprs(oca.set)))
-# but we need to change the ordering for the lollipop plot
+```{r calc-num-prot}
+# Calculate the number of proteins identified (not NA) in each sample
+oca.set$num_proteins <- colSums(!is.na(exprs(oca.set)))
 ```
 
-Three methods of visualizing this information are presented below. We begin with the lollipop plot.
+Now that we have a vector of the number of proteins detected in each sample stored in `pData(oca.set)`, there are a few ways to present it. The first is a simple summary, which is accomplished with the `summary` function. This outputs the average value, as well as a 5-number summary that includes the minimum, the 1st quartile, the median (2nd quartile), the 3rd quartile, and the maximum value.
 
-
-### Lollipop Plot
-
-Lollipop plots are similar to bar graphs, but they are composed of line segments terminating in points. They are a good alternative to bar graphs because they better minimize the amount of non-data ink. This doesn't matter too much when figures are only made for digital media, but it still reduces the visual clutter that comes with bars; however, it is not a good alternative to stacked bar graphs. In ggplot, we can construct lollipop plots by combining a `geom_segment()` and a `geom_point()` layer.
-
-```{r num_protein_lollipop, fig.asp=1.7}
-# Lollipop plot
-ggplot(plot_data) +
-  geom_segment(aes(x = 0, xend = num_proteins, 
-                   y = sample_name, yend = sample_name)) +
-  geom_point(aes(x = num_proteins, y = sample_name)) +
-  scale_x_continuous(name = "Number of Proteins Detected", 
-                     # Remove space between data and y axis 
-                     # (start lines at x = 0)
-                     expand = expansion(mult = c(0, 0.05))) +
-  # Remove unnecessary y-axis title and the major y-axis grid lines
-  theme(axis.title.y = element_blank(),
-        panel.grid.major.y = element_blank())
+```{r num-prot-summary}
+summary(oca.set$num_proteins)
 ```
 
-In this case, using a lollipop plot is not a very good use of space. Notice that the plot is lengthened so that all of the sample names are readable, and the number of proteins detected in each is about the same; a lot of the space is just taken up by lines. In this case, it would be better to use a table or another plot type like a boxplot.
+The 5-number summary can also be presented as a boxplot, which is typically more useful at a glance. Below is an example of how to create a horizontal boxplot.
 
-### Boxplot
-
-A boxplot is good for identifying and labeling potential outliers, but it is limited to displaying a summary of the data. We will be using `graphics::boxplot()` for this example, rather than the ggplot2 equivalent, because it is easier and the y-axis is uncluttered.
-
-```{r num_protein_boxplot, fig.asp=0.6}
-# Boxplot
-boxplot(plot_data$num_proteins, horizontal = TRUE,
-        xlab = "Number of Proteins Detected", col = NA)
+```{r num-prot-boxplot, fig.asp=0.6}
+# Horizontal boxplot
+boxplot(oca.set$num_proteins, horizontal = TRUE,
+        xlab = "Number of Proteins Detected")
 ```
 
-Notice that the boxplot takes up a lot less space, but it is less informative because we can not directly compare samples. Also, we lose a lot of the fine details of the shape of the distribution. To address the latter point, we can instead use a density plot.
+Boxplots are useful, but a lot of the finer details about the distribution are lost when summarizing. To remedy this, we could instead show a scatterplot of the individual values with the base `plot` function. We will change the point type with `pch` to plot solid circles and change the axis titles with `xlab` and `ylab`.
 
-
-### Density Plot
-
-A density plot is like a smoothed histogram. In fact, one of the benefits over the histogram is that we don't have to deal with bins, as the choice of the number of bins can drastically change the overall shape of a histogram.
-
-```{r num_protein_density, fig.asp = 0.6}
-ggplot(plot_data) +
-  geom_density(aes(x = num_proteins), 
-               # Change fill color, make it translucent, remove outline
-               fill = "lightblue", alpha = 0.5, color = NA) +
-  scale_x_continuous(name = "Number of Proteins Detected", 
-                     # Remove space between data and y axis
-                     expand = expansion(mult = 0),
-                     limits = c(NA, 7800),
-                     breaks = seq(6600, 7800, 200)) +
-  scale_y_continuous(name = "Density",
-                     # Remove space between data and x axis (start y axis at 0)
-                     expand = expansion(mult = c(0, 0.05)),
-                     # Use scientific notation for labels
-                     labels = label_scientific()) +
-  theme_bw(base_size = 14) +
-  # Adjust plot margin so that the 7800 label is not cut off
-  theme(plot.margin = unit(c(6, 16, 6, 6), units = "pt"))
+```{r num-prot-scatterplot}
+plot(oca.set$num_proteins, pch = 19, xlab = "Sample Index", 
+     ylab = "Number of Proteins Detected")
 ```
 
-While outliers in a boxplot appear as points beyond the whiskers, outliers in density plots will appear as small bumps in the tails of the distribution.
-While there are no outliers, in this case, we can see that there are two peaks where the number of identified proteins are concentrated. This is not something that could be captured with a boxplot, so it is useful to try different plot types.
+While harder to interpret at a glance than a boxplot, scatterplots are useful for identifying potential outliers and possible trends in the data. In the plot above, it doesn't appear than there are any samples with significantly fewer identifications. 
+
+The other plot type we could use balances the summary of the boxplot with the finer detail of the scatterplot: density plots. We will pipe the vector of protein counts to two arguments of the `densityPlot` function from the car package with the `.` placeholder.
+
+```{r num-prot-density}
+# Density plot - pipe the vector to multiple arguments with .
+oca.set$num_proteins %>% 
+  densityPlot(x = ., xlim = range(.), main = "Density Plot", 
+              xlab = "Number of Proteins Detected")
+```
+
+It looks like there are peaks around 6900-7000 and 7300-7500 proteins. The rug plot (one-dimensional scatterplot) at the bottom of the density estimate shows the counts, so this particular density plot presents much of the same information as the scatterplot.
 
 
 ## Estimate Blood Contamination
 
+Strong contamination of samples with blood may lead to the inability to identify low-abundant proteins, so it is important to estimate the level of blood contamination. We can search for major blood proteins with the `grepl` function and summarize their abundances within each sample to obtain reasonable estimates.
+
+We will need to search for the blood protein identifiers that match the protein identifiers in the MSnSet. Since we are using the `cptac_oca` data for these examples, we will need to know the NCBI RefSeq protein IDs for the following blood proteins: hemoglobin, fibrinogen, albumin, and spectrin. Unfortunately, this means manually searching for these identifiers, which are provided in the list below.
+
+* hemoglobin 
+  +  subunit alpha 1: NP_000549.1
+  +  subunit alpha 2: NP_000508.1
+  +  subunit beta: NP_000509.1
+  +  subunit gamma-1: NP_000550.2
+  +  subunit gamma-2: NP_000175.1
+* albumin: NP_000468.1
+* fibrinogen
+  +  alpha chain isoform alpha precursor: NP_068657.1
+  +  alpha chain isoform alpha-E preprotein: NP_000499.1
+* spectrin
+  +  alpha chain, erythrocytic 1: NP_003117.2
+  +  beta chain, erythrocytic 1: NP_001342365.1
+
+We need to create a vector of these blood protein IDs. We will use this to check if each feature is a blood protein. Doing so will create a logical vector that we can use to subset the data to the abundance values of those matches. With the subset data, we can then calculate the column (sample) averages with `colMeans` to get a single vector that estimates the average blood contamination of each sample.
+
+```{r}
+# Blood protein IDs
+blood_prot <- c("NP_000549.1", "NP_000508.1", "NP_000509.1", "NP_000550.2",
+                "NP_000175.1", "NP_000468.1", "NP_068657.1", "NP_000499.1",
+                "NP_003117.2", "NP_001342365.1")
+
+# Select entries that match one of the blood proteins
+idx <- featureNames(oca.set) %in% blood_prot # indexing matches
+blood_contam <- colMeans(exprs(oca.set)[idx, ], na.rm = TRUE)
+```
+
+We can visualize the blood contamination with any of the previously shown methods for visualizing number of protein identifications. We will use a density plot.
+
+```{r}
+# Pipe vector to densityPlot
+blood_contam %>% 
+  densityPlot(x = ., xlim = range(.), main = "Blood Contamination",
+              xlab = "Average Protein Abundance")
+```
+
+
+
 <!---
+## Estimate Blood Contamination
+
+
 TODO:
 * What are the major blood proteins?
 
 * Hemoglobin alpha, beta, delta, gamma 1; fibrinogen alpha, beta, gamma; albumin, spectrin, 
---->
+
+Sometimes, it may be of interest to check for blood contamination.
 
 ```{r blood_contam, eval = FALSE}
 # NOTE: eval set to FALSE
-blood_proteins <- "HBA_HUMAN HBB_HUMAN HBD_HUMAN HBG1_HUMAN FIBA_HUMAN
-FIBB_HUMAN FIBG_HUMAN SPTB1_HUMAN THRB_HUMAN ALBU_HUMAN A1AG1_HUMAN
-A1AG2_HUMAN CAH1_HUMAN GLPA_HUMAN GLPB_HUMAN GLPC_HUMAN"
-
-blood_proteins <- gsub("\\s|\\n", "\\|", blood_proteins)
+blood_proteins <- c("HBA_HUMAN HBB_HUMAN HBD_HUMAN HBG1_HUMAN FIBA_HUMAN
+FIBB_HUMAN FIBG_HUMAN SPTB1_HUMAN THRB_HUMAN ALBU_HUMAN A1AG1_HUMAN A1AG2_HUMAN CAH1_HUMAN GLPA_HUMAN GLPB_HUMAN GLPC_HUMAN") %>% 
+gsub("\\s|\\n", "\\|", .)
 
 m1$blood_contamination <-
-  apply(exprs(m1)[grepl(blood_proteins, featureNames(m1)), ],
-        2, mean, na.rm = TRUE)
+apply(exprs(m1)[grepl(blood_proteins, featureNames(m1)), ],
+2, mean, na.rm = TRUE)
 ```
 
+--->
 
 ## PCA
 
-### Overview
+Principal Component Analysis (PCA) is an unsupervised dimensionality reduction technique. It is useful for visualizing high-dimensional data in a lower-dimensional (usually 2D) space while retaining as much information from the original data as possible. It does this by creating linear combinations of features called principal components in such a way that that the first principal component (PC1) explains the most variation in the original data, PC2 explains the second most, and so on. Typically, we create scatterplots of PC1 vs PC2 to visualize relationships between samples with the `plot_pca` function from the MSnSet.utils package.
 
-This is the overview for PCA.
+PCA plots are used to check for batch effects and sample differences due to variables of interest. If samples appear to separate by group or according to a continuous variable and the first two principal components explain a decent percentage of the variance in the original data, then we are fairly confident that the predictor affected the data in some way or is at least correlated to something that did.
 
-### PCA Plots
+Note that while there are PCA methods that allow some degree of missing data (see `pcaMethods::pca` for details), `plot_pca` makes use of the `prcomp` function, which does not. We do not need to filter data prior to running `plot_pca`, as it handles that and prints a message to tell us how many complete rows remained. If there are very few complete features, PCA will still work, but the results may not be very meaningful. In this case, it may be a good idea to impute missing values.
 
-```{r pca_plot_base}
+We will begin with the base plot. The axis titles show how much variance in the original data is explained by each component. This is built with the ggplot2 package, so it can be customized with other functions in the package.
+
+```{r pca-plot-1, message=FALSE}
 # Default plot
-plot_pca_v3(oca.set, phenotype = "SUBTYPE")
+plot_pca(oca.set)
 ```
 
+Of the total `r nrow(oca.set)` features, 4738 were present in all `r ncol(oca.set)` samples and used for PCA. Also notice that PC1 and PC2 explain less than 1/5 of the variance in the original data.
 
-```{r pca-plot-pretty, fig.cap="This is the figure caption"}
-# New legend title
-legend.title <- "Subtype"
+Now, we will color points according to their "SUBTYPE" group label and add a 50% Normal confidence ellipse for each group. We could remove the ellipse by setting `show_ellipse` to `FALSE`. We will also change the legend title to "Subtype".
 
-plot_pca_v3(oca.set, phenotype = "SUBTYPE") +
-  # Change the titles of the point color and ellipse fill legends
-  guides(color = guide_legend(title = legend.title),
-         # Do not include this line if show.ellipse = FALSE
-         fill = guide_legend(title = legend.title)) +
-  # Change base text size. theme_set() does not work here
-  theme_bw(base_size = 14)
+```{r pca-plot-2}
+# Points colored by SUBTYPE
+plot_pca(oca.set, phenotype = "SUBTYPE", legend_title = "Subtype")
 ```
 
-I am referencing Figure \@ref(fig:pca-plot-pretty).
+It looks like samples slightly separate by SUBTYPE, and there may be features that are statistically different between the Proliferative and Mesenchymal groups. Something to keep in mind when performing differential analysis. Now, we will check for potential batch effects by coloring points by their "Batch" group.
 
-### List Top-Contributing Features
-
-In MSnSet.utils, there is a function that allows us to determine which features contribute the most to each principal component. This is the main part of the code to do this.
-
-```{r, eval=FALSE}
-# V is the matrix of eigenvectors that have been scaled to unit vectors.
-cutoff <- sqrt(1 / nrow(V))
-
-res <- apply(V, 2, function(w) {
-    # Subset to values at least equal to the cutoff in magnitude
-    x <- w[which(abs(w) >= cutoff)]
-    # Order this subset by magnitude
-    x[order(abs(x), decreasing = TRUE)]
-  })
+```{r plot-pca-3}
+# Points colored by Batch
+plot_pca(oca.set, phenotype = "Batch")
 ```
+
+For the most part, it seems like all of the batches overlap and are somewhat centered on the origin (aside from batch X17). It is difficult to determine if there is a batch effect, so it may be a good idea to correct for it anyway. This is covered in a different section.
+
+We can also use this function to identify the most influential features in PCA space with the `biplot` argument.
+
+```{r plot-pca-4}
+plot_pca(oca.set, phenotype = "SUBTYPE", biplot = TRUE, 
+         label_args = list(color = "black"))
+```
+
+From the biplot, we can see that proteins that begin with "NP_9976" are major drivers in the separation of the Mesenchymal and Proliferative samples. Similarly, we can see that there are a few blood proteins (hemoglobin subunits: NP000549.1 and NP_000550.2) that are major drivers of separation along PC2, though PC2 only explains about 6% of the variance in the original data. See `?plot_pca` for more customization options.
 
 
 <!-- ## UMAP -->

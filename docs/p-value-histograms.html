@@ -4,36 +4,36 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>4.2 p-value Histograms | Proteomics Data Analysis in R/Bioconductor</title>
-  <meta name="description" content="This is a comprehensive tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
+  <title>5.4 p-value Histograms | Proteomics Data Analysis in R/Bioconductor</title>
+  <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="4.2 p-value Histograms | Proteomics Data Analysis in R/Bioconductor" />
+  <meta property="og:title" content="5.4 p-value Histograms | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This is a comprehensive tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
+  <meta property="og:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="4.2 p-value Histograms | Proteomics Data Analysis in R/Bioconductor" />
+  <meta name="twitter:title" content="5.4 p-value Histograms | Proteomics Data Analysis in R/Bioconductor" />
   
-  <meta name="twitter:description" content="This is a comprehensive tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
+  <meta name="twitter:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
 
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2021-10-17" />
+<meta name="date" content="2022-01-04" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="dea-with-limma.html"/>
+<link rel="prev" href="t-tests.html"/>
 <link rel="next" href="volcano-plots.html"/>
-<script src="libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -162,126 +162,126 @@ div.csl-indent {
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome!</a></li>
-<li class="chapter" data-level="1" data-path="miscellaneous-resources.html"><a href="miscellaneous-resources.html"><i class="fa fa-check"></i><b>1</b> Miscellaneous Resources</a></li>
-<li class="chapter" data-level="2" data-path="isobaric-quantification-pipelines.html"><a href="isobaric-quantification-pipelines.html"><i class="fa fa-check"></i><b>2</b> Isobaric Quantification Pipelines</a>
+<li class="chapter" data-level="1" data-path="isobaric-quantification-pipelines.html"><a href="isobaric-quantification-pipelines.html"><i class="fa fa-check"></i><b>1</b> Isobaric Quantification Pipelines</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html"><i class="fa fa-check"></i><b>2.1</b> Global Proteomics Data</a>
+<li class="chapter" data-level="1.1" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html"><i class="fa fa-check"></i><b>1.1</b> Global Proteomics Data</a>
 <ul>
-<li class="chapter" data-level="2.1.1" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#prepare-MS2-IDs-global"><i class="fa fa-check"></i><b>2.1.1</b> Prepare MS/MS Identifications</a>
-<ul>
-<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#read-ms-gf-data"><i class="fa fa-check"></i>Read MS-GF+ Data</a></li>
-<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#correct-isotope-selection-error"><i class="fa fa-check"></i>Correct Isotope Selection Error</a></li>
-<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#remove-contaminants"><i class="fa fa-check"></i>Remove Contaminants</a></li>
-<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#msms-id-filter-peptide-level"><i class="fa fa-check"></i>MS/MS ID Filter: Peptide Level</a></li>
-<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#msms-id-filter-protein-level"><i class="fa fa-check"></i>MS/MS ID Filter: Protein Level</a></li>
-<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#inference-of-parsimonious-protein-set"><i class="fa fa-check"></i>Inference of Parsimonious Protein Set</a></li>
+<li class="chapter" data-level="1.1.1" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#read-ms-gf-data"><i class="fa fa-check"></i><b>1.1.1</b> Read MS-GF+ Data</a></li>
+<li class="chapter" data-level="1.1.2" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#correct-isotope-selection-error"><i class="fa fa-check"></i><b>1.1.2</b> Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="1.1.3" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#remove-contaminants"><i class="fa fa-check"></i><b>1.1.3</b> Remove Contaminants</a></li>
+<li class="chapter" data-level="1.1.4" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#global-peptide-filter"><i class="fa fa-check"></i><b>1.1.4</b> MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="1.1.5" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#msms-id-filter-protein-level"><i class="fa fa-check"></i><b>1.1.5</b> MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="1.1.6" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#inference-of-parsimonious-protein-set"><i class="fa fa-check"></i><b>1.1.6</b> Inference of Parsimonious Protein Set</a></li>
+<li class="chapter" data-level="1.1.7" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#remove-decoy-psms"><i class="fa fa-check"></i><b>1.1.7</b> Remove Decoy PSMs</a></li>
+<li class="chapter" data-level="1.1.8" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#read-masic-output"><i class="fa fa-check"></i><b>1.1.8</b> Read MASIC Output</a></li>
+<li class="chapter" data-level="1.1.9" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#filter-masic-data"><i class="fa fa-check"></i><b>1.1.9</b> Filter MASIC Data</a></li>
+<li class="chapter" data-level="1.1.10" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#fetch-study-design-tables"><i class="fa fa-check"></i><b>1.1.10</b> Create Study Design Tables</a></li>
+<li class="chapter" data-level="1.1.11" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#fractions"><i class="fa fa-check"></i><b>1.1.11</b> Fractions</a></li>
+<li class="chapter" data-level="1.1.12" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#samples"><i class="fa fa-check"></i><b>1.1.12</b> Samples</a></li>
+<li class="chapter" data-level="1.1.13" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#references"><i class="fa fa-check"></i><b>1.1.13</b> References</a></li>
+<li class="chapter" data-level="1.1.14" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#global-quant-crosstab"><i class="fa fa-check"></i><b>1.1.14</b> Create Quantitative Cross-tab</a></li>
+<li class="chapter" data-level="1.1.15" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#create-msnset-object"><i class="fa fa-check"></i><b>1.1.15</b> Create MSnSet Object</a></li>
 </ul></li>
-<li class="chapter" data-level="2.1.2" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#reporter-ion-intensities"><i class="fa fa-check"></i><b>2.1.2</b> Prepare Reporter Ion Intensities</a>
+<li class="chapter" data-level="1.2" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html"><i class="fa fa-check"></i><b>1.2</b> Phosphoproteomics Data</a>
 <ul>
-<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#read-masic-output"><i class="fa fa-check"></i>Read MASIC Output</a></li>
-<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#filter-masic-data"><i class="fa fa-check"></i>Filter MASIC Data</a></li>
-</ul></li>
-<li class="chapter" data-level="2.1.3" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#fetch-study-design-tables"><i class="fa fa-check"></i><b>2.1.3</b> Create Study Design Tables</a>
-<ul>
-<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#fractions"><i class="fa fa-check"></i>Fractions</a></li>
-<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#samples"><i class="fa fa-check"></i>Samples</a></li>
-<li class="chapter" data-level="" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#references"><i class="fa fa-check"></i>References</a></li>
-</ul></li>
-<li class="chapter" data-level="2.1.4" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#global-quant-crosstab"><i class="fa fa-check"></i><b>2.1.4</b> Create Quantitative Cross-tab</a></li>
-</ul></li>
-<li class="chapter" data-level="2.2" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html"><i class="fa fa-check"></i><b>2.2</b> Phosphoproteomics Data</a>
-<ul>
-<li class="chapter" data-level="2.2.1" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#prepare-MS2-IDs-phospho"><i class="fa fa-check"></i><b>2.2.1</b> Prepare MS/MS Identifications</a>
-<ul>
-<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#read-ms-gf-output"><i class="fa fa-check"></i>Read MS-GF+ Output</a></li>
-<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-non-phosphorylated-peptides"><i class="fa fa-check"></i>Remove Non-Phosphorylated Peptides</a></li>
-<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#correct-isotope-selection-error-1"><i class="fa fa-check"></i>Correct Isotope Selection Error</a></li>
-<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-contaminants-1"><i class="fa fa-check"></i>Remove Contaminants</a></li>
-<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#ascore"><i class="fa fa-check"></i>AScore</a></li>
-<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#msms-id-filter-peptide-level-1"><i class="fa fa-check"></i>MS/MS ID Filter: Peptide Level</a></li>
-<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#msms-id-filter-protein-level-1"><i class="fa fa-check"></i>MS/MS ID Filter: Protein Level</a></li>
-<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#inference-of-parsimonious-protein-set-1"><i class="fa fa-check"></i>Inference of Parsimonious Protein Set</a></li>
-<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#map-sites-to-protein-sequences"><i class="fa fa-check"></i>Map Sites to Protein Sequences</a></li>
-</ul></li>
-<li class="chapter" data-level="2.2.2" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#phospho-reporter-ion-intensities"><i class="fa fa-check"></i><b>2.2.2</b> Prepare Reporter Ion Intensities</a>
-<ul>
-<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#read-masic-output-1"><i class="fa fa-check"></i>Read MASIC Output</a></li>
-<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#filter-masic-data-1"><i class="fa fa-check"></i>Filter MASIC Data</a></li>
-</ul></li>
-<li class="chapter" data-level="2.2.3" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#create-study-design-tables"><i class="fa fa-check"></i><b>2.2.3</b> Create Study Design Tables</a>
-<ul>
-<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#fractions-1"><i class="fa fa-check"></i>Fractions</a></li>
-<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#samples-1"><i class="fa fa-check"></i>Samples</a></li>
-<li class="chapter" data-level="" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#references-1"><i class="fa fa-check"></i>References</a></li>
-</ul></li>
-<li class="chapter" data-level="2.2.4" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#phospho-create-crosstab"><i class="fa fa-check"></i><b>2.2.4</b> Create Quantitative Cross-tab</a></li>
+<li class="chapter" data-level="1.2.1" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#read-ms-gf-output"><i class="fa fa-check"></i><b>1.2.1</b> Read MS-GF+ Output</a></li>
+<li class="chapter" data-level="1.2.2" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#correct-isotope-selection-error-1"><i class="fa fa-check"></i><b>1.2.2</b> Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="1.2.3" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-non-phosphorylated-peptides"><i class="fa fa-check"></i><b>1.2.3</b> Remove Non-Phosphorylated Peptides</a></li>
+<li class="chapter" data-level="1.2.4" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-contaminants-1"><i class="fa fa-check"></i><b>1.2.4</b> Remove Contaminants</a></li>
+<li class="chapter" data-level="1.2.5" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#improve-phosphosite-localization"><i class="fa fa-check"></i><b>1.2.5</b> Improve Phosphosite Localization</a></li>
+<li class="chapter" data-level="1.2.6" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#msms-id-filter-peptide-level"><i class="fa fa-check"></i><b>1.2.6</b> MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="1.2.7" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#msms-id-filter-protein-level-1"><i class="fa fa-check"></i><b>1.2.7</b> MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="1.2.8" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#inference-of-parsimonious-protein-set-1"><i class="fa fa-check"></i><b>1.2.8</b> Inference of Parsimonious Protein Set</a></li>
+<li class="chapter" data-level="1.2.9" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-decoy-psms-1"><i class="fa fa-check"></i><b>1.2.9</b> Remove Decoy PSMs</a></li>
+<li class="chapter" data-level="1.2.10" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#map-sites-to-protein-sequences"><i class="fa fa-check"></i><b>1.2.10</b> Map Sites to Protein Sequences</a></li>
+<li class="chapter" data-level="1.2.11" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#read-masic-output-1"><i class="fa fa-check"></i><b>1.2.11</b> Read MASIC Output</a></li>
+<li class="chapter" data-level="1.2.12" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#filter-masic-data-1"><i class="fa fa-check"></i><b>1.2.12</b> Filter MASIC Data</a></li>
+<li class="chapter" data-level="1.2.13" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#create-study-design-tables"><i class="fa fa-check"></i><b>1.2.13</b> Create Study Design Tables</a></li>
+<li class="chapter" data-level="1.2.14" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#phospho-create-crosstab"><i class="fa fa-check"></i><b>1.2.14</b> Create Quantitative Cross-tab</a></li>
 </ul></li>
 </ul></li>
+<li class="chapter" data-level="2" data-path="label-free-quantification.html"><a href="label-free-quantification.html"><i class="fa fa-check"></i><b>2</b> Label-Free Quantification</a></li>
 <li class="chapter" data-level="3" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>3</b> Exploratory Data Analysis</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>3.1</b> Count Features in Samples</a>
-<ul>
-<li class="chapter" data-level="3.1.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html#lollipop-plot"><i class="fa fa-check"></i><b>3.1.1</b> Lollipop Plot</a></li>
-<li class="chapter" data-level="3.1.2" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html#boxplot"><i class="fa fa-check"></i><b>3.1.2</b> Boxplot</a></li>
-<li class="chapter" data-level="3.1.3" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html#density-plot"><i class="fa fa-check"></i><b>3.1.3</b> Density Plot</a></li>
-</ul></li>
+<li class="chapter" data-level="3.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>3.1</b> Count Features in Samples</a></li>
 <li class="chapter" data-level="3.2" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>3.2</b> Estimate Blood Contamination</a></li>
-<li class="chapter" data-level="3.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>3.3</b> PCA</a>
+<li class="chapter" data-level="3.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>3.3</b> PCA</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>4</b> Heatmaps</a>
 <ul>
-<li class="chapter" data-level="3.3.1" data-path="pca.html"><a href="pca.html#overview"><i class="fa fa-check"></i><b>3.3.1</b> Overview</a></li>
-<li class="chapter" data-level="3.3.2" data-path="pca.html"><a href="pca.html#pca-plots"><i class="fa fa-check"></i><b>3.3.2</b> PCA Plots</a></li>
-<li class="chapter" data-level="3.3.3" data-path="pca.html"><a href="pca.html#list-top-contributing-features"><i class="fa fa-check"></i><b>3.3.3</b> List Top-Contributing Features</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="4" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>4</b> Differential Expression Analysis</a>
+<li class="chapter" data-level="4.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>4.1</b> Expression Heatmaps</a></li>
+<li class="chapter" data-level="4.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>4.2</b> Correlation Heatmaps</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="dea-with-limma.html"><a href="dea-with-limma.html"><i class="fa fa-check"></i><b>4.1</b> DEA with limma</a>
+<li class="chapter" data-level="4.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>4.2.1</b> Sample Correlation</a></li>
+<li class="chapter" data-level="4.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>4.2.2</b> Feature Correlation</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>4.3</b> Heatmap Annotation</a>
 <ul>
-<li class="chapter" data-level="4.1.1" data-path="dea-with-limma.html"><a href="dea-with-limma.html#dichotomous-predictors"><i class="fa fa-check"></i><b>4.1.1</b> Dichotomous Predictors</a></li>
-<li class="chapter" data-level="4.1.2" data-path="dea-with-limma.html"><a href="dea-with-limma.html#continuous-predictors"><i class="fa fa-check"></i><b>4.1.2</b> Continuous Predictors</a></li>
-<li class="chapter" data-level="4.1.3" data-path="dea-with-limma.html"><a href="dea-with-limma.html#reference-level-comparisons"><i class="fa fa-check"></i><b>4.1.3</b> Reference Level Comparisons</a></li>
-<li class="chapter" data-level="4.1.4" data-path="dea-with-limma.html"><a href="dea-with-limma.html#custom-contrasts"><i class="fa fa-check"></i><b>4.1.4</b> Custom Contrasts</a></li>
+<li class="chapter" data-level="4.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>4.3.1</b> Modifying Default Colors</a></li>
 </ul></li>
-<li class="chapter" data-level="4.2" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>4.2</b> p-value Histograms</a></li>
-<li class="chapter" data-level="4.3" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>4.3</b> Volcano Plots</a></li>
-</ul></li>
-<li class="chapter" data-level="5" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>5</b> Pathway Analysis</a>
+<li class="chapter" data-level="4.4" data-path="additional-modifications.html"><a href="additional-modifications.html"><i class="fa fa-check"></i><b>4.4</b> Additional Modifications</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>5.1</b> Annotation Databases</a>
+<li class="chapter" data-level="4.4.1" data-path="additional-modifications.html"><a href="additional-modifications.html#change-row-or-column-labels"><i class="fa fa-check"></i><b>4.4.1</b> Change row or column labels</a></li>
+<li class="chapter" data-level="4.4.2" data-path="additional-modifications.html"><a href="additional-modifications.html#change-label-colors"><i class="fa fa-check"></i><b>4.4.2</b> Change label colors</a></li>
+<li class="chapter" data-level="4.4.3" data-path="additional-modifications.html"><a href="additional-modifications.html#label-specific-features"><i class="fa fa-check"></i><b>4.4.3</b> Label specific features</a></li>
+<li class="chapter" data-level="4.4.4" data-path="additional-modifications.html"><a href="additional-modifications.html#change-heatmap-body-color"><i class="fa fa-check"></i><b>4.4.4</b> Change heatmap body color</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>5</b> Differential Analysis</a>
 <ul>
-<li class="chapter" data-level="5.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>5.1.1</b> Gene Ontology</a>
+<li class="chapter" data-level="5.1" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>5.1</b> Linear Regression</a></li>
+<li class="chapter" data-level="5.2" data-path="one-way-anova.html"><a href="one-way-anova.html"><i class="fa fa-check"></i><b>5.2</b> One-Way ANOVA</a></li>
+<li class="chapter" data-level="5.3" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>5.3</b> t-tests</a>
 <ul>
-<li class="chapter" data-level="" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i>Semantic Similarity</a></li>
-<li class="chapter" data-level="" data-path="annotation-databases.html"><a href="annotation-databases.html#go-subsetsslims"><i class="fa fa-check"></i>GO Subsets/Slims</a></li>
+<li class="chapter" data-level="5.3.1" data-path="t-tests.html"><a href="t-tests.html#one-comparison"><i class="fa fa-check"></i><b>5.3.1</b> One Comparison</a></li>
+<li class="chapter" data-level="5.3.2" data-path="t-tests.html"><a href="t-tests.html#multiple-comparisons"><i class="fa fa-check"></i><b>5.3.2</b> Multiple Comparisons</a></li>
 </ul></li>
-<li class="chapter" data-level="5.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>5.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="5.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>5.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="5.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>5.1.4</b> Pfam</a></li>
+<li class="chapter" data-level="5.4" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>5.4</b> p-value Histograms</a></li>
+<li class="chapter" data-level="5.5" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>5.5</b> Volcano Plots</a></li>
 </ul></li>
-<li class="chapter" data-level="5.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>5.2</b> Over-Representation Analysis</a>
+<li class="chapter" data-level="6" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>6</b> Pathway Analysis</a>
 <ul>
-<li class="chapter" data-level="5.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>5.2.1</b> Overview</a></li>
-<li class="chapter" data-level="5.2.2" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>5.2.2</b> Examples</a>
+<li class="chapter" data-level="6.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>6.1</b> Annotation Databases</a>
 <ul>
-<li class="chapter" data-level="" data-path="ora.html"><a href="ora.html#gene-ontology-1"><i class="fa fa-check"></i>Gene Ontology</a></li>
-<li class="chapter" data-level="" data-path="ora.html"><a href="ora.html#reactome-1"><i class="fa fa-check"></i>Reactome</a></li>
-<li class="chapter" data-level="" data-path="ora.html"><a href="ora.html#pfam-1"><i class="fa fa-check"></i>Pfam</a></li>
-</ul></li>
-<li class="chapter" data-level="5.2.3" data-path="ora.html"><a href="ora.html#considerations"><i class="fa fa-check"></i><b>5.2.3</b> Considerations</a></li>
-</ul></li>
-<li class="chapter" data-level="5.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>5.3</b> Gene Set Enrichment Analysis</a>
+<li class="chapter" data-level="6.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>6.1.1</b> Gene Ontology</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>5.3.1</b> Overview</a></li>
-<li class="chapter" data-level="5.3.2" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>5.3.2</b> Examples</a>
+<li class="chapter" data-level="6.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>6.1.1.1</b> Semantic Similarity</a></li>
+<li class="chapter" data-level="6.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>6.1.1.2</b> GO Subsets/Slims</a></li>
+</ul></li>
+<li class="chapter" data-level="6.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>6.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="6.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>6.1.3</b> KEGG</a></li>
+<li class="chapter" data-level="6.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>6.1.4</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>6.2</b> Over-Representation Analysis</a>
 <ul>
-<li class="chapter" data-level="5.3.2.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-2"><i class="fa fa-check"></i><b>5.3.2.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="5.3.2.2" data-path="gsea.html"><a href="gsea.html#reactome-2"><i class="fa fa-check"></i><b>5.3.2.2</b> Reactome</a></li>
-<li class="chapter" data-level="5.3.2.3" data-path="gsea.html"><a href="gsea.html#pfam-2"><i class="fa fa-check"></i><b>5.3.2.3</b> Pfam</a></li>
+<li class="chapter" data-level="6.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>6.2.1</b> Overview</a>
+<ul>
+<li class="chapter" data-level="" data-path="ora.html"><a href="ora.html#important-considerations"><i class="fa fa-check"></i>Important Considerations</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3.3" data-path="gsea.html"><a href="gsea.html#considerations-1"><i class="fa fa-check"></i><b>5.3.3</b> Considerations</a></li>
+<li class="chapter" data-level="6.2.2" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>6.2.2</b> Examples</a>
+<ul>
+<li class="chapter" data-level="6.2.2.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>6.2.2.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="6.2.2.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>6.2.2.2</b> Reactome</a></li>
+<li class="chapter" data-level="6.2.2.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>6.2.2.3</b> Pfam</a></li>
+<li class="chapter" data-level="6.2.2.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>6.2.2.4</b> Other Databases</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="references-2.html"><a href="references-2.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="6.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>6.3</b> Gene Set Enrichment Analysis</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>6.3.1</b> Overview</a>
+<ul>
+<li class="chapter" data-level="" data-path="gsea.html"><a href="gsea.html#important-considerations-1"><i class="fa fa-check"></i>Important Considerations</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3.2" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>6.3.2</b> Examples</a>
+<ul>
+<li class="chapter" data-level="6.3.2.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>6.3.2.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="6.3.2.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>6.3.2.2</b> Reactome</a></li>
+<li class="chapter" data-level="6.3.2.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>6.3.2.3</b> Pfam</a></li>
+<li class="chapter" data-level="6.3.2.4" data-path="gsea.html"><a href="gsea.html#other-databases"><i class="fa fa-check"></i><b>6.3.2.4</b> Other Databases</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references-1.html"><a href="references-1.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -299,27 +299,35 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="p-value-histograms" class="section level2" number="4.2">
-<h2><span class="header-section-number">4.2</span> p-value Histograms</h2>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="p-value-histograms.html#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(res1<span class="sc">$</span>P.Value, </span>
-<span id="cb77-2"><a href="p-value-histograms.html#cb77-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.05</span>), </span>
-<span id="cb77-3"><a href="p-value-histograms.html#cb77-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Histogram of Case vs Control p-values&quot;</span>, </span>
-<span id="cb77-4"><a href="p-value-histograms.html#cb77-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;p-value&quot;</span>)</span></code></pre></div>
-<p><img src="DEA_files/figure-html/unnamed-chunk-2-1.png" width="75%" style="display: block; margin: auto;" /></p>
-<p>The histogram is fairly uniform, which means that only a few of the features are likely to be significant after adjustment.</p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="p-value-histograms.html#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(res1<span class="sc">$</span>adj.P.Val, </span>
-<span id="cb78-2"><a href="p-value-histograms.html#cb78-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.05</span>), </span>
-<span id="cb78-3"><a href="p-value-histograms.html#cb78-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Histogram of Case vs Control Adjusted p-values&quot;</span>, </span>
-<span id="cb78-4"><a href="p-value-histograms.html#cb78-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;BH-adjusted p-value&quot;</span>)</span></code></pre></div>
-<p><img src="DEA_files/figure-html/unnamed-chunk-3-1.png" width="75%" style="display: block; margin: auto;" /></p>
-<p>After adjustment, only 2 proteins are significantly-different between the case and control groups.</p>
+<div id="p-value-histograms" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> p-value Histograms</h2>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="p-value-histograms.html#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(res3<span class="sc">$</span>P.Value, </span>
+<span id="cb117-2"><a href="p-value-histograms.html#cb117-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.05</span>), </span>
+<span id="cb117-3"><a href="p-value-histograms.html#cb117-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Histogram of PLATINUM.STATUS ANOVA Results&quot;</span>, </span>
+<span id="cb117-4"><a href="p-value-histograms.html#cb117-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;p-value&quot;</span>)</span></code></pre></div>
+<p><img src="DEA_files/figure-html/unnamed-chunk-7-1.png" width="75%" style="display: block; margin: auto;" /></p>
+<p>The histogram is uniform, which means it is unlikely that any features will be significantly different between any two <code>PLATINUM.STATUS</code> groups after adjustment for multiple comparisons. Indeed, when we check with <code>table(res3$adj.P.Val &lt; 0.05)</code>, none of the features pass the significance threshold after Benjamini-Hochberg (BH) adjustment.</p>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="p-value-histograms.html#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogram faceted by contrast</span></span>
+<span id="cb118-2"><a href="p-value-histograms.html#cb118-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(res4) <span class="sc">+</span></span>
+<span id="cb118-3"><a href="p-value-histograms.html#cb118-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> P.Value), <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.05</span>),</span>
+<span id="cb118-4"><a href="p-value-histograms.html#cb118-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;grey&quot;</span>) <span class="sc">+</span></span>
+<span id="cb118-5"><a href="p-value-histograms.html#cb118-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(contrast)) <span class="sc">+</span></span>
+<span id="cb118-6"><a href="p-value-histograms.html#cb118-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_bw</span>()</span></code></pre></div>
+<p><img src="DEA_files/figure-html/unnamed-chunk-8-1.png" width="75%" style="display: block; margin: auto;" /></p>
+<p>Based on the unadjusted p-values, it appears that there are more features that are significantly different between the Proliferative vs. Immunoreactive comparison than the other two comparisons. We can create a table of the number of features with adjusted p-values less than 0.05 in each comparison with the <code>table</code> function.</p>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="p-value-histograms.html#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(res4<span class="sc">$</span>contrast, res4<span class="sc">$</span>adj.P.Val <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span></code></pre></div>
+<pre><code>##                                
+##                                 FALSE TRUE
+##   Differentiated-Immunoreactive  8056   47
+##   Mesenchymal-Immunoreactive     7912  191
+##   Proliferative-Immunoreactive   7855  248</code></pre>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="dea-with-limma.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="t-tests.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 <a href="volcano-plots.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
