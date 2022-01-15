@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>1.1 Prepare MS/MS Identifications | Proteomics Data Analysis in R/Bioconductor</title>
+  <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="1.1 Prepare MS/MS Identifications | Proteomics Data Analysis in R/Bioconductor" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="1.1 Prepare MS/MS Identifications | Proteomics Data Analysis in R/Bioconductor" />
+  
+  <meta name="twitter:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
+  
+
+<meta name="author" content="Tyler Sagendorf" />
+
+
+<meta name="date" content="2022-01-14" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="iso-global.html"/>
+<link rel="next" href="prepare-reporter-ion-intensities.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href=".">Proteomics Data Analysis in R/Bioconductor</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome!</a></li>
+<li class="chapter" data-level="1" data-path="iso-global.html"><a href="iso-global.html"><i class="fa fa-check"></i><b>1</b> Isobaric Quantification: Proteomics</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html"><i class="fa fa-check"></i><b>1.1</b> Prepare MS/MS Identifications</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#read-ms-gf-data"><i class="fa fa-check"></i><b>1.1.1</b> Read MS-GF+ Data</a></li>
+<li class="chapter" data-level="1.1.2" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#correct-isotope-selection-error"><i class="fa fa-check"></i><b>1.1.2</b> Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="1.1.3" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#remove-contaminants"><i class="fa fa-check"></i><b>1.1.3</b> Remove Contaminants</a></li>
+<li class="chapter" data-level="1.1.4" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#global-peptide-filter"><i class="fa fa-check"></i><b>1.1.4</b> MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="1.1.5" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#msms-id-filter-protein-level"><i class="fa fa-check"></i><b>1.1.5</b> MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="1.1.6" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#inference-of-parsimonious-protein-set"><i class="fa fa-check"></i><b>1.1.6</b> Inference of Parsimonious Protein Set</a></li>
+<li class="chapter" data-level="1.1.7" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#remove-decoy-psms"><i class="fa fa-check"></i><b>1.1.7</b> Remove Decoy PSMs</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html"><i class="fa fa-check"></i><b>1.2</b> Prepare Reporter Ion Intensities</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html#read-masic-output"><i class="fa fa-check"></i><b>1.2.1</b> Read MASIC Output</a></li>
+<li class="chapter" data-level="1.2.2" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html#filter-masic-data"><i class="fa fa-check"></i><b>1.2.2</b> Filter MASIC Data</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html"><i class="fa fa-check"></i><b>1.3</b> Create Study Design Tables</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#fractions"><i class="fa fa-check"></i><b>1.3.1</b> Fractions</a></li>
+<li class="chapter" data-level="1.3.2" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#samples"><i class="fa fa-check"></i><b>1.3.2</b> Samples</a></li>
+<li class="chapter" data-level="1.3.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#references"><i class="fa fa-check"></i><b>1.3.3</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="global-quant-crosstab.html"><a href="global-quant-crosstab.html"><i class="fa fa-check"></i><b>1.4</b> Create Quantitative Cross-tab</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="iso-phospho.html"><a href="iso-phospho.html"><i class="fa fa-check"></i><b>2</b> Isobaric Quantification: Phosphoproteomics</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html"><i class="fa fa-check"></i><b>2.1</b> Prepare MS/MS Identifications</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#read-ms-gf-data-1"><i class="fa fa-check"></i><b>2.1.1</b> Read MS-GF+ Data</a></li>
+<li class="chapter" data-level="2.1.2" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#correct-isotope-selection-error-1"><i class="fa fa-check"></i><b>2.1.2</b> Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="2.1.3" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-unmodified-peptides"><i class="fa fa-check"></i><b>2.1.3</b> Remove Unmodified Peptides</a></li>
+<li class="chapter" data-level="2.1.4" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-contaminants-1"><i class="fa fa-check"></i><b>2.1.4</b> Remove Contaminants</a></li>
+<li class="chapter" data-level="2.1.5" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#improve-phosphosite-localization"><i class="fa fa-check"></i><b>2.1.5</b> Improve Phosphosite Localization</a></li>
+<li class="chapter" data-level="2.1.6" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#msms-id-filter-peptide-level"><i class="fa fa-check"></i><b>2.1.6</b> MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="2.1.7" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#msms-id-filter-protein-level-1"><i class="fa fa-check"></i><b>2.1.7</b> MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="2.1.8" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#inference-of-parsimonious-protein-set-1"><i class="fa fa-check"></i><b>2.1.8</b> Inference of Parsimonious Protein Set</a></li>
+<li class="chapter" data-level="2.1.9" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#map-mod-sites"><i class="fa fa-check"></i><b>2.1.9</b> Map Sites to Protein Sequences</a></li>
+<li class="chapter" data-level="2.1.10" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-decoy-psms-1"><i class="fa fa-check"></i><b>2.1.10</b> Remove Decoy PSMs</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html"><i class="fa fa-check"></i><b>2.2</b> Prepare Reporter Ion Intensities</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html#read-masic-output-1"><i class="fa fa-check"></i><b>2.2.1</b> Read MASIC Output</a></li>
+<li class="chapter" data-level="2.2.2" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html#filter-masic-data-1"><i class="fa fa-check"></i><b>2.2.2</b> Filter MASIC Data</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="create-study-design-tables.html"><a href="create-study-design-tables.html"><i class="fa fa-check"></i><b>2.3</b> Create Study Design Tables</a></li>
+<li class="chapter" data-level="2.4" data-path="create-quantitative-cross-tab.html"><a href="create-quantitative-cross-tab.html"><i class="fa fa-check"></i><b>2.4</b> Create Quantitative Cross-tab</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="spectral-counting.html"><a href="spectral-counting.html"><i class="fa fa-check"></i><b>3</b> Spectral Counting</a></li>
+<li class="chapter" data-level="4" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>4</b> Exploratory Data Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>4.1</b> Count Features in Samples</a></li>
+<li class="chapter" data-level="4.2" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>4.2</b> Estimate Blood Contamination</a></li>
+<li class="chapter" data-level="4.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>4.3</b> PCA</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>5</b> Heatmaps</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>5.1</b> Expression Heatmaps</a></li>
+<li class="chapter" data-level="5.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>5.2</b> Correlation Heatmaps</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>5.2.1</b> Sample Correlation</a></li>
+<li class="chapter" data-level="5.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>5.2.2</b> Feature Correlation</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>5.3</b> Heatmap Annotation</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>5.3.1</b> Modifying Default Colors</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="modifications.html"><a href="modifications.html"><i class="fa fa-check"></i><b>5.4</b> Modifications</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="modifications.html"><a href="modifications.html#row-and-column-labels"><i class="fa fa-check"></i><b>5.4.1</b> Row and column labels</a></li>
+<li class="chapter" data-level="5.4.2" data-path="modifications.html"><a href="modifications.html#label-colors"><i class="fa fa-check"></i><b>5.4.2</b> Label colors</a></li>
+<li class="chapter" data-level="5.4.3" data-path="modifications.html"><a href="modifications.html#label-specific-features"><i class="fa fa-check"></i><b>5.4.3</b> Label specific features</a></li>
+<li class="chapter" data-level="5.4.4" data-path="modifications.html"><a href="modifications.html#heatmap-body-color"><i class="fa fa-check"></i><b>5.4.4</b> Heatmap body color</a></li>
+<li class="chapter" data-level="5.4.5" data-path="modifications.html"><a href="modifications.html#horizontal-heatmaps"><i class="fa fa-check"></i><b>5.4.5</b> Horizontal heatmaps</a></li>
+<li class="chapter" data-level="5.4.6" data-path="modifications.html"><a href="modifications.html#legends"><i class="fa fa-check"></i><b>5.4.6</b> Legends</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>6</b> Differential Expression Analysis</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="mult-comp.html"><a href="mult-comp.html"><i class="fa fa-check"></i><b>6.1</b> Multiple Comparisons</a></li>
+<li class="chapter" data-level="6.2" data-path="linear-reg.html"><a href="linear-reg.html"><i class="fa fa-check"></i><b>6.2</b> Linear Regression</a></li>
+<li class="chapter" data-level="6.3" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>6.3</b> Two-Sample t-tests</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="t-tests.html"><a href="t-tests.html#t-single"><i class="fa fa-check"></i><b>6.3.1</b> One comparison</a></li>
+<li class="chapter" data-level="6.3.2" data-path="t-tests.html"><a href="t-tests.html#t-mult"><i class="fa fa-check"></i><b>6.3.2</b> Multiple comparisons</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>6.4</b> One-Way ANOVA</a></li>
+<li class="chapter" data-level="6.5" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>6.5</b> p-value Histograms</a></li>
+<li class="chapter" data-level="6.6" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>6.6</b> Volcano Plots</a>
+<ul>
+<li class="chapter" data-level="6.6.1" data-path="volcano-plots.html"><a href="volcano-plots.html#base-plot"><i class="fa fa-check"></i><b>6.6.1</b> Base plot</a></li>
+<li class="chapter" data-level="6.6.2" data-path="volcano-plots.html"><a href="volcano-plots.html#label-top-features"><i class="fa fa-check"></i><b>6.6.2</b> Label top features</a></li>
+<li class="chapter" data-level="6.6.3" data-path="volcano-plots.html"><a href="volcano-plots.html#label-specific-features-1"><i class="fa fa-check"></i><b>6.6.3</b> Label specific features</a></li>
+<li class="chapter" data-level="6.6.4" data-path="volcano-plots.html"><a href="volcano-plots.html#modify-point-colors"><i class="fa fa-check"></i><b>6.6.4</b> Modify point colors</a></li>
+<li class="chapter" data-level="6.6.5" data-path="volcano-plots.html"><a href="volcano-plots.html#multiple-volcano-plots"><i class="fa fa-check"></i><b>6.6.5</b> Multiple volcano plots</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>7</b> Pathway Analysis</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>7.1</b> Annotation Databases</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>7.1.1</b> Gene Ontology</a>
+<ul>
+<li class="chapter" data-level="7.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>7.1.1.1</b> Semantic Similarity</a></li>
+<li class="chapter" data-level="7.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>7.1.1.2</b> GO Subsets/Slims</a></li>
+</ul></li>
+<li class="chapter" data-level="7.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>7.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="7.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>7.1.3</b> KEGG</a></li>
+<li class="chapter" data-level="7.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>7.1.4</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>7.2</b> Over-Representation Analysis</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>7.2.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="7.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>7.2.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="7.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>7.2.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="7.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>7.2.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="7.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>7.2.1.4</b> Other Databases</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>7.3</b> Gene Set Enrichment Analysis</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>7.3.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="7.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>7.3.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="7.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>7.3.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="7.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>7.3.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="7.3.1.4" data-path="gsea.html"><a href="gsea.html#other-databases"><i class="fa fa-check"></i><b>7.3.1.4</b> Other Databases</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references-1.html"><a href="references-1.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Proteomics Data Analysis in R/Bioconductor</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="prepare-msms-identifications" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Prepare MS/MS Identifications</h2>
+<div id="read-ms-gf-data" class="section level3" number="1.1.1">
+<h3><span class="header-section-number">1.1.1</span> Read MS-GF+ Data</h3>
+<p>The first step in the preparation of the MS/MS identifications is to fetch the data. This can either be obtained from PNNL’s DMS or from a local folder. If working with the DMS, use <code>PNNL.DMS.utils::read_msgf_data_from_DMS</code>; otherwise, use <code>PlexedPiper::read_msgf_data</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="prepare-msms-identifications.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Get MS-GF+ results from local folder - not run</span></span>
+<span id="cb2-2"><a href="prepare-msms-identifications.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Get file path</span></span>
+<span id="cb2-3"><a href="prepare-msms-identifications.html#cb2-3" aria-hidden="true" tabindex="-1"></a>path_to_MSGF_results <span class="ot">&lt;-</span> <span class="st">&quot;path_to_msgf_results&quot;</span></span>
+<span id="cb2-4"><a href="prepare-msms-identifications.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Read MS-GF+ data from path</span></span>
+<span id="cb2-5"><a href="prepare-msms-identifications.html#cb2-5" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">read_msgf_data</span>(path_to_MSGF_results)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="prepare-msms-identifications.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Get MS-GF+ results from DMS</span></span>
+<span id="cb3-2"><a href="prepare-msms-identifications.html#cb3-2" aria-hidden="true" tabindex="-1"></a>data_package_num <span class="ot">&lt;-</span> <span class="dv">3442</span> <span class="co"># global proteomics</span></span>
+<span id="cb3-3"><a href="prepare-msms-identifications.html#cb3-3" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">read_msgf_data_from_DMS</span>(data_package_num) <span class="co"># global proteomics</span></span></code></pre></div>
+<p>Normally, this would display a progress bar in the console as the data is being fetched. However, the output was suppressed to save space. We can view a summary of the MSnID object with the <code>show()</code> function.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="prepare-msms-identifications.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  48 
+## #PSMs: 1156754 at 31 % FDR
+## #peptides: 511617 at 61 % FDR
+## #accessions: 128378 at 98 % FDR</code></pre>
+<p>This summary tells us that <code>msnid</code> consists of 4 spectrum files (datasets), and contains a total of 1,156,754 peptide-spectrum-matches (PSMs), 511,617 total peptides, and 128,378 total accessions (proteins). The reported FDR is the empirical <strong>false-discovery rate</strong>, which is calculated as the ratio of the number of unique decoy to unique non-decoy PSMs, peptides, or accessions.</p>
+</div>
+<div id="correct-isotope-selection-error" class="section level3" number="1.1.2">
+<h3><span class="header-section-number">1.1.2</span> Correct Isotope Selection Error</h3>
+<p>Carbon has two stable isotopes: <span class="math inline">\(^{12}\text{C}\)</span> and <span class="math inline">\(^{13}\text{C}\)</span>, with natural abundances of 98.93% and 1.07%, respectively. That is, we expect that about 1 out of every 100 carbon atoms is naturally going to be a <span class="math inline">\(^{13}\text{C}\)</span>, while the rest are <span class="math inline">\(^{12}\text{C}\)</span>. In larger peptides with many carbon atoms, it is more likely that at least one atom will be a <span class="math inline">\(^{13}\text{C}\)</span> than all atoms will be <span class="math inline">\(^{12}\text{C}\)</span>. In cases such as these, a non-monoisotopic ion will be selected by the instrument for fragmentation.</p>
+<div class="figure" style="text-align: center"><span id="fig:MS1-peak"></span>
+<img src="images/MS1_non_monoisotopic.PNG" alt="MS1 spectra with peak at non-monoisotopic precursor ion." width="75%" />
+<p class="caption">
+Figure 1.1: MS1 spectra with peak at non-monoisotopic precursor ion.
+</p>
+</div>
+<p>In Figure <a href="prepare-msms-identifications.html#fig:MS1-peak">1.1</a>, the monoisotopic ion (m/z of 1427.29) is not the most abundant, so it is not selected as the precursor. Instead, the ion with a <span class="math inline">\(^{13}\text{C}\)</span> in place of a <span class="math inline">\(^{12}\text{C}\)</span> is selected for fragmentation. We calculate the mass difference between these two ions as the difference between the mass-to-charge ratios multiplied by the ion charge. In this case, the mass difference is 1 Dalton, or about the difference between <span class="math inline">\(^{13}\text{C}\)</span> and <span class="math inline">\(^{12}\text{C}\)</span>. (More accurately, the difference between these isotopes is 1.0033548378 Da.) While MS-GF+ is still capable of correctly identifying these peptides, the downstream calculations of mass measurement error need to be fixed because they are used for filtering later on (Section <a href="prepare-msms-identifications.html#global-peptide-filter">1.1.4</a>). The <code>correct_peak_selection</code> function corrects these mass measurement errors, and Figure <a href="prepare-msms-identifications.html#fig:mass-to-charge-diff">1.2</a> shows the distribution of the absolute mass measurement errors (in PPM) before and after correction.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="prepare-msms-identifications.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correct for isotope selection error</span></span>
+<span id="cb6-2"><a href="prepare-msms-identifications.html#cb6-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">correct_peak_selection</span>(msnid)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:mass-to-charge-diff"></span>
+<img src="iso_quant_global_prot_files/figure-html/mass-to-charge-diff-1.png" alt="Histogram of mass measurement errors before and after correction." width="75%" />
+<p class="caption">
+Figure 1.2: Histogram of mass measurement errors before and after correction.
+</p>
+</div>
+</div>
+<div id="remove-contaminants" class="section level3" number="1.1.3">
+<h3><span class="header-section-number">1.1.3</span> Remove Contaminants</h3>
+<p>Now, we will remove contaminants such as the trypsin that was used for protein digestion. We can see which contaminants will be removed with <code>accessions(msnid)[grepl("Contaminant", accessions(msnid))]</code>. To remove contaminants, we use <code>apply_filter</code> with an appropriate string that tells the function what rows to keep. In this case, we keep rows where the accession does not contain “Contaminant.” We will use <code>show</code> to see how the counts change.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="prepare-msms-identifications.html#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove contaminants</span></span>
+<span id="cb7-2"><a href="prepare-msms-identifications.html#cb7-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">apply_filter</span>(msnid, <span class="st">&quot;!grepl(&#39;Contaminant&#39;, accession)&quot;</span>)</span>
+<span id="cb7-3"><a href="prepare-msms-identifications.html#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  48 
+## #PSMs: 1155442 at 31 % FDR
+## #peptides: 511196 at 61 % FDR
+## #accessions: 128353 at 98 % FDR</code></pre>
+<p>We can see that the number of PSMs decreased by about 1300, peptides by ~400, and proteins by 25.</p>
+</div>
+<div id="global-peptide-filter" class="section level3" number="1.1.4">
+<h3><span class="header-section-number">1.1.4</span> MS/MS ID Filter: Peptide Level</h3>
+<p>The next step is to filter the MS/MS identifications such that the empirical peptide-level FDR is less than some threshold and the number of identifications is maximized. We will use the <span class="math inline">\(-log_{10}\)</span> of the <code>PepQValue</code> column as one of our filtering criteria and assign it to a new column in <code>psms(msnid)</code> called <code>msmsScore</code>. The <code>PepQValue</code> column is the MS-GF+ Spectrum E-value, which reflects how well the theoretical and experimental fragmentation spectra match; therefore, high values of <code>msmsScore</code> indicate a good match (see Figure <a href="prepare-msms-identifications.html#fig:plot-msmsScore">1.3</a>).</p>
+<div class="figure" style="text-align: center"><span id="fig:plot-msmsScore"></span>
+<img src="iso_quant_global_prot_files/figure-html/plot-msmsScore-1.png" alt="Density plot of msmsScore." width="75%" />
+<p class="caption">
+Figure 1.3: Density plot of msmsScore.
+</p>
+</div>
+<p></br></p>
+<p>The other filtering criteria is the absolute deviation of the mass measurement error of the precursor ions in parts-per-million (ppm), which is assigned to the <code>absParentMassErrorPPM</code> column in <code>psms(msnid)</code> (see Figure <a href="prepare-msms-identifications.html#fig:plot-mass-error">1.4</a>).</p>
+<div class="figure" style="text-align: center"><span id="fig:plot-mass-error"></span>
+<img src="iso_quant_global_prot_files/figure-html/plot-mass-error-1.png" alt="Density plot of absParentMassErrorPPM." width="75%" />
+<p class="caption">
+Figure 1.4: Density plot of absParentMassErrorPPM.
+</p>
+</div>
+<p></br></p>
+<p>Now, we will filter the PSMs.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="prepare-msms-identifications.html#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1% FDR filter at the peptide level</span></span>
+<span id="cb9-2"><a href="prepare-msms-identifications.html#cb9-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">filter_msgf_data</span>(msnid, <span class="at">level =</span> <span class="st">&quot;peptide&quot;</span>, <span class="at">fdr.max =</span> <span class="fl">0.01</span>)</span>
+<span id="cb9-3"><a href="prepare-msms-identifications.html#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  48 
+## #PSMs: 464474 at 0.45 % FDR
+## #peptides: 96485 at 1 % FDR
+## #accessions: 27119 at 9.2 % FDR</code></pre>
+<p>We can see that filtering drastically reduces the number of PSMs, and the empirical peptide-level FDR is now 1%. However, notice that the empirical protein-level FDR is still fairly high.</p>
+</div>
+<div id="msms-id-filter-protein-level" class="section level3" number="1.1.5">
+<h3><span class="header-section-number">1.1.5</span> MS/MS ID Filter: Protein Level</h3>
+<p>Now, we need to filter proteins so that the FDR is at most 1%. For each protein, we divide the number of associated peptides by its length and multiply this value by 1000. This new <code>peptides_per_1000aa</code> column is used as the filter criteria (Figure <a href="prepare-msms-identifications.html#fig:plot-num-pep">1.6</a>).</p>
+<p>We will need the lengths of each protein, which can be obtained from the FASTA (pronounced FAST-AYE) file that contains the protein sequences used in the database search. The first three entries of the FASTA file are shown in Figure <a href="prepare-msms-identifications.html#fig:fasta-ex">1.5</a>.</p>
+<div class="figure" style="text-align: center"><span id="fig:fasta-ex"></span>
+<img src="images/FASTA_example_MoTrPAC.PNG" alt="First three entries of the FASTA file." width="75%" />
+<p class="caption">
+Figure 1.5: First three entries of the FASTA file.
+</p>
+</div>
+<p></br></p>
+<p>The path to the FASTA file can be specified as the path to a local folder or it can be obtained with <code>PNNL.DMS.utils::path_to_FASTA_used_by_DMS</code>. We will use the latter method.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="prepare-msms-identifications.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Get path to FASTA file from local folder - not run</span></span>
+<span id="cb11-2"><a href="prepare-msms-identifications.html#cb11-2" aria-hidden="true" tabindex="-1"></a>path_to_FASTA <span class="ot">&lt;-</span> <span class="st">&quot;path_to_FASTA_file&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="prepare-msms-identifications.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Get path to FASTA file from DMS</span></span>
+<span id="cb12-2"><a href="prepare-msms-identifications.html#cb12-2" aria-hidden="true" tabindex="-1"></a>path_to_FASTA <span class="ot">&lt;-</span> <span class="fu">path_to_FASTA_used_by_DMS</span>(data_package_num)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="prepare-msms-identifications.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute number of peptides per 1000 amino acids</span></span>
+<span id="cb13-2"><a href="prepare-msms-identifications.html#cb13-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">compute_num_peptides_per_1000aa</span>(msnid, path_to_FASTA)</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:plot-num-pep"></span>
+<img src="iso_quant_global_prot_files/figure-html/plot-num-pep-1.png" alt="Density plot of peptides_per_1000aa. The plot area has been zoomed in." width="75%" />
+<p class="caption">
+Figure 1.6: Density plot of peptides_per_1000aa. The plot area has been zoomed in.
+</p>
+</div>
+<p></br></p>
+<p>Now, we filter the proteins to 1% FDR.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="prepare-msms-identifications.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1% FDR filter at the protein level</span></span>
+<span id="cb14-2"><a href="prepare-msms-identifications.html#cb14-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">filter_msgf_data</span>(msnid, <span class="at">level =</span> <span class="st">&quot;accession&quot;</span>, <span class="at">fdr.max =</span> <span class="fl">0.01</span>)</span>
+<span id="cb14-3"><a href="prepare-msms-identifications.html#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  48 
+## #PSMs: 458090 at 0.16 % FDR
+## #peptides: 92036 at 0.32 % FDR
+## #accessions: 15631 at 1 % FDR</code></pre>
+</div>
+<div id="inference-of-parsimonious-protein-set" class="section level3" number="1.1.6">
+<h3><span class="header-section-number">1.1.6</span> Inference of Parsimonious Protein Set</h3>
+<p>The situation when a certain peptide sequence matches multiple proteins adds complication to the downstream quantitative analysis, as it is not clear which protein this peptide is originating from. There are common ways for dealing with this. One is to simply retain uniquely matching peptides and discard shared peptides (<code>unique_only = TRUE</code>). Alternatively, assign the shared peptides to the proteins with the larger number of uniquely mapping peptides (<code>unique_only = FALSE</code>). If there is a choice between multiple proteins with equal numbers of uniquely mapping peptides, the shared peptides are assigned to the first protein according to alphanumeric order (Figure <a href="prepare-msms-identifications.html#fig:parsimony">1.7</a>).</p>
+<!---
+This step could be done prior to filtering at the accession level, but if peptides are assigned to a low-confidence protein, and that protein is removed during filtering, those peptides will be lost. Instead, it is better to filter to the set of confidently-identified proteins and then determine the parsimonious set.
+--->
+<div class="figure" style="text-align: center"><span id="fig:parsimony"></span>
+<img src="images/parsimonious-protein-set-inference.PNG" alt="Visual explanation of the inference of the parsimonious protein set." width="75%" />
+<p class="caption">
+Figure 1.7: Visual explanation of the inference of the parsimonious protein set.
+</p>
+</div>
+<p></br></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="prepare-msms-identifications.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Inference of parsimonious protein set</span></span>
+<span id="cb16-2"><a href="prepare-msms-identifications.html#cb16-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">infer_parsimonious_accessions</span>(msnid, <span class="at">unique_only =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb16-3"><a href="prepare-msms-identifications.html#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  48 
+## #PSMs: 444999 at 0.15 % FDR
+## #peptides: 90478 at 0.27 % FDR
+## #accessions: 5251 at 1.1 % FDR</code></pre>
+<p>Notice that the protein-level FDR increased slightly above the 1% threshold. In this case, the difference isn’t significant, so we can ignore it.</p>
+<p><em>Note:</em> If the peptide or accession-level FDR increases significantly above 1% after inference of the parsimonious protein set, consider lowering the FDR cutoff (for example, to 0.9%) and redoing the previous processing steps. That is, start with the MSnID prior to any filtering and redo the FDR filtering steps.</p>
+</div>
+<div id="remove-decoy-psms" class="section level3" number="1.1.7">
+<h3><span class="header-section-number">1.1.7</span> Remove Decoy PSMs</h3>
+<p>The final step in preparing the MS/MS identifications is to remove the decoy PSMs, as they were only needed for the FDR filters. We use the <code>apply_filter</code> function again and only keep entries where <code>isDecoy</code> is <code>FALSE</code>.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="prepare-msms-identifications.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove Decoy PSMs</span></span>
+<span id="cb18-2"><a href="prepare-msms-identifications.html#cb18-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">apply_filter</span>(msnid, <span class="st">&quot;!isDecoy&quot;</span>)</span>
+<span id="cb18-3"><a href="prepare-msms-identifications.html#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<pre><code>## MSnID object
+## Working directory: &quot;.&quot;
+## #Spectrum Files:  48 
+## #PSMs: 444338 at 0 % FDR
+## #peptides: 90232 at 0 % FDR
+## #accessions: 5196 at 0 % FDR</code></pre>
+<p>After processing, we are left with 444,345 PSMs, 90,232 peptides, and 5,196 proteins. Table <a href="prepare-msms-identifications.html#tab:global-msnid-table">1.1</a> shows the first 6 rows of the processed MS-GF+ output.</p>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:90%; ">
+<table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:global-msnid-table">Table 1.1: </span><left>First 6 rows of the processed MS-GF+ results.</left>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Dataset
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+ResultID
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Scan
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+FragMethod
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+SpecIndex
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Charge
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PrecursorMZ
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+DelM
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+DelM_PPM
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+MH
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+peptide
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Protein
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+NTT
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+DeNovoScore
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+MSGFScore
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+MSGFDB_SpecEValue
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Rank_MSGFDB_SpecEValue
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+EValue
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+QValue
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+PepQValue
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+IsotopeError
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+accession
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+calculatedMassToCharge
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+chargeState
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+experimentalMassToCharge
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+isDecoy
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+spectrumFile
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+spectrumID
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+pepSeq
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+msmsScore
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+absParentMassErrorPPM
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+peptides_per_1000aa
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_07_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+1862
+</td>
+<td style="text-align:right;">
+27707
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+324
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+928.541
+</td>
+<td style="text-align:right;">
+-0.001
+</td>
+<td style="text-align:right;">
+-0.526
+</td>
+<td style="text-align:right;">
+1856.075
+</td>
+<td style="text-align:left;">
+R.AAAAAAAAAAAAAAGAAGK.E
+</td>
+<td style="text-align:left;">
+NP_113986.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+285
+</td>
+<td style="text-align:right;">
+282
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NP_113986.1
+</td>
+<td style="text-align:right;">
+928.541
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+928.541
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_07_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+27707
+</td>
+<td style="text-align:left;">
+AAAAAAAAAAAAAAGAAGK
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+0.589
+</td>
+<td style="text-align:right;">
+25.769
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_07_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+4192
+</td>
+<td style="text-align:right;">
+27684
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+906
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:right;">
+-0.002
+</td>
+<td style="text-align:right;">
+-0.887
+</td>
+<td style="text-align:right;">
+1856.075
+</td>
+<td style="text-align:left;">
+R.AAAAAAAAAAAAAAGAAGK.E
+</td>
+<td style="text-align:left;">
+NP_113986.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+156
+</td>
+<td style="text-align:right;">
+144
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NP_113986.1
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_07_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+27684
+</td>
+<td style="text-align:left;">
+AAAAAAAAAAAAAAGAAGK
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+0.991
+</td>
+<td style="text-align:right;">
+25.769
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_06_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+26263
+</td>
+<td style="text-align:right;">
+27336
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+5187
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.197
+</td>
+<td style="text-align:right;">
+1856.075
+</td>
+<td style="text-align:left;">
+R.AAAAAAAAAAAAAAGAAGK.E
+</td>
+<td style="text-align:left;">
+NP_113986.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+118
+</td>
+<td style="text-align:right;">
+85
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NP_113986.1
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_06_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+27336
+</td>
+<td style="text-align:left;">
+AAAAAAAAAAAAAAGAAGK
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+0.091
+</td>
+<td style="text-align:right;">
+25.769
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_07_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+1471
+</td>
+<td style="text-align:right;">
+27096
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+415
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:right;">
+-0.001
+</td>
+<td style="text-align:right;">
+-0.591
+</td>
+<td style="text-align:right;">
+1856.075
+</td>
+<td style="text-align:left;">
+R.AAAAAAAAAAAAAAGAAGK.E
+</td>
+<td style="text-align:left;">
+NP_113986.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+157
+</td>
+<td style="text-align:right;">
+156
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NP_113986.1
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+619.363
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_07_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+27096
+</td>
+<td style="text-align:left;">
+AAAAAAAAAAAAAAGAAGK
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+0.684
+</td>
+<td style="text-align:right;">
+25.769
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_05_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+28664
+</td>
+<td style="text-align:right;">
+10441
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+4849
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+586.832
+</td>
+<td style="text-align:right;">
+-0.001
+</td>
+<td style="text-align:right;">
+-0.728
+</td>
+<td style="text-align:right;">
+1172.659
+</td>
+<td style="text-align:left;">
+R.AAAAADLANR.S
+</td>
+<td style="text-align:left;">
+NP_001007804.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+124
+</td>
+<td style="text-align:right;">
+124
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NP_001007804.1
+</td>
+<td style="text-align:right;">
+586.833
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+586.832
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_05_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+10441
+</td>
+<td style="text-align:left;">
+AAAAADLANR
+</td>
+<td style="text-align:right;">
+2.480
+</td>
+<td style="text-align:right;">
+0.746
+</td>
+<td style="text-align:right;">
+34.755
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_24_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+41775
+</td>
+<td style="text-align:right;">
+8033
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+7889
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+831.447
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+1661.886
+</td>
+<td style="text-align:left;">
+G.AAAAAEAESGGGGGK.K
+</td>
+<td style="text-align:left;">
+NP_001128630.1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+176
+</td>
+<td style="text-align:right;">
+76
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0.001
+</td>
+<td style="text-align:right;">
+0.003
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+NP_001128630.1
+</td>
+<td style="text-align:right;">
+831.447
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+831.447
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_24_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:right;">
+8033
+</td>
+<td style="text-align:left;">
+AAAAAEAESGGGGGK
+</td>
+<td style="text-align:right;">
+2.583
+</td>
+<td style="text-align:right;">
+0.106
+</td>
+<td style="text-align:right;">
+580.844
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p></br></p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="iso-global.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="prepare-reporter-ion-intensities.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

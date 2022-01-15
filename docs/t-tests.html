@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>5.3 t-tests | Proteomics Data Analysis in R/Bioconductor</title>
+  <title>6.3 Two-Sample t-tests | Proteomics Data Analysis in R/Bioconductor</title>
   <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="5.3 t-tests | Proteomics Data Analysis in R/Bioconductor" />
+  <meta property="og:title" content="6.3 Two-Sample t-tests | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="5.3 t-tests | Proteomics Data Analysis in R/Bioconductor" />
+  <meta name="twitter:title" content="6.3 Two-Sample t-tests | Proteomics Data Analysis in R/Bioconductor" />
   
   <meta name="twitter:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -24,15 +24,15 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-01-04" />
+<meta name="date" content="2022-01-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="one-way-anova.html"/>
-<link rel="next" href="p-value-histograms.html"/>
+<link rel="prev" href="linear-reg.html"/>
+<link rel="next" href="anova.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -162,122 +162,134 @@ div.csl-indent {
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome!</a></li>
-<li class="chapter" data-level="1" data-path="isobaric-quantification-pipelines.html"><a href="isobaric-quantification-pipelines.html"><i class="fa fa-check"></i><b>1</b> Isobaric Quantification Pipelines</a>
+<li class="chapter" data-level="1" data-path="iso-global.html"><a href="iso-global.html"><i class="fa fa-check"></i><b>1</b> Isobaric Quantification: Proteomics</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html"><i class="fa fa-check"></i><b>1.1</b> Global Proteomics Data</a>
+<li class="chapter" data-level="1.1" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html"><i class="fa fa-check"></i><b>1.1</b> Prepare MS/MS Identifications</a>
 <ul>
-<li class="chapter" data-level="1.1.1" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#read-ms-gf-data"><i class="fa fa-check"></i><b>1.1.1</b> Read MS-GF+ Data</a></li>
-<li class="chapter" data-level="1.1.2" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#correct-isotope-selection-error"><i class="fa fa-check"></i><b>1.1.2</b> Correct Isotope Selection Error</a></li>
-<li class="chapter" data-level="1.1.3" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#remove-contaminants"><i class="fa fa-check"></i><b>1.1.3</b> Remove Contaminants</a></li>
-<li class="chapter" data-level="1.1.4" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#global-peptide-filter"><i class="fa fa-check"></i><b>1.1.4</b> MS/MS ID Filter: Peptide Level</a></li>
-<li class="chapter" data-level="1.1.5" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#msms-id-filter-protein-level"><i class="fa fa-check"></i><b>1.1.5</b> MS/MS ID Filter: Protein Level</a></li>
-<li class="chapter" data-level="1.1.6" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#inference-of-parsimonious-protein-set"><i class="fa fa-check"></i><b>1.1.6</b> Inference of Parsimonious Protein Set</a></li>
-<li class="chapter" data-level="1.1.7" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#remove-decoy-psms"><i class="fa fa-check"></i><b>1.1.7</b> Remove Decoy PSMs</a></li>
-<li class="chapter" data-level="1.1.8" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#read-masic-output"><i class="fa fa-check"></i><b>1.1.8</b> Read MASIC Output</a></li>
-<li class="chapter" data-level="1.1.9" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#filter-masic-data"><i class="fa fa-check"></i><b>1.1.9</b> Filter MASIC Data</a></li>
-<li class="chapter" data-level="1.1.10" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#fetch-study-design-tables"><i class="fa fa-check"></i><b>1.1.10</b> Create Study Design Tables</a></li>
-<li class="chapter" data-level="1.1.11" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#fractions"><i class="fa fa-check"></i><b>1.1.11</b> Fractions</a></li>
-<li class="chapter" data-level="1.1.12" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#samples"><i class="fa fa-check"></i><b>1.1.12</b> Samples</a></li>
-<li class="chapter" data-level="1.1.13" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#references"><i class="fa fa-check"></i><b>1.1.13</b> References</a></li>
-<li class="chapter" data-level="1.1.14" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#global-quant-crosstab"><i class="fa fa-check"></i><b>1.1.14</b> Create Quantitative Cross-tab</a></li>
-<li class="chapter" data-level="1.1.15" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#create-msnset-object"><i class="fa fa-check"></i><b>1.1.15</b> Create MSnSet Object</a></li>
+<li class="chapter" data-level="1.1.1" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#read-ms-gf-data"><i class="fa fa-check"></i><b>1.1.1</b> Read MS-GF+ Data</a></li>
+<li class="chapter" data-level="1.1.2" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#correct-isotope-selection-error"><i class="fa fa-check"></i><b>1.1.2</b> Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="1.1.3" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#remove-contaminants"><i class="fa fa-check"></i><b>1.1.3</b> Remove Contaminants</a></li>
+<li class="chapter" data-level="1.1.4" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#global-peptide-filter"><i class="fa fa-check"></i><b>1.1.4</b> MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="1.1.5" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#msms-id-filter-protein-level"><i class="fa fa-check"></i><b>1.1.5</b> MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="1.1.6" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#inference-of-parsimonious-protein-set"><i class="fa fa-check"></i><b>1.1.6</b> Inference of Parsimonious Protein Set</a></li>
+<li class="chapter" data-level="1.1.7" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#remove-decoy-psms"><i class="fa fa-check"></i><b>1.1.7</b> Remove Decoy PSMs</a></li>
 </ul></li>
-<li class="chapter" data-level="1.2" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html"><i class="fa fa-check"></i><b>1.2</b> Phosphoproteomics Data</a>
+<li class="chapter" data-level="1.2" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html"><i class="fa fa-check"></i><b>1.2</b> Prepare Reporter Ion Intensities</a>
 <ul>
-<li class="chapter" data-level="1.2.1" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#read-ms-gf-output"><i class="fa fa-check"></i><b>1.2.1</b> Read MS-GF+ Output</a></li>
-<li class="chapter" data-level="1.2.2" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#correct-isotope-selection-error-1"><i class="fa fa-check"></i><b>1.2.2</b> Correct Isotope Selection Error</a></li>
-<li class="chapter" data-level="1.2.3" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-non-phosphorylated-peptides"><i class="fa fa-check"></i><b>1.2.3</b> Remove Non-Phosphorylated Peptides</a></li>
-<li class="chapter" data-level="1.2.4" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-contaminants-1"><i class="fa fa-check"></i><b>1.2.4</b> Remove Contaminants</a></li>
-<li class="chapter" data-level="1.2.5" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#improve-phosphosite-localization"><i class="fa fa-check"></i><b>1.2.5</b> Improve Phosphosite Localization</a></li>
-<li class="chapter" data-level="1.2.6" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#msms-id-filter-peptide-level"><i class="fa fa-check"></i><b>1.2.6</b> MS/MS ID Filter: Peptide Level</a></li>
-<li class="chapter" data-level="1.2.7" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#msms-id-filter-protein-level-1"><i class="fa fa-check"></i><b>1.2.7</b> MS/MS ID Filter: Protein Level</a></li>
-<li class="chapter" data-level="1.2.8" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#inference-of-parsimonious-protein-set-1"><i class="fa fa-check"></i><b>1.2.8</b> Inference of Parsimonious Protein Set</a></li>
-<li class="chapter" data-level="1.2.9" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-decoy-psms-1"><i class="fa fa-check"></i><b>1.2.9</b> Remove Decoy PSMs</a></li>
-<li class="chapter" data-level="1.2.10" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#map-sites-to-protein-sequences"><i class="fa fa-check"></i><b>1.2.10</b> Map Sites to Protein Sequences</a></li>
-<li class="chapter" data-level="1.2.11" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#read-masic-output-1"><i class="fa fa-check"></i><b>1.2.11</b> Read MASIC Output</a></li>
-<li class="chapter" data-level="1.2.12" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#filter-masic-data-1"><i class="fa fa-check"></i><b>1.2.12</b> Filter MASIC Data</a></li>
-<li class="chapter" data-level="1.2.13" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#create-study-design-tables"><i class="fa fa-check"></i><b>1.2.13</b> Create Study Design Tables</a></li>
-<li class="chapter" data-level="1.2.14" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#phospho-create-crosstab"><i class="fa fa-check"></i><b>1.2.14</b> Create Quantitative Cross-tab</a></li>
+<li class="chapter" data-level="1.2.1" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html#read-masic-output"><i class="fa fa-check"></i><b>1.2.1</b> Read MASIC Output</a></li>
+<li class="chapter" data-level="1.2.2" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html#filter-masic-data"><i class="fa fa-check"></i><b>1.2.2</b> Filter MASIC Data</a></li>
 </ul></li>
+<li class="chapter" data-level="1.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html"><i class="fa fa-check"></i><b>1.3</b> Create Study Design Tables</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#fractions"><i class="fa fa-check"></i><b>1.3.1</b> Fractions</a></li>
+<li class="chapter" data-level="1.3.2" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#samples"><i class="fa fa-check"></i><b>1.3.2</b> Samples</a></li>
+<li class="chapter" data-level="1.3.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#references"><i class="fa fa-check"></i><b>1.3.3</b> References</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="label-free-quantification.html"><a href="label-free-quantification.html"><i class="fa fa-check"></i><b>2</b> Label-Free Quantification</a></li>
-<li class="chapter" data-level="3" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>3</b> Exploratory Data Analysis</a>
-<ul>
-<li class="chapter" data-level="3.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>3.1</b> Count Features in Samples</a></li>
-<li class="chapter" data-level="3.2" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>3.2</b> Estimate Blood Contamination</a></li>
-<li class="chapter" data-level="3.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>3.3</b> PCA</a></li>
+<li class="chapter" data-level="1.4" data-path="global-quant-crosstab.html"><a href="global-quant-crosstab.html"><i class="fa fa-check"></i><b>1.4</b> Create Quantitative Cross-tab</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>4</b> Heatmaps</a>
+<li class="chapter" data-level="2" data-path="iso-phospho.html"><a href="iso-phospho.html"><i class="fa fa-check"></i><b>2</b> Isobaric Quantification: Phosphoproteomics</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>4.1</b> Expression Heatmaps</a></li>
-<li class="chapter" data-level="4.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>4.2</b> Correlation Heatmaps</a>
+<li class="chapter" data-level="2.1" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html"><i class="fa fa-check"></i><b>2.1</b> Prepare MS/MS Identifications</a>
 <ul>
-<li class="chapter" data-level="4.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>4.2.1</b> Sample Correlation</a></li>
-<li class="chapter" data-level="4.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>4.2.2</b> Feature Correlation</a></li>
+<li class="chapter" data-level="2.1.1" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#read-ms-gf-data-1"><i class="fa fa-check"></i><b>2.1.1</b> Read MS-GF+ Data</a></li>
+<li class="chapter" data-level="2.1.2" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#correct-isotope-selection-error-1"><i class="fa fa-check"></i><b>2.1.2</b> Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="2.1.3" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-unmodified-peptides"><i class="fa fa-check"></i><b>2.1.3</b> Remove Unmodified Peptides</a></li>
+<li class="chapter" data-level="2.1.4" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-contaminants-1"><i class="fa fa-check"></i><b>2.1.4</b> Remove Contaminants</a></li>
+<li class="chapter" data-level="2.1.5" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#improve-phosphosite-localization"><i class="fa fa-check"></i><b>2.1.5</b> Improve Phosphosite Localization</a></li>
+<li class="chapter" data-level="2.1.6" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#msms-id-filter-peptide-level"><i class="fa fa-check"></i><b>2.1.6</b> MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="2.1.7" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#msms-id-filter-protein-level-1"><i class="fa fa-check"></i><b>2.1.7</b> MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="2.1.8" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#inference-of-parsimonious-protein-set-1"><i class="fa fa-check"></i><b>2.1.8</b> Inference of Parsimonious Protein Set</a></li>
+<li class="chapter" data-level="2.1.9" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#map-mod-sites"><i class="fa fa-check"></i><b>2.1.9</b> Map Sites to Protein Sequences</a></li>
+<li class="chapter" data-level="2.1.10" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-decoy-psms-1"><i class="fa fa-check"></i><b>2.1.10</b> Remove Decoy PSMs</a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>4.3</b> Heatmap Annotation</a>
+<li class="chapter" data-level="2.2" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html"><i class="fa fa-check"></i><b>2.2</b> Prepare Reporter Ion Intensities</a>
 <ul>
-<li class="chapter" data-level="4.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>4.3.1</b> Modifying Default Colors</a></li>
+<li class="chapter" data-level="2.2.1" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html#read-masic-output-1"><i class="fa fa-check"></i><b>2.2.1</b> Read MASIC Output</a></li>
+<li class="chapter" data-level="2.2.2" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html#filter-masic-data-1"><i class="fa fa-check"></i><b>2.2.2</b> Filter MASIC Data</a></li>
 </ul></li>
-<li class="chapter" data-level="4.4" data-path="additional-modifications.html"><a href="additional-modifications.html"><i class="fa fa-check"></i><b>4.4</b> Additional Modifications</a>
-<ul>
-<li class="chapter" data-level="4.4.1" data-path="additional-modifications.html"><a href="additional-modifications.html#change-row-or-column-labels"><i class="fa fa-check"></i><b>4.4.1</b> Change row or column labels</a></li>
-<li class="chapter" data-level="4.4.2" data-path="additional-modifications.html"><a href="additional-modifications.html#change-label-colors"><i class="fa fa-check"></i><b>4.4.2</b> Change label colors</a></li>
-<li class="chapter" data-level="4.4.3" data-path="additional-modifications.html"><a href="additional-modifications.html#label-specific-features"><i class="fa fa-check"></i><b>4.4.3</b> Label specific features</a></li>
-<li class="chapter" data-level="4.4.4" data-path="additional-modifications.html"><a href="additional-modifications.html#change-heatmap-body-color"><i class="fa fa-check"></i><b>4.4.4</b> Change heatmap body color</a></li>
+<li class="chapter" data-level="2.3" data-path="create-study-design-tables.html"><a href="create-study-design-tables.html"><i class="fa fa-check"></i><b>2.3</b> Create Study Design Tables</a></li>
+<li class="chapter" data-level="2.4" data-path="create-quantitative-cross-tab.html"><a href="create-quantitative-cross-tab.html"><i class="fa fa-check"></i><b>2.4</b> Create Quantitative Cross-tab</a></li>
 </ul></li>
+<li class="chapter" data-level="3" data-path="spectral-counting.html"><a href="spectral-counting.html"><i class="fa fa-check"></i><b>3</b> Spectral Counting</a></li>
+<li class="chapter" data-level="4" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>4</b> Exploratory Data Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>4.1</b> Count Features in Samples</a></li>
+<li class="chapter" data-level="4.2" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>4.2</b> Estimate Blood Contamination</a></li>
+<li class="chapter" data-level="4.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>4.3</b> PCA</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>5</b> Differential Analysis</a>
+<li class="chapter" data-level="5" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>5</b> Heatmaps</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>5.1</b> Linear Regression</a></li>
-<li class="chapter" data-level="5.2" data-path="one-way-anova.html"><a href="one-way-anova.html"><i class="fa fa-check"></i><b>5.2</b> One-Way ANOVA</a></li>
-<li class="chapter" data-level="5.3" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>5.3</b> t-tests</a>
+<li class="chapter" data-level="5.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>5.1</b> Expression Heatmaps</a></li>
+<li class="chapter" data-level="5.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>5.2</b> Correlation Heatmaps</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="t-tests.html"><a href="t-tests.html#one-comparison"><i class="fa fa-check"></i><b>5.3.1</b> One Comparison</a></li>
-<li class="chapter" data-level="5.3.2" data-path="t-tests.html"><a href="t-tests.html#multiple-comparisons"><i class="fa fa-check"></i><b>5.3.2</b> Multiple Comparisons</a></li>
+<li class="chapter" data-level="5.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>5.2.1</b> Sample Correlation</a></li>
+<li class="chapter" data-level="5.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>5.2.2</b> Feature Correlation</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>5.4</b> p-value Histograms</a></li>
-<li class="chapter" data-level="5.5" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>5.5</b> Volcano Plots</a></li>
+<li class="chapter" data-level="5.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>5.3</b> Heatmap Annotation</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>5.3.1</b> Modifying Default Colors</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>6</b> Pathway Analysis</a>
+<li class="chapter" data-level="5.4" data-path="modifications.html"><a href="modifications.html"><i class="fa fa-check"></i><b>5.4</b> Modifications</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>6.1</b> Annotation Databases</a>
-<ul>
-<li class="chapter" data-level="6.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>6.1.1</b> Gene Ontology</a>
-<ul>
-<li class="chapter" data-level="6.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>6.1.1.1</b> Semantic Similarity</a></li>
-<li class="chapter" data-level="6.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>6.1.1.2</b> GO Subsets/Slims</a></li>
-</ul></li>
-<li class="chapter" data-level="6.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>6.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="6.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>6.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="6.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>6.1.4</b> Pfam</a></li>
-</ul></li>
-<li class="chapter" data-level="6.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>6.2</b> Over-Representation Analysis</a>
-<ul>
-<li class="chapter" data-level="6.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>6.2.1</b> Overview</a>
-<ul>
-<li class="chapter" data-level="" data-path="ora.html"><a href="ora.html#important-considerations"><i class="fa fa-check"></i>Important Considerations</a></li>
-</ul></li>
-<li class="chapter" data-level="6.2.2" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>6.2.2</b> Examples</a>
-<ul>
-<li class="chapter" data-level="6.2.2.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>6.2.2.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="6.2.2.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>6.2.2.2</b> Reactome</a></li>
-<li class="chapter" data-level="6.2.2.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>6.2.2.3</b> Pfam</a></li>
-<li class="chapter" data-level="6.2.2.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>6.2.2.4</b> Other Databases</a></li>
+<li class="chapter" data-level="5.4.1" data-path="modifications.html"><a href="modifications.html#row-and-column-labels"><i class="fa fa-check"></i><b>5.4.1</b> Row and column labels</a></li>
+<li class="chapter" data-level="5.4.2" data-path="modifications.html"><a href="modifications.html#label-colors"><i class="fa fa-check"></i><b>5.4.2</b> Label colors</a></li>
+<li class="chapter" data-level="5.4.3" data-path="modifications.html"><a href="modifications.html#label-specific-features"><i class="fa fa-check"></i><b>5.4.3</b> Label specific features</a></li>
+<li class="chapter" data-level="5.4.4" data-path="modifications.html"><a href="modifications.html#heatmap-body-color"><i class="fa fa-check"></i><b>5.4.4</b> Heatmap body color</a></li>
+<li class="chapter" data-level="5.4.5" data-path="modifications.html"><a href="modifications.html#horizontal-heatmaps"><i class="fa fa-check"></i><b>5.4.5</b> Horizontal heatmaps</a></li>
+<li class="chapter" data-level="5.4.6" data-path="modifications.html"><a href="modifications.html#legends"><i class="fa fa-check"></i><b>5.4.6</b> Legends</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>6.3</b> Gene Set Enrichment Analysis</a>
+<li class="chapter" data-level="6" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>6</b> Differential Expression Analysis</a>
 <ul>
-<li class="chapter" data-level="6.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>6.3.1</b> Overview</a>
+<li class="chapter" data-level="6.1" data-path="mult-comp.html"><a href="mult-comp.html"><i class="fa fa-check"></i><b>6.1</b> Multiple Comparisons</a></li>
+<li class="chapter" data-level="6.2" data-path="linear-reg.html"><a href="linear-reg.html"><i class="fa fa-check"></i><b>6.2</b> Linear Regression</a></li>
+<li class="chapter" data-level="6.3" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>6.3</b> Two-Sample t-tests</a>
 <ul>
-<li class="chapter" data-level="" data-path="gsea.html"><a href="gsea.html#important-considerations-1"><i class="fa fa-check"></i>Important Considerations</a></li>
+<li class="chapter" data-level="6.3.1" data-path="t-tests.html"><a href="t-tests.html#t-single"><i class="fa fa-check"></i><b>6.3.1</b> One comparison</a></li>
+<li class="chapter" data-level="6.3.2" data-path="t-tests.html"><a href="t-tests.html#t-mult"><i class="fa fa-check"></i><b>6.3.2</b> Multiple comparisons</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3.2" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>6.3.2</b> Examples</a>
+<li class="chapter" data-level="6.4" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>6.4</b> One-Way ANOVA</a></li>
+<li class="chapter" data-level="6.5" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>6.5</b> p-value Histograms</a></li>
+<li class="chapter" data-level="6.6" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>6.6</b> Volcano Plots</a>
 <ul>
-<li class="chapter" data-level="6.3.2.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>6.3.2.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="6.3.2.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>6.3.2.2</b> Reactome</a></li>
-<li class="chapter" data-level="6.3.2.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>6.3.2.3</b> Pfam</a></li>
-<li class="chapter" data-level="6.3.2.4" data-path="gsea.html"><a href="gsea.html#other-databases"><i class="fa fa-check"></i><b>6.3.2.4</b> Other Databases</a></li>
+<li class="chapter" data-level="6.6.1" data-path="volcano-plots.html"><a href="volcano-plots.html#base-plot"><i class="fa fa-check"></i><b>6.6.1</b> Base plot</a></li>
+<li class="chapter" data-level="6.6.2" data-path="volcano-plots.html"><a href="volcano-plots.html#label-top-features"><i class="fa fa-check"></i><b>6.6.2</b> Label top features</a></li>
+<li class="chapter" data-level="6.6.3" data-path="volcano-plots.html"><a href="volcano-plots.html#label-specific-features-1"><i class="fa fa-check"></i><b>6.6.3</b> Label specific features</a></li>
+<li class="chapter" data-level="6.6.4" data-path="volcano-plots.html"><a href="volcano-plots.html#modify-point-colors"><i class="fa fa-check"></i><b>6.6.4</b> Modify point colors</a></li>
+<li class="chapter" data-level="6.6.5" data-path="volcano-plots.html"><a href="volcano-plots.html#multiple-volcano-plots"><i class="fa fa-check"></i><b>6.6.5</b> Multiple volcano plots</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>7</b> Pathway Analysis</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>7.1</b> Annotation Databases</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>7.1.1</b> Gene Ontology</a>
+<ul>
+<li class="chapter" data-level="7.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>7.1.1.1</b> Semantic Similarity</a></li>
+<li class="chapter" data-level="7.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>7.1.1.2</b> GO Subsets/Slims</a></li>
+</ul></li>
+<li class="chapter" data-level="7.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>7.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="7.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>7.1.3</b> KEGG</a></li>
+<li class="chapter" data-level="7.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>7.1.4</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>7.2</b> Over-Representation Analysis</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>7.2.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="7.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>7.2.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="7.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>7.2.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="7.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>7.2.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="7.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>7.2.1.4</b> Other Databases</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>7.3</b> Gene Set Enrichment Analysis</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>7.3.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="7.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>7.3.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="7.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>7.3.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="7.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>7.3.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="7.3.1.4" data-path="gsea.html"><a href="gsea.html#other-databases"><i class="fa fa-check"></i><b>7.3.1.4</b> Other Databases</a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -299,64 +311,91 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="t-tests" class="section level2" number="5.3">
-<h2><span class="header-section-number">5.3</span> t-tests</h2>
-<div id="one-comparison" class="section level3" number="5.3.1">
-<h3><span class="header-section-number">5.3.1</span> One Comparison</h3>
-<p><code>limma_a_b</code> is used when there are exactly two levels that are being compared. If the <code>coef.str</code> column of the phenotype data is a factor, the first level will be used as the reference. If the <code>coef.str</code> column is a character vector, the first unique category will be used as the reference.</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="t-tests.html#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Only two-groups</span></span>
-<span id="cb109-2"><a href="t-tests.html#cb109-2" aria-hidden="true" tabindex="-1"></a>res3 <span class="ot">&lt;-</span> <span class="fu">limma_a_b</span>(oca.set, <span class="at">model.str =</span> <span class="st">&quot;~ PLATINUM.STATUS&quot;</span>, </span>
-<span id="cb109-3"><a href="t-tests.html#cb109-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">coef.str =</span> <span class="st">&quot;PLATINUM.STATUS&quot;</span>)</span>
-<span id="cb109-4"><a href="t-tests.html#cb109-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res3)</span></code></pre></div>
-<pre><code>##                    logFC     AveExpr           t     P.Value adj.P.Val
-## NP_000005.2 -0.107374921 -0.01665020 -0.43146914 0.667868628 0.9869175
-## NP_000007.1  0.492463553  0.05029281  2.74657864 0.008196829 0.9569777
-## NP_000008.1  0.137635365  0.03187806  0.85183002 0.398122076 0.9780748
-## NP_000009.1  0.085879347  0.03595808  0.56710194 0.573027180 0.9780748
-## NP_000010.1  0.116989322 -0.04849702  0.56970627 0.571271928 0.9780748
-## NP_000012.1 -0.009030939 -0.01768271 -0.07885814 0.937500866 0.9960390
-##                     B
-## NP_000005.2 -4.774314
-## NP_000007.1 -3.618784
-## NP_000008.1 -4.680735
-## NP_000009.1 -4.750673
-## NP_000010.1 -4.750157
-## NP_000012.1 -4.771268</code></pre>
-<p>To count the number of significant features after adjustment, we can use <code>table</code> or <code>sum</code>.</p>
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="t-tests.html#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(res3<span class="sc">$</span>adj.P.Val <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span></code></pre></div>
+<div id="t-tests" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Two-Sample t-tests</h2>
+<p>Two-sample t-tests are used to determine whether there is a significant difference between the means of two groups. The null hypothesis is that the group means are equal, and the alternative is that they are not equal. Written another way, the null hypothesis is that the difference in means is zero, and the alternative is that the difference is not zero.</p>
+<!---
+MSnSet.utils has two functions that perform two-sample t-tests. The first function, `limma_a_b`, is used when there are exactly two groups. For example, the PLATINUM.STATUS column of `pData(m)` has exactly two categories: "SENSITIVE" and "RESISTANT". The second function, `limma_contrasts`, is used when there are more than two categories (for example, the SUBTYPE column) and we wish to test specific contrasts (usually when making comparisons against a reference). This results in separate t-statistics and p-values for each contrast, unlike `limma_gen`, which results in a single F statistic for all contrasts. We will begin with an example of how to use `limma_a_b`.
+
+--->
+<p><code>limma_a_b</code> and <code>limma_contrasts</code> can perform moderated two-sample t-tests.</p>
+<div id="t-single" class="section level3" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> One comparison</h3>
+<p>If a factor only has two groups, we can use <code>limma_a_b</code>. We will test for differences between the “RESISTANT” and “TREATMENT” groups without accounting for any covariates.</p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="t-tests.html#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test RESISTANT - SENSITIVE = 0</span></span>
+<span id="cb108-2"><a href="t-tests.html#cb108-2" aria-hidden="true" tabindex="-1"></a>t_res1 <span class="ot">&lt;-</span> <span class="fu">limma_a_b</span>(<span class="at">eset =</span> m, <span class="at">model.str =</span> <span class="st">&quot;~ PLATINUM.STATUS&quot;</span>, </span>
+<span id="cb108-3"><a href="t-tests.html#cb108-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">coef.str =</span> <span class="st">&quot;PLATINUM.STATUS&quot;</span>)</span>
+<span id="cb108-4"><a href="t-tests.html#cb108-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">arrange</span>(t_res1, adj.P.Val)) <span class="co"># top 6 rows sorted by adjusted p-value</span></span></code></pre></div>
+<pre><code>##                  logFC      AveExpr         t     P.Value adj.P.Val         B
+## NP_000007.1  0.4924636  0.050292811  2.746579 0.008196829 0.9569777 -3.618784
+## NP_000013.2 -0.2221522  0.062925069 -1.373152 0.175457942 0.9569777 -4.484676
+## NP_000030.1 -0.3525116 -0.051132133 -1.251127 0.216355370 0.9569777 -4.538114
+## NP_000031.1 -0.3487920  0.046000375 -1.248196 0.217418216 0.9569777 -4.539343
+## NP_000032.1 -0.3564539  0.003432085 -1.445320 0.154225965 0.9569777 -4.451000
+## NP_000037.2 -0.2507794  0.041070595 -1.770298 0.087859482 0.9569777 -4.386374</code></pre>
+<p>The <code>logFC</code> column is the difference in means between the “RESISTANT” and “SENSITIVE” groups (the first level is always the reference; use <code>levels(m$PLATINUM.STATUS)</code> to check). The other columns are</p>
+<ul>
+<li><code>AveExpr</code> overall mean (same as <code>rowMeans(exprs(m), na.rm = TRUE)</code>)</li>
+<li><code>t</code> moderated t-statistic</li>
+<li><code>P.Value</code> p-values</li>
+<li><code>adj.P.Val</code> BH-adjusted p-values (q-values)</li>
+<li><code>B</code> log-odds of differential expression/abundance</li>
+</ul>
+<p>Below is a graphical representation of the results for a specific feature. This is not a required step. It is just to visually explain the results.</p>
+<p><img src="DEA_files/figure-html/t-lm-plot-1-1.png" width="75%" style="display: block; margin: auto;" /></p>
+<p>The next step would be to check the p-value histograms. If those look fine, we can tally the number of q-values that have an FDR of 0.05.</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="t-tests.html#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="co"># TRUE - significant, FALSE - not significant</span></span>
+<span id="cb110-2"><a href="t-tests.html#cb110-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(t_res1<span class="sc">$</span>adj.P.Val <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span></code></pre></div>
 <pre><code>## 
 ## FALSE 
 ##  8101</code></pre>
-<p>No features are significantly different between the RESISTANT and SENSITIVE <code>PLATINUM.STATUS</code> levels after adjustment.</p>
+<p>None of the features are significantly different between the two PLATINUM.STATUS groups at the 0.05 FDR level.</p>
 </div>
-<div id="multiple-comparisons" class="section level3" number="5.3.2">
-<h3><span class="header-section-number">5.3.2</span> Multiple Comparisons</h3>
-<p><code>limma_contrasts</code> is used to perform multiple t-tests at the same time. We can use the <code>paircomp</code> function to generate contrasts to be used with <code>paircomp</code>.</p>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="t-tests.html#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pairwise contrasts</span></span>
-<span id="cb113-2"><a href="t-tests.html#cb113-2" aria-hidden="true" tabindex="-1"></a>contrasts <span class="ot">&lt;-</span> <span class="fu">paircomp</span>(oca.set<span class="sc">$</span>SUBTYPE, <span class="at">name =</span> <span class="st">&quot;SUBTYPE&quot;</span>)</span>
-<span id="cb113-3"><a href="t-tests.html#cb113-3" aria-hidden="true" tabindex="-1"></a>contrasts</span></code></pre></div>
+<div id="t-mult" class="section level3" number="6.3.2">
+<h3><span class="header-section-number">6.3.2</span> Multiple comparisons</h3>
+<p>Now, we will move on to an example of how to use <code>limma_contrasts</code>, which is suited for <strong>comparing groups against a reference</strong>. We will treat “Immunoreactive” as the reference group for this example, though this does not really make sense in the context of this data. It would make more sense to do a one-way ANOVA with <code>limma_gen</code> (Section <a href="anova.html#anova">6.4</a>). This is just for example purposes.</p>
+<p>We will test the following contrasts. Each level must begin with the variable name, or <code>limma_contrasts</code> will not work.</p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="t-tests.html#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Contrasts to test</span></span>
+<span id="cb112-2"><a href="t-tests.html#cb112-2" aria-hidden="true" tabindex="-1"></a>contrasts <span class="ot">&lt;-</span> <span class="fu">paircomp</span>(<span class="at">x =</span> m<span class="sc">$</span>SUBTYPE, <span class="at">name =</span> <span class="st">&quot;SUBTYPE&quot;</span>, </span>
+<span id="cb112-3"><a href="t-tests.html#cb112-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">ref =</span> <span class="st">&quot;Immunoreactive&quot;</span>)</span>
+<span id="cb112-4"><a href="t-tests.html#cb112-4" aria-hidden="true" tabindex="-1"></a>contrasts</span></code></pre></div>
 <pre><code>## [1] &quot;SUBTYPEProliferative-SUBTYPEImmunoreactive&quot; 
 ## [2] &quot;SUBTYPEMesenchymal-SUBTYPEImmunoreactive&quot;   
 ## [3] &quot;SUBTYPEDifferentiated-SUBTYPEImmunoreactive&quot;</code></pre>
-<p>By default, <code>limma_contrasts</code> will generate diagnostic plots. We can prevent this by setting <code>plot</code> to <code>FALSE</code>.</p>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="t-tests.html#cb115-1" aria-hidden="true" tabindex="-1"></a>res4 <span class="ot">&lt;-</span> <span class="fu">limma_contrasts</span>(oca.set, <span class="at">model.str =</span> <span class="st">&quot;~ 0 + SUBTYPE&quot;</span>, </span>
-<span id="cb115-2"><a href="t-tests.html#cb115-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">coef.str =</span> <span class="st">&quot;SUBTYPE&quot;</span>, <span class="at">contrasts =</span> contrasts,</span>
-<span id="cb115-3"><a href="t-tests.html#cb115-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb115-4"><a href="t-tests.html#cb115-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">arrange</span>(res4, feature))</span></code></pre></div>
-<pre><code>##        feature                      contrast      RefSeq       logFC
-## 1: NP_000005.2  Proliferative-Immunoreactive NP_000005.2 -0.15149043
-## 2: NP_000005.2    Mesenchymal-Immunoreactive NP_000005.2  0.05641954
-## 3: NP_000005.2 Differentiated-Immunoreactive NP_000005.2 -0.15057866
-## 4: NP_000007.1  Proliferative-Immunoreactive NP_000007.1 -0.24732121
-## 5: NP_000007.1    Mesenchymal-Immunoreactive NP_000007.1 -0.15789692
-## 6: NP_000007.1 Differentiated-Immunoreactive NP_000007.1  0.08496949
-##          AveExpr          t   P.Value adj.P.Val         B
-## 1: -1.672939e-17 -0.6468898 0.5197231 0.8364999 -6.021610
-## 2: -1.672939e-17  0.2341331 0.8155341 0.9517088 -6.086486
-## 3: -1.672939e-17 -0.6342478 0.5278928 0.8414233 -5.607632
-## 4: -1.611154e-17 -1.4339934 0.1558248 0.5663793 -5.237105
-## 5: -1.611154e-17 -0.8897083 0.3765321 0.7594979 -5.733156
-## 6: -1.611154e-17  0.4859585 0.6284456 0.8846421 -5.683780</code></pre>
+<p>By default, <code>limma_contrasts</code> generates diagnostic plots. For now, we will not make these plots. We also need to specify a no-intercept model by including 0 in <code>model.str</code>.</p>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="t-tests.html#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test contrasts</span></span>
+<span id="cb114-2"><a href="t-tests.html#cb114-2" aria-hidden="true" tabindex="-1"></a>t_res2 <span class="ot">&lt;-</span> <span class="fu">limma_contrasts</span>(<span class="at">eset =</span> m, <span class="at">model.str =</span> <span class="st">&quot;~ 0 + SUBTYPE&quot;</span>, </span>
+<span id="cb114-3"><a href="t-tests.html#cb114-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">coef.str =</span> <span class="st">&quot;SUBTYPE&quot;</span>, <span class="at">contrasts =</span> contrasts,</span>
+<span id="cb114-4"><a href="t-tests.html#cb114-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">trend =</span> <span class="cn">TRUE</span>, <span class="at">robust =</span> <span class="cn">TRUE</span>, <span class="co"># passed to eBayes</span></span>
+<span id="cb114-5"><a href="t-tests.html#cb114-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb114-6"><a href="t-tests.html#cb114-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">arrange</span>(t_res2, adj.P.Val)) <span class="co"># top 6 rows sorted by adjusted p-value</span></span></code></pre></div>
+<pre><code>##           feature                     contrast         RefSeq      logFC
+## 1:    NP_000388.2 Proliferative-Immunoreactive    NP_000388.2 -1.2232098
+## 2:    NP_001944.1 Proliferative-Immunoreactive    NP_001944.1 -1.3465807
+## 3:    NP_112092.1 Proliferative-Immunoreactive    NP_112092.1 -1.0268282
+## 4:    NP_002323.2   Mesenchymal-Immunoreactive    NP_002323.2  0.6707465
+## 5: NP_001120963.1 Proliferative-Immunoreactive NP_001120963.1 -0.9267318
+## 6:    NP_009005.1 Proliferative-Immunoreactive    NP_009005.1 -1.0097220
+##          AveExpr         t      P.Value    adj.P.Val         B
+## 1: -3.421920e-18 -7.703025 4.549213e-11 1.105868e-06 14.750586
+## 2: -5.322987e-18 -6.637345 4.520647e-09 3.191542e-05 10.463800
+## 3: -9.315227e-18 -6.602133 5.251623e-09 3.191542e-05 10.323954
+## 4:  3.564500e-18  6.698537 3.482606e-09 3.191542e-05 10.602125
+## 5: -2.281280e-18 -6.358267 1.475334e-08 7.172780e-05  9.360149
+## 6: -1.273715e-17 -6.243353 2.392300e-08 8.017389e-05  8.909146</code></pre>
+<p>In addition to the columns from the output of <code>limma_a_b</code>, <code>limma_contrasts</code> creates a column for the contrasts and includes all columns from <code>fData</code>. It is important to note that p-values in the <code>adj.P.Val</code> column have been adjusted across all features and contrasts, so testing more contrasts results in fewer significant features. It is best to test only a small number of related contrasts.</p>
+<p>Below is a graphical representation of the results for a specific feature.</p>
+<p><img src="DEA_files/figure-html/unnamed-chunk-9-1.png" width="75%" style="display: block; margin: auto;" /></p>
+<p>The next step would be to check the p-value histograms. If those look fine, we can tally the number of q-values that pass the threshold for statistical significance.</p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="t-tests.html#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="co"># TRUE - significant, FALSE - not significant</span></span>
+<span id="cb116-2"><a href="t-tests.html#cb116-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(t_res2<span class="sc">$</span>contrast, t_res2<span class="sc">$</span>adj.P.Val <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span></code></pre></div>
+<pre><code>##                                
+##                                 FALSE TRUE
+##   Differentiated-Immunoreactive  8052   51
+##   Mesenchymal-Immunoreactive     7908  195
+##   Proliferative-Immunoreactive   7848  255</code></pre>
+<p>If we take the 51, 195, and 255 features with the lowest q-values from the “Differentiated-Immunoreactive,” “Mesenchymal-Immunoreactive,” and “Proliferative-Immunoreactive” comparisons, respectively, the overall estimated FDR is at most 0.05. That is, we expect ~25 out of those 501 to be false positives.</p>
+<p>More features are significantly different between the “Proliferative” and “Immunoreactive” groups than in the other comparisons.</p>
 </div>
 </div>
             </section>
@@ -364,8 +403,8 @@ div.csl-indent {
           </div>
         </div>
       </div>
-<a href="one-way-anova.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="p-value-histograms.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="linear-reg.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="anova.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
@@ -410,7 +449,7 @@ gitbook.start({
 },
 "download": null,
 "toc": {
-"collapse": "section"
+"collapse": "subsection"
 }
 });
 });

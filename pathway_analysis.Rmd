@@ -1,14 +1,14 @@
 # Pathway Analysis {#pathway-analysis}
 
 ```{r pathway-analysis-chunk-opts, include=FALSE}
-knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
+knitr::opts_chunk$set(warning=FALSE, message=FALSE, 
                       fig.align='center', out.width='75%')
 ```
 
 
-In Section \@ref(DEA), we covered analysis at the individual feature level (protein, peptide, phosphoprotein, etc.). While DEA is useful, it is not without its own set of shortcomings. For instance, there may be no features that pass the significance threshold after correcting for multiple hypothesis testing. Alternatively, there may be many features that are statistically significant, and interpreting this list can be tedious and "prone to investigator bias toward a hypothesis of interest" [@maleki_gene_2020]. Another issue is that single-feature analysis fails to detect subtle, yet coordinated changes in groups of related features [@subramanian_gene_2005]. 
+In Section \@ref(DEA), we covered analysis at the individual feature level (protein, peptide, phosphoprotein, etc.). While this is useful, it is not without its own set of shortcomings. For instance, there may be no features that pass the significance threshold after correcting for multiple hypothesis testing. Alternatively, there may be many features that are statistically significant, and interpreting this list can be tedious and "prone to investigator bias toward a hypothesis of interest" [@maleki_gene_2020]. Another issue is that single-feature analysis fails to detect subtle, yet coordinated changes in groups of related features [@subramanian_gene_2005]. 
 
-In order to address these, and other, issues, pathway analysis instead examines *a priori* defined **gene sets**—groups of genes that participate in the same biological pathway, share the same cellular location, etc. In this section, we will explore some common annotation databases, as well as two pathway analysis methods: Over-Representation Analysis (ORA) and Gene Set Enrichment Analysis (GSEA).
+In order to address these, and other, issues, pathway analysis instead examines *a priori* defined **gene sets**---groups of genes that participate in the same biological pathway, share the same cellular location, etc. In this section, we will explore some common annotation databases, as well as two pathway analysis methods: Over-Representation Analysis (ORA) and Gene Set Enrichment Analysis (GSEA).
 
 
 ## Annotation Databases {#annotation-databases}
@@ -23,7 +23,7 @@ The Gene Ontology (GO) database is divided into three separate domains: Biologic
 
 Due to the DAG structure of each domain, there is often redundancy in pathway analysis results. For example, suppose terms <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a>, <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a>, and  <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0046034" title = "ATP metabolic process">GO:0046034</a> are significantly over-represented biological processes. <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a> and  <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0046034" title = "ATP metabolic process">GO:0046034</a> are the parent terms of <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a>. Due to this relationship, the terms likely provide much of the same information, so the inclusion of all three terms in the output is unnecessary. In order to resolve this redundancy, we can calculate the **semantic similarity** between pairs of GO terms, which "assesses the likeness in meaning of two concepts" [@pesquita_semantic_2017]. Basically, if two terms are highly related, we can use some other criteria (such as adjusted p-value or level in the DAG) to retain only one of the terms. Below, we use the `GOSemSim` package to calculate the semantic similarity between the terms.
 
-```{r sem-sim, message=FALSE}
+```{r sem-sim}
 ## Calculate semantic similarity between GO terms
 library(GOSemSim)
 library(org.Hs.eg.db)
@@ -58,7 +58,7 @@ Now that we have the semantic similarities, we can remove redundant terms. `clus
 
 Another way to handle the redundancy of GO terms is to use a <a href="http://geneontology.org/docs/go-subset-guide/" title = "Guide to GO subsets">GO slim</a>, which is a subset of more general or research-relevant terms from the GO. GO slims can be <a href="http://geneontology.org/docs/download-ontology/#subsets" title = "Download the ontology">downloaded</a> or the `biomaRt` package can be used to access GO slim accessions.
 
-```{r go-slim, message=FALSE}
+```{r go-slim, eval=FALSE}
 ## Create human GO slim
 library(biomaRt)
 library(clusterProfiler) # gcSample data
@@ -82,6 +82,19 @@ GO_slim <- getBM(filters = "entrezgene_id",
   # Convert entrezgene_id from integer to character
   mutate_all(as.character)
 ```
+
+```{r eval=FALSE, echo=FALSE}
+save(GO_slim, file = "data/GO_slim.RData", compress = TRUE)
+```
+
+```{r include=FALSE}
+library(biomaRt)
+library(clusterProfiler) # gcSample data
+library(dplyr)
+
+load("data/GO_slim.RData")
+```
+
 
 
 ```{r message=FALSE, echo=FALSE, fig.alt="First 6 rows of an Entrez ID to GO slim accession and description conversion table"}
@@ -120,8 +133,6 @@ Unfortunately, not every GO accession maps to a domain when we use `biomaRt` (un
 
 ## Over-Representation Analysis {#ora}
 
-### Overview {#ora-overview}
-
 Over-Representation Analysis (ORA) is used to determine which *a priori* defined gene sets are more present (over-represented) in a subset of "interesting" genes than what would be expected by chance [@huang_bioinformatics_2009]. Essentially, it identifies the gene sets—rather than the individual genes—that are significantly different between two conditions.
 
 For each gene set, an enrichment p-value is calculated using the Binomial distribution, Hypergeometric distribution, the Fisher exact test, or the Chi-square test. Although this list is not all-encompassing, these are the most popular statistical methods [@huang_bioinformatics_2009]. Below is the formula for calculating the enrichment p-value for a particular gene set using the Hypergeometric distribution.
@@ -150,8 +161,7 @@ phyper(q = 20 - 1, m = 400, n = 8000 - 400, k = 100, lower.tail = FALSE)
 
 After a p-value has been calculated for each of the applicable gene sets, a multiple comparison adjustment should be performed.
 
-#### Important Considerations {-}
-
+**Important Considerations**
 <ol>
 <li>
 The choice of the threshold for statistical significance and the multiple comparison adjustment method can greatly impact the analysis [@huang_bioinformatics_2009].
@@ -212,9 +222,7 @@ format_cp_ora <- function(x, caption, link, n = 10) {
       }),
       ID = cell_spec(
         ID, link = sprintf(link, ID))
-    ) %>% 
-    # Remove unnecessary columns
-    select(-qvalue, -Count) %>% 
+    ) %>%
     # Nice table.
     kable(digits = 4, row.names = FALSE, caption = caption,
           escape = FALSE) %>% 
@@ -617,9 +625,14 @@ In this data frame, there are only `r length(unique(ENTREZ2PFAM$PFAM))` Pfam ent
 --->
 
 
-## Gene Set Enrichment Analysis {#gsea}
+<!---
+------------------------------------------------------------------------------
+--->
 
-### Overview {#gsea-overview}
+
+
+
+## Gene Set Enrichment Analysis {#gsea}
 
 Gene Set Enrichment Analysis (GSEA) employs a "no-cutoff" strategy that utilizes some experimental value (such as fold change, the moderated t-statistic, or Z-Score) to rank a list of $N$ genes in descending order. Using this ranked list $L$, the values of the ranking metric, and an *a priori* defined gene set $S$, we can calculate an enrichment score. This is done by "walking down the list $L$, increasing a running-sum statistic when we encounter a gene in $S$ and decreasing it when we encounter genes not in $S$." The maximum deviation from zero of this running-sum statistic is the enrichment score for $S$, denoted by $ES(S)$. If the genes in $S$ are randomly distributed throughout $L$, $ES(S)$ will be relatively small; however, if they are not randomly distributed (i.e. primarily located near either end of $L$), then $ES(S)$ will be relatively large [@mootha_pgc-1-responsive_2003; @subramanian_gene_2005].
 
@@ -639,8 +652,7 @@ r_{i-1} - \frac{1}{N-k} & \text{if } 1 \leq i \leq N \text{ and } i \not\in S
 
 $ES(S)$ is the largest (in terms of absolute value) element of $r_N$. This notation is a slightly modified version of what is presented in the paper by @korotkevich_fast_2016.
 
-#### Important Considerations {-}
-
+**Important Considerations**
 <ol>
 <li>
 GSEA is not influenced by an arbitrary cutoff for statistical significance. This is especially useful when only a few features pass this threshold after adjustment for multiple testing, and it also means that it does not depend on the choice of p-value adjustment.
@@ -716,7 +728,8 @@ gsea_input <- limma_gen(m, model.str = "~ PLATINUM.STATUS",
                         coef.str = "PLATINUM.STATUS") %>% 
   mutate(RefSeq = rownames(.)) %>% # Create RefSeq column
   left_join(fData(m), by = "RefSeq") %>%  # Add columns from fData
-  .[complete.cases(.), ] %>% # Remove rows with any missing values
+  # Remove rows with missing entrez_gene or P.Value
+  filter(!is.na(entrez_gene), !is.na(P.Value)) %>%
   # Create GSEA ranking metric column: signed -log10 p-value
   mutate(ranking_metric = -log10(P.Value) * sign(logFC)) %>% 
   # Average ranking metric for each gene
@@ -724,7 +737,7 @@ gsea_input <- limma_gen(m, model.str = "~ PLATINUM.STATUS",
   summarise(ranking_metric = mean(ranking_metric)) %>% 
   # Sort from high to low by ranking metric
   arrange(-ranking_metric) %>%
-  # Convert to named vector
+  # Convert to named vector - first column is names, second is values
   tibble::deframe()
 
 head(gsea_input)
@@ -736,7 +749,7 @@ gsea_input2 <- limma_gen(m, model.str = "~ PLATINUM.STATUS",
                          coef.str = "PLATINUM.STATUS") %>% 
   mutate(RefSeq = rownames(.)) %>%
   left_join(fData(m), by = "RefSeq") %>%
-  .[complete.cases(.), ] %>%
+  filter(!is.na(entrez_gene), !is.na(P.Value)) %>%
   mutate(ranking_metric = t) %>% 
   group_by(entrez_gene) %>% 
   summarise(ranking_metric = mean(ranking_metric)) %>% 

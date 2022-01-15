@@ -1,174 +1,480 @@
-# Differential Analysis {#DEA}
+# Differential Expression Analysis {#DEA}
 
-The overview goes here.
+<!---
+TODO:
+* Add more information about LIMMA.
+* Add section on UpSet plots
+--->
 
-```{r DEA_chunk_opts, include=FALSE}
+In this section, we will use wrappers around functions from the <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a> package to fit linear models (linear regression, t-test, and ANOVA) to proteomics data. While LIMMA was originally intended for use with microarray data, it is useful for other data types. When working with LIMMA, the <a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/limma/inst/doc/usersguide.pdf">LIMMA User's Guide</a> is an invaluable resource.
+
+<!---
+, though it is not a required reading unless you intend to modify the wrapper functions in <a href="https://github.com/PNNL-Comp-Mass-Spec/MSnSet.utils">MSnSet.utils</a>; the `limma_*` functions will handle all the usual steps required to go from an MSnSet to a results table. Users should understand enough such that these wrappers are not black boxes, as that may result in incorrect usage and interpretation of results. When in doubt, read the function documentation, look at the code (`View(function_name)`), and/or ask for help.
+--->
+
+LIMMA makes use of empirical Bayes techniques to borrow information across all features being tested to increase the degrees of freedom available for the test statistics. This results in so-called "moderated" test statistics and improved ability to detect differential expression/abundance.
+
+We will use the CPTAC ovarian cancer proteomics dataset for this section. The required packages are MSnSet.utils for the LIMMA wrappers and volcano plots, dplyr for data frame manipulation, and ggplot2 for p-value histograms and to further customize the volcano plots. We load the `cptac_oca` data and copy `oca.set` to `m`, which will be used in the examples.
+
+```{r lm-chunk-opts, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
-                      fig.align='center', out.width='75%')
+                      fig.align='center', out.width='75%', fig.asp=0.65)
+library(ggplot2); theme_set(theme_bw(base_size = 12))
 ```
 
 ```{r DEA_setup, warning=FALSE, message=FALSE}
+## Uncomment to install missing packages
+# install.packages("remotes")
+# remotes::install_github("PNNL-Comp-Mass-Spec/MSnSet.utils")
+# install.packages("dplyr")
+# install.packages("ggplot2")
 library(MSnSet.utils)
 library(dplyr)
 library(ggplot2)
 
 # MSnSet
 data("cptac_oca")
+m <- oca.set
 ```
 
 
-## Linear Regression
+## Multiple Comparisons {#mult-comp}
+
+By default, the LIMMA wrappers from MSnSet.utils adjust the p-values to account for multiple comparisons using the Benjamini-Hochberg (BH) procedure. This controls the false discovery rate (FDR), and the resulting adjusted p-values are called q-values. To understand q-values, suppose we test whether there is a difference between the means of two groups. We do this for a set of 10,000 features. Suppose that, of these 10,000 tests, 1050 results in q-values less than $\alpha = 0.05$ (a typical threshold for statistical significance). We would say that these 1050 most significant features have an estimated FDR of 0.05. That is, we expect that at most $0.05 \cdot 1050 \approx 53$ of these results are false positives (features that are wrongly classified as significantly different between groups).
+
+
+## Linear Regression {#linear-reg}
+
+`limma_a_b` or `limma_gen` are used to perform linear regression, which models the linear relationship between a numeric predictor and the feature-wise values in the `exprs` slot of an `MSnSet`.
+
+For this example, we will test the AGE column of `pData(m)`. The `model.str` is the full model that includes the variable of interest and any covariates. The `coef.str` argument is the variable of interest.
 
 ```{r}
-res1 <- limma_a_b(oca.set, model.str = "~ AGE", coef.str = "AGE")
-head(res1)
+lm_res <- limma_gen(m, model.str = "~ AGE", coef.str = "AGE")
+head(arrange(lm_res, adj.P.Val)) # top 6 rows sorted by adjusted p-value
 ```
 
-## One-Way ANOVA
+The `logFC` column is the slope of the regression line, and the `AveExpr` column is the average of the values for that feature (same as `rowMeans(exprs(m), na.rm = TRUE)`). `AveExpr` can also be thought of as the y-intercept of the regression line when the predictor is mean-centered. The actual y-intercept is $\text{AveExpr} - avg(\text{AGE})\cdot\text{logFC}$. The other columns are
 
-```{r}
-res2 <- limma_gen(oca.set, model.str = "~ SUBTYPE", coef.str = "SUBTYPE")
-head(res2)
+- `t` moderated t-statistic
+- `P.Value` p-value
+- `adj.P.Val` p-values adjusted with the Benjamini-Hocheberg procedure. Also called q-values.
+- `B` log-odds of differential expression
+
+Since the table was sorted by q-values, and the lowest q-value is ~ 0.6, none of the features have a significant linear relationship with AGE (after adjustment for multiple comparisons).
+
+Below is a graphical representation of the results for a specific feature. This is not a required plot; it is just to visually explain the results.
+
+```{r echo=FALSE}
+# Plot for specific feature
+feature <- "NP_001077077.1"
+
+slope <- lm_res[feature, "logFC"]
+avexpr <- lm_res[feature, "AveExpr"]
+intercept <- avexpr - mean(m$AGE, na.rm = TRUE) * slope
+
+subtitle <- sprintf("logFC (slope) = %g, AveExpr (overall mean) = %g",
+                    signif(lm_res[feature, "logFC"], 2),
+                    signif(lm_res[feature, "AveExpr"], 2))
+
+data.frame(exprs = exprs(m)[feature, ],
+           AGE = m$AGE) %>% 
+        ggplot(aes(x = AGE, y = exprs)) +
+        geom_point(na.rm = TRUE, size = 3) +
+        geom_abline(slope = slope, intercept = intercept, 
+                    color = "#3366ff", lty = "dashed", size = 1) +
+        scale_x_continuous(limits = c(35, 80),
+                           expand = expansion(0)) +
+        labs(x = "Age (years)",
+             y = "Value in exprs(m)",
+             title = feature,
+             subtitle = subtitle) +
+        theme_bw(base_size = 12)
 ```
 
-
-## t-tests
-
-### One Comparison
-
-`limma_a_b` is used when there are exactly two levels that are being compared. If the `coef.str` column of the phenotype data is a factor, the first level will be used as the reference. If the `coef.str` column is a character vector, the first unique category will be used as the reference.
+To adjust for the presence of one or more covariates, such as accounting for batch differences, we modify the `model.str` argument. For this example, we will include Batch as a covariate. We add it *after* the variable being tested.
 
 ```{r}
-# Only two-groups
-res3 <- limma_a_b(oca.set, model.str = "~ PLATINUM.STATUS", 
-                  coef.str = "PLATINUM.STATUS")
-head(res3)
+# Include SUBTYPE as a covariate
+lm_res_cov <- limma_gen(m, model.str = "~ AGE + Batch", coef.str = "AGE")
+head(arrange(lm_res_cov, adj.P.Val))
 ```
 
-To count the number of significant features after adjustment, we can use `table` or `sum`.
+When accounting for differences due to Batch, no features have a significant linear relationship with AGE. Again, we will show a graphical representation of the top feature.
 
-```{r}
-table(res3$adj.P.Val < 0.05)
+```{r echo=FALSE}
+feature <- "NP_002104.2"
+
+slope_cov <- lm_res_cov[feature, "logFC"]
+avexpr_cov <- lm_res_cov[feature, "AveExpr"]
+intercept_cov <- avexpr_cov - mean(m$AGE, na.rm = TRUE) * slope_cov
+
+subtitle <- sprintf("logFC (slope) = %g, AveExpr (overall mean) = %g",
+                    signif(slope_cov, 2),
+                    signif(avexpr_cov, 2))
+
+data.frame(exprs = exprs(m)[feature, ],
+           AGE = m$AGE) %>% 
+        ggplot(aes(x = AGE, y = exprs)) +
+        geom_point(na.rm = TRUE, size = 3) +
+        geom_abline(slope = slope_cov, intercept = intercept_cov, 
+                    color = "#3366ff", lty = "dashed", size = 1) +
+        scale_x_continuous(limits = c(35, 80),
+                           expand = expansion(0)) +
+        labs(x = "Age (years)",
+             y = "Value in exprs(m)",
+             title = feature,
+             subtitle = subtitle) +
+        theme_bw(base_size = 12)
 ```
 
-No features are significantly different between the RESISTANT and SENSITIVE `PLATINUM.STATUS` levels after adjustment.
+## Two-Sample t-tests {#t-tests}
 
-### Multiple Comparisons
+Two-sample t-tests are used to determine whether there is a significant difference between the means of two groups. The null hypothesis is that the group means are equal, and the alternative is that they are not equal. Written another way, the null hypothesis is that the difference in means is zero, and the alternative is that the difference is not zero.
 
-`limma_contrasts` is used to perform multiple t-tests at the same time. We can use the `paircomp` function to generate contrasts to be used with `paircomp`.
+<!---
+MSnSet.utils has two functions that perform two-sample t-tests. The first function, `limma_a_b`, is used when there are exactly two groups. For example, the PLATINUM.STATUS column of `pData(m)` has exactly two categories: "SENSITIVE" and "RESISTANT". The second function, `limma_contrasts`, is used when there are more than two categories (for example, the SUBTYPE column) and we wish to test specific contrasts (usually when making comparisons against a reference). This results in separate t-statistics and p-values for each contrast, unlike `limma_gen`, which results in a single F statistic for all contrasts. We will begin with an example of how to use `limma_a_b`.
+
+--->
+
+`limma_a_b` and `limma_contrasts` can perform moderated two-sample t-tests.
+
+### One comparison {#t-single}
+
+If a factor only has two groups, we can use `limma_a_b`. We will test for differences between the "RESISTANT" and "TREATMENT" groups without accounting for any covariates.
 
 ```{r}
-# Pairwise contrasts
-contrasts <- paircomp(oca.set$SUBTYPE, name = "SUBTYPE")
+# Test RESISTANT - SENSITIVE = 0
+t_res1 <- limma_a_b(eset = m, model.str = "~ PLATINUM.STATUS", 
+                    coef.str = "PLATINUM.STATUS")
+head(arrange(t_res1, adj.P.Val)) # top 6 rows sorted by adjusted p-value
+```
+
+The `logFC` column is the difference in means between the "RESISTANT" and "SENSITIVE" groups (the first level is always the reference; use `levels(m$PLATINUM.STATUS)` to check). The other columns are
+
+- `AveExpr` overall mean (same as `rowMeans(exprs(m), na.rm = TRUE)`)
+- `t` moderated t-statistic
+- `P.Value` p-values
+- `adj.P.Val` BH-adjusted p-values (q-values)
+- `B` log-odds of differential expression/abundance
+
+Below is a graphical representation of the results for a specific feature. This is not a required step. It is just to visually explain the results.
+
+```{r t-lm-plot-1, echo=FALSE}
+feature <- "NP_000007.1"
+m1 <- m[, !is.na(m$PLATINUM.STATUS)]
+subtitle <- sprintf("logFC = %g, AveExpr (overall mean) = %g",
+                    signif(t_res1[feature, "logFC"], 2),
+                    signif(t_res1[feature, "AveExpr"], 2))
+
+data.frame(exprs = exprs(m1)[feature, ],
+           PLATINUM.STATUS = m1$PLATINUM.STATUS) %>% 
+        ggplot(aes(x = PLATINUM.STATUS, y = exprs)) +
+        geom_point(size = 3, na.rm = TRUE) +
+        stat_summary(fun = "mean", size = 0.3, geom = "crossbar",
+                     width = 0.7, lty = "longdash", color = "#3366ff") +
+        # stat_summary(fun = mean, geom = "line", aes(group = 1),
+        #              color = "blue", lty = "longdash") +
+        labs(y = "Value in exprs(m)",
+             title = feature,
+             subtitle = subtitle) +
+        theme_bw(base_size = 12)
+```
+
+The next step would be to check the p-value histograms. If those look fine, we can tally the number of q-values that have an FDR of 0.05.
+
+```{r}
+# TRUE - significant, FALSE - not significant
+table(t_res1$adj.P.Val < 0.05)
+```
+
+None of the features are significantly different between the two PLATINUM.STATUS groups at the 0.05 FDR level.
+
+
+### Multiple comparisons {#t-mult}
+
+Now, we will move on to an example of how to use `limma_contrasts`, which is suited for **comparing groups against a reference**. We will treat "Immunoreactive" as the reference group for this example, though this does not really make sense in the context of this data. It would make more sense to do a one-way ANOVA with `limma_gen` (Section \@ref(anova)). This is just for example purposes.
+
+We will test the following contrasts. Each level must begin with the variable name, or `limma_contrasts` will not work.
+
+```{r}
+# Contrasts to test
+contrasts <- paircomp(x = m$SUBTYPE, name = "SUBTYPE", 
+                      ref = "Immunoreactive")
 contrasts
 ```
 
-By default, `limma_contrasts` will generate diagnostic plots. We can prevent this by setting `plot` to `FALSE`.
+By default, `limma_contrasts` generates diagnostic plots. For now, we will not make these plots. We also need to specify a no-intercept model by including 0 in `model.str`.
 
 ```{r}
-res4 <- limma_contrasts(oca.set, model.str = "~ 0 + SUBTYPE", 
-                        coef.str = "SUBTYPE", contrasts = contrasts,
-                        plot = FALSE)
-head(arrange(res4, feature))
+# Test contrasts
+t_res2 <- limma_contrasts(eset = m, model.str = "~ 0 + SUBTYPE", 
+                          coef.str = "SUBTYPE", contrasts = contrasts,
+                          trend = TRUE, robust = TRUE, # passed to eBayes
+                          plot = FALSE)
+head(arrange(t_res2, adj.P.Val)) # top 6 rows sorted by adjusted p-value
 ```
+
+In addition to the columns from the output of `limma_a_b`, `limma_contrasts` creates a column for the contrasts and includes all columns from `fData`. It is important to note that p-values in the `adj.P.Val` column have been adjusted across all features and contrasts, so testing more contrasts results in fewer significant features. It is best to test only a small number of related contrasts.
+
+Below is a graphical representation of the results for a specific feature.
+
+```{r echo=FALSE}
+feature <- "NP_000388.2"
+
+temp <- lapply(levels(m$SUBTYPE), function(level) {
+        m_sub <- m[, m$SUBTYPE == level]
+        df <- data.frame(exprs = exprs(m_sub)[feature, ]) %>% 
+                mutate(SUBTYPE = substr(level, 1, 1))
+        n <- nrow(df)
+        if (level == "Immunoreactive") {
+                df <- do.call("rbind", replicate(3, df, simplify = FALSE))
+                df$contrast <- rep(gsub("SUBTYPE", "", contrasts), each = n)
+        } else {
+                df$contrast <- rep(sprintf("%s-Immunoreactive", level))
+        }
+        df
+}) %>% 
+        data.table::rbindlist() %>% 
+        as.data.frame() %>%
+        # Convert to factors to plot in specific order
+        mutate(SUBTYPE = factor(SUBTYPE, levels = c("I", "P", "M", "D")),
+               contrast = factor(contrast, 
+                                 levels = unique(contrast)[c(2,3,1)]))
+
+t_res2 <- as.data.frame(t_res2)
+
+# Facet labels
+contrast_labs <- sprintf(
+        "%s\nlogFC = %g",
+        gsub("-", " - ", levels(temp$contrast)),
+        signif(t_res2[t_res2$feature == feature, "logFC"], 2)[c(2,3,1)])
+names(contrast_labs) <- levels(temp$contrast)
+
+# Plot
+ggplot(temp, aes(x = SUBTYPE, y = exprs)) +
+        geom_point(size = 3) +
+        stat_summary(fun = "mean", size = 0.3, geom = "crossbar",
+                     width = 0.7, lty = "longdash", color = "#3366ff") +
+        # stat_summary(fun = mean, geom = "line", aes(group = 1),
+        #              color = "blue", lty = "longdash") +
+        facet_wrap(vars(contrast), scales = "free_x", 
+                   labeller = labeller(contrast = contrast_labs)) +
+        labs(x = "Ovarian Cancer Subtype",
+             y = "Value in exprs(m)",
+             title = feature,
+             subtitle = sprintf(
+                     "AveExpr (overall mean) = %s", 
+                     signif(mean(exprs(m)[feature, ], na.rm = TRUE), 2))) +
+        theme_bw(base_size = 12)
+```
+
+The next step would be to check the p-value histograms. If those look fine, we can tally the number of q-values that pass the threshold for statistical significance.
+
+```{r}
+# TRUE - significant, FALSE - not significant
+table(t_res2$contrast, t_res2$adj.P.Val < 0.05)
+```
+
+If we take the 51, 195, and 255 features with the lowest q-values from the "Differentiated-Immunoreactive", "Mesenchymal-Immunoreactive", and "Proliferative-Immunoreactive" comparisons, respectively, the overall estimated FDR is at most 0.05. That is, we expect ~25 out of those 501 to be false positives.
+
+More features are significantly different between the "Proliferative" and "Immunoreactive" groups than in the other comparisons.
+
+
+## One-Way ANOVA {#anova}
+
+A one-way ANOVA is a generalized version of the two-sample t-test that is used to determine whether there is a significant difference between the means of three or more groups. The null hypothesis is that all group means are equal, and the alternative is that at least one of the means is different from the rest. Written another way, the null hypothesis is that the difference between any two means is zero, and the alternative is that the difference between at least two means is not zero. 
+
+<!---
+**Hypotheses:**
+
+$H_0: \mu_1 = \mu_2 = \mu_3 = ... = \mu_k \quad \text{or} \quad \mu_i - \mu_j = 0, \quad \forall i \neq j \in 1,2,3,...,k$
+
+$H_A: \mu_i \neq \mu_j \quad \text{or} \quad \mu_i - \mu_j \neq 0, \quad \text{for some } i, j \in 1,2,3,...,k$
+--->
+
+**Note:** A one-way ANOVA does not tell us which means are different—only that a difference exists.
+
+`MSnSet.utils::limma_gen` is a wrapper around functions from the limma package that performs one-way ANOVA. We will use it to test if there is a significant difference between any two levels of SUBTYPE: "Immunoreactive", "Proliferative",  "Mesenchymal", and "Differentiated". Since SUBTYPE is a factor, the first level ("Immunoreactive") will be used as the reference. That is, we will be testing whether the means of the "Proliferative", "Mesenchymal", or "Differentiated" groups are different from the mean of the "Immunoreactive" group for each feature in the MSnSet `m`.
+
+```{r}
+anova_res <- limma_gen(eset = m, model.str = "~ SUBTYPE", 
+                       coef.str = "SUBTYPE")
+head(arrange(anova_res, adj.P.Val)) # top 6 rows arranged by adjusted p-value
+```
+
+The row names are the features that were tested, and the first three columns are the average log2 fold-changes for each contrast: "Proliferative - Immunoreactive",  "Mesenchymal - Immunoreactive", and "Differentiated - Immunoreactive". That is, a positive value indicates that the mean of the "Immunoreactive" group is lower than the mean of the other group, and a negative value indicates that the mean of the "Immunoreactive" group is higher than the mean of the other group. To find the logFC between the "Proliferative" and "Mesenchymal" groups for protein NP_055140.1, for example, we would take the difference between "SUBTYPEProliferative" and "SUBTYPEMesenchymal": -0.498 - 0.241 = -0.739. The other columns are
+
+- `AveExpr` overall mean (same as `rowMeans(exprs(m), na.rm = TRUE)`)
+- `F` moderated F-statistic
+- `P.Value` p-value
+- `adj.P.Val` BH-adjusted p-value (q-value)
+
+Below is a graphical representation of the results for a specific feature. This is not a required step; it is just a visual explanation of the results.
+
+```{r echo=FALSE}
+feature <- "NP_055140.1"
+m3 <- m[, !is.na(m$SUBTYPE)]
+
+data.frame(exprs = exprs(m3)[feature, ],
+           SUBTYPE = m3$SUBTYPE) %>% 
+        ggplot(aes(x = SUBTYPE, y = exprs)) +
+        geom_point(size = 3, na.rm = TRUE) +
+        stat_summary(fun = "mean", size = 0.3, geom = "crossbar",
+                     width = 0.7, lty = "longdash", color = "#3366ff") +
+        labs(x = "Ovarian Cancer Subtype",
+             y = "Value in exprs(m)", 
+             title = feature) +
+        theme_bw(base_size = 12)
+```
+
+<!---
+The next step would be to check the p-value histograms. If those look fine, we can tally the number of adjusted p-values that pass the threshold for statistical significance. We will use $\alpha = 0.05$ for the significance cutoff. Since we use the BH adjustment, we say that the FDR of the features that pass the significance threshold after adjustment is at most $alpha$. For example, if 100 features are considered significant at the 0.05 level after adjustment, we expect at most 5 of them to be false positives.
+--->
+
+The next step would be to check the p-value histograms. If those look fine, we can tally the number of q-values with an FDR of 0.05.
+
+```{r}
+table(anova_res$adj.P.Val < 0.05)
+```
+
+1054 features have q-values less than 0.05. Since the expected FDR is 0.05, we estimate that at most ~53 of these are false positives.
 
 ## p-value Histograms
 
-```{r}
-hist(res3$P.Value, 
+A p-value histogram visualizes the distribution of p-values from a collection of hypothesis tests. It is used as a diagnostic tool to check the validity of results prior to multiple testing correction.
+
+<!---
+If the p-values follow a uniform distribution (Figure \@ref(fig:p-val-hist-1)), all of the null hypotheses are true (e.g. the slope is 0 in the case of linear regression or there is no difference in means for t-tests and ANOVA). Few, if any, features will pass the significance threshold after adjustment. If the p-values are anti-conservative (there is a peak close to 0), then some of the null hypotheses are false (the slope is not 0 or there are differences in means). Figure \@ref(fig:p-val-hist-2) is an example of an anti-conservative histogram.
+
+**Note:** If the histogram is anti-conservative, but there are no interesting features after multiple testing correction, the experiment is underpowered, and we will not be able to detect differences even if they exist.
+--->
+
+```{r p-val-hist-1}
+hist(t_res1$P.Value, 
      breaks = seq(0, 1, 0.05), 
-     main = "Histogram of PLATINUM.STATUS ANOVA Results", 
+     main = "Histogram of p-values from PLATINUM.STATUS t-test Results",
      xlab = "p-value")
 ```
 
-The histogram is uniform, which means it is unlikely that any features will be significantly different between any two `PLATINUM.STATUS` groups after adjustment for multiple comparisons. Indeed, when we check with `table(res3$adj.P.Val < 0.05)`, none of the features pass the significance threshold after Benjamini-Hochberg (BH) adjustment.
+The histogram is uniform, which means it is unlikely that any features will be significantly different between any two PLATINUM.STATUS groups after adjustment for multiple comparisons. Indeed, when we check with `sum(t_res1$adj.P.Val < 0.05)`, none of the features pass the significance threshold after BH adjustment.
 
-
-```{r fig.asp=0.6}
-# Histogram faceted by contrast
-ggplot(res4) +
-        geom_histogram(aes(x = P.Value), breaks = seq(0, 1, 0.05),
-                       color = "black", fill = "grey") +
-        facet_wrap(vars(contrast)) +
-        theme_bw()
+```{r p-val-hist-2}
+hist(anova_res$P.Value, 
+     breaks = seq(0, 1, 0.05), 
+     main = "Histogram of p-values from SUBTYPE ANOVA Results",
+     xlab = "p-value")
 ```
 
-Based on the unadjusted p-values, it appears that there are more features that are significantly different between the Proliferative vs. Immunoreactive comparison than the other two comparisons. We can create a table of the number of features with adjusted p-values less than 0.05 in each comparison with the `table` function.
+There is a peak around 0 that indicates the null hypothesis is false for some of the tests. If plotting results from `limma_contrasts`, it is better to use the ggplot2 package to create separate histograms for each contrast.
 
 ```{r}
-table(res4$contrast, res4$adj.P.Val < 0.05)
+# Histogram faceted by contrast
+ggplot(t_res2) +
+        geom_histogram(aes(x = P.Value), breaks = seq(0, 1, 0.05),
+                       color = "black", fill = "grey") +
+        # Remove space between x-axis and min(y)
+        scale_y_continuous(expand = expansion(c(0, 0.05))) +
+        facet_wrap(vars(contrast)) + # separate plots
+        theme_bw(base_size = 12)
 ```
 
-## Volcano Plots
+Based on the p-values, it appears that there are more features that are significantly different between the "Proliferative" vs. "Immunoreactive" comparison than the other two comparisons. The counts were shown at the end of Section \@ref(t-mult).
 
-```{r volcano-plot-base, fig.asp=0.6}
-# Basic volcano plot
-plot_volcano(df = res4, logFC = "logFC", pvals = "adj.P.Val", 
-             sig_threshold = 0.05) +
-        facet_wrap(vars(contrast)) +
-        labs(y = "BH-adjusted p-value")
+
+## Volcano Plots {#volcano-plots}
+
+Volcano plots are used to summarize the results of differential analysis. They are scatter plots that show log$_2$ fold-change vs statistical significance (p-values or q-values). The `plot_volcano` function in the MSnSet.utils package is used to create volcano plots. For ANOVA results, volcano plots will not be useful, since the p-values are based on two or more contrasts; the volcano plots would not display the characteristic "V" shape.
+
+### Base plot
+
+Unless the differential analysis results are from a one-sample t-test with a single comparison, volcano plots need to be made for each contrast, since there are multiple logFC values for each feature. For this example, we will make a volcano plot using the log$_2$ fold-changes from the `t_res1` table. We will set `sig_threshold` to 0.05, which will add a dashed horizontal line indicating the cutoff for statistical significance. Normally, the adjusted p-values would be used, though they are all extremely high in these results, so we will use the unadjusted p-values for the examples.
+
+```{r}
+plot_volcano(df = t_res1, logFC = "logFC", 
+             pvals = "P.Value", sig_threshold = 0.05)
+```
+
+### Label top features
+
+`plot_volcano` has an argument called `label` to label the top most significant features. By default, the top 8 features will be labelled. The column used for labeling must be in the data frame supplied to the `df` argument. In this case, we will need to create it using the row names.
+
+```{r}
+# Create RefSeq column for labeling
+t_res1$RefSeq <- rownames(t_res1)
+
+# Volcano plot with feature labels
+plot_volcano(df = t_res1, logFC = "logFC", 
+             pvals = "P.Value", sig_threshold = 0.05,
+             label = "RefSeq") # label by RefSeq - top 8
 ```
 
 
-It looks like there are more features that are significantly lower in the Proliferative group compared to the Immunoreactive group than there are features that are significantly higher. The Differentiated group appears to behave similarly, though with fewer features passing the significance cutoff of 0.05.
+### Label specific features
 
-Below is an example of how to color points based on sign of the fold-change and whether they are significant.
+There may be cases when the features to label are not necessarily the top $n$. To label specific features, we need a column where everything but the labels are `NA`, and we need to set `num_features` to the number of rows in the data so that nothing is discarded. For this example, we will select a random group of 5 features to label.
 
-```{r fig.asp = 0.6, message=FALSE}
-# Top 4 most significant features in each contrast
-feature_labels <- res4 %>% 
-        group_by(contrast) %>%
-        slice_min(order_by = adj.P.Val, n = 4, with_ties = FALSE) %>% 
-        mutate(feature_label = feature)
+```{r}
+# 5 random RefSeqs to label
+random_features <- sample(t_res1$RefSeq, size = 5)
+# If RefSeq is not in the random group of 5, set it to NA
+t_res1 <- mutate(t_res1, 
+                 custom_labels = ifelse(RefSeq %in% random_features, 
+                                        RefSeq, NA))
+# Volcano plot with feature labels
+plot_volcano(df = t_res1, logFC = "logFC", 
+             pvals = "P.Value", sig_threshold = 0.05,
+             # Custom labels
+             label = "custom_labels", num_features = nrow(t_res1))
+```
 
-res4 <- res4 %>% 
-        # Label 5 most significant features in each comparison group
-        left_join(feature_labels) %>% 
-        # Determine point colors based on significance and sign(logFC)
+### Modify point colors
+
+We will change the color of points to reflect their significance and the sign of the log$_2$ fold-change. We start by creating a point_color column with three groups: "down", "up" and "NS" (not-significant). Then, the `point_args` argument is modified so that the color of points depends on these groups.
+
+```{r}
+# Determine point colors based on significance and sign of the logFC
+# We would normally use adj.P.Value instead of P.Value
+t_res1 <- t_res1 %>% 
         mutate(point_color = case_when(
-                adj.P.Val < 0.05 & logFC < 0 ~ "down",
-                adj.P.Val < 0.05 & logFC > 0 ~ "up",
-                TRUE ~ "NS"), 
-               point_color_sub = ifelse(!is.na(feature_label), 
-                                        point_color, NA))
+                P.Value < 0.05 & logFC < 0 ~ "down", # significantly down
+                P.Value < 0.05 & logFC > 0 ~ "up", # significantly up
+                TRUE ~ "NS") # not significant
+        )
 
 # Color points
-v1 <- plot_volcano(df = res4, logFC = "logFC", pvals = "adj.P.Val", 
-                   sig_threshold = 0.05, 
-                   point_args = list(mapping = aes(color = point_color))) +
-        facet_wrap(vars(contrast))
+v1 <- plot_volcano(df = t_res1, logFC = "logFC", 
+                   pvals = "P.Value", sig_threshold = 0.05, 
+                   # Change point color
+                   point_args = list(mapping = aes(color = point_color)))
 v1
 ```
 
-```{r fig.asp=0.6}
-# Change colors - do not include "NS"
-v1 + scale_color_manual(values = c("#5555ff", "red3", NA), 
-                        breaks = c("down", "up", "NS"), 
-                        limits = c("down", "up"), 
-                        na.value = "lightgrey") +
-        theme(legend.position = "none") # do not show legend
-```
-
+We will change the default colors to be more informative. Points in the "down" group will be #5555ff (blue), points in the "up" group will be red3, and points in the "NS" group will be lightgrey. We will also remove the legend, since it doesn't add much information.
 
 ```{r}
-# Label top 4 significant features in each contrast
-plot_volcano(df = res4, logFC = "logFC", pvals = "adj.P.Val", 
-             sig_threshold = 0.05, label = "feature_label",
-             num_features = nrow(res4),
-             # Change point and label color
-             label_args = list(mapping = aes(color = point_color),
-                               size = 2.5, box.padding = 0.75, 
-                               force_pull = 0, seed = 99), 
-             point_args = list(mapping = aes(color = point_color),
-                               alpha = 0.5)) +
-        facet_wrap(vars(contrast)) +
-        # Point colors
-        scale_color_manual(values = c("#5555ff", "red3", NA), 
-                           breaks = c("down", "up", "NS"), 
-                           limits = c("down", "up"), 
-                           na.value = "lightgrey") +
-        theme_bw() +
+# Change colors
+v1 + scale_color_manual(values = c("#5555ff", "red3", "lightgrey"), 
+                        breaks = c("down", "up", "NS")) +
         theme(legend.position = "none") # do not show legend
 ```
+
+### Multiple volcano plots
+
+For results generated by `limma_contrasts`, we should make separate plots for each comparison with `facet_wrap` or `facet_grid`.
+
+```{r volcano-plot-contrasts}
+# Basic volcano plot
+plot_volcano(df = t_res2, logFC = "logFC", pvals = "adj.P.Val", 
+             sig_threshold = 0.05) + 
+        facet_wrap(vars(contrast)) + # plot for each contrast
+        labs(title = "Volcano Plots of limma_contrasts Results")
+```
+
+<!---
+## UpSet Plots
+
+"An UpSet plot is an alternative to a Venn Diagram" (R graph gallery).
+--->
 
 

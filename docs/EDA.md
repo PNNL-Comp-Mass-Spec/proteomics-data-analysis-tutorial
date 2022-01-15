@@ -2,14 +2,15 @@
 
 Exploratory Data Analysis (EDA) is an important step before any sort of statistical analyses. The goal of EDA is to get a big picture view of the data and identify potential outlier samples and batch effects that need to be corrected. For this section, we need to load the MSnSet.utils, dplyr, and car packages. MSnSet.utils contains the `cptac_oca` data that we will use to illustrate these EDA approaches, as well as the `plot_pca` function for creating PCA plots of samples. The dplyr package is used for data frame manipulation, though it is only used for the pipe operator (`%>%`) in this section. The car package is used to create density plots with the `plotDensity` function, though similar plots can be made by combining `stats::density` with `base::plot`.
 
-If creating figures for publications or presentations, it is recommended to use the ggplot2 package. For this section, however, I opted to use simpler plotting functions where possible because these initial plots are just to get a first impression of the data.
-
-
 
 
 
 ```r
-# Packages
+## Uncomment to install missing packages
+# install.packages("remotes")
+# remotes::install_github("PNNL-Comp-Mass-Spec/MSnSet.utils")
+# install.packages("dplyr")
+# install.packages("car")
 library(MSnSet.utils)
 library(dplyr)
 library(car)

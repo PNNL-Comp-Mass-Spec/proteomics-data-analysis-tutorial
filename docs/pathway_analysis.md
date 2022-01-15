@@ -3,9 +3,9 @@
 
 
 
-In Section \@ref(DEA), we covered analysis at the individual feature level (protein, peptide, phosphoprotein, etc.). While DEA is useful, it is not without its own set of shortcomings. For instance, there may be no features that pass the significance threshold after correcting for multiple hypothesis testing. Alternatively, there may be many features that are statistically significant, and interpreting this list can be tedious and "prone to investigator bias toward a hypothesis of interest" [@maleki_gene_2020]. Another issue is that single-feature analysis fails to detect subtle, yet coordinated changes in groups of related features [@subramanian_gene_2005]. 
+In Section \@ref(DEA), we covered analysis at the individual feature level (protein, peptide, phosphoprotein, etc.). While this is useful, it is not without its own set of shortcomings. For instance, there may be no features that pass the significance threshold after correcting for multiple hypothesis testing. Alternatively, there may be many features that are statistically significant, and interpreting this list can be tedious and "prone to investigator bias toward a hypothesis of interest" [@maleki_gene_2020]. Another issue is that single-feature analysis fails to detect subtle, yet coordinated changes in groups of related features [@subramanian_gene_2005]. 
 
-In order to address these, and other, issues, pathway analysis instead examines *a priori* defined **gene sets**—groups of genes that participate in the same biological pathway, share the same cellular location, etc. In this section, we will explore some common annotation databases, as well as two pathway analysis methods: Over-Representation Analysis (ORA) and Gene Set Enrichment Analysis (GSEA).
+In order to address these, and other, issues, pathway analysis instead examines *a priori* defined **gene sets**---groups of genes that participate in the same biological pathway, share the same cellular location, etc. In this section, we will explore some common annotation databases, as well as two pathway analysis methods: Over-Representation Analysis (ORA) and Gene Set Enrichment Analysis (GSEA).
 
 
 ## Annotation Databases {#annotation-databases}
@@ -108,6 +108,11 @@ GO_slim <- getBM(filters = "entrezgene_id",
 ```
 
 
+
+
+
+
+
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
  <thead>
   <tr>
@@ -171,8 +176,6 @@ Unfortunately, not every GO accession maps to a domain when we use `biomaRt` (un
 
 ## Over-Representation Analysis {#ora}
 
-### Overview {#ora-overview}
-
 Over-Representation Analysis (ORA) is used to determine which *a priori* defined gene sets are more present (over-represented) in a subset of "interesting" genes than what would be expected by chance [@huang_bioinformatics_2009]. Essentially, it identifies the gene sets—rather than the individual genes—that are significantly different between two conditions.
 
 For each gene set, an enrichment p-value is calculated using the Binomial distribution, Hypergeometric distribution, the Fisher exact test, or the Chi-square test. Although this list is not all-encompassing, these are the most popular statistical methods [@huang_bioinformatics_2009]. Below is the formula for calculating the enrichment p-value for a particular gene set using the Hypergeometric distribution.
@@ -202,8 +205,7 @@ phyper(q = 20 - 1, m = 400, n = 8000 - 400, k = 100, lower.tail = FALSE)
 
 After a p-value has been calculated for each of the applicable gene sets, a multiple comparison adjustment should be performed.
 
-#### Important Considerations {-}
-
+**Important Considerations**
 <ol>
 <li>
 The choice of the threshold for statistical significance and the multiple comparison adjustment method can greatly impact the analysis [@huang_bioinformatics_2009].
@@ -287,7 +289,9 @@ cp_ora_go <- enrichGO(
    <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> BgRatio </th>
    <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> pvalue </th>
    <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> p.adjust </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> qvalue </th>
    <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> geneID </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Count </th>
   </tr>
  </thead>
 <tbody>
@@ -298,7 +302,9 @@ cp_ora_go <- enrichGO(
    <td style="text-align:left;"> 96/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> COX4I1/PGK1/TPI1... </td>
+   <td style="text-align:right;"> 24 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" style="     ">GO:0006119</a> </td>
@@ -307,7 +313,9 @@ cp_ora_go <- enrichGO(
    <td style="text-align:left;"> 49/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> COX4I1/COX8A/COX7C... </td>
+   <td style="text-align:right;"> 16 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006402" style="     ">GO:0006402</a> </td>
@@ -316,7 +324,9 @@ cp_ora_go <- enrichGO(
    <td style="text-align:left;"> 93/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> HNRNPU/YWHAZ/RPL13A... </td>
+   <td style="text-align:right;"> 22 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:1902600" style="     ">GO:1902600</a> </td>
@@ -325,7 +335,9 @@ cp_ora_go <- enrichGO(
    <td style="text-align:left;"> 28/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> COX4I1/COX8A/COX7C... </td>
+   <td style="text-align:right;"> 12 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0016071" style="     ">GO:0016071</a> </td>
@@ -334,7 +346,9 @@ cp_ora_go <- enrichGO(
    <td style="text-align:left;"> 208/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> HNRNPU/YWHAZ/RPL13A... </td>
+   <td style="text-align:right;"> 35 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006091" style="     ">GO:0006091</a> </td>
@@ -343,7 +357,9 @@ cp_ora_go <- enrichGO(
    <td style="text-align:left;"> 159/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> COX4I1/PGK1/TPI1... </td>
+   <td style="text-align:right;"> 29 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" style="     ">GO:0009060</a> </td>
@@ -352,7 +368,9 @@ cp_ora_go <- enrichGO(
    <td style="text-align:left;"> 32/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 1e-04 </td>
+   <td style="text-align:right;"> 1e-04 </td>
    <td style="text-align:left;"> COX4I1/MDH1/HIF1A... </td>
+   <td style="text-align:right;"> 12 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006401" style="     ">GO:0006401</a> </td>
@@ -361,7 +379,9 @@ cp_ora_go <- enrichGO(
    <td style="text-align:left;"> 104/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 1e-04 </td>
+   <td style="text-align:right;"> 1e-04 </td>
    <td style="text-align:left;"> HNRNPU/YWHAZ/RPL13A... </td>
+   <td style="text-align:right;"> 22 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0010608" style="     ">GO:0010608</a> </td>
@@ -370,7 +390,9 @@ cp_ora_go <- enrichGO(
    <td style="text-align:left;"> 168/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 3e-04 </td>
+   <td style="text-align:right;"> 2e-04 </td>
    <td style="text-align:left;"> HNRNPU/MATR3/YWHAZ... </td>
+   <td style="text-align:right;"> 28 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0042773" style="     ">GO:0042773</a> </td>
@@ -379,7 +401,9 @@ cp_ora_go <- enrichGO(
    <td style="text-align:left;"> 31/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 3e-04 </td>
+   <td style="text-align:right;"> 2e-04 </td>
    <td style="text-align:left;"> COX4I1/COX8A/COX7C... </td>
+   <td style="text-align:right;"> 11 </td>
   </tr>
 </tbody>
 </table></div>
@@ -408,7 +432,9 @@ cp_ora_go_sim <- simplify(cp_ora_go)
    <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> BgRatio </th>
    <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> pvalue </th>
    <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> p.adjust </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> qvalue </th>
    <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> geneID </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Count </th>
   </tr>
  </thead>
 <tbody>
@@ -419,7 +445,9 @@ cp_ora_go_sim <- simplify(cp_ora_go)
    <td style="text-align:left;"> 96/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> COX4I1/PGK1/TPI1... </td>
+   <td style="text-align:right;"> 24 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" style="     ">GO:0006119</a> </td>
@@ -428,7 +456,9 @@ cp_ora_go_sim <- simplify(cp_ora_go)
    <td style="text-align:left;"> 49/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> COX4I1/COX8A/COX7C... </td>
+   <td style="text-align:right;"> 16 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006402" style="     ">GO:0006402</a> </td>
@@ -437,7 +467,9 @@ cp_ora_go_sim <- simplify(cp_ora_go)
    <td style="text-align:left;"> 93/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> HNRNPU/YWHAZ/RPL13A... </td>
+   <td style="text-align:right;"> 22 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:1902600" style="     ">GO:1902600</a> </td>
@@ -446,7 +478,9 @@ cp_ora_go_sim <- simplify(cp_ora_go)
    <td style="text-align:left;"> 28/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> COX4I1/COX8A/COX7C... </td>
+   <td style="text-align:right;"> 12 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0016071" style="     ">GO:0016071</a> </td>
@@ -455,7 +489,9 @@ cp_ora_go_sim <- simplify(cp_ora_go)
    <td style="text-align:left;"> 208/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> HNRNPU/YWHAZ/RPL13A... </td>
+   <td style="text-align:right;"> 35 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006091" style="     ">GO:0006091</a> </td>
@@ -464,7 +500,9 @@ cp_ora_go_sim <- simplify(cp_ora_go)
    <td style="text-align:left;"> 159/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> COX4I1/PGK1/TPI1... </td>
+   <td style="text-align:right;"> 29 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0010608" style="     ">GO:0010608</a> </td>
@@ -473,7 +511,9 @@ cp_ora_go_sim <- simplify(cp_ora_go)
    <td style="text-align:left;"> 168/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 3e-04 </td>
+   <td style="text-align:right;"> 2e-04 </td>
    <td style="text-align:left;"> HNRNPU/MATR3/YWHAZ... </td>
+   <td style="text-align:right;"> 28 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009205" style="     ">GO:0009205</a> </td>
@@ -482,7 +522,9 @@ cp_ora_go_sim <- simplify(cp_ora_go)
    <td style="text-align:left;"> 21/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 4e-04 </td>
+   <td style="text-align:right;"> 3e-04 </td>
    <td style="text-align:left;"> RAN/ENO1/ATP5F1B... </td>
+   <td style="text-align:right;"> 9 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0034097" style="     ">GO:0034097</a> </td>
@@ -491,7 +533,9 @@ cp_ora_go_sim <- simplify(cp_ora_go)
    <td style="text-align:left;"> 357/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 4e-04 </td>
+   <td style="text-align:right;"> 4e-04 </td>
    <td style="text-align:left;"> HNRNPU/YWHAZ/SLC25A5... </td>
+   <td style="text-align:right;"> 45 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0071345" style="     ">GO:0071345</a> </td>
@@ -500,7 +544,9 @@ cp_ora_go_sim <- simplify(cp_ora_go)
    <td style="text-align:left;"> 325/3652 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 4e-04 </td>
+   <td style="text-align:right;"> 4e-04 </td>
    <td style="text-align:left;"> HNRNPU/YWHAZ/SLC25A5... </td>
+   <td style="text-align:right;"> 42 </td>
   </tr>
 </tbody>
 </table></div>
@@ -848,7 +894,9 @@ cp_ora_reactome <- enrichPathway(
    <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> BgRatio </th>
    <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> pvalue </th>
    <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> p.adjust </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> qvalue </th>
    <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> geneID </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Count </th>
   </tr>
  </thead>
 <tbody>
@@ -859,7 +907,9 @@ cp_ora_reactome <- enrichPathway(
    <td style="text-align:left;"> 185/2548 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> COX4I1/RPL13A/SKP1... </td>
+   <td style="text-align:right;"> 39 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://reactome.org/content/detail/R-HSA-2262752" style="     ">R-HSA-2262752</a> </td>
@@ -868,7 +918,9 @@ cp_ora_reactome <- enrichPathway(
    <td style="text-align:left;"> 181/2548 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> COX4I1/RPL13A/SKP1... </td>
+   <td style="text-align:right;"> 37 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://reactome.org/content/detail/R-HSA-163200" style="     ">R-HSA-163200</a> </td>
@@ -877,7 +929,9 @@ cp_ora_reactome <- enrichPathway(
    <td style="text-align:left;"> 37/2548 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> COX4I1/COX8A/COX7C... </td>
+   <td style="text-align:right;"> 15 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://reactome.org/content/detail/R-HSA-5663205" style="     ">R-HSA-5663205</a> </td>
@@ -886,7 +940,9 @@ cp_ora_reactome <- enrichPathway(
    <td style="text-align:left;"> 212/2548 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> PRKAR1A/SLC25A5/RPL13A... </td>
+   <td style="text-align:right;"> 38 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://reactome.org/content/detail/R-HSA-9711123" style="     ">R-HSA-9711123</a> </td>
@@ -895,7 +951,9 @@ cp_ora_reactome <- enrichPathway(
    <td style="text-align:left;"> 61/2548 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> COX4I1/SKP1/PSMB7... </td>
+   <td style="text-align:right;"> 18 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://reactome.org/content/detail/R-HSA-9707564" style="     ">R-HSA-9707564</a> </td>
@@ -904,7 +962,9 @@ cp_ora_reactome <- enrichPathway(
    <td style="text-align:left;"> 50/2548 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> COX4I1/SKP1/PSMB7... </td>
+   <td style="text-align:right;"> 16 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://reactome.org/content/detail/R-HSA-1428517" style="     ">R-HSA-1428517</a> </td>
@@ -913,7 +973,9 @@ cp_ora_reactome <- enrichPathway(
    <td style="text-align:left;"> 57/2548 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> COX4I1/LDHB/COX8A... </td>
+   <td style="text-align:right;"> 17 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://reactome.org/content/detail/R-HSA-72766" style="     ">R-HSA-72766</a> </td>
@@ -922,7 +984,9 @@ cp_ora_reactome <- enrichPathway(
    <td style="text-align:left;"> 58/2548 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0e+00 </td>
+   <td style="text-align:right;"> 0e+00 </td>
    <td style="text-align:left;"> RPL13A/RPL29/KARS1... </td>
+   <td style="text-align:right;"> 17 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://reactome.org/content/detail/R-HSA-5628897" style="     ">R-HSA-5628897</a> </td>
@@ -931,7 +995,9 @@ cp_ora_reactome <- enrichPathway(
    <td style="text-align:left;"> 34/2548 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 1e-04 </td>
+   <td style="text-align:right;"> 1e-04 </td>
    <td style="text-align:left;"> COX4I1/YWHAZ/YWHAQ... </td>
+   <td style="text-align:right;"> 12 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="https://reactome.org/content/detail/R-HSA-8953854" style="     ">R-HSA-8953854</a> </td>
@@ -940,7 +1006,9 @@ cp_ora_reactome <- enrichPathway(
    <td style="text-align:left;"> 181/2548 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 3e-04 </td>
+   <td style="text-align:right;"> 1e-04 </td>
    <td style="text-align:left;"> HNRNPU/YWHAZ/RPL13A... </td>
+   <td style="text-align:right;"> 31 </td>
   </tr>
 </tbody>
 </table></div>
@@ -1202,7 +1270,9 @@ cp_ora_pfam <- enricher(
    <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> BgRatio </th>
    <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> pvalue </th>
    <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> p.adjust </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> qvalue </th>
    <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> geneID </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Count </th>
   </tr>
  </thead>
 <tbody>
@@ -1213,7 +1283,9 @@ cp_ora_pfam <- enricher(
    <td style="text-align:left;"> 31/3676 </td>
    <td style="text-align:right;"> 0.0029 </td>
    <td style="text-align:right;"> 0.0686 </td>
+   <td style="text-align:right;"> 0.0686 </td>
    <td style="text-align:left;"> 1293/1281/1277... </td>
+   <td style="text-align:right;"> 7 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00076" style="     ">PF00076</a> </td>
@@ -1222,7 +1294,9 @@ cp_ora_pfam <- enricher(
    <td style="text-align:left;"> 55/3676 </td>
    <td style="text-align:right;"> 0.0598 </td>
    <td style="text-align:right;"> 0.5360 </td>
+   <td style="text-align:right;"> 0.5360 </td>
    <td style="text-align:left;"> 1153/3182/5042... </td>
+   <td style="text-align:right;"> 7 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00092" style="     ">PF00092</a> </td>
@@ -1231,7 +1305,9 @@ cp_ora_pfam <- enricher(
    <td style="text-align:left;"> 15/3676 </td>
    <td style="text-align:right;"> 0.0670 </td>
    <td style="text-align:right;"> 0.5360 </td>
+   <td style="text-align:right;"> 0.5360 </td>
    <td style="text-align:left;"> 1293/1292/1291 </td>
+   <td style="text-align:right;"> 3 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00071" style="     ">PF00071</a> </td>
@@ -1240,7 +1316,9 @@ cp_ora_pfam <- enricher(
    <td style="text-align:left;"> 23/3676 </td>
    <td style="text-align:right;"> 0.1803 </td>
    <td style="text-align:right;"> 0.9021 </td>
+   <td style="text-align:right;"> 0.9021 </td>
    <td style="text-align:left;"> 5901/6009/388 </td>
+   <td style="text-align:right;"> 3 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF07679" style="     ">PF07679</a> </td>
@@ -1249,7 +1327,9 @@ cp_ora_pfam <- enricher(
    <td style="text-align:left;"> 27/3676 </td>
    <td style="text-align:right;"> 0.2488 </td>
    <td style="text-align:right;"> 0.9021 </td>
+   <td style="text-align:right;"> 0.9021 </td>
    <td style="text-align:left;"> 23022/3490/25878 </td>
+   <td style="text-align:right;"> 3 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF13499" style="     ">PF13499</a> </td>
@@ -1258,7 +1338,9 @@ cp_ora_pfam <- enricher(
    <td style="text-align:left;"> 20/3676 </td>
    <td style="text-align:right;"> 0.3710 </td>
    <td style="text-align:right;"> 0.9021 </td>
+   <td style="text-align:right;"> 0.9021 </td>
    <td style="text-align:left;"> 6717/80303 </td>
+   <td style="text-align:right;"> 2 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00271" style="     ">PF00271</a> </td>
@@ -1267,7 +1349,9 @@ cp_ora_pfam <- enricher(
    <td style="text-align:left;"> 24/3676 </td>
    <td style="text-align:right;"> 0.4622 </td>
    <td style="text-align:right;"> 0.9021 </td>
+   <td style="text-align:right;"> 0.9021 </td>
    <td style="text-align:left;"> 1973/10521 </td>
+   <td style="text-align:right;"> 2 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00412" style="     ">PF00412</a> </td>
@@ -1276,7 +1360,9 @@ cp_ora_pfam <- enricher(
    <td style="text-align:left;"> 24/3676 </td>
    <td style="text-align:right;"> 0.4622 </td>
    <td style="text-align:right;"> 0.9021 </td>
+   <td style="text-align:right;"> 0.9021 </td>
    <td style="text-align:left;"> 1396/9124 </td>
+   <td style="text-align:right;"> 2 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF13855" style="     ">PF13855</a> </td>
@@ -1285,7 +1371,9 @@ cp_ora_pfam <- enricher(
    <td style="text-align:left;"> 42/3676 </td>
    <td style="text-align:right;"> 0.5121 </td>
    <td style="text-align:right;"> 0.9021 </td>
+   <td style="text-align:right;"> 0.9021 </td>
    <td style="text-align:left;"> 4060/1634/25878 </td>
+   <td style="text-align:right;"> 3 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> <a href="http://pfam.xfam.org/family/PF00046" style="     ">PF00046</a> </td>
@@ -1294,7 +1382,9 @@ cp_ora_pfam <- enricher(
    <td style="text-align:left;"> 27/3676 </td>
    <td style="text-align:right;"> 0.5253 </td>
    <td style="text-align:right;"> 0.9021 </td>
+   <td style="text-align:right;"> 0.9021 </td>
    <td style="text-align:left;"> 5087/29956 </td>
+   <td style="text-align:right;"> 2 </td>
   </tr>
 </tbody>
 </table></div>
@@ -1360,9 +1450,14 @@ In this data frame, there are only 6186 Pfam entries. This is not even close to 
 --->
 
 
-## Gene Set Enrichment Analysis {#gsea}
+<!---
+------------------------------------------------------------------------------
+--->
 
-### Overview {#gsea-overview}
+
+
+
+## Gene Set Enrichment Analysis {#gsea}
 
 Gene Set Enrichment Analysis (GSEA) employs a "no-cutoff" strategy that utilizes some experimental value (such as fold change, the moderated t-statistic, or Z-Score) to rank a list of $N$ genes in descending order. Using this ranked list $L$, the values of the ranking metric, and an *a priori* defined gene set $S$, we can calculate an enrichment score. This is done by "walking down the list $L$, increasing a running-sum statistic when we encounter a gene in $S$ and decreasing it when we encounter genes not in $S$." The maximum deviation from zero of this running-sum statistic is the enrichment score for $S$, denoted by $ES(S)$. If the genes in $S$ are randomly distributed throughout $L$, $ES(S)$ will be relatively small; however, if they are not randomly distributed (i.e. primarily located near either end of $L$), then $ES(S)$ will be relatively large [@mootha_pgc-1-responsive_2003; @subramanian_gene_2005].
 
@@ -1382,8 +1477,7 @@ r_{i-1} - \frac{1}{N-k} & \text{if } 1 \leq i \leq N \text{ and } i \not\in S
 
 $ES(S)$ is the largest (in terms of absolute value) element of $r_N$. This notation is a slightly modified version of what is presented in the paper by @korotkevich_fast_2016.
 
-#### Important Considerations {-}
-
+**Important Considerations**
 <ol>
 <li>
 GSEA is not influenced by an arbitrary cutoff for statistical significance. This is especially useful when only a few features pass this threshold after adjustment for multiple testing, and it also means that it does not depend on the choice of p-value adjustment.
@@ -1497,7 +1591,8 @@ gsea_input <- limma_gen(m, model.str = "~ PLATINUM.STATUS",
                         coef.str = "PLATINUM.STATUS") %>% 
   mutate(RefSeq = rownames(.)) %>% # Create RefSeq column
   left_join(fData(m), by = "RefSeq") %>%  # Add columns from fData
-  .[complete.cases(.), ] %>% # Remove rows with any missing values
+  # Remove rows with missing entrez_gene or P.Value
+  filter(!is.na(entrez_gene), !is.na(P.Value)) %>%
   # Create GSEA ranking metric column: signed -log10 p-value
   mutate(ranking_metric = -log10(P.Value) * sign(logFC)) %>% 
   # Average ranking metric for each gene
@@ -1505,7 +1600,7 @@ gsea_input <- limma_gen(m, model.str = "~ PLATINUM.STATUS",
   summarise(ranking_metric = mean(ranking_metric)) %>% 
   # Sort from high to low by ranking metric
   arrange(-ranking_metric) %>%
-  # Convert to named vector
+  # Convert to named vector - first column is names, second is values
   tibble::deframe()
 
 head(gsea_input)
@@ -1548,7 +1643,7 @@ go_gsea <- gseGO(geneList = gsea_input,
 ```
 
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; "><table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">(\#tab:unnamed-chunk-19) </caption>
+<caption style="font-size: initial !important;">(\#tab:unnamed-chunk-21) </caption>
  <thead>
   <tr>
    <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> ID </th>
@@ -1570,7 +1665,7 @@ go_gsea <- gseGO(geneList = gsea_input,
    <td style="text-align:left;"> keratinization </td>
    <td style="text-align:right;"> 54 </td>
    <td style="text-align:right;"> 0.7794 </td>
-   <td style="text-align:right;"> 2.7035 </td>
+   <td style="text-align:right;"> 2.7349 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
@@ -1583,7 +1678,7 @@ go_gsea <- gseGO(geneList = gsea_input,
    <td style="text-align:left;"> cornification </td>
    <td style="text-align:right;"> 50 </td>
    <td style="text-align:right;"> 0.7820 </td>
-   <td style="text-align:right;"> 2.6888 </td>
+   <td style="text-align:right;"> 2.6803 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
@@ -1596,7 +1691,7 @@ go_gsea <- gseGO(geneList = gsea_input,
    <td style="text-align:left;"> ATP metabolic process </td>
    <td style="text-align:right;"> 234 </td>
    <td style="text-align:right;"> 0.5070 </td>
-   <td style="text-align:right;"> 2.2250 </td>
+   <td style="text-align:right;"> 2.2107 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
@@ -1605,24 +1700,11 @@ go_gsea <- gseGO(geneList = gsea_input,
    <td style="text-align:left;"> 1738/64802/11315... </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0007005" style="     ">GO:0007005</a> </td>
-   <td style="text-align:left;"> mitochondrion organization </td>
-   <td style="text-align:right;"> 370 </td>
-   <td style="text-align:right;"> 0.4318 </td>
-   <td style="text-align:right;"> 1.9836 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1530 </td>
-   <td style="text-align:left;"> tags=35%, list=20%, signal=30% </td>
-   <td style="text-align:left;"> 23277/54927/9141... </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" style="     ">GO:0006119</a> </td>
    <td style="text-align:left;"> oxidative phosphorylation </td>
    <td style="text-align:right;"> 112 </td>
    <td style="text-align:right;"> 0.6049 </td>
-   <td style="text-align:right;"> 2.4078 </td>
+   <td style="text-align:right;"> 2.4034 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
@@ -1631,11 +1713,24 @@ go_gsea <- gseGO(geneList = gsea_input,
    <td style="text-align:left;"> 1738/11315/1340... </td>
   </tr>
   <tr>
+   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0007005" style="     ">GO:0007005</a> </td>
+   <td style="text-align:left;"> mitochondrion organization </td>
+   <td style="text-align:right;"> 370 </td>
+   <td style="text-align:right;"> 0.4318 </td>
+   <td style="text-align:right;"> 1.9854 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1530 </td>
+   <td style="text-align:left;"> tags=35%, list=20%, signal=30% </td>
+   <td style="text-align:left;"> 23277/54927/9141... </td>
+  </tr>
+  <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0045229" style="     ">GO:0045229</a> </td>
    <td style="text-align:left;"> external encapsulating structure organization </td>
    <td style="text-align:right;"> 225 </td>
    <td style="text-align:right;"> -0.4919 </td>
-   <td style="text-align:right;"> -2.1088 </td>
+   <td style="text-align:right;"> -2.1305 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
@@ -1648,7 +1743,7 @@ go_gsea <- gseGO(geneList = gsea_input,
    <td style="text-align:left;"> inner mitochondrial membrane organization </td>
    <td style="text-align:right;"> 47 </td>
    <td style="text-align:right;"> 0.7458 </td>
-   <td style="text-align:right;"> 2.5613 </td>
+   <td style="text-align:right;"> 2.5235 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
@@ -1661,7 +1756,7 @@ go_gsea <- gseGO(geneList = gsea_input,
    <td style="text-align:left;"> extracellular matrix organization </td>
    <td style="text-align:right;"> 224 </td>
    <td style="text-align:right;"> -0.4933 </td>
-   <td style="text-align:right;"> -2.1138 </td>
+   <td style="text-align:right;"> -2.1377 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
@@ -1674,7 +1769,7 @@ go_gsea <- gseGO(geneList = gsea_input,
    <td style="text-align:left;"> extracellular structure organization </td>
    <td style="text-align:right;"> 224 </td>
    <td style="text-align:right;"> -0.4933 </td>
-   <td style="text-align:right;"> -2.1138 </td>
+   <td style="text-align:right;"> -2.1377 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
@@ -1683,17 +1778,17 @@ go_gsea <- gseGO(geneList = gsea_input,
    <td style="text-align:left;"> 780/9510/3687... </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0045333" style="     ">GO:0045333</a> </td>
-   <td style="text-align:left;"> cellular respiration </td>
-   <td style="text-align:right;"> 146 </td>
-   <td style="text-align:right;"> 0.5398 </td>
-   <td style="text-align:right;"> 2.2240 </td>
+   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0015980" style="     ">GO:0015980</a> </td>
+   <td style="text-align:left;"> energy derivation by oxidation of organic compounds </td>
+   <td style="text-align:right;"> 190 </td>
+   <td style="text-align:right;"> 0.5048 </td>
+   <td style="text-align:right;"> 2.1419 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 916 </td>
-   <td style="text-align:left;"> tags=32%, list=12%, signal=28% </td>
-   <td style="text-align:left;"> 1738/1743/11315... </td>
+   <td style="text-align:right;"> 918 </td>
+   <td style="text-align:left;"> tags=28%, list=12%, signal=25% </td>
+   <td style="text-align:left;"> 1738/178/1743... </td>
   </tr>
 </tbody>
 </table></div>

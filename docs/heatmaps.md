@@ -111,9 +111,9 @@ complex_heatmap(m, anno_column = c("Type", "Age"),
 <img src="heatmaps_files/figure-html/unnamed-chunk-7-1.png" width="75%" style="display: block; margin: auto;" />
 
 
-## Additional Modifications
+## Modifications
 
-`heatmap_args` and `anno_args` are used to modify the heatmaps: changing the row and column labels, labeling specific features, changing the colors of labels, changing font size, adding different types of annotations, splitting rows or columns into groups, etc. The <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/">ComplexHeatmap Complete Reference</a> goes more into detail about each of these modifications, but we will cover a few of them in this section in the context of MSnSets.
+`heatmap_args` and `anno_args` are used to modify the heatmaps: changing the row and column labels, labeling specific features, changing the colors of labels, changing font size, adding different types of annotations, splitting rows or columns into groups, etc. The <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/">ComplexHeatmap Complete Reference</a> goes more into detail about each of these modifications, but we will cover a few of them in this section.
 
 We will use a random subset of the MSnSet to explore some of these modifications. This is just so we can see the row and column names more easily.
 
@@ -125,7 +125,7 @@ m_sub <- m[sample(1:nrow(m), size = 25),
            sample(1:ncol(m), size = 40)]
 ```
 
-### Change row or column labels
+### Row and column labels
 
 By default, the row and column labels are the row and column names of the matrix passed to `Heatmap`. In the case of the default expression heatmap, the row names are the `featureNames` of the MSnSet and the column names are the `sampleNames`. We can instead use any column in `fData` and any column in `pData` to label the rows and columns, respectively. Duplicate labels are also allowed, which is especially useful if there are multiple peptides that map to the same protein, multiple proteins that map to the same gene, etc.
 
@@ -153,7 +153,7 @@ complex_heatmap(m_sub, show_row_names = TRUE,
 <img src="heatmaps_files/figure-html/unnamed-chunk-10-1.png" width="75%" style="display: block; margin: auto;" />
 
 
-### Change label colors
+### Label colors
 
 
 ```r
@@ -227,7 +227,7 @@ row_title = NULL, column_title = NULL))
 
 --->
 
-### Change heatmap body color
+### Heatmap body color
 
 
 ```r
@@ -256,4 +256,76 @@ complex_heatmap(m, heatmap_args = list(col = circlize::colorRamp2(
 ```
 
 <img src="heatmaps_files/figure-html/unnamed-chunk-17-1.png" width="75%" style="display: block; margin: auto;" />
+
+### Horizontal heatmaps
+
+To create a horizontal heatmap, we need to take the transpose of the MSnSet. *This will switch the phenoData and featureData*. We will also reverse the order of the rows prior to the transpose so that the heatmap would appear to be rotated 90 degrees if samples were not clustered.
+
+
+```r
+# Rotate MSnSet
+m_rot <- t(m[, ncol(m):1])
+m_rot
+```
+
+```
+## MSnSet (storageMode: lockedEnvironment)
+## assayData: 236 features, 300 samples 
+##   element names: exprs 
+## protocolData: none
+## phenoData
+##   sampleNames: NTVISVFGASGDLAK TFPALFGLFR ... LLAEPVPGIK (300 total)
+##   varLabels: Organism Protein Peptide isSpike
+##   varMetadata: labelDescription
+## featureData
+##   featureNames: QC.24 QC.23 ... X03_C_B (236 total)
+##   fvarLabels: Sample isQC ... Age (12 total)
+##   fvarMetadata: labelDescription
+## experimentData: use 'experimentData(object)'
+## Annotation:  
+## - - - Processing information - - -
+## Subset [308,236][300,236] Fri Nov  9 15:22:49 2018 
+## Subset [300,236][300,236] Fri Jan 14 19:10:36 2022 
+## MSnSet transposed [Fri Jan 14 19:10:36 2022] 
+##  MSnbase version: 2.7.11
+```
+
+We will annotate rows to show that it worked.
+
+
+```r
+# Horizontal heatmap with row annotations
+complex_heatmap(m_rot, anno_row = "Age")
+```
+
+<img src="heatmaps_files/figure-html/unnamed-chunk-19-1.png" width="75%" style="display: block; margin: auto;" />
+
+### Legends
+
+Modifying legends with `draw_args`, `heatmap_args`, and `anno_args`. Below, we change the direction of the heatmap legend and continuous annotation legends to horizontal, change position of annotation titles to top left, and set the number of rows for discrete annotation legends to 1. We also change the width of the "Age" legend to 28 mm, move the legends to the bottom of the heatmap, and set the space between the legends to 10 mm.
+
+
+```r
+# Horizontal legends at the bottom
+complex_heatmap(m, anno_column = c("Type", "Age"), 
+                # horizontal heatmap legend
+                heatmap_args = list(
+                  heatmap_legend_param = list(direction = "horizontal")
+                ),
+                # horizontal annotation legend
+                anno_args = list(
+                  annotation_legend_param = list(
+                    title_position = "lefttop",
+                    legend_width = unit(28, "mm"),
+                    direction = "horizontal", # for continuous legends
+                    nrow = 1 # for discrete legends
+                  )
+                ),
+                # Place legends at bottom of heatmap
+                draw_args = list(heatmap_legend_side = "bottom",
+                                 legend_gap = unit(10, "mm"))
+)
+```
+
+<img src="heatmaps_files/figure-html/unnamed-chunk-20-1.png" width="75%" style="display: block; margin: auto;" />
 

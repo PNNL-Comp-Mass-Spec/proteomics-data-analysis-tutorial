@@ -9,6 +9,7 @@ language:
     chapter_name: "Section "
 new_session: yes
 rmd_files:
-  ["index.Rmd", "isobaric_quantification.Rmd", "label-free_quantification.Rmd",
+  ["index.Rmd", "iso_quant_global_prot.Rmd", "iso_quant_phospho.Rmd",
+  "label-free_quantification.Rmd",
   "EDA.Rmd", "heatmaps.Rmd", "DEA.Rmd", "pathway_analysis.Rmd",
   "references.Rmd"]

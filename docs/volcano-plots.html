@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>5.5 Volcano Plots | Proteomics Data Analysis in R/Bioconductor</title>
+  <title>6.6 Volcano Plots | Proteomics Data Analysis in R/Bioconductor</title>
   <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="5.5 Volcano Plots | Proteomics Data Analysis in R/Bioconductor" />
+  <meta property="og:title" content="6.6 Volcano Plots | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="5.5 Volcano Plots | Proteomics Data Analysis in R/Bioconductor" />
+  <meta name="twitter:title" content="6.6 Volcano Plots | Proteomics Data Analysis in R/Bioconductor" />
   
   <meta name="twitter:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-01-04" />
+<meta name="date" content="2022-01-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,122 +162,134 @@ div.csl-indent {
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome!</a></li>
-<li class="chapter" data-level="1" data-path="isobaric-quantification-pipelines.html"><a href="isobaric-quantification-pipelines.html"><i class="fa fa-check"></i><b>1</b> Isobaric Quantification Pipelines</a>
+<li class="chapter" data-level="1" data-path="iso-global.html"><a href="iso-global.html"><i class="fa fa-check"></i><b>1</b> Isobaric Quantification: Proteomics</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html"><i class="fa fa-check"></i><b>1.1</b> Global Proteomics Data</a>
+<li class="chapter" data-level="1.1" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html"><i class="fa fa-check"></i><b>1.1</b> Prepare MS/MS Identifications</a>
 <ul>
-<li class="chapter" data-level="1.1.1" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#read-ms-gf-data"><i class="fa fa-check"></i><b>1.1.1</b> Read MS-GF+ Data</a></li>
-<li class="chapter" data-level="1.1.2" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#correct-isotope-selection-error"><i class="fa fa-check"></i><b>1.1.2</b> Correct Isotope Selection Error</a></li>
-<li class="chapter" data-level="1.1.3" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#remove-contaminants"><i class="fa fa-check"></i><b>1.1.3</b> Remove Contaminants</a></li>
-<li class="chapter" data-level="1.1.4" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#global-peptide-filter"><i class="fa fa-check"></i><b>1.1.4</b> MS/MS ID Filter: Peptide Level</a></li>
-<li class="chapter" data-level="1.1.5" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#msms-id-filter-protein-level"><i class="fa fa-check"></i><b>1.1.5</b> MS/MS ID Filter: Protein Level</a></li>
-<li class="chapter" data-level="1.1.6" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#inference-of-parsimonious-protein-set"><i class="fa fa-check"></i><b>1.1.6</b> Inference of Parsimonious Protein Set</a></li>
-<li class="chapter" data-level="1.1.7" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#remove-decoy-psms"><i class="fa fa-check"></i><b>1.1.7</b> Remove Decoy PSMs</a></li>
-<li class="chapter" data-level="1.1.8" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#read-masic-output"><i class="fa fa-check"></i><b>1.1.8</b> Read MASIC Output</a></li>
-<li class="chapter" data-level="1.1.9" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#filter-masic-data"><i class="fa fa-check"></i><b>1.1.9</b> Filter MASIC Data</a></li>
-<li class="chapter" data-level="1.1.10" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#fetch-study-design-tables"><i class="fa fa-check"></i><b>1.1.10</b> Create Study Design Tables</a></li>
-<li class="chapter" data-level="1.1.11" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#fractions"><i class="fa fa-check"></i><b>1.1.11</b> Fractions</a></li>
-<li class="chapter" data-level="1.1.12" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#samples"><i class="fa fa-check"></i><b>1.1.12</b> Samples</a></li>
-<li class="chapter" data-level="1.1.13" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#references"><i class="fa fa-check"></i><b>1.1.13</b> References</a></li>
-<li class="chapter" data-level="1.1.14" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#global-quant-crosstab"><i class="fa fa-check"></i><b>1.1.14</b> Create Quantitative Cross-tab</a></li>
-<li class="chapter" data-level="1.1.15" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#create-msnset-object"><i class="fa fa-check"></i><b>1.1.15</b> Create MSnSet Object</a></li>
+<li class="chapter" data-level="1.1.1" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#read-ms-gf-data"><i class="fa fa-check"></i><b>1.1.1</b> Read MS-GF+ Data</a></li>
+<li class="chapter" data-level="1.1.2" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#correct-isotope-selection-error"><i class="fa fa-check"></i><b>1.1.2</b> Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="1.1.3" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#remove-contaminants"><i class="fa fa-check"></i><b>1.1.3</b> Remove Contaminants</a></li>
+<li class="chapter" data-level="1.1.4" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#global-peptide-filter"><i class="fa fa-check"></i><b>1.1.4</b> MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="1.1.5" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#msms-id-filter-protein-level"><i class="fa fa-check"></i><b>1.1.5</b> MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="1.1.6" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#inference-of-parsimonious-protein-set"><i class="fa fa-check"></i><b>1.1.6</b> Inference of Parsimonious Protein Set</a></li>
+<li class="chapter" data-level="1.1.7" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#remove-decoy-psms"><i class="fa fa-check"></i><b>1.1.7</b> Remove Decoy PSMs</a></li>
 </ul></li>
-<li class="chapter" data-level="1.2" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html"><i class="fa fa-check"></i><b>1.2</b> Phosphoproteomics Data</a>
+<li class="chapter" data-level="1.2" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html"><i class="fa fa-check"></i><b>1.2</b> Prepare Reporter Ion Intensities</a>
 <ul>
-<li class="chapter" data-level="1.2.1" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#read-ms-gf-output"><i class="fa fa-check"></i><b>1.2.1</b> Read MS-GF+ Output</a></li>
-<li class="chapter" data-level="1.2.2" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#correct-isotope-selection-error-1"><i class="fa fa-check"></i><b>1.2.2</b> Correct Isotope Selection Error</a></li>
-<li class="chapter" data-level="1.2.3" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-non-phosphorylated-peptides"><i class="fa fa-check"></i><b>1.2.3</b> Remove Non-Phosphorylated Peptides</a></li>
-<li class="chapter" data-level="1.2.4" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-contaminants-1"><i class="fa fa-check"></i><b>1.2.4</b> Remove Contaminants</a></li>
-<li class="chapter" data-level="1.2.5" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#improve-phosphosite-localization"><i class="fa fa-check"></i><b>1.2.5</b> Improve Phosphosite Localization</a></li>
-<li class="chapter" data-level="1.2.6" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#msms-id-filter-peptide-level"><i class="fa fa-check"></i><b>1.2.6</b> MS/MS ID Filter: Peptide Level</a></li>
-<li class="chapter" data-level="1.2.7" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#msms-id-filter-protein-level-1"><i class="fa fa-check"></i><b>1.2.7</b> MS/MS ID Filter: Protein Level</a></li>
-<li class="chapter" data-level="1.2.8" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#inference-of-parsimonious-protein-set-1"><i class="fa fa-check"></i><b>1.2.8</b> Inference of Parsimonious Protein Set</a></li>
-<li class="chapter" data-level="1.2.9" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-decoy-psms-1"><i class="fa fa-check"></i><b>1.2.9</b> Remove Decoy PSMs</a></li>
-<li class="chapter" data-level="1.2.10" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#map-sites-to-protein-sequences"><i class="fa fa-check"></i><b>1.2.10</b> Map Sites to Protein Sequences</a></li>
-<li class="chapter" data-level="1.2.11" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#read-masic-output-1"><i class="fa fa-check"></i><b>1.2.11</b> Read MASIC Output</a></li>
-<li class="chapter" data-level="1.2.12" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#filter-masic-data-1"><i class="fa fa-check"></i><b>1.2.12</b> Filter MASIC Data</a></li>
-<li class="chapter" data-level="1.2.13" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#create-study-design-tables"><i class="fa fa-check"></i><b>1.2.13</b> Create Study Design Tables</a></li>
-<li class="chapter" data-level="1.2.14" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#phospho-create-crosstab"><i class="fa fa-check"></i><b>1.2.14</b> Create Quantitative Cross-tab</a></li>
+<li class="chapter" data-level="1.2.1" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html#read-masic-output"><i class="fa fa-check"></i><b>1.2.1</b> Read MASIC Output</a></li>
+<li class="chapter" data-level="1.2.2" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html#filter-masic-data"><i class="fa fa-check"></i><b>1.2.2</b> Filter MASIC Data</a></li>
 </ul></li>
+<li class="chapter" data-level="1.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html"><i class="fa fa-check"></i><b>1.3</b> Create Study Design Tables</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#fractions"><i class="fa fa-check"></i><b>1.3.1</b> Fractions</a></li>
+<li class="chapter" data-level="1.3.2" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#samples"><i class="fa fa-check"></i><b>1.3.2</b> Samples</a></li>
+<li class="chapter" data-level="1.3.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#references"><i class="fa fa-check"></i><b>1.3.3</b> References</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="label-free-quantification.html"><a href="label-free-quantification.html"><i class="fa fa-check"></i><b>2</b> Label-Free Quantification</a></li>
-<li class="chapter" data-level="3" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>3</b> Exploratory Data Analysis</a>
-<ul>
-<li class="chapter" data-level="3.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>3.1</b> Count Features in Samples</a></li>
-<li class="chapter" data-level="3.2" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>3.2</b> Estimate Blood Contamination</a></li>
-<li class="chapter" data-level="3.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>3.3</b> PCA</a></li>
+<li class="chapter" data-level="1.4" data-path="global-quant-crosstab.html"><a href="global-quant-crosstab.html"><i class="fa fa-check"></i><b>1.4</b> Create Quantitative Cross-tab</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>4</b> Heatmaps</a>
+<li class="chapter" data-level="2" data-path="iso-phospho.html"><a href="iso-phospho.html"><i class="fa fa-check"></i><b>2</b> Isobaric Quantification: Phosphoproteomics</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>4.1</b> Expression Heatmaps</a></li>
-<li class="chapter" data-level="4.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>4.2</b> Correlation Heatmaps</a>
+<li class="chapter" data-level="2.1" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html"><i class="fa fa-check"></i><b>2.1</b> Prepare MS/MS Identifications</a>
 <ul>
-<li class="chapter" data-level="4.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>4.2.1</b> Sample Correlation</a></li>
-<li class="chapter" data-level="4.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>4.2.2</b> Feature Correlation</a></li>
+<li class="chapter" data-level="2.1.1" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#read-ms-gf-data-1"><i class="fa fa-check"></i><b>2.1.1</b> Read MS-GF+ Data</a></li>
+<li class="chapter" data-level="2.1.2" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#correct-isotope-selection-error-1"><i class="fa fa-check"></i><b>2.1.2</b> Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="2.1.3" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-unmodified-peptides"><i class="fa fa-check"></i><b>2.1.3</b> Remove Unmodified Peptides</a></li>
+<li class="chapter" data-level="2.1.4" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-contaminants-1"><i class="fa fa-check"></i><b>2.1.4</b> Remove Contaminants</a></li>
+<li class="chapter" data-level="2.1.5" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#improve-phosphosite-localization"><i class="fa fa-check"></i><b>2.1.5</b> Improve Phosphosite Localization</a></li>
+<li class="chapter" data-level="2.1.6" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#msms-id-filter-peptide-level"><i class="fa fa-check"></i><b>2.1.6</b> MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="2.1.7" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#msms-id-filter-protein-level-1"><i class="fa fa-check"></i><b>2.1.7</b> MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="2.1.8" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#inference-of-parsimonious-protein-set-1"><i class="fa fa-check"></i><b>2.1.8</b> Inference of Parsimonious Protein Set</a></li>
+<li class="chapter" data-level="2.1.9" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#map-mod-sites"><i class="fa fa-check"></i><b>2.1.9</b> Map Sites to Protein Sequences</a></li>
+<li class="chapter" data-level="2.1.10" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-decoy-psms-1"><i class="fa fa-check"></i><b>2.1.10</b> Remove Decoy PSMs</a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>4.3</b> Heatmap Annotation</a>
+<li class="chapter" data-level="2.2" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html"><i class="fa fa-check"></i><b>2.2</b> Prepare Reporter Ion Intensities</a>
 <ul>
-<li class="chapter" data-level="4.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>4.3.1</b> Modifying Default Colors</a></li>
+<li class="chapter" data-level="2.2.1" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html#read-masic-output-1"><i class="fa fa-check"></i><b>2.2.1</b> Read MASIC Output</a></li>
+<li class="chapter" data-level="2.2.2" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html#filter-masic-data-1"><i class="fa fa-check"></i><b>2.2.2</b> Filter MASIC Data</a></li>
 </ul></li>
-<li class="chapter" data-level="4.4" data-path="additional-modifications.html"><a href="additional-modifications.html"><i class="fa fa-check"></i><b>4.4</b> Additional Modifications</a>
-<ul>
-<li class="chapter" data-level="4.4.1" data-path="additional-modifications.html"><a href="additional-modifications.html#change-row-or-column-labels"><i class="fa fa-check"></i><b>4.4.1</b> Change row or column labels</a></li>
-<li class="chapter" data-level="4.4.2" data-path="additional-modifications.html"><a href="additional-modifications.html#change-label-colors"><i class="fa fa-check"></i><b>4.4.2</b> Change label colors</a></li>
-<li class="chapter" data-level="4.4.3" data-path="additional-modifications.html"><a href="additional-modifications.html#label-specific-features"><i class="fa fa-check"></i><b>4.4.3</b> Label specific features</a></li>
-<li class="chapter" data-level="4.4.4" data-path="additional-modifications.html"><a href="additional-modifications.html#change-heatmap-body-color"><i class="fa fa-check"></i><b>4.4.4</b> Change heatmap body color</a></li>
+<li class="chapter" data-level="2.3" data-path="create-study-design-tables.html"><a href="create-study-design-tables.html"><i class="fa fa-check"></i><b>2.3</b> Create Study Design Tables</a></li>
+<li class="chapter" data-level="2.4" data-path="create-quantitative-cross-tab.html"><a href="create-quantitative-cross-tab.html"><i class="fa fa-check"></i><b>2.4</b> Create Quantitative Cross-tab</a></li>
 </ul></li>
+<li class="chapter" data-level="3" data-path="spectral-counting.html"><a href="spectral-counting.html"><i class="fa fa-check"></i><b>3</b> Spectral Counting</a></li>
+<li class="chapter" data-level="4" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>4</b> Exploratory Data Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>4.1</b> Count Features in Samples</a></li>
+<li class="chapter" data-level="4.2" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>4.2</b> Estimate Blood Contamination</a></li>
+<li class="chapter" data-level="4.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>4.3</b> PCA</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>5</b> Differential Analysis</a>
+<li class="chapter" data-level="5" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>5</b> Heatmaps</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>5.1</b> Linear Regression</a></li>
-<li class="chapter" data-level="5.2" data-path="one-way-anova.html"><a href="one-way-anova.html"><i class="fa fa-check"></i><b>5.2</b> One-Way ANOVA</a></li>
-<li class="chapter" data-level="5.3" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>5.3</b> t-tests</a>
+<li class="chapter" data-level="5.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>5.1</b> Expression Heatmaps</a></li>
+<li class="chapter" data-level="5.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>5.2</b> Correlation Heatmaps</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="t-tests.html"><a href="t-tests.html#one-comparison"><i class="fa fa-check"></i><b>5.3.1</b> One Comparison</a></li>
-<li class="chapter" data-level="5.3.2" data-path="t-tests.html"><a href="t-tests.html#multiple-comparisons"><i class="fa fa-check"></i><b>5.3.2</b> Multiple Comparisons</a></li>
+<li class="chapter" data-level="5.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>5.2.1</b> Sample Correlation</a></li>
+<li class="chapter" data-level="5.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>5.2.2</b> Feature Correlation</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>5.4</b> p-value Histograms</a></li>
-<li class="chapter" data-level="5.5" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>5.5</b> Volcano Plots</a></li>
+<li class="chapter" data-level="5.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>5.3</b> Heatmap Annotation</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>5.3.1</b> Modifying Default Colors</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>6</b> Pathway Analysis</a>
+<li class="chapter" data-level="5.4" data-path="modifications.html"><a href="modifications.html"><i class="fa fa-check"></i><b>5.4</b> Modifications</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>6.1</b> Annotation Databases</a>
-<ul>
-<li class="chapter" data-level="6.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>6.1.1</b> Gene Ontology</a>
-<ul>
-<li class="chapter" data-level="6.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>6.1.1.1</b> Semantic Similarity</a></li>
-<li class="chapter" data-level="6.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>6.1.1.2</b> GO Subsets/Slims</a></li>
-</ul></li>
-<li class="chapter" data-level="6.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>6.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="6.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>6.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="6.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>6.1.4</b> Pfam</a></li>
-</ul></li>
-<li class="chapter" data-level="6.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>6.2</b> Over-Representation Analysis</a>
-<ul>
-<li class="chapter" data-level="6.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>6.2.1</b> Overview</a>
-<ul>
-<li class="chapter" data-level="" data-path="ora.html"><a href="ora.html#important-considerations"><i class="fa fa-check"></i>Important Considerations</a></li>
-</ul></li>
-<li class="chapter" data-level="6.2.2" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>6.2.2</b> Examples</a>
-<ul>
-<li class="chapter" data-level="6.2.2.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>6.2.2.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="6.2.2.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>6.2.2.2</b> Reactome</a></li>
-<li class="chapter" data-level="6.2.2.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>6.2.2.3</b> Pfam</a></li>
-<li class="chapter" data-level="6.2.2.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>6.2.2.4</b> Other Databases</a></li>
+<li class="chapter" data-level="5.4.1" data-path="modifications.html"><a href="modifications.html#row-and-column-labels"><i class="fa fa-check"></i><b>5.4.1</b> Row and column labels</a></li>
+<li class="chapter" data-level="5.4.2" data-path="modifications.html"><a href="modifications.html#label-colors"><i class="fa fa-check"></i><b>5.4.2</b> Label colors</a></li>
+<li class="chapter" data-level="5.4.3" data-path="modifications.html"><a href="modifications.html#label-specific-features"><i class="fa fa-check"></i><b>5.4.3</b> Label specific features</a></li>
+<li class="chapter" data-level="5.4.4" data-path="modifications.html"><a href="modifications.html#heatmap-body-color"><i class="fa fa-check"></i><b>5.4.4</b> Heatmap body color</a></li>
+<li class="chapter" data-level="5.4.5" data-path="modifications.html"><a href="modifications.html#horizontal-heatmaps"><i class="fa fa-check"></i><b>5.4.5</b> Horizontal heatmaps</a></li>
+<li class="chapter" data-level="5.4.6" data-path="modifications.html"><a href="modifications.html#legends"><i class="fa fa-check"></i><b>5.4.6</b> Legends</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>6.3</b> Gene Set Enrichment Analysis</a>
+<li class="chapter" data-level="6" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>6</b> Differential Expression Analysis</a>
 <ul>
-<li class="chapter" data-level="6.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>6.3.1</b> Overview</a>
+<li class="chapter" data-level="6.1" data-path="mult-comp.html"><a href="mult-comp.html"><i class="fa fa-check"></i><b>6.1</b> Multiple Comparisons</a></li>
+<li class="chapter" data-level="6.2" data-path="linear-reg.html"><a href="linear-reg.html"><i class="fa fa-check"></i><b>6.2</b> Linear Regression</a></li>
+<li class="chapter" data-level="6.3" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>6.3</b> Two-Sample t-tests</a>
 <ul>
-<li class="chapter" data-level="" data-path="gsea.html"><a href="gsea.html#important-considerations-1"><i class="fa fa-check"></i>Important Considerations</a></li>
+<li class="chapter" data-level="6.3.1" data-path="t-tests.html"><a href="t-tests.html#t-single"><i class="fa fa-check"></i><b>6.3.1</b> One comparison</a></li>
+<li class="chapter" data-level="6.3.2" data-path="t-tests.html"><a href="t-tests.html#t-mult"><i class="fa fa-check"></i><b>6.3.2</b> Multiple comparisons</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3.2" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>6.3.2</b> Examples</a>
+<li class="chapter" data-level="6.4" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>6.4</b> One-Way ANOVA</a></li>
+<li class="chapter" data-level="6.5" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>6.5</b> p-value Histograms</a></li>
+<li class="chapter" data-level="6.6" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>6.6</b> Volcano Plots</a>
 <ul>
-<li class="chapter" data-level="6.3.2.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>6.3.2.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="6.3.2.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>6.3.2.2</b> Reactome</a></li>
-<li class="chapter" data-level="6.3.2.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>6.3.2.3</b> Pfam</a></li>
-<li class="chapter" data-level="6.3.2.4" data-path="gsea.html"><a href="gsea.html#other-databases"><i class="fa fa-check"></i><b>6.3.2.4</b> Other Databases</a></li>
+<li class="chapter" data-level="6.6.1" data-path="volcano-plots.html"><a href="volcano-plots.html#base-plot"><i class="fa fa-check"></i><b>6.6.1</b> Base plot</a></li>
+<li class="chapter" data-level="6.6.2" data-path="volcano-plots.html"><a href="volcano-plots.html#label-top-features"><i class="fa fa-check"></i><b>6.6.2</b> Label top features</a></li>
+<li class="chapter" data-level="6.6.3" data-path="volcano-plots.html"><a href="volcano-plots.html#label-specific-features-1"><i class="fa fa-check"></i><b>6.6.3</b> Label specific features</a></li>
+<li class="chapter" data-level="6.6.4" data-path="volcano-plots.html"><a href="volcano-plots.html#modify-point-colors"><i class="fa fa-check"></i><b>6.6.4</b> Modify point colors</a></li>
+<li class="chapter" data-level="6.6.5" data-path="volcano-plots.html"><a href="volcano-plots.html#multiple-volcano-plots"><i class="fa fa-check"></i><b>6.6.5</b> Multiple volcano plots</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>7</b> Pathway Analysis</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>7.1</b> Annotation Databases</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>7.1.1</b> Gene Ontology</a>
+<ul>
+<li class="chapter" data-level="7.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>7.1.1.1</b> Semantic Similarity</a></li>
+<li class="chapter" data-level="7.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>7.1.1.2</b> GO Subsets/Slims</a></li>
+</ul></li>
+<li class="chapter" data-level="7.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>7.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="7.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>7.1.3</b> KEGG</a></li>
+<li class="chapter" data-level="7.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>7.1.4</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>7.2</b> Over-Representation Analysis</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>7.2.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="7.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>7.2.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="7.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>7.2.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="7.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>7.2.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="7.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>7.2.1.4</b> Other Databases</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>7.3</b> Gene Set Enrichment Analysis</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>7.3.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="7.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>7.3.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="7.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>7.3.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="7.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>7.3.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="7.3.1.4" data-path="gsea.html"><a href="gsea.html#other-databases"><i class="fa fa-check"></i><b>7.3.1.4</b> Other Databases</a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -299,67 +311,86 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="volcano-plots" class="section level2" number="5.5">
-<h2><span class="header-section-number">5.5</span> Volcano Plots</h2>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="volcano-plots.html#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Basic volcano plot</span></span>
-<span id="cb121-2"><a href="volcano-plots.html#cb121-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_volcano</span>(<span class="at">df =</span> res4, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, <span class="at">pvals =</span> <span class="st">&quot;adj.P.Val&quot;</span>, </span>
-<span id="cb121-3"><a href="volcano-plots.html#cb121-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">sig_threshold =</span> <span class="fl">0.05</span>) <span class="sc">+</span></span>
-<span id="cb121-4"><a href="volcano-plots.html#cb121-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(contrast)) <span class="sc">+</span></span>
-<span id="cb121-5"><a href="volcano-plots.html#cb121-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&quot;BH-adjusted p-value&quot;</span>)</span></code></pre></div>
-<p><img src="DEA_files/figure-html/volcano-plot-base-1.png" width="75%" style="display: block; margin: auto;" /></p>
-<p>It looks like there are more features that are significantly lower in the Proliferative group compared to the Immunoreactive group than there are features that are significantly higher. The Differentiated group appears to behave similarly, though with fewer features passing the significance cutoff of 0.05.</p>
-<p>Below is an example of how to color points based on sign of the fold-change and whether they are significant.</p>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="volcano-plots.html#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Top 4 most significant features in each contrast</span></span>
-<span id="cb122-2"><a href="volcano-plots.html#cb122-2" aria-hidden="true" tabindex="-1"></a>feature_labels <span class="ot">&lt;-</span> res4 <span class="sc">%&gt;%</span> </span>
-<span id="cb122-3"><a href="volcano-plots.html#cb122-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">group_by</span>(contrast) <span class="sc">%&gt;%</span></span>
-<span id="cb122-4"><a href="volcano-plots.html#cb122-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">slice_min</span>(<span class="at">order_by =</span> adj.P.Val, <span class="at">n =</span> <span class="dv">4</span>, <span class="at">with_ties =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb122-5"><a href="volcano-plots.html#cb122-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">feature_label =</span> feature)</span>
-<span id="cb122-6"><a href="volcano-plots.html#cb122-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb122-7"><a href="volcano-plots.html#cb122-7" aria-hidden="true" tabindex="-1"></a>res4 <span class="ot">&lt;-</span> res4 <span class="sc">%&gt;%</span> </span>
-<span id="cb122-8"><a href="volcano-plots.html#cb122-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Label 5 most significant features in each comparison group</span></span>
-<span id="cb122-9"><a href="volcano-plots.html#cb122-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">left_join</span>(feature_labels) <span class="sc">%&gt;%</span> </span>
-<span id="cb122-10"><a href="volcano-plots.html#cb122-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Determine point colors based on significance and sign(logFC)</span></span>
-<span id="cb122-11"><a href="volcano-plots.html#cb122-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">point_color =</span> <span class="fu">case_when</span>(</span>
-<span id="cb122-12"><a href="volcano-plots.html#cb122-12" aria-hidden="true" tabindex="-1"></a>                adj.P.Val <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> logFC <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">&quot;down&quot;</span>,</span>
-<span id="cb122-13"><a href="volcano-plots.html#cb122-13" aria-hidden="true" tabindex="-1"></a>                adj.P.Val <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> logFC <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">&quot;up&quot;</span>,</span>
-<span id="cb122-14"><a href="volcano-plots.html#cb122-14" aria-hidden="true" tabindex="-1"></a>                <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">&quot;NS&quot;</span>), </span>
-<span id="cb122-15"><a href="volcano-plots.html#cb122-15" aria-hidden="true" tabindex="-1"></a>               <span class="at">point_color_sub =</span> <span class="fu">ifelse</span>(<span class="sc">!</span><span class="fu">is.na</span>(feature_label), </span>
-<span id="cb122-16"><a href="volcano-plots.html#cb122-16" aria-hidden="true" tabindex="-1"></a>                                        point_color, <span class="cn">NA</span>))</span>
-<span id="cb122-17"><a href="volcano-plots.html#cb122-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb122-18"><a href="volcano-plots.html#cb122-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Color points</span></span>
-<span id="cb122-19"><a href="volcano-plots.html#cb122-19" aria-hidden="true" tabindex="-1"></a>v1 <span class="ot">&lt;-</span> <span class="fu">plot_volcano</span>(<span class="at">df =</span> res4, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, <span class="at">pvals =</span> <span class="st">&quot;adj.P.Val&quot;</span>, </span>
-<span id="cb122-20"><a href="volcano-plots.html#cb122-20" aria-hidden="true" tabindex="-1"></a>                   <span class="at">sig_threshold =</span> <span class="fl">0.05</span>, </span>
-<span id="cb122-21"><a href="volcano-plots.html#cb122-21" aria-hidden="true" tabindex="-1"></a>                   <span class="at">point_args =</span> <span class="fu">list</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">color =</span> point_color))) <span class="sc">+</span></span>
-<span id="cb122-22"><a href="volcano-plots.html#cb122-22" aria-hidden="true" tabindex="-1"></a>        <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(contrast))</span>
-<span id="cb122-23"><a href="volcano-plots.html#cb122-23" aria-hidden="true" tabindex="-1"></a>v1</span></code></pre></div>
-<p><img src="DEA_files/figure-html/unnamed-chunk-10-1.png" width="75%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="volcano-plots.html#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Change colors - do not include &quot;NS&quot;</span></span>
-<span id="cb123-2"><a href="volcano-plots.html#cb123-2" aria-hidden="true" tabindex="-1"></a>v1 <span class="sc">+</span> <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#5555ff&quot;</span>, <span class="st">&quot;red3&quot;</span>, <span class="cn">NA</span>), </span>
-<span id="cb123-3"><a href="volcano-plots.html#cb123-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">&quot;down&quot;</span>, <span class="st">&quot;up&quot;</span>, <span class="st">&quot;NS&quot;</span>), </span>
-<span id="cb123-4"><a href="volcano-plots.html#cb123-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">limits =</span> <span class="fu">c</span>(<span class="st">&quot;down&quot;</span>, <span class="st">&quot;up&quot;</span>), </span>
-<span id="cb123-5"><a href="volcano-plots.html#cb123-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">na.value =</span> <span class="st">&quot;lightgrey&quot;</span>) <span class="sc">+</span></span>
-<span id="cb123-6"><a href="volcano-plots.html#cb123-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="co"># do not show legend</span></span></code></pre></div>
-<p><img src="DEA_files/figure-html/unnamed-chunk-11-1.png" width="75%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="volcano-plots.html#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Label top 4 significant features in each contrast</span></span>
-<span id="cb124-2"><a href="volcano-plots.html#cb124-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_volcano</span>(<span class="at">df =</span> res4, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, <span class="at">pvals =</span> <span class="st">&quot;adj.P.Val&quot;</span>, </span>
-<span id="cb124-3"><a href="volcano-plots.html#cb124-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">sig_threshold =</span> <span class="fl">0.05</span>, <span class="at">label =</span> <span class="st">&quot;feature_label&quot;</span>,</span>
-<span id="cb124-4"><a href="volcano-plots.html#cb124-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">num_features =</span> <span class="fu">nrow</span>(res4),</span>
-<span id="cb124-5"><a href="volcano-plots.html#cb124-5" aria-hidden="true" tabindex="-1"></a>             <span class="co"># Change point and label color</span></span>
-<span id="cb124-6"><a href="volcano-plots.html#cb124-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">label_args =</span> <span class="fu">list</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">color =</span> point_color),</span>
-<span id="cb124-7"><a href="volcano-plots.html#cb124-7" aria-hidden="true" tabindex="-1"></a>                               <span class="at">size =</span> <span class="fl">2.5</span>, <span class="at">box.padding =</span> <span class="fl">0.75</span>, </span>
-<span id="cb124-8"><a href="volcano-plots.html#cb124-8" aria-hidden="true" tabindex="-1"></a>                               <span class="at">force_pull =</span> <span class="dv">0</span>, <span class="at">seed =</span> <span class="dv">99</span>), </span>
-<span id="cb124-9"><a href="volcano-plots.html#cb124-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">point_args =</span> <span class="fu">list</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">color =</span> point_color),</span>
-<span id="cb124-10"><a href="volcano-plots.html#cb124-10" aria-hidden="true" tabindex="-1"></a>                               <span class="at">alpha =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
-<span id="cb124-11"><a href="volcano-plots.html#cb124-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(contrast)) <span class="sc">+</span></span>
-<span id="cb124-12"><a href="volcano-plots.html#cb124-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Point colors</span></span>
-<span id="cb124-13"><a href="volcano-plots.html#cb124-13" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#5555ff&quot;</span>, <span class="st">&quot;red3&quot;</span>, <span class="cn">NA</span>), </span>
-<span id="cb124-14"><a href="volcano-plots.html#cb124-14" aria-hidden="true" tabindex="-1"></a>                           <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">&quot;down&quot;</span>, <span class="st">&quot;up&quot;</span>, <span class="st">&quot;NS&quot;</span>), </span>
-<span id="cb124-15"><a href="volcano-plots.html#cb124-15" aria-hidden="true" tabindex="-1"></a>                           <span class="at">limits =</span> <span class="fu">c</span>(<span class="st">&quot;down&quot;</span>, <span class="st">&quot;up&quot;</span>), </span>
-<span id="cb124-16"><a href="volcano-plots.html#cb124-16" aria-hidden="true" tabindex="-1"></a>                           <span class="at">na.value =</span> <span class="st">&quot;lightgrey&quot;</span>) <span class="sc">+</span></span>
-<span id="cb124-17"><a href="volcano-plots.html#cb124-17" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb124-18"><a href="volcano-plots.html#cb124-18" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="co"># do not show legend</span></span></code></pre></div>
-<p><img src="DEA_files/figure-html/unnamed-chunk-12-1.png" width="75%" style="display: block; margin: auto;" /></p>
+<div id="volcano-plots" class="section level2" number="6.6">
+<h2><span class="header-section-number">6.6</span> Volcano Plots</h2>
+<p>Volcano plots are used to summarize the results of differential analysis. They are scatter plots that show log<span class="math inline">\(_2\)</span> fold-change vs statistical significance (p-values or q-values). The <code>plot_volcano</code> function in the MSnSet.utils package is used to create volcano plots. For ANOVA results, volcano plots will not be useful, since the p-values are based on two or more contrasts; the volcano plots would not display the characteristic “V” shape.</p>
+<div id="base-plot" class="section level3" number="6.6.1">
+<h3><span class="header-section-number">6.6.1</span> Base plot</h3>
+<p>Unless the differential analysis results are from a one-sample t-test with a single comparison, volcano plots need to be made for each contrast, since there are multiple logFC values for each feature. For this example, we will make a volcano plot using the log<span class="math inline">\(_2\)</span> fold-changes from the <code>t_res1</code> table. We will set <code>sig_threshold</code> to 0.05, which will add a dashed horizontal line indicating the cutoff for statistical significance. Normally, the adjusted p-values would be used, though they are all extremely high in these results, so we will use the unadjusted p-values for the examples.</p>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="volcano-plots.html#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_volcano</span>(<span class="at">df =</span> t_res1, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, </span>
+<span id="cb125-2"><a href="volcano-plots.html#cb125-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">pvals =</span> <span class="st">&quot;P.Value&quot;</span>, <span class="at">sig_threshold =</span> <span class="fl">0.05</span>)</span></code></pre></div>
+<p><img src="DEA_files/figure-html/unnamed-chunk-15-1.png" width="75%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="label-top-features" class="section level3" number="6.6.2">
+<h3><span class="header-section-number">6.6.2</span> Label top features</h3>
+<p><code>plot_volcano</code> has an argument called <code>label</code> to label the top most significant features. By default, the top 8 features will be labelled. The column used for labeling must be in the data frame supplied to the <code>df</code> argument. In this case, we will need to create it using the row names.</p>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="volcano-plots.html#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create RefSeq column for labeling</span></span>
+<span id="cb126-2"><a href="volcano-plots.html#cb126-2" aria-hidden="true" tabindex="-1"></a>t_res1<span class="sc">$</span>RefSeq <span class="ot">&lt;-</span> <span class="fu">rownames</span>(t_res1)</span>
+<span id="cb126-3"><a href="volcano-plots.html#cb126-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb126-4"><a href="volcano-plots.html#cb126-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Volcano plot with feature labels</span></span>
+<span id="cb126-5"><a href="volcano-plots.html#cb126-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_volcano</span>(<span class="at">df =</span> t_res1, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, </span>
+<span id="cb126-6"><a href="volcano-plots.html#cb126-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">pvals =</span> <span class="st">&quot;P.Value&quot;</span>, <span class="at">sig_threshold =</span> <span class="fl">0.05</span>,</span>
+<span id="cb126-7"><a href="volcano-plots.html#cb126-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">label =</span> <span class="st">&quot;RefSeq&quot;</span>) <span class="co"># label by RefSeq - top 8</span></span></code></pre></div>
+<p><img src="DEA_files/figure-html/unnamed-chunk-16-1.png" width="75%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="label-specific-features-1" class="section level3" number="6.6.3">
+<h3><span class="header-section-number">6.6.3</span> Label specific features</h3>
+<p>There may be cases when the features to label are not necessarily the top <span class="math inline">\(n\)</span>. To label specific features, we need a column where everything but the labels are <code>NA</code>, and we need to set <code>num_features</code> to the number of rows in the data so that nothing is discarded. For this example, we will select a random group of 5 features to label.</p>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="volcano-plots.html#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 5 random RefSeqs to label</span></span>
+<span id="cb127-2"><a href="volcano-plots.html#cb127-2" aria-hidden="true" tabindex="-1"></a>random_features <span class="ot">&lt;-</span> <span class="fu">sample</span>(t_res1<span class="sc">$</span>RefSeq, <span class="at">size =</span> <span class="dv">5</span>)</span>
+<span id="cb127-3"><a href="volcano-plots.html#cb127-3" aria-hidden="true" tabindex="-1"></a><span class="co"># If RefSeq is not in the random group of 5, set it to NA</span></span>
+<span id="cb127-4"><a href="volcano-plots.html#cb127-4" aria-hidden="true" tabindex="-1"></a>t_res1 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(t_res1, </span>
+<span id="cb127-5"><a href="volcano-plots.html#cb127-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">custom_labels =</span> <span class="fu">ifelse</span>(RefSeq <span class="sc">%in%</span> random_features, </span>
+<span id="cb127-6"><a href="volcano-plots.html#cb127-6" aria-hidden="true" tabindex="-1"></a>                                        RefSeq, <span class="cn">NA</span>))</span>
+<span id="cb127-7"><a href="volcano-plots.html#cb127-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Volcano plot with feature labels</span></span>
+<span id="cb127-8"><a href="volcano-plots.html#cb127-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_volcano</span>(<span class="at">df =</span> t_res1, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, </span>
+<span id="cb127-9"><a href="volcano-plots.html#cb127-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">pvals =</span> <span class="st">&quot;P.Value&quot;</span>, <span class="at">sig_threshold =</span> <span class="fl">0.05</span>,</span>
+<span id="cb127-10"><a href="volcano-plots.html#cb127-10" aria-hidden="true" tabindex="-1"></a>             <span class="co"># Custom labels</span></span>
+<span id="cb127-11"><a href="volcano-plots.html#cb127-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">label =</span> <span class="st">&quot;custom_labels&quot;</span>, <span class="at">num_features =</span> <span class="fu">nrow</span>(t_res1))</span></code></pre></div>
+<p><img src="DEA_files/figure-html/unnamed-chunk-17-1.png" width="75%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="modify-point-colors" class="section level3" number="6.6.4">
+<h3><span class="header-section-number">6.6.4</span> Modify point colors</h3>
+<p>We will change the color of points to reflect their significance and the sign of the log<span class="math inline">\(_2\)</span> fold-change. We start by creating a point_color column with three groups: “down,” “up” and “NS” (not-significant). Then, the <code>point_args</code> argument is modified so that the color of points depends on these groups.</p>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="volcano-plots.html#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine point colors based on significance and sign of the logFC</span></span>
+<span id="cb128-2"><a href="volcano-plots.html#cb128-2" aria-hidden="true" tabindex="-1"></a><span class="co"># We would normally use adj.P.Value instead of P.Value</span></span>
+<span id="cb128-3"><a href="volcano-plots.html#cb128-3" aria-hidden="true" tabindex="-1"></a>t_res1 <span class="ot">&lt;-</span> t_res1 <span class="sc">%&gt;%</span> </span>
+<span id="cb128-4"><a href="volcano-plots.html#cb128-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">point_color =</span> <span class="fu">case_when</span>(</span>
+<span id="cb128-5"><a href="volcano-plots.html#cb128-5" aria-hidden="true" tabindex="-1"></a>                P.Value <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> logFC <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">&quot;down&quot;</span>, <span class="co"># significantly down</span></span>
+<span id="cb128-6"><a href="volcano-plots.html#cb128-6" aria-hidden="true" tabindex="-1"></a>                P.Value <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> logFC <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">&quot;up&quot;</span>, <span class="co"># significantly up</span></span>
+<span id="cb128-7"><a href="volcano-plots.html#cb128-7" aria-hidden="true" tabindex="-1"></a>                <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">&quot;NS&quot;</span>) <span class="co"># not significant</span></span>
+<span id="cb128-8"><a href="volcano-plots.html#cb128-8" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb128-9"><a href="volcano-plots.html#cb128-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb128-10"><a href="volcano-plots.html#cb128-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Color points</span></span>
+<span id="cb128-11"><a href="volcano-plots.html#cb128-11" aria-hidden="true" tabindex="-1"></a>v1 <span class="ot">&lt;-</span> <span class="fu">plot_volcano</span>(<span class="at">df =</span> t_res1, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, </span>
+<span id="cb128-12"><a href="volcano-plots.html#cb128-12" aria-hidden="true" tabindex="-1"></a>                   <span class="at">pvals =</span> <span class="st">&quot;P.Value&quot;</span>, <span class="at">sig_threshold =</span> <span class="fl">0.05</span>, </span>
+<span id="cb128-13"><a href="volcano-plots.html#cb128-13" aria-hidden="true" tabindex="-1"></a>                   <span class="co"># Change point color</span></span>
+<span id="cb128-14"><a href="volcano-plots.html#cb128-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">point_args =</span> <span class="fu">list</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">color =</span> point_color)))</span>
+<span id="cb128-15"><a href="volcano-plots.html#cb128-15" aria-hidden="true" tabindex="-1"></a>v1</span></code></pre></div>
+<p><img src="DEA_files/figure-html/unnamed-chunk-18-1.png" width="75%" style="display: block; margin: auto;" /></p>
+<p>We will change the default colors to be more informative. Points in the “down” group will be #5555ff (blue), points in the “up” group will be red3, and points in the “NS” group will be lightgrey. We will also remove the legend, since it doesn’t add much information.</p>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="volcano-plots.html#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Change colors</span></span>
+<span id="cb129-2"><a href="volcano-plots.html#cb129-2" aria-hidden="true" tabindex="-1"></a>v1 <span class="sc">+</span> <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#5555ff&quot;</span>, <span class="st">&quot;red3&quot;</span>, <span class="st">&quot;lightgrey&quot;</span>), </span>
+<span id="cb129-3"><a href="volcano-plots.html#cb129-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">&quot;down&quot;</span>, <span class="st">&quot;up&quot;</span>, <span class="st">&quot;NS&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb129-4"><a href="volcano-plots.html#cb129-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="co"># do not show legend</span></span></code></pre></div>
+<p><img src="DEA_files/figure-html/unnamed-chunk-19-1.png" width="75%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="multiple-volcano-plots" class="section level3" number="6.6.5">
+<h3><span class="header-section-number">6.6.5</span> Multiple volcano plots</h3>
+<p>For results generated by <code>limma_contrasts</code>, we should make separate plots for each comparison with <code>facet_wrap</code> or <code>facet_grid</code>.</p>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="volcano-plots.html#cb130-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Basic volcano plot</span></span>
+<span id="cb130-2"><a href="volcano-plots.html#cb130-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_volcano</span>(<span class="at">df =</span> t_res2, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, <span class="at">pvals =</span> <span class="st">&quot;adj.P.Val&quot;</span>, </span>
+<span id="cb130-3"><a href="volcano-plots.html#cb130-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">sig_threshold =</span> <span class="fl">0.05</span>) <span class="sc">+</span> </span>
+<span id="cb130-4"><a href="volcano-plots.html#cb130-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(contrast)) <span class="sc">+</span> <span class="co"># plot for each contrast</span></span>
+<span id="cb130-5"><a href="volcano-plots.html#cb130-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Volcano Plots of limma_contrasts Results&quot;</span>)</span></code></pre></div>
+<p><img src="DEA_files/figure-html/volcano-plot-contrasts-1.png" width="75%" style="display: block; margin: auto;" /></p>
+<!---
+## UpSet Plots
 
+"An UpSet plot is an alternative to a Venn Diagram" (R graph gallery).
+--->
+
+</div>
 </div>
 <!-- </div> -->
             </section>
@@ -413,7 +444,7 @@ gitbook.start({
 },
 "download": null,
 "toc": {
-"collapse": "section"
+"collapse": "subsection"
 }
 });
 });

@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>6.2 Over-Representation Analysis | Proteomics Data Analysis in R/Bioconductor</title>
+  <title>7.2 Over-Representation Analysis | Proteomics Data Analysis in R/Bioconductor</title>
   <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="6.2 Over-Representation Analysis | Proteomics Data Analysis in R/Bioconductor" />
+  <meta property="og:title" content="7.2 Over-Representation Analysis | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="6.2 Over-Representation Analysis | Proteomics Data Analysis in R/Bioconductor" />
+  <meta name="twitter:title" content="7.2 Over-Representation Analysis | Proteomics Data Analysis in R/Bioconductor" />
   
   <meta name="twitter:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-01-04" />
+<meta name="date" content="2022-01-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -162,122 +162,134 @@ div.csl-indent {
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome!</a></li>
-<li class="chapter" data-level="1" data-path="isobaric-quantification-pipelines.html"><a href="isobaric-quantification-pipelines.html"><i class="fa fa-check"></i><b>1</b> Isobaric Quantification Pipelines</a>
+<li class="chapter" data-level="1" data-path="iso-global.html"><a href="iso-global.html"><i class="fa fa-check"></i><b>1</b> Isobaric Quantification: Proteomics</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html"><i class="fa fa-check"></i><b>1.1</b> Global Proteomics Data</a>
+<li class="chapter" data-level="1.1" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html"><i class="fa fa-check"></i><b>1.1</b> Prepare MS/MS Identifications</a>
 <ul>
-<li class="chapter" data-level="1.1.1" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#read-ms-gf-data"><i class="fa fa-check"></i><b>1.1.1</b> Read MS-GF+ Data</a></li>
-<li class="chapter" data-level="1.1.2" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#correct-isotope-selection-error"><i class="fa fa-check"></i><b>1.1.2</b> Correct Isotope Selection Error</a></li>
-<li class="chapter" data-level="1.1.3" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#remove-contaminants"><i class="fa fa-check"></i><b>1.1.3</b> Remove Contaminants</a></li>
-<li class="chapter" data-level="1.1.4" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#global-peptide-filter"><i class="fa fa-check"></i><b>1.1.4</b> MS/MS ID Filter: Peptide Level</a></li>
-<li class="chapter" data-level="1.1.5" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#msms-id-filter-protein-level"><i class="fa fa-check"></i><b>1.1.5</b> MS/MS ID Filter: Protein Level</a></li>
-<li class="chapter" data-level="1.1.6" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#inference-of-parsimonious-protein-set"><i class="fa fa-check"></i><b>1.1.6</b> Inference of Parsimonious Protein Set</a></li>
-<li class="chapter" data-level="1.1.7" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#remove-decoy-psms"><i class="fa fa-check"></i><b>1.1.7</b> Remove Decoy PSMs</a></li>
-<li class="chapter" data-level="1.1.8" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#read-masic-output"><i class="fa fa-check"></i><b>1.1.8</b> Read MASIC Output</a></li>
-<li class="chapter" data-level="1.1.9" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#filter-masic-data"><i class="fa fa-check"></i><b>1.1.9</b> Filter MASIC Data</a></li>
-<li class="chapter" data-level="1.1.10" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#fetch-study-design-tables"><i class="fa fa-check"></i><b>1.1.10</b> Create Study Design Tables</a></li>
-<li class="chapter" data-level="1.1.11" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#fractions"><i class="fa fa-check"></i><b>1.1.11</b> Fractions</a></li>
-<li class="chapter" data-level="1.1.12" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#samples"><i class="fa fa-check"></i><b>1.1.12</b> Samples</a></li>
-<li class="chapter" data-level="1.1.13" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#references"><i class="fa fa-check"></i><b>1.1.13</b> References</a></li>
-<li class="chapter" data-level="1.1.14" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#global-quant-crosstab"><i class="fa fa-check"></i><b>1.1.14</b> Create Quantitative Cross-tab</a></li>
-<li class="chapter" data-level="1.1.15" data-path="global-proteomics-data.html"><a href="global-proteomics-data.html#create-msnset-object"><i class="fa fa-check"></i><b>1.1.15</b> Create MSnSet Object</a></li>
+<li class="chapter" data-level="1.1.1" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#read-ms-gf-data"><i class="fa fa-check"></i><b>1.1.1</b> Read MS-GF+ Data</a></li>
+<li class="chapter" data-level="1.1.2" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#correct-isotope-selection-error"><i class="fa fa-check"></i><b>1.1.2</b> Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="1.1.3" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#remove-contaminants"><i class="fa fa-check"></i><b>1.1.3</b> Remove Contaminants</a></li>
+<li class="chapter" data-level="1.1.4" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#global-peptide-filter"><i class="fa fa-check"></i><b>1.1.4</b> MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="1.1.5" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#msms-id-filter-protein-level"><i class="fa fa-check"></i><b>1.1.5</b> MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="1.1.6" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#inference-of-parsimonious-protein-set"><i class="fa fa-check"></i><b>1.1.6</b> Inference of Parsimonious Protein Set</a></li>
+<li class="chapter" data-level="1.1.7" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#remove-decoy-psms"><i class="fa fa-check"></i><b>1.1.7</b> Remove Decoy PSMs</a></li>
 </ul></li>
-<li class="chapter" data-level="1.2" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html"><i class="fa fa-check"></i><b>1.2</b> Phosphoproteomics Data</a>
+<li class="chapter" data-level="1.2" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html"><i class="fa fa-check"></i><b>1.2</b> Prepare Reporter Ion Intensities</a>
 <ul>
-<li class="chapter" data-level="1.2.1" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#read-ms-gf-output"><i class="fa fa-check"></i><b>1.2.1</b> Read MS-GF+ Output</a></li>
-<li class="chapter" data-level="1.2.2" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#correct-isotope-selection-error-1"><i class="fa fa-check"></i><b>1.2.2</b> Correct Isotope Selection Error</a></li>
-<li class="chapter" data-level="1.2.3" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-non-phosphorylated-peptides"><i class="fa fa-check"></i><b>1.2.3</b> Remove Non-Phosphorylated Peptides</a></li>
-<li class="chapter" data-level="1.2.4" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-contaminants-1"><i class="fa fa-check"></i><b>1.2.4</b> Remove Contaminants</a></li>
-<li class="chapter" data-level="1.2.5" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#improve-phosphosite-localization"><i class="fa fa-check"></i><b>1.2.5</b> Improve Phosphosite Localization</a></li>
-<li class="chapter" data-level="1.2.6" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#msms-id-filter-peptide-level"><i class="fa fa-check"></i><b>1.2.6</b> MS/MS ID Filter: Peptide Level</a></li>
-<li class="chapter" data-level="1.2.7" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#msms-id-filter-protein-level-1"><i class="fa fa-check"></i><b>1.2.7</b> MS/MS ID Filter: Protein Level</a></li>
-<li class="chapter" data-level="1.2.8" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#inference-of-parsimonious-protein-set-1"><i class="fa fa-check"></i><b>1.2.8</b> Inference of Parsimonious Protein Set</a></li>
-<li class="chapter" data-level="1.2.9" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#remove-decoy-psms-1"><i class="fa fa-check"></i><b>1.2.9</b> Remove Decoy PSMs</a></li>
-<li class="chapter" data-level="1.2.10" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#map-sites-to-protein-sequences"><i class="fa fa-check"></i><b>1.2.10</b> Map Sites to Protein Sequences</a></li>
-<li class="chapter" data-level="1.2.11" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#read-masic-output-1"><i class="fa fa-check"></i><b>1.2.11</b> Read MASIC Output</a></li>
-<li class="chapter" data-level="1.2.12" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#filter-masic-data-1"><i class="fa fa-check"></i><b>1.2.12</b> Filter MASIC Data</a></li>
-<li class="chapter" data-level="1.2.13" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#create-study-design-tables"><i class="fa fa-check"></i><b>1.2.13</b> Create Study Design Tables</a></li>
-<li class="chapter" data-level="1.2.14" data-path="phosphoproteomics-data.html"><a href="phosphoproteomics-data.html#phospho-create-crosstab"><i class="fa fa-check"></i><b>1.2.14</b> Create Quantitative Cross-tab</a></li>
+<li class="chapter" data-level="1.2.1" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html#read-masic-output"><i class="fa fa-check"></i><b>1.2.1</b> Read MASIC Output</a></li>
+<li class="chapter" data-level="1.2.2" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html#filter-masic-data"><i class="fa fa-check"></i><b>1.2.2</b> Filter MASIC Data</a></li>
 </ul></li>
+<li class="chapter" data-level="1.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html"><i class="fa fa-check"></i><b>1.3</b> Create Study Design Tables</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#fractions"><i class="fa fa-check"></i><b>1.3.1</b> Fractions</a></li>
+<li class="chapter" data-level="1.3.2" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#samples"><i class="fa fa-check"></i><b>1.3.2</b> Samples</a></li>
+<li class="chapter" data-level="1.3.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#references"><i class="fa fa-check"></i><b>1.3.3</b> References</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="label-free-quantification.html"><a href="label-free-quantification.html"><i class="fa fa-check"></i><b>2</b> Label-Free Quantification</a></li>
-<li class="chapter" data-level="3" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>3</b> Exploratory Data Analysis</a>
-<ul>
-<li class="chapter" data-level="3.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>3.1</b> Count Features in Samples</a></li>
-<li class="chapter" data-level="3.2" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>3.2</b> Estimate Blood Contamination</a></li>
-<li class="chapter" data-level="3.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>3.3</b> PCA</a></li>
+<li class="chapter" data-level="1.4" data-path="global-quant-crosstab.html"><a href="global-quant-crosstab.html"><i class="fa fa-check"></i><b>1.4</b> Create Quantitative Cross-tab</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>4</b> Heatmaps</a>
+<li class="chapter" data-level="2" data-path="iso-phospho.html"><a href="iso-phospho.html"><i class="fa fa-check"></i><b>2</b> Isobaric Quantification: Phosphoproteomics</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>4.1</b> Expression Heatmaps</a></li>
-<li class="chapter" data-level="4.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>4.2</b> Correlation Heatmaps</a>
+<li class="chapter" data-level="2.1" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html"><i class="fa fa-check"></i><b>2.1</b> Prepare MS/MS Identifications</a>
 <ul>
-<li class="chapter" data-level="4.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>4.2.1</b> Sample Correlation</a></li>
-<li class="chapter" data-level="4.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>4.2.2</b> Feature Correlation</a></li>
+<li class="chapter" data-level="2.1.1" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#read-ms-gf-data-1"><i class="fa fa-check"></i><b>2.1.1</b> Read MS-GF+ Data</a></li>
+<li class="chapter" data-level="2.1.2" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#correct-isotope-selection-error-1"><i class="fa fa-check"></i><b>2.1.2</b> Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="2.1.3" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-unmodified-peptides"><i class="fa fa-check"></i><b>2.1.3</b> Remove Unmodified Peptides</a></li>
+<li class="chapter" data-level="2.1.4" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-contaminants-1"><i class="fa fa-check"></i><b>2.1.4</b> Remove Contaminants</a></li>
+<li class="chapter" data-level="2.1.5" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#improve-phosphosite-localization"><i class="fa fa-check"></i><b>2.1.5</b> Improve Phosphosite Localization</a></li>
+<li class="chapter" data-level="2.1.6" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#msms-id-filter-peptide-level"><i class="fa fa-check"></i><b>2.1.6</b> MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="2.1.7" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#msms-id-filter-protein-level-1"><i class="fa fa-check"></i><b>2.1.7</b> MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="2.1.8" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#inference-of-parsimonious-protein-set-1"><i class="fa fa-check"></i><b>2.1.8</b> Inference of Parsimonious Protein Set</a></li>
+<li class="chapter" data-level="2.1.9" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#map-mod-sites"><i class="fa fa-check"></i><b>2.1.9</b> Map Sites to Protein Sequences</a></li>
+<li class="chapter" data-level="2.1.10" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-decoy-psms-1"><i class="fa fa-check"></i><b>2.1.10</b> Remove Decoy PSMs</a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>4.3</b> Heatmap Annotation</a>
+<li class="chapter" data-level="2.2" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html"><i class="fa fa-check"></i><b>2.2</b> Prepare Reporter Ion Intensities</a>
 <ul>
-<li class="chapter" data-level="4.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>4.3.1</b> Modifying Default Colors</a></li>
+<li class="chapter" data-level="2.2.1" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html#read-masic-output-1"><i class="fa fa-check"></i><b>2.2.1</b> Read MASIC Output</a></li>
+<li class="chapter" data-level="2.2.2" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html#filter-masic-data-1"><i class="fa fa-check"></i><b>2.2.2</b> Filter MASIC Data</a></li>
 </ul></li>
-<li class="chapter" data-level="4.4" data-path="additional-modifications.html"><a href="additional-modifications.html"><i class="fa fa-check"></i><b>4.4</b> Additional Modifications</a>
-<ul>
-<li class="chapter" data-level="4.4.1" data-path="additional-modifications.html"><a href="additional-modifications.html#change-row-or-column-labels"><i class="fa fa-check"></i><b>4.4.1</b> Change row or column labels</a></li>
-<li class="chapter" data-level="4.4.2" data-path="additional-modifications.html"><a href="additional-modifications.html#change-label-colors"><i class="fa fa-check"></i><b>4.4.2</b> Change label colors</a></li>
-<li class="chapter" data-level="4.4.3" data-path="additional-modifications.html"><a href="additional-modifications.html#label-specific-features"><i class="fa fa-check"></i><b>4.4.3</b> Label specific features</a></li>
-<li class="chapter" data-level="4.4.4" data-path="additional-modifications.html"><a href="additional-modifications.html#change-heatmap-body-color"><i class="fa fa-check"></i><b>4.4.4</b> Change heatmap body color</a></li>
+<li class="chapter" data-level="2.3" data-path="create-study-design-tables.html"><a href="create-study-design-tables.html"><i class="fa fa-check"></i><b>2.3</b> Create Study Design Tables</a></li>
+<li class="chapter" data-level="2.4" data-path="create-quantitative-cross-tab.html"><a href="create-quantitative-cross-tab.html"><i class="fa fa-check"></i><b>2.4</b> Create Quantitative Cross-tab</a></li>
 </ul></li>
+<li class="chapter" data-level="3" data-path="spectral-counting.html"><a href="spectral-counting.html"><i class="fa fa-check"></i><b>3</b> Spectral Counting</a></li>
+<li class="chapter" data-level="4" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>4</b> Exploratory Data Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>4.1</b> Count Features in Samples</a></li>
+<li class="chapter" data-level="4.2" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>4.2</b> Estimate Blood Contamination</a></li>
+<li class="chapter" data-level="4.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>4.3</b> PCA</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>5</b> Differential Analysis</a>
+<li class="chapter" data-level="5" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>5</b> Heatmaps</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>5.1</b> Linear Regression</a></li>
-<li class="chapter" data-level="5.2" data-path="one-way-anova.html"><a href="one-way-anova.html"><i class="fa fa-check"></i><b>5.2</b> One-Way ANOVA</a></li>
-<li class="chapter" data-level="5.3" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>5.3</b> t-tests</a>
+<li class="chapter" data-level="5.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>5.1</b> Expression Heatmaps</a></li>
+<li class="chapter" data-level="5.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>5.2</b> Correlation Heatmaps</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="t-tests.html"><a href="t-tests.html#one-comparison"><i class="fa fa-check"></i><b>5.3.1</b> One Comparison</a></li>
-<li class="chapter" data-level="5.3.2" data-path="t-tests.html"><a href="t-tests.html#multiple-comparisons"><i class="fa fa-check"></i><b>5.3.2</b> Multiple Comparisons</a></li>
+<li class="chapter" data-level="5.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>5.2.1</b> Sample Correlation</a></li>
+<li class="chapter" data-level="5.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>5.2.2</b> Feature Correlation</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>5.4</b> p-value Histograms</a></li>
-<li class="chapter" data-level="5.5" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>5.5</b> Volcano Plots</a></li>
+<li class="chapter" data-level="5.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>5.3</b> Heatmap Annotation</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>5.3.1</b> Modifying Default Colors</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>6</b> Pathway Analysis</a>
+<li class="chapter" data-level="5.4" data-path="modifications.html"><a href="modifications.html"><i class="fa fa-check"></i><b>5.4</b> Modifications</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>6.1</b> Annotation Databases</a>
-<ul>
-<li class="chapter" data-level="6.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>6.1.1</b> Gene Ontology</a>
-<ul>
-<li class="chapter" data-level="6.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>6.1.1.1</b> Semantic Similarity</a></li>
-<li class="chapter" data-level="6.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>6.1.1.2</b> GO Subsets/Slims</a></li>
-</ul></li>
-<li class="chapter" data-level="6.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>6.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="6.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>6.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="6.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>6.1.4</b> Pfam</a></li>
-</ul></li>
-<li class="chapter" data-level="6.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>6.2</b> Over-Representation Analysis</a>
-<ul>
-<li class="chapter" data-level="6.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>6.2.1</b> Overview</a>
-<ul>
-<li class="chapter" data-level="" data-path="ora.html"><a href="ora.html#important-considerations"><i class="fa fa-check"></i>Important Considerations</a></li>
-</ul></li>
-<li class="chapter" data-level="6.2.2" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>6.2.2</b> Examples</a>
-<ul>
-<li class="chapter" data-level="6.2.2.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>6.2.2.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="6.2.2.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>6.2.2.2</b> Reactome</a></li>
-<li class="chapter" data-level="6.2.2.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>6.2.2.3</b> Pfam</a></li>
-<li class="chapter" data-level="6.2.2.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>6.2.2.4</b> Other Databases</a></li>
+<li class="chapter" data-level="5.4.1" data-path="modifications.html"><a href="modifications.html#row-and-column-labels"><i class="fa fa-check"></i><b>5.4.1</b> Row and column labels</a></li>
+<li class="chapter" data-level="5.4.2" data-path="modifications.html"><a href="modifications.html#label-colors"><i class="fa fa-check"></i><b>5.4.2</b> Label colors</a></li>
+<li class="chapter" data-level="5.4.3" data-path="modifications.html"><a href="modifications.html#label-specific-features"><i class="fa fa-check"></i><b>5.4.3</b> Label specific features</a></li>
+<li class="chapter" data-level="5.4.4" data-path="modifications.html"><a href="modifications.html#heatmap-body-color"><i class="fa fa-check"></i><b>5.4.4</b> Heatmap body color</a></li>
+<li class="chapter" data-level="5.4.5" data-path="modifications.html"><a href="modifications.html#horizontal-heatmaps"><i class="fa fa-check"></i><b>5.4.5</b> Horizontal heatmaps</a></li>
+<li class="chapter" data-level="5.4.6" data-path="modifications.html"><a href="modifications.html#legends"><i class="fa fa-check"></i><b>5.4.6</b> Legends</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>6.3</b> Gene Set Enrichment Analysis</a>
+<li class="chapter" data-level="6" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>6</b> Differential Expression Analysis</a>
 <ul>
-<li class="chapter" data-level="6.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>6.3.1</b> Overview</a>
+<li class="chapter" data-level="6.1" data-path="mult-comp.html"><a href="mult-comp.html"><i class="fa fa-check"></i><b>6.1</b> Multiple Comparisons</a></li>
+<li class="chapter" data-level="6.2" data-path="linear-reg.html"><a href="linear-reg.html"><i class="fa fa-check"></i><b>6.2</b> Linear Regression</a></li>
+<li class="chapter" data-level="6.3" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>6.3</b> Two-Sample t-tests</a>
 <ul>
-<li class="chapter" data-level="" data-path="gsea.html"><a href="gsea.html#important-considerations-1"><i class="fa fa-check"></i>Important Considerations</a></li>
+<li class="chapter" data-level="6.3.1" data-path="t-tests.html"><a href="t-tests.html#t-single"><i class="fa fa-check"></i><b>6.3.1</b> One comparison</a></li>
+<li class="chapter" data-level="6.3.2" data-path="t-tests.html"><a href="t-tests.html#t-mult"><i class="fa fa-check"></i><b>6.3.2</b> Multiple comparisons</a></li>
 </ul></li>
-<li class="chapter" data-level="6.3.2" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>6.3.2</b> Examples</a>
+<li class="chapter" data-level="6.4" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>6.4</b> One-Way ANOVA</a></li>
+<li class="chapter" data-level="6.5" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>6.5</b> p-value Histograms</a></li>
+<li class="chapter" data-level="6.6" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>6.6</b> Volcano Plots</a>
 <ul>
-<li class="chapter" data-level="6.3.2.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>6.3.2.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="6.3.2.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>6.3.2.2</b> Reactome</a></li>
-<li class="chapter" data-level="6.3.2.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>6.3.2.3</b> Pfam</a></li>
-<li class="chapter" data-level="6.3.2.4" data-path="gsea.html"><a href="gsea.html#other-databases"><i class="fa fa-check"></i><b>6.3.2.4</b> Other Databases</a></li>
+<li class="chapter" data-level="6.6.1" data-path="volcano-plots.html"><a href="volcano-plots.html#base-plot"><i class="fa fa-check"></i><b>6.6.1</b> Base plot</a></li>
+<li class="chapter" data-level="6.6.2" data-path="volcano-plots.html"><a href="volcano-plots.html#label-top-features"><i class="fa fa-check"></i><b>6.6.2</b> Label top features</a></li>
+<li class="chapter" data-level="6.6.3" data-path="volcano-plots.html"><a href="volcano-plots.html#label-specific-features-1"><i class="fa fa-check"></i><b>6.6.3</b> Label specific features</a></li>
+<li class="chapter" data-level="6.6.4" data-path="volcano-plots.html"><a href="volcano-plots.html#modify-point-colors"><i class="fa fa-check"></i><b>6.6.4</b> Modify point colors</a></li>
+<li class="chapter" data-level="6.6.5" data-path="volcano-plots.html"><a href="volcano-plots.html#multiple-volcano-plots"><i class="fa fa-check"></i><b>6.6.5</b> Multiple volcano plots</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>7</b> Pathway Analysis</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>7.1</b> Annotation Databases</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>7.1.1</b> Gene Ontology</a>
+<ul>
+<li class="chapter" data-level="7.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>7.1.1.1</b> Semantic Similarity</a></li>
+<li class="chapter" data-level="7.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>7.1.1.2</b> GO Subsets/Slims</a></li>
+</ul></li>
+<li class="chapter" data-level="7.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>7.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="7.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>7.1.3</b> KEGG</a></li>
+<li class="chapter" data-level="7.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>7.1.4</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>7.2</b> Over-Representation Analysis</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>7.2.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="7.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>7.2.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="7.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>7.2.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="7.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>7.2.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="7.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>7.2.1.4</b> Other Databases</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>7.3</b> Gene Set Enrichment Analysis</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>7.3.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="7.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>7.3.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="7.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>7.3.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="7.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>7.3.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="7.3.1.4" data-path="gsea.html"><a href="gsea.html#other-databases"><i class="fa fa-check"></i><b>7.3.1.4</b> Other Databases</a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -299,10 +311,8 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="ora" class="section level2" number="6.2">
-<h2><span class="header-section-number">6.2</span> Over-Representation Analysis</h2>
-<div id="ora-overview" class="section level3" number="6.2.1">
-<h3><span class="header-section-number">6.2.1</span> Overview</h3>
+<div id="ora" class="section level2" number="7.2">
+<h2><span class="header-section-number">7.2</span> Over-Representation Analysis</h2>
 <p>Over-Representation Analysis (ORA) is used to determine which <em>a priori</em> defined gene sets are more present (over-represented) in a subset of “interesting” genes than what would be expected by chance <span class="citation">(<a href="#ref-huang_bioinformatics_2009" role="doc-biblioref">Huang et al., 2009</a>)</span>. Essentially, it identifies the gene sets—rather than the individual genes—that are significantly different between two conditions.</p>
 <p>For each gene set, an enrichment p-value is calculated using the Binomial distribution, Hypergeometric distribution, the Fisher exact test, or the Chi-square test. Although this list is not all-encompassing, these are the most popular statistical methods <span class="citation">(<a href="#ref-huang_bioinformatics_2009" role="doc-biblioref">Huang et al., 2009</a>)</span>. Below is the formula for calculating the enrichment p-value for a particular gene set using the Hypergeometric distribution.</p>
 <div class="math">
@@ -318,10 +328,9 @@ P(X\geq 20) = 1 - P(X \leq 19) = 1-\sum \limits_{i=0}^{19}\frac{\hphantom{}{100 
 \]</span></p>
 </div>
 <p>That is, it is extremely unlikely that 20 of the 100 genes from this set are significantly differentially expressed by chance (at least, prior to adjustment for multiple comparisons). The code to calculate this p-value is</p>
-<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="ora.html#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="fu">phyper</span>(<span class="at">q =</span> <span class="dv">20</span> <span class="sc">-</span> <span class="dv">1</span>, <span class="at">m =</span> <span class="dv">400</span>, <span class="at">n =</span> <span class="dv">8000</span> <span class="sc">-</span> <span class="dv">400</span>, <span class="at">k =</span> <span class="dv">100</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="ora.html#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="fu">phyper</span>(<span class="at">q =</span> <span class="dv">20</span> <span class="sc">-</span> <span class="dv">1</span>, <span class="at">m =</span> <span class="dv">400</span>, <span class="at">n =</span> <span class="dv">8000</span> <span class="sc">-</span> <span class="dv">400</span>, <span class="at">k =</span> <span class="dv">100</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
 <p>After a p-value has been calculated for each of the applicable gene sets, a multiple comparison adjustment should be performed.</p>
-<div id="important-considerations" class="section level4 unnumbered">
-<h4>Important Considerations</h4>
+<strong>Important Considerations</strong>
 <ol>
 <li>
 The choice of the threshold for statistical significance and the multiple comparison adjustment method can greatly impact the analysis <span class="citation">(<a href="#ref-huang_bioinformatics_2009" role="doc-biblioref">Huang et al., 2009</a>)</span>.
@@ -340,47 +349,45 @@ If few genes are differentially expressed, ORA may not yield useful or reliable 
 If the DEA results are not gene-centric (i.e. DEA was performed at the protein or phosphosite level), then there may be cases where two proteins are associated with the same gene, but only one is significantly differentially abundant. In this case, there is no way to categorize the gene as significant or not, so ORA should not be used. The other problem that could arise if the DEA results are not gene-centric is that the same gene may be counted as significant multiple times, which leads to artificial over-representation. In these cases, GSEA may be a good alternative.
 </li>
 </ol>
-</div>
-</div>
-<div id="ora-examples" class="section level3" number="6.2.2">
-<h3><span class="header-section-number">6.2.2</span> Examples</h3>
-<p>For these examples, we will show how to perform ORA with the GOstats, clusterProfiler, and ReactomePA packages. The databases that we will cover are Gene Ontology, Reactome, and Pfam. For details on these different annotation databases, please see Section <a href="annotation-databases.html#annotation-databases">6.1</a>.</p>
-<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="ora.html#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Setup</span></span>
-<span id="cb128-2"><a href="ora.html#cb128-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Required packages</span></span>
-<span id="cb128-3"><a href="ora.html#cb128-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clusterProfiler) <span class="co"># GO, KEGG, and custom ORA</span></span>
-<span id="cb128-4"><a href="ora.html#cb128-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ReactomePA) <span class="co"># Reactome ORA</span></span>
-<span id="cb128-5"><a href="ora.html#cb128-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GOstats) <span class="co"># GO, KEGG, and Pfam ORA</span></span>
-<span id="cb128-6"><a href="ora.html#cb128-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PFAM.db) <span class="co"># Map Pfam IDs to descriptions</span></span>
-<span id="cb128-7"><a href="ora.html#cb128-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(org.Hs.eg.db) <span class="co"># Human annotation database</span></span>
-<span id="cb128-8"><a href="ora.html#cb128-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
-<span id="cb128-9"><a href="ora.html#cb128-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
+<div id="ora-examples" class="section level3" number="7.2.1">
+<h3><span class="header-section-number">7.2.1</span> Examples</h3>
+<p>For these examples, we will show how to perform ORA with the GOstats, clusterProfiler, and ReactomePA packages. The databases that we will cover are Gene Ontology, Reactome, and Pfam. For details on these different annotation databases, please see Section <a href="annotation-databases.html#annotation-databases">7.1</a>.</p>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="ora.html#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Setup</span></span>
+<span id="cb134-2"><a href="ora.html#cb134-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Required packages</span></span>
+<span id="cb134-3"><a href="ora.html#cb134-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clusterProfiler) <span class="co"># GO, KEGG, and custom ORA</span></span>
+<span id="cb134-4"><a href="ora.html#cb134-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ReactomePA) <span class="co"># Reactome ORA</span></span>
+<span id="cb134-5"><a href="ora.html#cb134-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GOstats) <span class="co"># GO, KEGG, and Pfam ORA</span></span>
+<span id="cb134-6"><a href="ora.html#cb134-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PFAM.db) <span class="co"># Map Pfam IDs to descriptions</span></span>
+<span id="cb134-7"><a href="ora.html#cb134-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(org.Hs.eg.db) <span class="co"># Human annotation database</span></span>
+<span id="cb134-8"><a href="ora.html#cb134-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb134-9"><a href="ora.html#cb134-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
 <p>Normally, we would use a DEA table to create two character vectors: one for the significantly expressed genes and the other for all genes that were tested (referred to as the “background” or “universe”); instead, we will use the <code>gcSample</code> data that comes with clusterProfiler and treat the eighth cluster as our vector of significant genes and the entire list as the gene universe. Each gene is represented by a human Entrez gene ID, which is the default keytype used by the clusterProfiler functions (and the only keytype compatible with <code>ReactomePA::enrichPathway</code>).</p>
-<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="ora.html#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;gcSample&quot;</span>) <span class="co"># Data for examples</span></span>
-<span id="cb129-2"><a href="ora.html#cb129-2" aria-hidden="true" tabindex="-1"></a>sig_genes <span class="ot">&lt;-</span> gcSample[[<span class="dv">8</span>]] <span class="co"># significant genes</span></span>
-<span id="cb129-3"><a href="ora.html#cb129-3" aria-hidden="true" tabindex="-1"></a>universe <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">unlist</span>(gcSample)) <span class="co"># universe</span></span></code></pre></div>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="ora.html#cb135-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;gcSample&quot;</span>) <span class="co"># Data for examples</span></span>
+<span id="cb135-2"><a href="ora.html#cb135-2" aria-hidden="true" tabindex="-1"></a>sig_genes <span class="ot">&lt;-</span> gcSample[[<span class="dv">8</span>]] <span class="co"># significant genes</span></span>
+<span id="cb135-3"><a href="ora.html#cb135-3" aria-hidden="true" tabindex="-1"></a>universe <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">unlist</span>(gcSample)) <span class="co"># universe</span></span></code></pre></div>
 <p>It is important to note that the genes should be unique from the start. The terms between any two clusters of <code>gcSample</code> may overlap, so we must use <code>unique</code> for the sake of these examples. <em>If your DEA results are not gene-centric, do NOT use ORA. Instead, switch to GSEA and summarize the ranking metric in some way to make it gene-centric (i.e. take the average, min, max, etc. of the metrics for each gene group)</em>.</p>
-<div id="ora-go" class="section level4" number="6.2.2.1">
-<h4><span class="header-section-number">6.2.2.1</span> Gene Ontology</h4>
+<div id="ora-go" class="section level4" number="7.2.1.1">
+<h4><span class="header-section-number">7.2.1.1</span> Gene Ontology</h4>
 <p>We will first use the clusterProfiler package to test which biological processes are over-represented in the set of interesting genes. For this example, we will only consider gene sets of size 20 to 500. In order to test either molecular functions, cellular components, or all three ontologies at once, set <code>ont</code> to <code>"MF"</code>, <code>"CC"</code>, or <code>"ALL"</code>, respectively.</p>
-<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="ora.html#cb130-1" aria-hidden="true" tabindex="-1"></a><span class="do">## GO BP ORA with clusterProfiler</span></span>
-<span id="cb130-2"><a href="ora.html#cb130-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This takes a while</span></span>
-<span id="cb130-3"><a href="ora.html#cb130-3" aria-hidden="true" tabindex="-1"></a>cp_ora_go <span class="ot">&lt;-</span> <span class="fu">enrichGO</span>(</span>
-<span id="cb130-4"><a href="ora.html#cb130-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">gene =</span> sig_genes, </span>
-<span id="cb130-5"><a href="ora.html#cb130-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">OrgDb =</span> <span class="st">&quot;org.Hs.eg.db&quot;</span>, </span>
-<span id="cb130-6"><a href="ora.html#cb130-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">keyType =</span> <span class="st">&quot;ENTREZID&quot;</span>, </span>
-<span id="cb130-7"><a href="ora.html#cb130-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ont =</span> <span class="st">&quot;BP&quot;</span>, <span class="co"># BP, CC, MF, or ALL for all ontologies</span></span>
-<span id="cb130-8"><a href="ora.html#cb130-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pvalueCutoff =</span> <span class="fl">0.05</span>,</span>
-<span id="cb130-9"><a href="ora.html#cb130-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">qvalueCutoff =</span> <span class="dv">1</span>, <span class="co"># Do not filter by q-value</span></span>
-<span id="cb130-10"><a href="ora.html#cb130-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">pAdjustMethod =</span> <span class="st">&quot;BH&quot;</span>, </span>
-<span id="cb130-11"><a href="ora.html#cb130-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">universe =</span> universe, </span>
-<span id="cb130-12"><a href="ora.html#cb130-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">minGSSize =</span> <span class="dv">20</span>, </span>
-<span id="cb130-13"><a href="ora.html#cb130-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">maxGSSize =</span> <span class="dv">500</span>, </span>
-<span id="cb130-14"><a href="ora.html#cb130-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">readable =</span> <span class="cn">TRUE</span> <span class="co"># Convert Entrez ID to gene symbol</span></span>
-<span id="cb130-15"><a href="ora.html#cb130-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="ora.html#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="do">## GO BP ORA with clusterProfiler</span></span>
+<span id="cb136-2"><a href="ora.html#cb136-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This takes a while</span></span>
+<span id="cb136-3"><a href="ora.html#cb136-3" aria-hidden="true" tabindex="-1"></a>cp_ora_go <span class="ot">&lt;-</span> <span class="fu">enrichGO</span>(</span>
+<span id="cb136-4"><a href="ora.html#cb136-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">gene =</span> sig_genes, </span>
+<span id="cb136-5"><a href="ora.html#cb136-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">OrgDb =</span> <span class="st">&quot;org.Hs.eg.db&quot;</span>, </span>
+<span id="cb136-6"><a href="ora.html#cb136-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">keyType =</span> <span class="st">&quot;ENTREZID&quot;</span>, </span>
+<span id="cb136-7"><a href="ora.html#cb136-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">ont =</span> <span class="st">&quot;BP&quot;</span>, <span class="co"># BP, CC, MF, or ALL for all ontologies</span></span>
+<span id="cb136-8"><a href="ora.html#cb136-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pvalueCutoff =</span> <span class="fl">0.05</span>,</span>
+<span id="cb136-9"><a href="ora.html#cb136-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">qvalueCutoff =</span> <span class="dv">1</span>, <span class="co"># Do not filter by q-value</span></span>
+<span id="cb136-10"><a href="ora.html#cb136-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">pAdjustMethod =</span> <span class="st">&quot;BH&quot;</span>, </span>
+<span id="cb136-11"><a href="ora.html#cb136-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">universe =</span> universe, </span>
+<span id="cb136-12"><a href="ora.html#cb136-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">minGSSize =</span> <span class="dv">20</span>, </span>
+<span id="cb136-13"><a href="ora.html#cb136-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">maxGSSize =</span> <span class="dv">500</span>, </span>
+<span id="cb136-14"><a href="ora.html#cb136-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">readable =</span> <span class="cn">TRUE</span> <span class="co"># Convert Entrez ID to gene symbol</span></span>
+<span id="cb136-15"><a href="ora.html#cb136-15" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; ">
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-<span id="tab:cp-ora-go-table">Table 6.2: </span>Top significantly over-represented biological processes from enrichGO output.
+<span id="tab:cp-ora-go-table">Table 7.2: </span>Top significantly over-represented biological processes from enrichGO output.
 </caption>
 <thead>
 <tr>
@@ -402,8 +409,14 @@ pvalue
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 p.adjust
 </th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+qvalue
+</th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 geneID
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Count
 </th>
 </tr>
 </thead>
@@ -427,8 +440,14 @@ ATP metabolic process
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 COX4I1/PGK1/TPI1…
+</td>
+<td style="text-align:right;">
+24
 </td>
 </tr>
 <tr>
@@ -450,8 +469,14 @@ oxidative phosphorylation
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 COX4I1/COX8A/COX7C…
+</td>
+<td style="text-align:right;">
+16
 </td>
 </tr>
 <tr>
@@ -473,8 +498,14 @@ mRNA catabolic process
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 HNRNPU/YWHAZ/RPL13A…
+</td>
+<td style="text-align:right;">
+22
 </td>
 </tr>
 <tr>
@@ -496,8 +527,14 @@ proton transmembrane transport
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 COX4I1/COX8A/COX7C…
+</td>
+<td style="text-align:right;">
+12
 </td>
 </tr>
 <tr>
@@ -519,8 +556,14 @@ mRNA metabolic process
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 HNRNPU/YWHAZ/RPL13A…
+</td>
+<td style="text-align:right;">
+35
 </td>
 </tr>
 <tr>
@@ -542,8 +585,14 @@ generation of precursor metabolites and energy
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 COX4I1/PGK1/TPI1…
+</td>
+<td style="text-align:right;">
+29
 </td>
 </tr>
 <tr>
@@ -565,8 +614,14 @@ aerobic respiration
 <td style="text-align:right;">
 1e-04
 </td>
+<td style="text-align:right;">
+1e-04
+</td>
 <td style="text-align:left;">
 COX4I1/MDH1/HIF1A…
+</td>
+<td style="text-align:right;">
+12
 </td>
 </tr>
 <tr>
@@ -588,8 +643,14 @@ RNA catabolic process
 <td style="text-align:right;">
 1e-04
 </td>
+<td style="text-align:right;">
+1e-04
+</td>
 <td style="text-align:left;">
 HNRNPU/YWHAZ/RPL13A…
+</td>
+<td style="text-align:right;">
+22
 </td>
 </tr>
 <tr>
@@ -611,8 +672,14 @@ posttranscriptional regulation of gene expression
 <td style="text-align:right;">
 3e-04
 </td>
+<td style="text-align:right;">
+2e-04
+</td>
 <td style="text-align:left;">
 HNRNPU/MATR3/YWHAZ…
+</td>
+<td style="text-align:right;">
+28
 </td>
 </tr>
 <tr>
@@ -634,23 +701,29 @@ ATP synthesis coupled electron transport
 <td style="text-align:right;">
 3e-04
 </td>
+<td style="text-align:right;">
+2e-04
+</td>
 <td style="text-align:left;">
 COX4I1/COX8A/COX7C…
+</td>
+<td style="text-align:right;">
+11
 </td>
 </tr>
 </tbody>
 </table>
 </div>
 <p></br></p>
-<p>There were 4436 biological processes that were tested. Of these, 2049 passed the size filter, and only 182 were significantly over-represented after multiple testing correction. The top 10 are shown in Table <a href="ora.html#tab:cp-ora-go-table">6.2</a>.</p>
+<p>There were 4436 biological processes that were tested. Of these, 2049 passed the size filter, and only 182 were significantly over-represented after multiple testing correction. The top 10 are shown in Table <a href="ora.html#tab:cp-ora-go-table">7.2</a>.</p>
 <p><strong>Remove Redundant GO Terms</strong></p>
 <p>By default, if two terms have a semantic similarity above 0.7, <code>clusterProfiler::simplify</code> retains the more significantly over-represented term.</p>
-<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="ora.html#cb131-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove redundant GO terms with simplify</span></span>
-<span id="cb131-2"><a href="ora.html#cb131-2" aria-hidden="true" tabindex="-1"></a>cp_ora_go_sim <span class="ot">&lt;-</span> <span class="fu">simplify</span>(cp_ora_go)</span></code></pre></div>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="ora.html#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove redundant GO terms with simplify</span></span>
+<span id="cb137-2"><a href="ora.html#cb137-2" aria-hidden="true" tabindex="-1"></a>cp_ora_go_sim <span class="ot">&lt;-</span> <span class="fu">simplify</span>(cp_ora_go)</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; ">
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-<span id="tab:simplify-cp-ora-bp-table">Table 6.3: </span>Simplified top significantly over-represented biological processes from enrichGO output.
+<span id="tab:simplify-cp-ora-bp-table">Table 7.3: </span>Simplified top significantly over-represented biological processes from enrichGO output.
 </caption>
 <thead>
 <tr>
@@ -672,8 +745,14 @@ pvalue
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 p.adjust
 </th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+qvalue
+</th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 geneID
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Count
 </th>
 </tr>
 </thead>
@@ -697,8 +776,14 @@ ATP metabolic process
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 COX4I1/PGK1/TPI1…
+</td>
+<td style="text-align:right;">
+24
 </td>
 </tr>
 <tr>
@@ -720,8 +805,14 @@ oxidative phosphorylation
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 COX4I1/COX8A/COX7C…
+</td>
+<td style="text-align:right;">
+16
 </td>
 </tr>
 <tr>
@@ -743,8 +834,14 @@ mRNA catabolic process
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 HNRNPU/YWHAZ/RPL13A…
+</td>
+<td style="text-align:right;">
+22
 </td>
 </tr>
 <tr>
@@ -766,8 +863,14 @@ proton transmembrane transport
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 COX4I1/COX8A/COX7C…
+</td>
+<td style="text-align:right;">
+12
 </td>
 </tr>
 <tr>
@@ -789,8 +892,14 @@ mRNA metabolic process
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 HNRNPU/YWHAZ/RPL13A…
+</td>
+<td style="text-align:right;">
+35
 </td>
 </tr>
 <tr>
@@ -812,8 +921,14 @@ generation of precursor metabolites and energy
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 COX4I1/PGK1/TPI1…
+</td>
+<td style="text-align:right;">
+29
 </td>
 </tr>
 <tr>
@@ -835,8 +950,14 @@ posttranscriptional regulation of gene expression
 <td style="text-align:right;">
 3e-04
 </td>
+<td style="text-align:right;">
+2e-04
+</td>
 <td style="text-align:left;">
 HNRNPU/MATR3/YWHAZ…
+</td>
+<td style="text-align:right;">
+28
 </td>
 </tr>
 <tr>
@@ -858,8 +979,14 @@ purine ribonucleoside triphosphate metabolic process
 <td style="text-align:right;">
 4e-04
 </td>
+<td style="text-align:right;">
+3e-04
+</td>
 <td style="text-align:left;">
 RAN/ENO1/ATP5F1B…
+</td>
+<td style="text-align:right;">
+9
 </td>
 </tr>
 <tr>
@@ -881,8 +1008,14 @@ response to cytokine
 <td style="text-align:right;">
 4e-04
 </td>
+<td style="text-align:right;">
+4e-04
+</td>
 <td style="text-align:left;">
 HNRNPU/YWHAZ/SLC25A5…
+</td>
+<td style="text-align:right;">
+45
 </td>
 </tr>
 <tr>
@@ -904,43 +1037,49 @@ cellular response to cytokine stimulus
 <td style="text-align:right;">
 4e-04
 </td>
+<td style="text-align:right;">
+4e-04
+</td>
 <td style="text-align:left;">
 HNRNPU/YWHAZ/SLC25A5…
+</td>
+<td style="text-align:right;">
+42
 </td>
 </tr>
 </tbody>
 </table>
 </div>
 <p></br></p>
-<p>Notice that <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a> is not present in Table <a href="ora.html#tab:simplify-cp-ora-bp-table">6.3</a> anymore, since it was highly similar to <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a>, and the latter was more significant. After removing redundant GO terms, 95 pass the significance threshold.</p>
+<p>Notice that <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a> is not present in Table <a href="ora.html#tab:simplify-cp-ora-bp-table">7.3</a> anymore, since it was highly similar to <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a>, and the latter was more significant. After removing redundant GO terms, 95 pass the significance threshold.</p>
 <p>Instead of retaining terms based on adjusted p-value, we could ignore significance and instead retain either parent or child terms (<code>select_fun = min</code> and <code>select_fun = max</code>, respectively). The code to do so is provided <a href="https://github.com/YuLab-SMU/clusterProfiler/issues/372" title = "New feature: simplify to parent GO terms #372">here</a>.</p>
-<p>Another alternative would be to use a gene ID to <a href="http://geneontology.org/docs/go-subset-guide/" title = "Guide to GO subsets">GO slim</a> ID conversion table. See the Semantic Similarity subsection of Section <a href="annotation-databases.html#annotation-databases">6.1</a> for more details.</p>
+<p>Another alternative would be to use a gene ID to <a href="http://geneontology.org/docs/go-subset-guide/" title = "Guide to GO subsets">GO slim</a> ID conversion table. See the Semantic Similarity subsection of Section <a href="annotation-databases.html#annotation-databases">7.1</a> for more details.</p>
 <p>Now, we will perform GO ORA with the GOstats package. We begin by creating an object of class <code>GOHyperGParams</code> and passing it to <code>hyperGTest</code> for calculation of Hypergeometric p-values. We do not filter by p-value, since adjusted p-values are not provided and we must calculate them ourselves.</p>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="ora.html#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="do">## GO BP ORA with GOstats</span></span>
-<span id="cb132-2"><a href="ora.html#cb132-2" aria-hidden="true" tabindex="-1"></a>hyperg_ora_go <span class="ot">&lt;-</span> <span class="fu">new</span>(</span>
-<span id="cb132-3"><a href="ora.html#cb132-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Class =</span> <span class="st">&quot;GOHyperGParams&quot;</span>,</span>
-<span id="cb132-4"><a href="ora.html#cb132-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ontology =</span> <span class="st">&quot;BP&quot;</span>,</span>
-<span id="cb132-5"><a href="ora.html#cb132-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">geneIds =</span> sig_genes,</span>
-<span id="cb132-6"><a href="ora.html#cb132-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">universeGeneIds =</span> universe,</span>
-<span id="cb132-7"><a href="ora.html#cb132-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">annotation =</span> <span class="st">&quot;org.Hs.eg.db&quot;</span>,</span>
-<span id="cb132-8"><a href="ora.html#cb132-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pvalueCutoff =</span> <span class="dv">1</span>, <span class="co"># Do not filter by p-value</span></span>
-<span id="cb132-9"><a href="ora.html#cb132-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">testDirection =</span> <span class="st">&quot;over&quot;</span>,</span>
-<span id="cb132-10"><a href="ora.html#cb132-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">conditional =</span> <span class="cn">FALSE</span></span>
-<span id="cb132-11"><a href="ora.html#cb132-11" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb132-12"><a href="ora.html#cb132-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hyperGTest</span>() <span class="co"># Hypergeometric testing</span></span></code></pre></div>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="ora.html#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="do">## GO BP ORA with GOstats</span></span>
+<span id="cb138-2"><a href="ora.html#cb138-2" aria-hidden="true" tabindex="-1"></a>hyperg_ora_go <span class="ot">&lt;-</span> <span class="fu">new</span>(</span>
+<span id="cb138-3"><a href="ora.html#cb138-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Class =</span> <span class="st">&quot;GOHyperGParams&quot;</span>,</span>
+<span id="cb138-4"><a href="ora.html#cb138-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ontology =</span> <span class="st">&quot;BP&quot;</span>,</span>
+<span id="cb138-5"><a href="ora.html#cb138-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">geneIds =</span> sig_genes,</span>
+<span id="cb138-6"><a href="ora.html#cb138-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">universeGeneIds =</span> universe,</span>
+<span id="cb138-7"><a href="ora.html#cb138-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">annotation =</span> <span class="st">&quot;org.Hs.eg.db&quot;</span>,</span>
+<span id="cb138-8"><a href="ora.html#cb138-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pvalueCutoff =</span> <span class="dv">1</span>, <span class="co"># Do not filter by p-value</span></span>
+<span id="cb138-9"><a href="ora.html#cb138-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">testDirection =</span> <span class="st">&quot;over&quot;</span>,</span>
+<span id="cb138-10"><a href="ora.html#cb138-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">conditional =</span> <span class="cn">FALSE</span></span>
+<span id="cb138-11"><a href="ora.html#cb138-11" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb138-12"><a href="ora.html#cb138-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hyperGTest</span>() <span class="co"># Hypergeometric testing</span></span></code></pre></div>
 <p>Now, we need to filter by gene set size (limit 20 to 500), adjust the p-values, and filter based on the adjusted p-values.</p>
-<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="ora.html#cb133-1" aria-hidden="true" tabindex="-1"></a>res_go_ora <span class="ot">&lt;-</span> <span class="fu">summary</span>(hyperg_ora_go) <span class="sc">%&gt;%</span></span>
-<span id="cb133-2"><a href="ora.html#cb133-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter by size</span></span>
-<span id="cb133-3"><a href="ora.html#cb133-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Size <span class="sc">&gt;=</span> <span class="dv">20</span>, Size <span class="sc">&lt;=</span> <span class="dv">500</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb133-4"><a href="ora.html#cb133-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adjust p-values</span></span>
-<span id="cb133-5"><a href="ora.html#cb133-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">p.adjust =</span> <span class="fu">p.adjust</span>(Pvalue, <span class="at">method =</span> <span class="st">&quot;BH&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb133-6"><a href="ora.html#cb133-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter and sort by adjusted p-values</span></span>
-<span id="cb133-7"><a href="ora.html#cb133-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(p.adjust) <span class="sc">%&gt;%</span> </span>
-<span id="cb133-8"><a href="ora.html#cb133-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(p.adjust <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="ora.html#cb139-1" aria-hidden="true" tabindex="-1"></a>res_go_ora <span class="ot">&lt;-</span> <span class="fu">summary</span>(hyperg_ora_go) <span class="sc">%&gt;%</span></span>
+<span id="cb139-2"><a href="ora.html#cb139-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter by size</span></span>
+<span id="cb139-3"><a href="ora.html#cb139-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Size <span class="sc">&gt;=</span> <span class="dv">20</span>, Size <span class="sc">&lt;=</span> <span class="dv">500</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb139-4"><a href="ora.html#cb139-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adjust p-values</span></span>
+<span id="cb139-5"><a href="ora.html#cb139-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">p.adjust =</span> <span class="fu">p.adjust</span>(Pvalue, <span class="at">method =</span> <span class="st">&quot;BH&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb139-6"><a href="ora.html#cb139-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter and sort by adjusted p-values</span></span>
+<span id="cb139-7"><a href="ora.html#cb139-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(p.adjust) <span class="sc">%&gt;%</span> </span>
+<span id="cb139-8"><a href="ora.html#cb139-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(p.adjust <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; ">
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-<span id="tab:cp-go-ora-table">Table 6.4: </span>Over-represented biological processes obtained using the GOstats package.
+<span id="tab:cp-go-ora-table">Table 7.4: </span>Over-represented biological processes obtained using the GOstats package.
 </caption>
 <thead>
 <tr>
@@ -1235,26 +1374,26 @@ ATP synthesis coupled electron transport
 </table>
 </div>
 <p></br></p>
-<p>There were 4435 biological processes that were tested. Of these, 2049 passed the size filter, and only 182 were significantly over-represented after multiple testing correction. The top 10 are shown in Table <a href="ora.html#tab:cp-go-ora-table">6.4</a>. The total number of biological processes that were tested is 1 less than the number reported from the <code>enrichGO</code> results. This is because <code>enrichGO</code> includes the “biological_process” root <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0008150" title = "biological process">GO:0008150</a>.</p>
+<p>There were 4435 biological processes that were tested. Of these, 2049 passed the size filter, and only 182 were significantly over-represented after multiple testing correction. The top 10 are shown in Table <a href="ora.html#tab:cp-go-ora-table">7.4</a>. The total number of biological processes that were tested is 1 less than the number reported from the <code>enrichGO</code> results. This is because <code>enrichGO</code> includes the “biological_process” root <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0008150" title = "biological process">GO:0008150</a>.</p>
 <p><strong>Remove Redundant GO Terms</strong></p>
 <p>While there is no function akin to <code>clusterProfiler::simplify</code> to process results, there is an argument called <code>conditional</code>. Setting <code>conditional</code> to <code>TRUE</code> tells <code>hyperGTest</code> to use the term-term relationships when calculating p-values <span class="citation">(<a href="#ref-falcon_how_2021" role="doc-biblioref">Falcon et al., 2021</a>)</span>. This approach is actually more akin to Modular Enrichment Analysis (MEA) than Over-Representation Analysis (also called Singular Enrichment Analysis; <span class="citation"><a href="#ref-huang_bioinformatics_2009" role="doc-biblioref">Huang et al.</a> (<a href="#ref-huang_bioinformatics_2009" role="doc-biblioref">2009</a>)</span>).</p>
-<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="ora.html#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Conditional GO BP ORA with GOstats</span></span>
-<span id="cb134-2"><a href="ora.html#cb134-2" aria-hidden="true" tabindex="-1"></a>hyperg_ora_go_sim <span class="ot">&lt;-</span> <span class="fu">new</span>(</span>
-<span id="cb134-3"><a href="ora.html#cb134-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Class =</span> <span class="st">&quot;GOHyperGParams&quot;</span>,</span>
-<span id="cb134-4"><a href="ora.html#cb134-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ontology =</span> <span class="st">&quot;BP&quot;</span>,</span>
-<span id="cb134-5"><a href="ora.html#cb134-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">geneIds =</span> sig_genes,</span>
-<span id="cb134-6"><a href="ora.html#cb134-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">universeGeneIds =</span> universe,</span>
-<span id="cb134-7"><a href="ora.html#cb134-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">annotation =</span> <span class="st">&quot;org.Hs.eg.db&quot;</span>,</span>
-<span id="cb134-8"><a href="ora.html#cb134-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pvalueCutoff =</span> <span class="dv">1</span>, <span class="co"># Do not filter by p-value</span></span>
-<span id="cb134-9"><a href="ora.html#cb134-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">testDirection =</span> <span class="st">&quot;over&quot;</span>,</span>
-<span id="cb134-10"><a href="ora.html#cb134-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">conditional =</span> <span class="cn">TRUE</span> <span class="co"># Use structure of GO graph</span></span>
-<span id="cb134-11"><a href="ora.html#cb134-11" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb134-12"><a href="ora.html#cb134-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hyperGTest</span>() <span class="co"># Hypergeometric testing</span></span></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="ora.html#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Conditional GO BP ORA with GOstats</span></span>
+<span id="cb140-2"><a href="ora.html#cb140-2" aria-hidden="true" tabindex="-1"></a>hyperg_ora_go_sim <span class="ot">&lt;-</span> <span class="fu">new</span>(</span>
+<span id="cb140-3"><a href="ora.html#cb140-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Class =</span> <span class="st">&quot;GOHyperGParams&quot;</span>,</span>
+<span id="cb140-4"><a href="ora.html#cb140-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ontology =</span> <span class="st">&quot;BP&quot;</span>,</span>
+<span id="cb140-5"><a href="ora.html#cb140-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">geneIds =</span> sig_genes,</span>
+<span id="cb140-6"><a href="ora.html#cb140-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">universeGeneIds =</span> universe,</span>
+<span id="cb140-7"><a href="ora.html#cb140-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">annotation =</span> <span class="st">&quot;org.Hs.eg.db&quot;</span>,</span>
+<span id="cb140-8"><a href="ora.html#cb140-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">pvalueCutoff =</span> <span class="dv">1</span>, <span class="co"># Do not filter by p-value</span></span>
+<span id="cb140-9"><a href="ora.html#cb140-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">testDirection =</span> <span class="st">&quot;over&quot;</span>,</span>
+<span id="cb140-10"><a href="ora.html#cb140-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">conditional =</span> <span class="cn">TRUE</span> <span class="co"># Use structure of GO graph</span></span>
+<span id="cb140-11"><a href="ora.html#cb140-11" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb140-12"><a href="ora.html#cb140-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hyperGTest</span>() <span class="co"># Hypergeometric testing</span></span></code></pre></div>
 <p>We will process the results the same as before and compare.</p>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; ">
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-<span id="tab:cp-go-ora-simple-table">Table 6.5: </span>Simplified over-represented biological processes obtained using the GOstats package.
+<span id="tab:cp-go-ora-simple-table">Table 7.5: </span>Simplified over-represented biological processes obtained using the GOstats package.
 </caption>
 <thead>
 <tr>
@@ -1549,27 +1688,27 @@ antigen processing and presentation of peptide antigen
 </table>
 </div>
 <p></br></p>
-<p>Now, only 2953 terms showed up in the summary. Of these, 1445 passed the size filter, and 31 were significantly over-represented after multiple testing correction. The top 10 are shown in Table <a href="ora.html#tab:cp-go-ora-simple-table">6.5</a>. The major difference between these results and the ones from <code>enrichGO</code> after using <code>simplify</code> is that p-value adjustment is not affected by <code>simplify</code>, as redundant GO terms are removed after. The conditional method is actually more akin to performing modular enrichment analysis (MEA) than ORA (also called singular enrichment analysis)</p>
+<p>Now, only 2953 terms showed up in the summary. Of these, 1445 passed the size filter, and 31 were significantly over-represented after multiple testing correction. The top 10 are shown in Table <a href="ora.html#tab:cp-go-ora-simple-table">7.5</a>. The major difference between these results and the ones from <code>enrichGO</code> after using <code>simplify</code> is that p-value adjustment is not affected by <code>simplify</code>, as redundant GO terms are removed after. The conditional method is actually more akin to performing modular enrichment analysis (MEA) than ORA (also called singular enrichment analysis)</p>
 </div>
-<div id="ora-reactome" class="section level4" number="6.2.2.2">
-<h4><span class="header-section-number">6.2.2.2</span> Reactome</h4>
+<div id="ora-reactome" class="section level4" number="7.2.1.2">
+<h4><span class="header-section-number">7.2.1.2</span> Reactome</h4>
 <p>GOstats does not have a dedicated class to test for Reactome pathway over-representation, but we can use ReactomePA. For this example, we will only consider pathways of size 20 to 500. <code>enrichPathway</code> only accepts Entrez gene IDs as input. In cases where the Entrez ID is not readily available, we must convert to them. Alternatively, we could use the custom ORA function <code>enricher</code>, which allows us to use any ID type (use demonstrated in Pfam example).</p>
-<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="ora.html#cb135-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Reactome ORA with ReactomePA</span></span>
-<span id="cb135-2"><a href="ora.html#cb135-2" aria-hidden="true" tabindex="-1"></a>cp_ora_reactome <span class="ot">&lt;-</span> <span class="fu">enrichPathway</span>(</span>
-<span id="cb135-3"><a href="ora.html#cb135-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">gene =</span> sig_genes, </span>
-<span id="cb135-4"><a href="ora.html#cb135-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">organism =</span> <span class="st">&quot;human&quot;</span>, </span>
-<span id="cb135-5"><a href="ora.html#cb135-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pvalueCutoff =</span> <span class="fl">0.05</span>, </span>
-<span id="cb135-6"><a href="ora.html#cb135-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">pAdjustMethod =</span> <span class="st">&quot;BH&quot;</span>, </span>
-<span id="cb135-7"><a href="ora.html#cb135-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">qvalueCutoff =</span> <span class="dv">1</span>, <span class="co"># Do not filter by q-value</span></span>
-<span id="cb135-8"><a href="ora.html#cb135-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">universe =</span> universe, </span>
-<span id="cb135-9"><a href="ora.html#cb135-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">minGSSize =</span> <span class="dv">20</span>, </span>
-<span id="cb135-10"><a href="ora.html#cb135-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">maxGSSize =</span> <span class="dv">500</span>,</span>
-<span id="cb135-11"><a href="ora.html#cb135-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">readable =</span> <span class="cn">TRUE</span> <span class="co"># Convert Entrez ID to gene symbol</span></span>
-<span id="cb135-12"><a href="ora.html#cb135-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="ora.html#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Reactome ORA with ReactomePA</span></span>
+<span id="cb141-2"><a href="ora.html#cb141-2" aria-hidden="true" tabindex="-1"></a>cp_ora_reactome <span class="ot">&lt;-</span> <span class="fu">enrichPathway</span>(</span>
+<span id="cb141-3"><a href="ora.html#cb141-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">gene =</span> sig_genes, </span>
+<span id="cb141-4"><a href="ora.html#cb141-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">organism =</span> <span class="st">&quot;human&quot;</span>, </span>
+<span id="cb141-5"><a href="ora.html#cb141-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pvalueCutoff =</span> <span class="fl">0.05</span>, </span>
+<span id="cb141-6"><a href="ora.html#cb141-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">pAdjustMethod =</span> <span class="st">&quot;BH&quot;</span>, </span>
+<span id="cb141-7"><a href="ora.html#cb141-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">qvalueCutoff =</span> <span class="dv">1</span>, <span class="co"># Do not filter by q-value</span></span>
+<span id="cb141-8"><a href="ora.html#cb141-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">universe =</span> universe, </span>
+<span id="cb141-9"><a href="ora.html#cb141-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">minGSSize =</span> <span class="dv">20</span>, </span>
+<span id="cb141-10"><a href="ora.html#cb141-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">maxGSSize =</span> <span class="dv">500</span>,</span>
+<span id="cb141-11"><a href="ora.html#cb141-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">readable =</span> <span class="cn">TRUE</span> <span class="co"># Convert Entrez ID to gene symbol</span></span>
+<span id="cb141-12"><a href="ora.html#cb141-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; ">
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-<span id="tab:cp-ora-react-table">Table 6.6: </span>Top significantly over-represented Reactome pathways from enrichPathway output.
+<span id="tab:cp-ora-react-table">Table 7.6: </span>Top significantly over-represented Reactome pathways from enrichPathway output.
 </caption>
 <thead>
 <tr>
@@ -1591,8 +1730,14 @@ pvalue
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 p.adjust
 </th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+qvalue
+</th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 geneID
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Count
 </th>
 </tr>
 </thead>
@@ -1616,8 +1761,14 @@ Cellular responses to external stimuli
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 COX4I1/RPL13A/SKP1…
+</td>
+<td style="text-align:right;">
+39
 </td>
 </tr>
 <tr>
@@ -1639,8 +1790,14 @@ Cellular responses to stress
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 COX4I1/RPL13A/SKP1…
+</td>
+<td style="text-align:right;">
+37
 </td>
 </tr>
 <tr>
@@ -1662,8 +1819,14 @@ Respiratory electron transport, ATP synthesis by chemiosmotic coupling, and heat
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 COX4I1/COX8A/COX7C…
+</td>
+<td style="text-align:right;">
+15
 </td>
 </tr>
 <tr>
@@ -1685,8 +1848,14 @@ Infectious disease
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 PRKAR1A/SLC25A5/RPL13A…
+</td>
+<td style="text-align:right;">
+38
 </td>
 </tr>
 <tr>
@@ -1708,8 +1877,14 @@ Cellular response to chemical stress
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 COX4I1/SKP1/PSMB7…
+</td>
+<td style="text-align:right;">
+18
 </td>
 </tr>
 <tr>
@@ -1731,8 +1906,14 @@ Cytoprotection by HMOX1
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 COX4I1/SKP1/PSMB7…
+</td>
+<td style="text-align:right;">
+16
 </td>
 </tr>
 <tr>
@@ -1754,8 +1935,14 @@ The citric acid (TCA) cycle and respiratory electron transport
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 COX4I1/LDHB/COX8A…
+</td>
+<td style="text-align:right;">
+17
 </td>
 </tr>
 <tr>
@@ -1777,8 +1964,14 @@ Translation
 <td style="text-align:right;">
 0e+00
 </td>
+<td style="text-align:right;">
+0e+00
+</td>
 <td style="text-align:left;">
 RPL13A/RPL29/KARS1…
+</td>
+<td style="text-align:right;">
+17
 </td>
 </tr>
 <tr>
@@ -1800,8 +1993,14 @@ TP53 Regulates Metabolic Genes
 <td style="text-align:right;">
 1e-04
 </td>
+<td style="text-align:right;">
+1e-04
+</td>
 <td style="text-align:left;">
 COX4I1/YWHAZ/YWHAQ…
+</td>
+<td style="text-align:right;">
+12
 </td>
 </tr>
 <tr>
@@ -1823,15 +2022,21 @@ Metabolism of RNA
 <td style="text-align:right;">
 3e-04
 </td>
+<td style="text-align:right;">
+1e-04
+</td>
 <td style="text-align:left;">
 HNRNPU/YWHAZ/RPL13A…
+</td>
+<td style="text-align:right;">
+31
 </td>
 </tr>
 </tbody>
 </table>
 </div>
 <p></br></p>
-<p>There were 919 Reactome pathways that were tested. Of these, 388 passed the size filter, and 155 were significantly over-represented after multiple testing correction. The top 10 are shown in Table <a href="ora.html#tab:cp-ora-react-table">6.6</a>.</p>
+<p>There were 919 Reactome pathways that were tested. Of these, 388 passed the size filter, and 155 were significantly over-represented after multiple testing correction. The top 10 are shown in Table <a href="ora.html#tab:cp-ora-react-table">7.6</a>.</p>
 <!---
 #### KEGG {#ora-kegg}
 
@@ -1853,27 +2058,27 @@ use_internal_data = FALSE
 ```
 --->
 </div>
-<div id="ora-pfam" class="section level4" number="6.2.2.3">
-<h4><span class="header-section-number">6.2.2.3</span> Pfam</h4>
+<div id="ora-pfam" class="section level4" number="7.2.1.3">
+<h4><span class="header-section-number">7.2.1.3</span> Pfam</h4>
 <p>Now, we will perform Pfam ORA with the GOstats package. We begin by constructing a new object of class <code>PFAMHyperGParams</code> and then passing it to <code>hyperGTest</code> for calculation of Hypergeometric p-values. We do not filter by p-value, since adjusted p-values are not provided and we must calculate them ourselves.</p>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="ora.html#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Pfam ORA with GOstats</span></span>
-<span id="cb136-2"><a href="ora.html#cb136-2" aria-hidden="true" tabindex="-1"></a>hyperg_pfam_ora <span class="ot">&lt;-</span> <span class="fu">new</span>(</span>
-<span id="cb136-3"><a href="ora.html#cb136-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Class =</span> <span class="st">&quot;PFAMHyperGParams&quot;</span>,</span>
-<span id="cb136-4"><a href="ora.html#cb136-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">geneIds =</span> sig_genes,</span>
-<span id="cb136-5"><a href="ora.html#cb136-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">universeGeneIds =</span> universe,</span>
-<span id="cb136-6"><a href="ora.html#cb136-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">annotation =</span> <span class="st">&quot;org.Hs.eg.db&quot;</span>,</span>
-<span id="cb136-7"><a href="ora.html#cb136-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pvalueCutoff =</span> <span class="dv">1</span>,</span>
-<span id="cb136-8"><a href="ora.html#cb136-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">testDirection =</span> <span class="st">&quot;over&quot;</span></span>
-<span id="cb136-9"><a href="ora.html#cb136-9" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
-<span id="cb136-10"><a href="ora.html#cb136-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hyperGTest</span>() <span class="co"># Hypergeometric testing</span></span></code></pre></div>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="ora.html#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Pfam ORA with GOstats</span></span>
+<span id="cb142-2"><a href="ora.html#cb142-2" aria-hidden="true" tabindex="-1"></a>hyperg_pfam_ora <span class="ot">&lt;-</span> <span class="fu">new</span>(</span>
+<span id="cb142-3"><a href="ora.html#cb142-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Class =</span> <span class="st">&quot;PFAMHyperGParams&quot;</span>,</span>
+<span id="cb142-4"><a href="ora.html#cb142-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">geneIds =</span> sig_genes,</span>
+<span id="cb142-5"><a href="ora.html#cb142-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">universeGeneIds =</span> universe,</span>
+<span id="cb142-6"><a href="ora.html#cb142-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">annotation =</span> <span class="st">&quot;org.Hs.eg.db&quot;</span>,</span>
+<span id="cb142-7"><a href="ora.html#cb142-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pvalueCutoff =</span> <span class="dv">1</span>,</span>
+<span id="cb142-8"><a href="ora.html#cb142-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">testDirection =</span> <span class="st">&quot;over&quot;</span></span>
+<span id="cb142-9"><a href="ora.html#cb142-9" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb142-10"><a href="ora.html#cb142-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hyperGTest</span>() <span class="co"># Hypergeometric testing</span></span></code></pre></div>
 <p>Now, we need to filter by gene set size (limit 15 to 500) and adjust the p-values. Normally, we would also filter based on the adjusted p-values, but we will skip this step so that we can compare the output with that of <code>clusterProfiler::enricher</code>.</p>
-<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="ora.html#cb137-1" aria-hidden="true" tabindex="-1"></a>res_pfam_ora <span class="ot">&lt;-</span> <span class="fu">summary</span>(hyperg_pfam_ora) <span class="sc">%&gt;%</span></span>
-<span id="cb137-2"><a href="ora.html#cb137-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter by Pfam entry size</span></span>
-<span id="cb137-3"><a href="ora.html#cb137-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Size <span class="sc">&gt;=</span> <span class="dv">15</span>, Size <span class="sc">&lt;=</span> <span class="dv">500</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb137-4"><a href="ora.html#cb137-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adjust p-values</span></span>
-<span id="cb137-5"><a href="ora.html#cb137-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">p.adjust =</span> <span class="fu">p.adjust</span>(Pvalue, <span class="at">method =</span> <span class="st">&quot;BH&quot;</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb137-6"><a href="ora.html#cb137-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Sort by adjusted p-values</span></span>
-<span id="cb137-7"><a href="ora.html#cb137-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(p.adjust)</span></code></pre></div>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="ora.html#cb143-1" aria-hidden="true" tabindex="-1"></a>res_pfam_ora <span class="ot">&lt;-</span> <span class="fu">summary</span>(hyperg_pfam_ora) <span class="sc">%&gt;%</span></span>
+<span id="cb143-2"><a href="ora.html#cb143-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Filter by Pfam entry size</span></span>
+<span id="cb143-3"><a href="ora.html#cb143-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Size <span class="sc">&gt;=</span> <span class="dv">15</span>, Size <span class="sc">&lt;=</span> <span class="dv">500</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb143-4"><a href="ora.html#cb143-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Adjust p-values</span></span>
+<span id="cb143-5"><a href="ora.html#cb143-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">p.adjust =</span> <span class="fu">p.adjust</span>(Pvalue, <span class="at">method =</span> <span class="st">&quot;BH&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb143-6"><a href="ora.html#cb143-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Sort by adjusted p-values</span></span>
+<span id="cb143-7"><a href="ora.html#cb143-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(p.adjust)</span></code></pre></div>
 <!---
 
 The last step is to add the human-readable Pfam descriptions. We will use the `TERM2NAME` data frame from before and just change the column names for easy joining.
@@ -1889,7 +2094,7 @@ res_pfam_ora <- left_join(res_pfam_ora, TERM2NAME)
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; ">
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-<span id="tab:gostats-pfam-ora-table">Table 6.7: </span>Top Pfam entries obtained using the GOstats package.
+<span id="tab:gostats-pfam-ora-table">Table 7.7: </span>Top Pfam entries obtained using the GOstats package.
 </caption>
 <thead>
 <tr>
@@ -2151,52 +2356,52 @@ p.adjust
 </table>
 </div>
 <p></br></p>
-<p>260 Pfam entries were tested. Of these, 16 passed the size filter, and none were significantly over-represented after multiple testing correction. The top 10 are shown in Table <a href="ora.html#tab:gostats-pfam-ora-table">6.7</a>.</p>
+<p>260 Pfam entries were tested. Of these, 16 passed the size filter, and none were significantly over-represented after multiple testing correction. The top 10 are shown in Table <a href="ora.html#tab:gostats-pfam-ora-table">7.7</a>.</p>
 </div>
-<div id="ora-other" class="section level4" number="6.2.2.4">
-<h4><span class="header-section-number">6.2.2.4</span> Other Databases</h4>
+<div id="ora-other" class="section level4" number="7.2.1.4">
+<h4><span class="header-section-number">7.2.1.4</span> Other Databases</h4>
 <p>For databases without a dedicated ORA function, we use <code>clusterProfiler::enricher</code>, which is a general ORA function that can be used with any term to gene conversion table. This function is also much faster than the dedicated <code>enrichGO</code> and <code>enrichPathway</code> functions (since the conversion table does not need to be fetched), so it may be preferred if running many separate over-representation analyses.</p>
 <p><strong>NOTE: The term to gene conversion table must have exactly two columns: term and gene. They must also be in that exact order!</strong></p>
 <p>For this example, we will perform Pfam ORA. The conversion table can be generated with the biomaRt package as follows.</p>
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="ora.html#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biomaRt)</span>
-<span id="cb138-2"><a href="ora.html#cb138-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb138-3"><a href="ora.html#cb138-3" aria-hidden="true" tabindex="-1"></a>mart <span class="ot">&lt;-</span> <span class="fu">useMart</span>(<span class="at">biomart =</span> <span class="st">&quot;ENSEMBL_MART_ENSEMBL&quot;</span>,</span>
-<span id="cb138-4"><a href="ora.html#cb138-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">dataset =</span> <span class="st">&quot;hsapiens_gene_ensembl&quot;</span>)</span>
-<span id="cb138-5"><a href="ora.html#cb138-5" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(<span class="fu">listAttributes</span>(mart)) <span class="co"># Determine which columns to return</span></span>
-<span id="cb138-6"><a href="ora.html#cb138-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb138-7"><a href="ora.html#cb138-7" aria-hidden="true" tabindex="-1"></a>TERM2GENE <span class="ot">&lt;-</span> <span class="fu">getBM</span>(<span class="at">filters =</span> <span class="st">&quot;entrezgene_id&quot;</span>,</span>
-<span id="cb138-8"><a href="ora.html#cb138-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">attributes =</span> <span class="fu">c</span>(<span class="st">&quot;entrezgene_id&quot;</span>,</span>
-<span id="cb138-9"><a href="ora.html#cb138-9" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">&quot;pfam&quot;</span>),</span>
-<span id="cb138-10"><a href="ora.html#cb138-10" aria-hidden="true" tabindex="-1"></a>                   <span class="at">values =</span> universe,</span>
-<span id="cb138-11"><a href="ora.html#cb138-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">mart =</span> mart) <span class="sc">%&gt;%</span></span>
-<span id="cb138-12"><a href="ora.html#cb138-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.character) <span class="sc">%&gt;%</span> </span>
-<span id="cb138-13"><a href="ora.html#cb138-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># !!! These specific column names must be in this exact order</span></span>
-<span id="cb138-14"><a href="ora.html#cb138-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="at">term =</span> pfam, <span class="at">gene =</span> entrezgene_id) <span class="sc">%&gt;%</span> </span>
-<span id="cb138-15"><a href="ora.html#cb138-15" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(term <span class="sc">!=</span> <span class="st">&quot;&quot;</span>) <span class="co"># remove empty terms</span></span></code></pre></div>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="ora.html#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biomaRt)</span>
+<span id="cb144-2"><a href="ora.html#cb144-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb144-3"><a href="ora.html#cb144-3" aria-hidden="true" tabindex="-1"></a>mart <span class="ot">&lt;-</span> <span class="fu">useMart</span>(<span class="at">biomart =</span> <span class="st">&quot;ENSEMBL_MART_ENSEMBL&quot;</span>,</span>
+<span id="cb144-4"><a href="ora.html#cb144-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">dataset =</span> <span class="st">&quot;hsapiens_gene_ensembl&quot;</span>)</span>
+<span id="cb144-5"><a href="ora.html#cb144-5" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(<span class="fu">listAttributes</span>(mart)) <span class="co"># Determine which columns to return</span></span>
+<span id="cb144-6"><a href="ora.html#cb144-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb144-7"><a href="ora.html#cb144-7" aria-hidden="true" tabindex="-1"></a>TERM2GENE <span class="ot">&lt;-</span> <span class="fu">getBM</span>(<span class="at">filters =</span> <span class="st">&quot;entrezgene_id&quot;</span>,</span>
+<span id="cb144-8"><a href="ora.html#cb144-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">attributes =</span> <span class="fu">c</span>(<span class="st">&quot;entrezgene_id&quot;</span>,</span>
+<span id="cb144-9"><a href="ora.html#cb144-9" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">&quot;pfam&quot;</span>),</span>
+<span id="cb144-10"><a href="ora.html#cb144-10" aria-hidden="true" tabindex="-1"></a>                   <span class="at">values =</span> universe,</span>
+<span id="cb144-11"><a href="ora.html#cb144-11" aria-hidden="true" tabindex="-1"></a>                   <span class="at">mart =</span> mart) <span class="sc">%&gt;%</span></span>
+<span id="cb144-12"><a href="ora.html#cb144-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.character) <span class="sc">%&gt;%</span> </span>
+<span id="cb144-13"><a href="ora.html#cb144-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># !!! These specific column names must be in this exact order</span></span>
+<span id="cb144-14"><a href="ora.html#cb144-14" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="at">term =</span> pfam, <span class="at">gene =</span> entrezgene_id) <span class="sc">%&gt;%</span> </span>
+<span id="cb144-15"><a href="ora.html#cb144-15" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(term <span class="sc">!=</span> <span class="st">&quot;&quot;</span>) <span class="co"># remove empty terms</span></span></code></pre></div>
 <p>In addition to the required term to gene conversion table, we can supply an optional term to name table that maps Pfam IDs to human-readable descriptions. While org.Hs.eg.db does not provide Pfam descriptions, the <a href="https://doi.org/doi:10.18129/B9.bioc.PFAM.db" title = "PFAM.db: A set of protein ID mappings for PFAM">PFAM.db</a> annotation data package has a Bimap with this information. Like the <code>TERM2GENE</code> table, name and order of columns matters.</p>
-<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="ora.html#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PFAM.db)</span>
-<span id="cb139-2"><a href="ora.html#cb139-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb139-3"><a href="ora.html#cb139-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Pfam IDs to descriptions</span></span>
-<span id="cb139-4"><a href="ora.html#cb139-4" aria-hidden="true" tabindex="-1"></a>TERM2NAME <span class="ot">&lt;-</span> <span class="fu">as.data.frame.Bimap</span>(PFAMDE) <span class="sc">%&gt;%</span> </span>
-<span id="cb139-5"><a href="ora.html#cb139-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># !!! These specific column names must be used in this exact order</span></span>
-<span id="cb139-6"><a href="ora.html#cb139-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">&quot;term&quot;</span>, <span class="st">&quot;name&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="ora.html#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PFAM.db)</span>
+<span id="cb145-2"><a href="ora.html#cb145-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb145-3"><a href="ora.html#cb145-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Pfam IDs to descriptions</span></span>
+<span id="cb145-4"><a href="ora.html#cb145-4" aria-hidden="true" tabindex="-1"></a>TERM2NAME <span class="ot">&lt;-</span> <span class="fu">as.data.frame.Bimap</span>(PFAMDE) <span class="sc">%&gt;%</span> </span>
+<span id="cb145-5"><a href="ora.html#cb145-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># !!! These specific column names must be used in this exact order</span></span>
+<span id="cb145-6"><a href="ora.html#cb145-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">&quot;term&quot;</span>, <span class="st">&quot;name&quot;</span>))</span></code></pre></div>
 <p>Now that we have the two conversion tables, we will perform ORA and limit the output to Pfam entries of size 15 to 500.</p>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="ora.html#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pfam ORA with clusterProfiler</span></span>
-<span id="cb140-2"><a href="ora.html#cb140-2" aria-hidden="true" tabindex="-1"></a>cp_ora_pfam <span class="ot">&lt;-</span> <span class="fu">enricher</span>(</span>
-<span id="cb140-3"><a href="ora.html#cb140-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">gene =</span> sig_genes,</span>
-<span id="cb140-4"><a href="ora.html#cb140-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pvalueCutoff =</span> <span class="fl">0.05</span>,</span>
-<span id="cb140-5"><a href="ora.html#cb140-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pAdjustMethod =</span> <span class="st">&quot;BH&quot;</span>,</span>
-<span id="cb140-6"><a href="ora.html#cb140-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">universe =</span> universe,</span>
-<span id="cb140-7"><a href="ora.html#cb140-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">minGSSize =</span> <span class="dv">15</span>,</span>
-<span id="cb140-8"><a href="ora.html#cb140-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">maxGSSize =</span> <span class="dv">500</span>,</span>
-<span id="cb140-9"><a href="ora.html#cb140-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">qvalueCutoff =</span> <span class="dv">1</span>,</span>
-<span id="cb140-10"><a href="ora.html#cb140-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">TERM2GENE =</span> TERM2GENE,</span>
-<span id="cb140-11"><a href="ora.html#cb140-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">TERM2NAME =</span> TERM2NAME</span>
-<span id="cb140-12"><a href="ora.html#cb140-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="ora.html#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pfam ORA with clusterProfiler</span></span>
+<span id="cb146-2"><a href="ora.html#cb146-2" aria-hidden="true" tabindex="-1"></a>cp_ora_pfam <span class="ot">&lt;-</span> <span class="fu">enricher</span>(</span>
+<span id="cb146-3"><a href="ora.html#cb146-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">gene =</span> sig_genes,</span>
+<span id="cb146-4"><a href="ora.html#cb146-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">pvalueCutoff =</span> <span class="fl">0.05</span>,</span>
+<span id="cb146-5"><a href="ora.html#cb146-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pAdjustMethod =</span> <span class="st">&quot;BH&quot;</span>,</span>
+<span id="cb146-6"><a href="ora.html#cb146-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">universe =</span> universe,</span>
+<span id="cb146-7"><a href="ora.html#cb146-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">minGSSize =</span> <span class="dv">15</span>,</span>
+<span id="cb146-8"><a href="ora.html#cb146-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">maxGSSize =</span> <span class="dv">500</span>,</span>
+<span id="cb146-9"><a href="ora.html#cb146-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">qvalueCutoff =</span> <span class="dv">1</span>,</span>
+<span id="cb146-10"><a href="ora.html#cb146-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">TERM2GENE =</span> TERM2GENE,</span>
+<span id="cb146-11"><a href="ora.html#cb146-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">TERM2NAME =</span> TERM2NAME</span>
+<span id="cb146-12"><a href="ora.html#cb146-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; ">
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-<span id="tab:cp-ora-pfam-table">Table 6.8: </span>Top Pfam entries from enricher output.
+<span id="tab:cp-ora-pfam-table">Table 7.8: </span>Top Pfam entries from enricher output.
 </caption>
 <thead>
 <tr>
@@ -2218,8 +2423,14 @@ pvalue
 <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
 p.adjust
 </th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+qvalue
+</th>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
 geneID
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+Count
 </th>
 </tr>
 </thead>
@@ -2243,8 +2454,14 @@ Collagen triple helix repeat (20 copies)
 <td style="text-align:right;">
 0.0686
 </td>
+<td style="text-align:right;">
+0.0686
+</td>
 <td style="text-align:left;">
 1293/1281/1277…
+</td>
+<td style="text-align:right;">
+7
 </td>
 </tr>
 <tr>
@@ -2266,8 +2483,14 @@ RNA recognition motif. (a.k.a. RRM, RBD, or RNP domain)
 <td style="text-align:right;">
 0.5360
 </td>
+<td style="text-align:right;">
+0.5360
+</td>
 <td style="text-align:left;">
 1153/3182/5042…
+</td>
+<td style="text-align:right;">
+7
 </td>
 </tr>
 <tr>
@@ -2289,8 +2512,14 @@ von Willebrand factor type A domain
 <td style="text-align:right;">
 0.5360
 </td>
+<td style="text-align:right;">
+0.5360
+</td>
 <td style="text-align:left;">
 1293/1292/1291
+</td>
+<td style="text-align:right;">
+3
 </td>
 </tr>
 <tr>
@@ -2312,8 +2541,14 @@ Ras family
 <td style="text-align:right;">
 0.9021
 </td>
+<td style="text-align:right;">
+0.9021
+</td>
 <td style="text-align:left;">
 5901/6009/388
+</td>
+<td style="text-align:right;">
+3
 </td>
 </tr>
 <tr>
@@ -2335,8 +2570,14 @@ Immunoglobulin I-set domain
 <td style="text-align:right;">
 0.9021
 </td>
+<td style="text-align:right;">
+0.9021
+</td>
 <td style="text-align:left;">
 23022/3490/25878
+</td>
+<td style="text-align:right;">
+3
 </td>
 </tr>
 <tr>
@@ -2358,8 +2599,14 @@ EF-hand domain pair
 <td style="text-align:right;">
 0.9021
 </td>
+<td style="text-align:right;">
+0.9021
+</td>
 <td style="text-align:left;">
 6717/80303
+</td>
+<td style="text-align:right;">
+2
 </td>
 </tr>
 <tr>
@@ -2381,8 +2628,14 @@ Helicase conserved C-terminal domain
 <td style="text-align:right;">
 0.9021
 </td>
+<td style="text-align:right;">
+0.9021
+</td>
 <td style="text-align:left;">
 1973/10521
+</td>
+<td style="text-align:right;">
+2
 </td>
 </tr>
 <tr>
@@ -2404,8 +2657,14 @@ LIM domain
 <td style="text-align:right;">
 0.9021
 </td>
+<td style="text-align:right;">
+0.9021
+</td>
 <td style="text-align:left;">
 1396/9124
+</td>
+<td style="text-align:right;">
+2
 </td>
 </tr>
 <tr>
@@ -2427,8 +2686,14 @@ Leucine rich repeat
 <td style="text-align:right;">
 0.9021
 </td>
+<td style="text-align:right;">
+0.9021
+</td>
 <td style="text-align:left;">
 4060/1634/25878
+</td>
+<td style="text-align:right;">
+3
 </td>
 </tr>
 <tr>
@@ -2450,16 +2715,22 @@ Homeodomain
 <td style="text-align:right;">
 0.9021
 </td>
+<td style="text-align:right;">
+0.9021
+</td>
 <td style="text-align:left;">
 5087/29956
+</td>
+<td style="text-align:right;">
+2
 </td>
 </tr>
 </tbody>
 </table>
 </div>
 <p></br></p>
-<p>There were 275 Pfam entries that were tested. Of these, 24 passed the size filter, and 0 were significantly over-represented after multiple testing correction. While none were significant, the top 10 are shown in Table <a href="ora.html#tab:cp-ora-pfam-table">6.8</a>.</p>
-<p>Notice that this table and Table <a href="ora.html#tab:gostats-pfam-ora-table">6.7</a> are different. For one, the sizes of the entries are not always the same. For example, <a href="http://pfam.xfam.org/family/PF01391" title = "Collagen triple helix repeat (20 copies)">PF01391</a> has size 31 according to the mapping file created from the <code>biomaRt</code> package, but only size 30 according to <code>org.Hs.eg.db</code> (used by GOstats). This has to do with how up-to-date the information is and leads to differences in the number of total Pfam entries that remain after filtering by size and, subsequently, differences in the adjusted p-values.</p>
+<p>There were 275 Pfam entries that were tested. Of these, 24 passed the size filter, and 0 were significantly over-represented after multiple testing correction. While none were significant, the top 10 are shown in Table <a href="ora.html#tab:cp-ora-pfam-table">7.8</a>.</p>
+<p>Notice that this table and Table <a href="ora.html#tab:gostats-pfam-ora-table">7.7</a> are different. For one, the sizes of the entries are not always the same. For example, <a href="http://pfam.xfam.org/family/PF01391" title = "Collagen triple helix repeat (20 copies)">PF01391</a> has size 31 according to the mapping file created from the <code>biomaRt</code> package, but only size 30 according to <code>org.Hs.eg.db</code> (used by GOstats). This has to do with how up-to-date the information is and leads to differences in the number of total Pfam entries that remain after filtering by size and, subsequently, differences in the adjusted p-values.</p>
 <!---
 First, we will perform Pfam ORA with the GOstats package using the org.Hs.eg.db human annotation database; however, it is a good idea to check the number of Pfam entries that are provided by this database before doing so. Ideally, it should be close to the number shown at the top of the <a href="http://pfam.xfam.org">main Pfam page</a>. We can accomplish this with functions in AnnotationDbi.
 
@@ -2512,6 +2783,9 @@ kable_styling(full_width = FALSE, font_size = 12)
 </table>
 
 In this data frame, there are only 6186 Pfam entries. This is not even close to the most up-to-date number. We will continue for the sake of demonstration, but the results are unlikely to be reliable. 
+--->
+<!---
+------------------------------------------------------------------------------
 --->
 </div>
 </div>
@@ -2576,7 +2850,7 @@ gitbook.start({
 },
 "download": null,
 "toc": {
-"collapse": "section"
+"collapse": "subsection"
 }
 });
 });

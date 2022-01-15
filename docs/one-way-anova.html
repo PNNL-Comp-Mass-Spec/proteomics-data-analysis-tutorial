@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>5.2 One-Way ANOVA | Proteomics Data Analysis in R/Bioconductor</title>
+  <title>5.3 One-Way ANOVA | Proteomics Data Analysis in R/Bioconductor</title>
   <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="5.2 One-Way ANOVA | Proteomics Data Analysis in R/Bioconductor" />
+  <meta property="og:title" content="5.3 One-Way ANOVA | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="5.2 One-Way ANOVA | Proteomics Data Analysis in R/Bioconductor" />
+  <meta name="twitter:title" content="5.3 One-Way ANOVA | Proteomics Data Analysis in R/Bioconductor" />
   
   <meta name="twitter:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -31,8 +31,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="linear-regression.html"/>
-<link rel="next" href="t-tests.html"/>
+<link rel="prev" href="two-sample-t-tests.html"/>
+<link rel="next" href="p-value-histograms.html"/>
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
@@ -205,7 +205,8 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="3.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>3.1</b> Count Features in Samples</a></li>
 <li class="chapter" data-level="3.2" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>3.2</b> Estimate Blood Contamination</a></li>
-<li class="chapter" data-level="3.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>3.3</b> PCA</a></li>
+<li class="chapter" data-level="3.3" data-path="estimate-blood-contamination-1.html"><a href="estimate-blood-contamination-1.html"><i class="fa fa-check"></i><b>3.3</b> Estimate Blood Contamination</a></li>
+<li class="chapter" data-level="3.4" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>3.4</b> PCA</a></li>
 </ul></li>
 <li class="chapter" data-level="4" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>4</b> Heatmaps</a>
 <ul>
@@ -224,18 +225,19 @@ div.csl-indent {
 <li class="chapter" data-level="4.4.1" data-path="additional-modifications.html"><a href="additional-modifications.html#change-row-or-column-labels"><i class="fa fa-check"></i><b>4.4.1</b> Change row or column labels</a></li>
 <li class="chapter" data-level="4.4.2" data-path="additional-modifications.html"><a href="additional-modifications.html#change-label-colors"><i class="fa fa-check"></i><b>4.4.2</b> Change label colors</a></li>
 <li class="chapter" data-level="4.4.3" data-path="additional-modifications.html"><a href="additional-modifications.html#label-specific-features"><i class="fa fa-check"></i><b>4.4.3</b> Label specific features</a></li>
-<li class="chapter" data-level="4.4.4" data-path="additional-modifications.html"><a href="additional-modifications.html#change-heatmap-body-color"><i class="fa fa-check"></i><b>4.4.4</b> Change heatmap body color</a></li>
+<li class="chapter" data-level="4.4.4" data-path="additional-modifications.html"><a href="additional-modifications.html#split-rows-or-columns"><i class="fa fa-check"></i><b>4.4.4</b> Split rows or columns</a></li>
+<li class="chapter" data-level="4.4.5" data-path="additional-modifications.html"><a href="additional-modifications.html#change-heatmap-body-color"><i class="fa fa-check"></i><b>4.4.5</b> Change heatmap body color</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>5</b> Differential Analysis</a>
+<li class="chapter" data-level="5" data-path="linear-modeling.html"><a href="linear-modeling.html"><i class="fa fa-check"></i><b>5</b> Linear Modeling</a>
 <ul>
 <li class="chapter" data-level="5.1" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>5.1</b> Linear Regression</a></li>
-<li class="chapter" data-level="5.2" data-path="one-way-anova.html"><a href="one-way-anova.html"><i class="fa fa-check"></i><b>5.2</b> One-Way ANOVA</a></li>
-<li class="chapter" data-level="5.3" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>5.3</b> t-tests</a>
+<li class="chapter" data-level="5.2" data-path="two-sample-t-tests.html"><a href="two-sample-t-tests.html"><i class="fa fa-check"></i><b>5.2</b> Two-Sample t-tests</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="t-tests.html"><a href="t-tests.html#one-comparison"><i class="fa fa-check"></i><b>5.3.1</b> One Comparison</a></li>
-<li class="chapter" data-level="5.3.2" data-path="t-tests.html"><a href="t-tests.html#multiple-comparisons"><i class="fa fa-check"></i><b>5.3.2</b> Multiple Comparisons</a></li>
+<li class="chapter" data-level="5.2.1" data-path="two-sample-t-tests.html"><a href="two-sample-t-tests.html#one-comparison"><i class="fa fa-check"></i><b>5.2.1</b> One Comparison</a></li>
+<li class="chapter" data-level="5.2.2" data-path="two-sample-t-tests.html"><a href="two-sample-t-tests.html#multiple-comparisons"><i class="fa fa-check"></i><b>5.2.2</b> Multiple Comparisons</a></li>
 </ul></li>
+<li class="chapter" data-level="5.3" data-path="one-way-anova.html"><a href="one-way-anova.html"><i class="fa fa-check"></i><b>5.3</b> One-Way ANOVA</a></li>
 <li class="chapter" data-level="5.4" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>5.4</b> p-value Histograms</a></li>
 <li class="chapter" data-level="5.5" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>5.5</b> Volcano Plots</a></li>
 </ul></li>
@@ -262,8 +264,9 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="6.2.2.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>6.2.2.1</b> Gene Ontology</a></li>
 <li class="chapter" data-level="6.2.2.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>6.2.2.2</b> Reactome</a></li>
-<li class="chapter" data-level="6.2.2.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>6.2.2.3</b> Pfam</a></li>
-<li class="chapter" data-level="6.2.2.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>6.2.2.4</b> Other Databases</a></li>
+<li class="chapter" data-level="6.2.2.3" data-path="ora.html"><a href="ora.html#ora-kegg"><i class="fa fa-check"></i><b>6.2.2.3</b> KEGG</a></li>
+<li class="chapter" data-level="6.2.2.4" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>6.2.2.4</b> Pfam</a></li>
+<li class="chapter" data-level="6.2.2.5" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>6.2.2.5</b> Other Databases</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="6.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>6.3</b> Gene Set Enrichment Analysis</a>
@@ -299,32 +302,55 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="one-way-anova" class="section level2" number="5.2">
-<h2><span class="header-section-number">5.2</span> One-Way ANOVA</h2>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="one-way-anova.html#cb107-1" aria-hidden="true" tabindex="-1"></a>res2 <span class="ot">&lt;-</span> <span class="fu">limma_gen</span>(oca.set, <span class="at">model.str =</span> <span class="st">&quot;~ SUBTYPE&quot;</span>, <span class="at">coef.str =</span> <span class="st">&quot;SUBTYPE&quot;</span>)</span>
-<span id="cb107-2"><a href="one-way-anova.html#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res2)</span></code></pre></div>
+<div id="one-way-anova" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> One-Way ANOVA</h2>
+<p>A one-way ANOVA is a generalized version of the two-sample t-test that is used to determine whether there is a significant difference between the means of three or more groups. The null hypothesis is that all group means are equal, and the alternative is that at least one of the means is different from the rest. Written another way, the null hypothesis is that the difference between any two means is zero, and the alternative is that the difference between at least two means is not zero.</p>
+<p><strong>Hypotheses:</strong></p>
+<p><span class="math inline">\(H_0: \mu_1 = \mu_2 = \mu_3 = ... = \mu_k \quad \text{or} \quad \mu_i - \mu_j = 0, \quad \forall i \neq j \in 1,2,3,...,k\)</span></p>
+<p><span class="math inline">\(H_A: \mu_i \neq \mu_j \quad \text{or} \quad \mu_i - \mu_j \neq 0, \quad \text{for some } i, j \in 1,2,3,...,k\)</span></p>
+<p><strong>Note:</strong> A one-way ANOVA does not tell us which means are different—only that a difference exists.</p>
+<p><code>MSnSet.utils::limma_gen</code> is a wrapper around functions from the limma package that performs one-way ANOVA. We will use it to test if there is a significant difference between any two levels of SUBTYPE: “Immunoreactive,” “Proliferative,” “Mesenchymal,” and “Differentiated.” Since SUBTYPE is a factor, the first level (“Immunoreactive”) will be used as the reference. That is, we will be testing whether the means of the “Proliferative,” “Mesenchymal,” or “Differentiated” groups are different from the mean of the “Immunoreactive” group for each feature in the MSnSet <code>m</code>.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="one-way-anova.html#cb14-1" aria-hidden="true" tabindex="-1"></a>anova_res <span class="ot">&lt;-</span> <span class="fu">limma_gen</span>(<span class="at">eset =</span> m, <span class="at">model.str =</span> <span class="st">&quot;~ SUBTYPE&quot;</span>, </span>
+<span id="cb14-2"><a href="one-way-anova.html#cb14-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">coef.str =</span> <span class="st">&quot;SUBTYPE&quot;</span>)</span>
+<span id="cb14-3"><a href="one-way-anova.html#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">arrange</span>(anova_res, adj.P.Val)) <span class="co"># top 6 rows arranged by adjusted p-value</span></span></code></pre></div>
 <pre><code>##             SUBTYPEProliferative SUBTYPEMesenchymal SUBTYPEDifferentiated
-## NP_000005.2          -0.15149043         0.05641954           -0.15057866
-## NP_000007.1          -0.24732121        -0.15789692            0.08496949
-## NP_000008.1          -0.15921805        -0.08113290           -0.20215369
-## NP_000009.1           0.05017789         0.03855355            0.06446570
-## NP_000010.1          -0.13569585        -0.47163526            0.22698229
-## NP_000012.1           0.05628690         0.15846512            0.05044680
-##                   AveExpr          F     P.Value  adj.P.Val
-## NP_000005.2 -1.672939e-17 0.38687311 0.762774864 0.85488216
-## NP_000007.1 -1.611154e-17 1.47040585 0.229634248 0.43978604
-## NP_000008.1  1.482832e-17 0.66869230 0.573961618 0.72866828
-## NP_000009.1  6.653734e-18 0.07665979 0.972406121 0.98383381
-## NP_000010.1 -4.752667e-18 4.90988300 0.003650144 0.03431203
-## NP_000012.1 -5.880419e-18 0.56550327 0.639900892 0.77495047</code></pre>
+## NP_055140.1           -0.4979740         0.24131186            -0.3342889
+## NP_000388.2           -1.2232098        -0.21980158            -0.7849428
+## NP_009005.1           -1.0097220         0.04832193            -0.6224298
+## NP_000878.2           -0.7633419         0.07176514            -0.5563074
+## NP_001944.1           -1.3465807        -0.17808291            -0.9476618
+## NP_115584.1           -0.2718495         0.93758021             0.1842301
+##                   AveExpr        F      P.Value    adj.P.Val
+## NP_055140.1  2.269399e-18 24.74128 3.642291e-11 2.951348e-07
+## NP_000388.2 -3.421920e-18 23.63972 8.266856e-11 3.349317e-07
+## NP_009005.1 -1.273715e-17 19.72001 1.784885e-09 4.820974e-06
+## NP_000878.2 -1.710960e-18 18.89587 3.521123e-09 5.195885e-06
+## NP_001944.1 -5.322987e-18 19.03216 3.144239e-09 5.195885e-06
+## NP_115584.1  1.172771e-18 18.76318 4.488608e-09 5.195885e-06</code></pre>
+<p>The row names are the features that were tested, and the first three columns are the average log2 fold-changes for each contrast: “Proliferative - Immunoreactive,” “Mesenchymal - Immunoreactive,” and “Differentiated - Immunoreactive.” That is, a positive value indicates that the mean of the “Immunoreactive” group is lower than the mean of the other group, and a negative value indicates that the mean of the “Immunoreactive” group is higher than the mean of the other group. To find the logFC between the “Proliferative” and “Mesenchymal” groups for protein NP_055140.1, for example, we would take the difference between “SUBTYPEProliferative” and “SUBTYPEMesenchymal”: -0.498 - 0.241 = -0.739. The other columns are</p>
+<ul>
+<li><code>AveExpr</code> overall mean (same as <code>rowMeans(exprs(m), na.rm = TRUE)</code>)</li>
+<li><code>F</code> moderated F-statistic</li>
+<li><code>P.Value</code> p-value</li>
+<li><code>adj.P.Val</code> BH-adjusted p-value</li>
+</ul>
+<p>Below is a graphical representation of the results for a specific feature.</p>
+<p><img src="DEA_files/figure-html/unnamed-chunk-10-1.png" width="75%" style="display: block; margin: auto;" /></p>
+<p>We say features with adjusted p-values less than 0.05 are significantly different between two or more groups.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="one-way-anova.html#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># TRUE - significant, FALSE - not significant</span></span>
+<span id="cb16-2"><a href="one-way-anova.html#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(anova_res<span class="sc">$</span>adj.P.Val <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span></code></pre></div>
+<pre><code>## 
+## FALSE  TRUE 
+##  7049  1054</code></pre>
+<p>Of the features tested, 7049 do not exhibit statistically significant group differences, while 1054 do exhibit such differences.</p>
 </div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="linear-regression.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="t-tests.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="two-sample-t-tests.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="p-value-histograms.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

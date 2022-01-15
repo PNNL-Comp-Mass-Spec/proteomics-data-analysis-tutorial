@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>1.3 Create Study Design Tables | Proteomics Data Analysis in R/Bioconductor</title>
+  <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="1.3 Create Study Design Tables | Proteomics Data Analysis in R/Bioconductor" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="1.3 Create Study Design Tables | Proteomics Data Analysis in R/Bioconductor" />
+  
+  <meta name="twitter:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
+  
+
+<meta name="author" content="Tyler Sagendorf" />
+
+
+<meta name="date" content="2022-01-14" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="prepare-reporter-ion-intensities.html"/>
+<link rel="next" href="global-quant-crosstab.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href=".">Proteomics Data Analysis in R/Bioconductor</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome!</a></li>
+<li class="chapter" data-level="1" data-path="iso-global.html"><a href="iso-global.html"><i class="fa fa-check"></i><b>1</b> Isobaric Quantification: Proteomics</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html"><i class="fa fa-check"></i><b>1.1</b> Prepare MS/MS Identifications</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#read-ms-gf-data"><i class="fa fa-check"></i><b>1.1.1</b> Read MS-GF+ Data</a></li>
+<li class="chapter" data-level="1.1.2" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#correct-isotope-selection-error"><i class="fa fa-check"></i><b>1.1.2</b> Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="1.1.3" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#remove-contaminants"><i class="fa fa-check"></i><b>1.1.3</b> Remove Contaminants</a></li>
+<li class="chapter" data-level="1.1.4" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#global-peptide-filter"><i class="fa fa-check"></i><b>1.1.4</b> MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="1.1.5" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#msms-id-filter-protein-level"><i class="fa fa-check"></i><b>1.1.5</b> MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="1.1.6" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#inference-of-parsimonious-protein-set"><i class="fa fa-check"></i><b>1.1.6</b> Inference of Parsimonious Protein Set</a></li>
+<li class="chapter" data-level="1.1.7" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#remove-decoy-psms"><i class="fa fa-check"></i><b>1.1.7</b> Remove Decoy PSMs</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html"><i class="fa fa-check"></i><b>1.2</b> Prepare Reporter Ion Intensities</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html#read-masic-output"><i class="fa fa-check"></i><b>1.2.1</b> Read MASIC Output</a></li>
+<li class="chapter" data-level="1.2.2" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html#filter-masic-data"><i class="fa fa-check"></i><b>1.2.2</b> Filter MASIC Data</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html"><i class="fa fa-check"></i><b>1.3</b> Create Study Design Tables</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#fractions"><i class="fa fa-check"></i><b>1.3.1</b> Fractions</a></li>
+<li class="chapter" data-level="1.3.2" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#samples"><i class="fa fa-check"></i><b>1.3.2</b> Samples</a></li>
+<li class="chapter" data-level="1.3.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#references"><i class="fa fa-check"></i><b>1.3.3</b> References</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="global-quant-crosstab.html"><a href="global-quant-crosstab.html"><i class="fa fa-check"></i><b>1.4</b> Create Quantitative Cross-tab</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="iso-phospho.html"><a href="iso-phospho.html"><i class="fa fa-check"></i><b>2</b> Isobaric Quantification: Phosphoproteomics</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html"><i class="fa fa-check"></i><b>2.1</b> Prepare MS/MS Identifications</a>
+<ul>
+<li class="chapter" data-level="2.1.1" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#read-ms-gf-data-1"><i class="fa fa-check"></i><b>2.1.1</b> Read MS-GF+ Data</a></li>
+<li class="chapter" data-level="2.1.2" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#correct-isotope-selection-error-1"><i class="fa fa-check"></i><b>2.1.2</b> Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="2.1.3" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-unmodified-peptides"><i class="fa fa-check"></i><b>2.1.3</b> Remove Unmodified Peptides</a></li>
+<li class="chapter" data-level="2.1.4" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-contaminants-1"><i class="fa fa-check"></i><b>2.1.4</b> Remove Contaminants</a></li>
+<li class="chapter" data-level="2.1.5" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#improve-phosphosite-localization"><i class="fa fa-check"></i><b>2.1.5</b> Improve Phosphosite Localization</a></li>
+<li class="chapter" data-level="2.1.6" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#msms-id-filter-peptide-level"><i class="fa fa-check"></i><b>2.1.6</b> MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="2.1.7" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#msms-id-filter-protein-level-1"><i class="fa fa-check"></i><b>2.1.7</b> MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="2.1.8" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#inference-of-parsimonious-protein-set-1"><i class="fa fa-check"></i><b>2.1.8</b> Inference of Parsimonious Protein Set</a></li>
+<li class="chapter" data-level="2.1.9" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#map-mod-sites"><i class="fa fa-check"></i><b>2.1.9</b> Map Sites to Protein Sequences</a></li>
+<li class="chapter" data-level="2.1.10" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-decoy-psms-1"><i class="fa fa-check"></i><b>2.1.10</b> Remove Decoy PSMs</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html"><i class="fa fa-check"></i><b>2.2</b> Prepare Reporter Ion Intensities</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html#read-masic-output-1"><i class="fa fa-check"></i><b>2.2.1</b> Read MASIC Output</a></li>
+<li class="chapter" data-level="2.2.2" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html#filter-masic-data-1"><i class="fa fa-check"></i><b>2.2.2</b> Filter MASIC Data</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="create-study-design-tables.html"><a href="create-study-design-tables.html"><i class="fa fa-check"></i><b>2.3</b> Create Study Design Tables</a></li>
+<li class="chapter" data-level="2.4" data-path="create-quantitative-cross-tab.html"><a href="create-quantitative-cross-tab.html"><i class="fa fa-check"></i><b>2.4</b> Create Quantitative Cross-tab</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="spectral-counting.html"><a href="spectral-counting.html"><i class="fa fa-check"></i><b>3</b> Spectral Counting</a></li>
+<li class="chapter" data-level="4" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>4</b> Exploratory Data Analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>4.1</b> Count Features in Samples</a></li>
+<li class="chapter" data-level="4.2" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>4.2</b> Estimate Blood Contamination</a></li>
+<li class="chapter" data-level="4.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>4.3</b> PCA</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>5</b> Heatmaps</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>5.1</b> Expression Heatmaps</a></li>
+<li class="chapter" data-level="5.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>5.2</b> Correlation Heatmaps</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>5.2.1</b> Sample Correlation</a></li>
+<li class="chapter" data-level="5.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>5.2.2</b> Feature Correlation</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>5.3</b> Heatmap Annotation</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>5.3.1</b> Modifying Default Colors</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="modifications.html"><a href="modifications.html"><i class="fa fa-check"></i><b>5.4</b> Modifications</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="modifications.html"><a href="modifications.html#row-and-column-labels"><i class="fa fa-check"></i><b>5.4.1</b> Row and column labels</a></li>
+<li class="chapter" data-level="5.4.2" data-path="modifications.html"><a href="modifications.html#label-colors"><i class="fa fa-check"></i><b>5.4.2</b> Label colors</a></li>
+<li class="chapter" data-level="5.4.3" data-path="modifications.html"><a href="modifications.html#label-specific-features"><i class="fa fa-check"></i><b>5.4.3</b> Label specific features</a></li>
+<li class="chapter" data-level="5.4.4" data-path="modifications.html"><a href="modifications.html#heatmap-body-color"><i class="fa fa-check"></i><b>5.4.4</b> Heatmap body color</a></li>
+<li class="chapter" data-level="5.4.5" data-path="modifications.html"><a href="modifications.html#horizontal-heatmaps"><i class="fa fa-check"></i><b>5.4.5</b> Horizontal heatmaps</a></li>
+<li class="chapter" data-level="5.4.6" data-path="modifications.html"><a href="modifications.html#legends"><i class="fa fa-check"></i><b>5.4.6</b> Legends</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>6</b> Differential Expression Analysis</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="mult-comp.html"><a href="mult-comp.html"><i class="fa fa-check"></i><b>6.1</b> Multiple Comparisons</a></li>
+<li class="chapter" data-level="6.2" data-path="linear-reg.html"><a href="linear-reg.html"><i class="fa fa-check"></i><b>6.2</b> Linear Regression</a></li>
+<li class="chapter" data-level="6.3" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>6.3</b> Two-Sample t-tests</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="t-tests.html"><a href="t-tests.html#t-single"><i class="fa fa-check"></i><b>6.3.1</b> One comparison</a></li>
+<li class="chapter" data-level="6.3.2" data-path="t-tests.html"><a href="t-tests.html#t-mult"><i class="fa fa-check"></i><b>6.3.2</b> Multiple comparisons</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>6.4</b> One-Way ANOVA</a></li>
+<li class="chapter" data-level="6.5" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>6.5</b> p-value Histograms</a></li>
+<li class="chapter" data-level="6.6" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>6.6</b> Volcano Plots</a>
+<ul>
+<li class="chapter" data-level="6.6.1" data-path="volcano-plots.html"><a href="volcano-plots.html#base-plot"><i class="fa fa-check"></i><b>6.6.1</b> Base plot</a></li>
+<li class="chapter" data-level="6.6.2" data-path="volcano-plots.html"><a href="volcano-plots.html#label-top-features"><i class="fa fa-check"></i><b>6.6.2</b> Label top features</a></li>
+<li class="chapter" data-level="6.6.3" data-path="volcano-plots.html"><a href="volcano-plots.html#label-specific-features-1"><i class="fa fa-check"></i><b>6.6.3</b> Label specific features</a></li>
+<li class="chapter" data-level="6.6.4" data-path="volcano-plots.html"><a href="volcano-plots.html#modify-point-colors"><i class="fa fa-check"></i><b>6.6.4</b> Modify point colors</a></li>
+<li class="chapter" data-level="6.6.5" data-path="volcano-plots.html"><a href="volcano-plots.html#multiple-volcano-plots"><i class="fa fa-check"></i><b>6.6.5</b> Multiple volcano plots</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>7</b> Pathway Analysis</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>7.1</b> Annotation Databases</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>7.1.1</b> Gene Ontology</a>
+<ul>
+<li class="chapter" data-level="7.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>7.1.1.1</b> Semantic Similarity</a></li>
+<li class="chapter" data-level="7.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>7.1.1.2</b> GO Subsets/Slims</a></li>
+</ul></li>
+<li class="chapter" data-level="7.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>7.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="7.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>7.1.3</b> KEGG</a></li>
+<li class="chapter" data-level="7.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>7.1.4</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>7.2</b> Over-Representation Analysis</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>7.2.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="7.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>7.2.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="7.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>7.2.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="7.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>7.2.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="7.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>7.2.1.4</b> Other Databases</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>7.3</b> Gene Set Enrichment Analysis</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>7.3.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="7.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>7.3.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="7.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>7.3.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="7.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>7.3.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="7.3.1.4" data-path="gsea.html"><a href="gsea.html#other-databases"><i class="fa fa-check"></i><b>7.3.1.4</b> Other Databases</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="references-1.html"><a href="references-1.html"><i class="fa fa-check"></i>References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Proteomics Data Analysis in R/Bioconductor</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="fetch-study-design-tables" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Create Study Design Tables</h2>
+<p>To convert from PSMs and reporter ion intensities to meaningful quantitative data, it is necessary to specify the study design. The entire study design is captured by three tables - fractions, samples, references. With newly processed data, these typically do not exist, and must be created. The next sections show how to create these tables in R.</p>
+<p><strong>NOTE:</strong> simple study designs can be created in Excel and read in with <code>readxl::read_excel</code>, though R is the better choice when dealing with many samples.</p>
+<div id="fractions" class="section level3" number="1.3.1">
+<h3><span class="header-section-number">1.3.1</span> Fractions</h3>
+<p>The fractions table consists of two columns: <code>Dataset</code> and <code>PlexID</code>. The <code>Dataset</code> column contains all of the unique datasets that are common to <code>msnid</code> and <code>masic_data</code>. Sometimes, entire datasets may be removed during the FDR filtering steps, so that is why we use the unique intersection of datasets. The <code>PlexID</code> column contains the plex ID associated with each dataset, and is typically a letter followed by a number (“S1,” “S2,” etc.). We can extract the plex ID from the datasets. In this case, the plex ID always comes after “<em>W</em>,” so we can use a regular expression (use <code>help(topic = regex, package = base)</code> to learn more). The regular expression below says to capture an “S” followed by a single digit that appears after “_W_” and before an underscore.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="fetch-study-design-tables.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create fractions table</span></span>
+<span id="cb24-2"><a href="fetch-study-design-tables.html#cb24-2" aria-hidden="true" tabindex="-1"></a>datasets <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">intersect</span>(msnid<span class="sc">$</span>Dataset, masic_data<span class="sc">$</span>Dataset))</span>
+<span id="cb24-3"><a href="fetch-study-design-tables.html#cb24-3" aria-hidden="true" tabindex="-1"></a>fractions <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Dataset =</span> datasets) <span class="sc">%&gt;%</span> </span>
+<span id="cb24-4"><a href="fetch-study-design-tables.html#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">PlexID =</span> <span class="fu">gsub</span>(<span class="st">&quot;.*_W_(S</span><span class="sc">\\</span><span class="st">d{1})_.*&quot;</span>, <span class="st">&quot;</span><span class="sc">\\</span><span class="st">1&quot;</span>, Dataset))</span></code></pre></div>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; ">
+<table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:fractions-table">Table 1.3: </span><left>Fractions</left>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+Dataset
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+PlexID
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_07_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_06_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_07_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_05_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_24_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_08_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_16_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_16_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_23_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_15_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_09_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_17_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_08_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_23_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_22_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_24_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_05_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_04_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_04_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_02_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_01_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_13_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_12_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_03_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_03_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_18_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_18_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_20_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_06_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_21_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_10_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_19_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_15_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_17_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_12_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_14_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_13_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_14_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_09_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_11_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S1_22_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_10_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_11_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_19_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_20_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_21_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_W_S2_02_12Oct17_Elm_AQ-17-09-02
+</td>
+<td style="text-align:left;">
+S2
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="samples" class="section level3" number="1.3.2">
+<h3><span class="header-section-number">1.3.2</span> Samples</h3>
+<p>The samples table contains columns <code>PlexID</code>, <code>QuantBlock</code>, <code>ReporterName</code>, <code>ReporterAlias</code>, and <code>MeasurementName</code>.</p>
+<ul>
+<li><code>PlexID</code> must be the same as the <code>PlexID</code> in the fractions table.</li>
+<li><code>ReporterName</code> is the reporter ion name (“126,” “127N,” “127C,” etc.).</li>
+<li><code>ReporterAlias</code> is used for defining the reference channel(s).</li>
+<li><code>MeasurementName</code> determines the column names for the final cross-tab, and must be unique and begin with a letter. If any values of <code>ReporterAlias</code> are “ref,” the corresponding <code>MeasurementName</code> should be <code>NA</code>. <code>NA</code> measurement names will not appear as columns in the final cross-tab.</li>
+<li><code>QuantBlock</code> defines the sub-plex. In a typical TMT experiment, <code>QuantBlock</code> is always 1. In case of 5 pairwise comparisons within TMT10, there will be 5 QuantBlocks (1-5) with a reference for each <code>QuantBlock</code>.</li>
+</ul>
+<p>For this experiment, TMT10 was used as the basis for two plexes. Channel 131 is the reference, so we set <code>ReporterAlias</code> to “ref” and <code>MeasurementName</code> to <code>NA</code> when <code>ReporterName</code> is <code>"131"</code>. This will make the reference channel absent from the quantitative cross-tab. In cases where reporter ion intensities are not normalized by a reference channel (reference = 1) or they are normalized by the average of select channels, do not set any <code>ReporterAlias</code> to “ref” or <code>MeasurementName</code> to <code>NA</code>.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="fetch-study-design-tables.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create samples table</span></span>
+<span id="cb25-2"><a href="fetch-study-design-tables.html#cb25-2" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">&lt;-</span> reporter_converter<span class="sc">$</span>tmt10 <span class="sc">%&gt;%</span> </span>
+<span id="cb25-3"><a href="fetch-study-design-tables.html#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>ReporterIon) <span class="sc">%&gt;%</span> <span class="co"># remove ReporterIon column</span></span>
+<span id="cb25-4"><a href="fetch-study-design-tables.html#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>(), <span class="at">times =</span> <span class="dv">2</span>)) <span class="sc">%&gt;%</span> <span class="co"># Copy TMT10 table two times (2 plexes)</span></span>
+<span id="cb25-5"><a href="fetch-study-design-tables.html#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create PlexID and QuantBlock columns. </span></span>
+<span id="cb25-6"><a href="fetch-study-design-tables.html#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Plex S1 goes with first 10 rows, plex S2 with last 10</span></span>
+<span id="cb25-7"><a href="fetch-study-design-tables.html#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">PlexID =</span> <span class="fu">paste0</span>(<span class="st">&quot;S&quot;</span>, <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">each =</span> <span class="dv">10</span>)),</span>
+<span id="cb25-8"><a href="fetch-study-design-tables.html#cb25-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">QuantBlock =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-9"><a href="fetch-study-design-tables.html#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PlexID) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-10"><a href="fetch-study-design-tables.html#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Within each of the two PlexID groups, create unique reporter aliases</span></span>
+<span id="cb25-11"><a href="fetch-study-design-tables.html#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># and measurement names. ReporterAlias is &quot;ref&quot; for channel 131,</span></span>
+<span id="cb25-12"><a href="fetch-study-design-tables.html#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># and MeasurementName is NA so it is not included in the cross-tab.</span></span>
+<span id="cb25-13"><a href="fetch-study-design-tables.html#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ReporterAlias =</span> <span class="fu">paste</span>(PlexID, <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>(), <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>),</span>
+<span id="cb25-14"><a href="fetch-study-design-tables.html#cb25-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">ReporterAlias =</span> <span class="fu">ifelse</span>(ReporterName <span class="sc">==</span> <span class="st">&quot;131&quot;</span>, <span class="st">&quot;ref&quot;</span>, ReporterAlias),</span>
+<span id="cb25-15"><a href="fetch-study-design-tables.html#cb25-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">MeasurementName =</span> <span class="fu">ifelse</span>(ReporterAlias <span class="sc">==</span> <span class="st">&quot;ref&quot;</span>, </span>
+<span id="cb25-16"><a href="fetch-study-design-tables.html#cb25-16" aria-hidden="true" tabindex="-1"></a>                                  <span class="cn">NA</span>, ReporterAlias)) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-17"><a href="fetch-study-design-tables.html#cb25-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="co"># stop grouping by PlexID</span></span></code></pre></div>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; ">
+<table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:samples-table">Table 1.4: </span><left>Samples</left>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+ReporterName
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+PlexID
+</th>
+<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
+QuantBlock
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+ReporterAlias
+</th>
+<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
+MeasurementName
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+126
+</td>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S1_1
+</td>
+<td style="text-align:left;">
+S1_1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+127N
+</td>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S1_2
+</td>
+<td style="text-align:left;">
+S1_2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+127C
+</td>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S1_3
+</td>
+<td style="text-align:left;">
+S1_3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+128N
+</td>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S1_4
+</td>
+<td style="text-align:left;">
+S1_4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+128C
+</td>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S1_5
+</td>
+<td style="text-align:left;">
+S1_5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+129N
+</td>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S1_6
+</td>
+<td style="text-align:left;">
+S1_6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+129C
+</td>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S1_7
+</td>
+<td style="text-align:left;">
+S1_7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+130N
+</td>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S1_8
+</td>
+<td style="text-align:left;">
+S1_8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+130C
+</td>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S1_9
+</td>
+<td style="text-align:left;">
+S1_9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+131
+</td>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+ref
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+126
+</td>
+<td style="text-align:left;">
+S2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S2_1
+</td>
+<td style="text-align:left;">
+S2_1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+127N
+</td>
+<td style="text-align:left;">
+S2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S2_2
+</td>
+<td style="text-align:left;">
+S2_2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+127C
+</td>
+<td style="text-align:left;">
+S2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S2_3
+</td>
+<td style="text-align:left;">
+S2_3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+128N
+</td>
+<td style="text-align:left;">
+S2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S2_4
+</td>
+<td style="text-align:left;">
+S2_4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+128C
+</td>
+<td style="text-align:left;">
+S2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S2_5
+</td>
+<td style="text-align:left;">
+S2_5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+129N
+</td>
+<td style="text-align:left;">
+S2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S2_6
+</td>
+<td style="text-align:left;">
+S2_6
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+129C
+</td>
+<td style="text-align:left;">
+S2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S2_7
+</td>
+<td style="text-align:left;">
+S2_7
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+130N
+</td>
+<td style="text-align:left;">
+S2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S2_8
+</td>
+<td style="text-align:left;">
+S2_8
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+130C
+</td>
+<td style="text-align:left;">
+S2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+S2_9
+</td>
+<td style="text-align:left;">
+S2_9
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+131
+</td>
+<td style="text-align:left;">
+S2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+ref
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p></br></p>
+<p>Table <a href="fetch-study-design-tables.html#tab:samples-table">1.4</a> shows the <code>samples</code> table.</p>
+</div>
+<div id="references" class="section level3" number="1.3.3">
+<h3><span class="header-section-number">1.3.3</span> References</h3>
+<p>The reference can be a certain channel, average of multiple channels, or 1. The general form is an expression with <code>ReporterAlias</code> names as variables. It is evaluated for each <code>PlexID</code>/<code>QuantBlock</code> combination and applied to divide reporter ion intensities within corresponding <code>PlexID</code>/<code>QuantBlock</code>. A reference is used to convert raw intensities to relative intensities.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="fetch-study-design-tables.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create references table</span></span>
+<span id="cb26-2"><a href="fetch-study-design-tables.html#cb26-2" aria-hidden="true" tabindex="-1"></a>references <span class="ot">&lt;-</span> samples <span class="sc">%&gt;%</span> </span>
+<span id="cb26-3"><a href="fetch-study-design-tables.html#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ReporterAlias <span class="sc">==</span> <span class="st">&quot;ref&quot;</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-4"><a href="fetch-study-design-tables.html#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Select required columns and rename ReporterAlias to Reference</span></span>
+<span id="cb26-5"><a href="fetch-study-design-tables.html#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(PlexID, QuantBlock, <span class="at">Reference =</span> ReporterAlias)</span></code></pre></div>
+<table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">
+<span id="tab:references-table">Table 1.5: </span><left>References</left>
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+PlexID
+</th>
+<th style="text-align:right;">
+QuantBlock
+</th>
+<th style="text-align:left;">
+Reference
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+S1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+ref
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+S2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+ref
+</td>
+</tr>
+</tbody>
+</table>
+<p></br></p>
+<p>Table <a href="fetch-study-design-tables.html#tab:references-table">1.5</a> shows the <code>references</code> table. The code to use the geometric average instead of a single channel as the reference is shown below. The geometric average is the product of the reporter ion channels to the power of (1/number of channels). For each <code>PlexID</code> group, collapse the vector of reporter ion names with <code>*</code>, surround them in parentheses, and raise to the power of (1/number of channels).</p>
+<p><strong>Note:</strong> if using the geometric average or no reference, make sure the samples table is correct. There should not be any <code>ReporterAlias</code> that are “ref” or <code>MeasurementName</code> that are <code>NA</code>.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="fetch-study-design-tables.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use geometric average as reference</span></span>
+<span id="cb27-2"><a href="fetch-study-design-tables.html#cb27-2" aria-hidden="true" tabindex="-1"></a>references <span class="ot">&lt;-</span> samples <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="fetch-study-design-tables.html#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PlexID, QuantBlock) <span class="sc">%&gt;%</span></span>
+<span id="cb27-4"><a href="fetch-study-design-tables.html#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Reference =</span> <span class="fu">sprintf</span>(</span>
+<span id="cb27-5"><a href="fetch-study-design-tables.html#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;(%s)^(1/%d)&quot;</span>, <span class="fu">paste</span>(ReporterAlias, <span class="at">collapse =</span> <span class="st">&quot;*&quot;</span>), <span class="fu">n</span>()</span>
+<span id="cb27-6"><a href="fetch-study-design-tables.html#cb27-6" aria-hidden="true" tabindex="-1"></a>  ))</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="fetch-study-design-tables.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Do not normalize by reference channel (use 1 as the reference)</span></span>
+<span id="cb28-2"><a href="fetch-study-design-tables.html#cb28-2" aria-hidden="true" tabindex="-1"></a>references <span class="ot">&lt;-</span> samples <span class="sc">%&gt;%</span> </span>
+<span id="cb28-3"><a href="fetch-study-design-tables.html#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(PlexID, QuantBlock) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-4"><a href="fetch-study-design-tables.html#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Reference =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p>Now that we have the three study design tables, we should save them so they can be used by others. We typically save them using <code>write.table</code>, which allows them to be opened in Excel, though we could also use <code>save</code> to save all three tables to the same .RData file.</p>
+<!---
+TODO:
+Explain how to add the study design tables to the DMS.
+--->
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="fetch-study-design-tables.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save study design tables with write.table</span></span>
+<span id="cb29-2"><a href="fetch-study-design-tables.html#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(fractions, <span class="at">file =</span> <span class="st">&quot;data/3442_fractions.txt&quot;</span>,</span>
+<span id="cb29-3"><a href="fetch-study-design-tables.html#cb29-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb29-4"><a href="fetch-study-design-tables.html#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(samples, <span class="at">file =</span> <span class="st">&quot;data/3442_samples.txt&quot;</span>,</span>
+<span id="cb29-5"><a href="fetch-study-design-tables.html#cb29-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb29-6"><a href="fetch-study-design-tables.html#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(references, <span class="at">file =</span> <span class="st">&quot;data/3442_references.txt&quot;</span>,</span>
+<span id="cb29-7"><a href="fetch-study-design-tables.html#cb29-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="fetch-study-design-tables.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save study design tables with save</span></span>
+<span id="cb30-2"><a href="fetch-study-design-tables.html#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(fractions, samples, references, <span class="at">file =</span> <span class="st">&quot;data/study_design_tables.RData&quot;</span>)</span></code></pre></div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="prepare-reporter-ion-intensities.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="global-quant-crosstab.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": false
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

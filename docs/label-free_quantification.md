@@ -1,13 +1,24 @@
-# Label-Free Quantification
+# Spectral Counting
 
 This is a generic spectral counting script for MS-GF+ Human/UniProt searches. Only modify the lines that change the data package number and the name of the final .xlsx file that will be saved, unless you know what you are doing.
 
 
 ```r
-# Required packages
-library(PNNL.DMS.utils)
+## Uncomment to install missing packages
+# install.packages("devtools")
+# library(devtools)
+# install_github("PNNL-Comp-Mass-Spec/MSnID@pnnl-master")
+# install_github("PNNL-Comp-Mass-Spec/PlexedPiper")
+# install_github("PNNL-Comp-Mass-Spec/PNNL.DMS.utils")
+# if (!requireNamespace("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
+# BiocManager::install("MSnbase")
+# install.packages("writexl")
+# install.packages("dplyr")
+# install.packages("tibble")
 library(MSnID)
 library(PlexedPiper)
+library(PNNL.DMS.utils)
 library(MSnbase)
 library(writexl)
 library(dplyr)

@@ -1,0 +1,257 @@
+# Isobaric Quantification: Phosphoproteomics {#iso-phospho}
+
+This pipeline shows how to process phosphoproteomics TMT data with `PlexedPiper`, though it can be used for any type of post-translational modification (PTM) TMT data. We will use data package 3626, which is "PlexedPiperTestData phospho". In addition to PlexedPiper, we will also need MSnID (the basis for PlexedPiper), PNNL.DMS.utils to interface with PNNL's DMS, and Biostrings to create an `AAStringSet` object from a FASTA file. Since a lot of these steps are the same as in Section \@ref(iso-global), a lot of the details will be omitted.
+
+```{r include=FALSE}
+# Global chunk options
+knitr::opts_chunk$set(message=FALSE, warning=FALSE, 
+                      fig.align='center', fig.asp=0.65, out.width='75%')
+```
+
+```{r iso-lab-setup-2}
+## Uncomment to install missing packages
+# install.packages("remotes")
+# library(remotes)
+# install_github("PNNL-Comp-Mass-Spec/MSnID@pnnl-master")
+# install_github("PNNL-Comp-Mass-Spec/PlexedPiper")
+# install_github("PNNL-Comp-Mass-Spec/PNNL.DMS.utils")
+# if (!requireNamespace("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
+# BiocManager::install("Biostrings")
+library(MSnID)
+library(PlexedPiper)
+library(PNNL.DMS.utils)
+library(Biostrings)
+```
+
+```{r include=FALSE}
+library(knitr) # embed images
+library(kableExtra)
+library(dplyr)
+```
+
+
+## Prepare MS/MS Identifications
+
+### Read MS-GF+ Data
+
+```{r results='hide'}
+# Read MS-GF+ data
+data_package_num <- 3626 # phospho
+msnid <- read_msgf_data_from_DMS(data_package_num)
+```
+
+```{r}
+show(msnid)
+```
+
+
+### Correct Isotope Selection Error 
+
+```{r}
+# Correct for isotope selection error
+msnid <- correct_peak_selection(msnid)
+```
+
+
+### Remove Unmodified Peptides
+
+Generally, we will remove unmodified peptides before any sort of filtering steps; however, unmodified peptides will be removed automatically in Section \@ref(map-mod-sites), so this step can be skipped if we need to tally the number of modified and unmodified peptides toward the end of processing.
+
+In this case, the phosphorylation of an amino acid is marked by a `*` appearing next in the sequence. We can filter out peptides that do not contain this symbol with `apply_filter`. In regular expressions, the `*` is a special character called a metacharacter that must be escaped with backslashes, and the backslashes must also be escaped, since they are enclosed within a nested string (`"''"`). For non-metacharacters, it is not necessary to include the backslashes.
+
+```{r}
+# Remove non-phosphorylated peptides
+# (peptides that do not contain a *)
+msnid <- apply_filter(msnid, "grepl('\\\\*', peptide)")
+show(msnid)
+```
+
+
+### Remove Contaminants 
+
+```{r}
+# Remove contaminants
+msnid <- apply_filter(msnid, "!grepl('Contaminant', accession)")
+show(msnid)
+```
+
+
+### Improve Phosphosite Localization
+
+Phospho datasets involve AScore jobs for improving phosphosite localization. There should be one AScore job per data package. If the AScore job does not exist, see <a href="https://prismwiki.pnl.gov/wiki/AScore_Job_Creation">AScore Job Creation</a> for how to set it up. The fetched object is a data.frame that links datasets, scans and original PTM localization to newly suggested locations. Importantly, it contains `AScore` column that signifies the confidence of PTM assignment. AScore > 17 is considered confident.
+
+```{r results='hide'}
+# Filter PTMs by Ascore - only for phospho data
+ascore <- get_AScore_results(data_package_num)
+msnid <- best_PTM_location_by_ascore(msnid, ascore)
+```
+
+### MS/MS ID Filter: Peptide Level
+
+```{r}
+# 1% FDR filter at the peptide level
+msnid <- filter_msgf_data(msnid, level = "peptide", fdr.max = 0.01)
+show(msnid)
+```
+
+### MS/MS ID Filter: Protein Level
+
+```{r}
+# Get path to FASTA file
+path_to_FASTA <- path_to_FASTA_used_by_DMS(data_package_num)
+
+# Compute number of peptides per 1000 amino acids
+msnid <- compute_num_peptides_per_1000aa(msnid, path_to_FASTA)
+
+# 1% FDR filter at the protein level
+msnid <- filter_msgf_data(msnid, level = "accession", fdr.max = 0.01)
+show(msnid)
+```
+
+### Inference of Parsimonious Protein Set
+
+If a protein was detected in the global proteomics results, we may be more confident that it will appear in the PTM results. We can perform prioritized inference of the protein set to ensure that, if a protein is reported in the global cross-tab, and it is present in the PTM MSnID after filtering, it will be included in the final PTM MSnID. We set the proteins from the global cross-tab as the prior.
+
+```{r}
+# Proteins from global proteomics cross-tab
+load("data/3442_global_proteins.RData")
+
+# Prioritized inference of parsimonious protein set
+msnid <- infer_parsimonious_accessions(msnid, unique_only = FALSE,
+                                       prior = global_proteins)
+show(msnid)
+```
+
+### Map Sites to Protein Sequences {#map-mod-sites}
+
+`MSnID::map_mod_sites` creates a number of columns describing mapping of the modification sites onto the protein sequences. The most important for the user is `SiteID`. `names(fst)` must match `accessions(msnid)`; usually, we will have to modify names to select everything before the first space.
+
+```{r}
+# Create AAStringSet
+fst <- readAAStringSet(path_to_FASTA)
+# Remove contaminants
+fst <- fst[!grepl("Contaminant", names(fst)), ]
+# First 6 names
+head(names(fst))
+```
+
+```{r}
+# Modify names to match accessions(msnid)
+names(fst) <- gsub(" .*$", "", names(fst))
+# First 6 names
+head(names(fst))
+```
+
+The names are in the proper format, so we can continue with the main mapping call.
+
+```{r}
+# Main mapping call
+msnid <- map_mod_sites(object = msnid, 
+                       fasta = fst, 
+                       accession_col = "accession", 
+                       peptide_mod_col = "peptide",
+                       mod_char = "*", # modification character
+                       site_delimiter = ";") # ; between multiple sites
+```
+
+Table \@ref(tab:phospho-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
+
+```{r phospho-msnid-table, echo=FALSE}
+fix_phos <- function(x) {
+  gsub("\\*", "\\\\*", x)
+}
+x <- head(psms(msnid), 6) %>% 
+  mutate_if(is.character, fix_phos)
+kable(x, digits = 3, row.names = FALSE, 
+      caption = "<left>First 6 rows of the processed MS-GF+ results.</left>",
+      escape = FALSE, format = "html") %>% 
+  kable_styling(full_width = FALSE, font_size = 12,
+                bootstrap_options = c("hover", "condensed")) %>% 
+  scroll_box(height = "90%") # restrict width
+```
+
+</br>
+
+### Remove Decoy PSMs
+
+```{r}
+# Remove Decoy PSMs
+msnid <- apply_filter(msnid, "!isDecoy")
+show(msnid)
+```
+
+## Prepare Reporter Ion Intensities
+
+### Read MASIC Output 
+
+```{r results='hide'}
+# Read MASIC data
+masic_data <- read_masic_data_from_DMS(data_package_num, 
+                                       interference_score = TRUE)
+```
+
+### Filter MASIC Data 
+
+```{r}
+# Filter MASIC data
+masic_data <- filter_masic_data(masic_data, 
+                                interference_score_threshold = 0.5,
+                                s2n_threshold = 0)
+```
+
+## Create Study Design Tables
+
+Aside from the fractions table, the other study design tables can be the same as those created for the global proteomics data.
+
+```{r}
+# Create fractions table
+datasets <- unique(intersect(msnid$Dataset, masic_data$Dataset))
+fractions <- data.frame(Dataset = datasets) %>% 
+  mutate(PlexID = gsub(".*_P_(S\\d{1})_.*", "\\1", Dataset))
+
+# Use global samples and references tables
+samples <- read.delim("data/3442_samples.txt")
+references <- read.delim("data/3442_references.txt")
+```
+
+```{r}
+# Save phospho fractions table
+write.table(fractions, file = "data/3626_fractions.txt",
+            sep = "\t", quote = FALSE, row.names = FALSE)
+```
+
+
+## Create Quantitative Cross-tab
+
+```{r}
+# Create cross-tab - aggregate to SiteID level
+crosstab <- create_crosstab(msnid = msnid, 
+                            reporter_intensities = masic_data,
+                            aggregation_level = "SiteID",
+                            fractions = fractions, 
+                            samples = samples, 
+                            references = references)
+```
+
+```{r echo=FALSE}
+x <- head(crosstab)
+# rownames(x) <- gsub("\\*", "\\\\*", rownames(x))
+# rownames(x) <- gsub("\\@", "\\@\\\\hphantom{}", rownames(x))
+kable(x, row.names = TRUE, 
+      caption = "<left>First 6 rows of the phospho quantitative cross-tab.</left>", format = "html",
+      escape = FALSE) %>% 
+  kable_styling(font_size = 12,
+                bootstrap_options = c("hover", "condensed")) %>% 
+  scroll_box(height = "90%") # restrict width
+```
+
+</br>
+
+```{r}
+# Save cross-tab
+write.table(crosstab, file = "data/3662_phospho_crosstab.txt",
+            sep = "\t", quote = FALSE, row.names = TRUE)
+```
+
+
