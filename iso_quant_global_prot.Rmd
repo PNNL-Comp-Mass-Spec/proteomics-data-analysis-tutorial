@@ -9,12 +9,15 @@ knitr::opts_chunk$set(message=FALSE, warning=FALSE,
 ```
 
 ```{r iso-lab-setup}
-## Uncomment to install missing packages
-# install.packages("remotes")
-# library(remotes)
-# install_github("PNNL-Comp-Mass-Spec/MSnID@pnnl-master")
-# install_github("PNNL-Comp-Mass-Spec/PlexedPiper")
-# install_github("PNNL-Comp-Mass-Spec/PNNL.DMS.utils")
+## Install missing packages
+if (!require("remotes", quietly = T)) install.packages("remotes")
+git_packages <- c("MSnID@pnnl-master", "PlexedPiper", "PNNL.DMS.utils")
+for (pkg_i in git_packages) {
+  if (!require(sub("@.*", "", pkg_i), quietly = T, character.only = T))
+    remotes::install_github(file.path("PNNL-Comp-Mass-Spec", pkg_i))
+}
+## ------------------------
+
 library(MSnID)
 library(PlexedPiper)
 library(PNNL.DMS.utils)
@@ -27,7 +30,7 @@ library(kableExtra)
 library(dplyr)
 ```
 
-The pipeline can be broken up into four major parts: prepare MS/MS identifications, prepare reporter ion intensities, create study design tables, and create a quantitative cross-tab.
+The pipeline can be broken up into four major parts: prepare MS/MS identifications, prepare reporter ion intensities, create study design tables, and create a quantitative cross-tab. There is another step that is required for statistical testing, which is to create an MSnSet.
 
 ## Prepare MS/MS Identifications
 
@@ -59,7 +62,7 @@ This summary tells us that `msnid` consists of 4 spectrum files (datasets), and 
 
 ### Correct Isotope Selection Error 
 
-Carbon has two stable isotopes: $^{12}\text{C}$ and $^{13}\text{C}$, with natural abundances of 98.93% and 1.07%, respectively. That is, we expect that about 1 out of every 100 carbon atoms is naturally going to be a $^{13}\text{C}$, while the rest are $^{12}\text{C}$. In larger peptides with many carbon atoms, it is more likely that at least one atom will be a $^{13}\text{C}$ than all atoms will be $^{12}\text{C}$. In cases such as these, a non-monoisotopic ion will be selected by the instrument for fragmentation.
+Carbon has two stable isotopes: $^{12}\text{C}$ and $^{13}\text{C}$, with natural abundances of 98.93% and 1.07%, respectively [@berglund_isotopic_2011]. That is, we expect that about 1 out of every 100 carbon atoms is naturally going to be a $^{13}\text{C}$, while the rest are $^{12}\text{C}$. In larger peptides with many carbon atoms, it is more likely that at least one atom will be a $^{13}\text{C}$ than all atoms will be $^{12}\text{C}$. In cases such as these, a non-monoisotopic ion will be selected by the instrument for fragmentation.
 
 ```{r MS1-peak, echo=FALSE, fig.cap="MS1 spectra with peak at non-monoisotopic precursor ion."}
 include_graphics("images/MS1_non_monoisotopic.PNG")
@@ -131,7 +134,7 @@ ggplot() +
   scale_y_continuous("Density", expand = expansion(mult = c(0, 0.05))) +
   scale_x_continuous(expand = expansion(0)) +
   scale_color_manual(values = c("orange", "skyblue"), breaks = c(TRUE, FALSE)) +
-  theme_classic(base_size = 12)
+  theme_minimal(base_size = 12)
 ```
 </br>
 
@@ -144,12 +147,12 @@ ggplot() +
   scale_y_continuous("Density", expand = expansion(mult = c(0, 0.05))) +
   scale_x_continuous(expand = expansion(0)) +
   scale_color_manual(values = c("orange", "skyblue"), breaks = c(TRUE, FALSE)) +
-  theme_classic(base_size = 12)
+  theme_minimal(base_size = 12)
 ```
 
 </br>
 
-Now, we will filter the PSMs.
+These new columns `msmsScore` and `absParentMassErrorPPM` are generated automatically by `filter_msgf_data`, so we don't need to worry about creating them ourselves.
 
 ```{r global-fdr-filter-peptide}
 # 1% FDR filter at the peptide level
@@ -171,11 +174,11 @@ include_graphics("images/FASTA_example_MoTrPAC.PNG")
 
 </br>
 
-The path to the FASTA file can be specified as the path to a local folder or it can be obtained with `PNNL.DMS.utils::path_to_FASTA_used_by_DMS`. We will use the latter method.
+The path to the FASTA file can be specified as a local file path or it can be obtained with `PNNL.DMS.utils::path_to_FASTA_used_by_DMS`. We will use the latter method.
 
 ```{r eval=FALSE}
 ## Get path to FASTA file from local folder - not run
-path_to_FASTA <- "path_to_FASTA_file"
+path_to_FASTA <- "some_folder/name_of_fasta_file.fasta"
 ```
 
 ```{r}
@@ -235,7 +238,7 @@ show(msnid)
 
 Notice that the protein-level FDR increased slightly above the 1% threshold. In this case, the difference isn't significant, so we can ignore it. 
 
-*Note:* If the peptide or accession-level FDR increases significantly above 1% after inference of the parsimonious protein set, consider lowering the FDR cutoff (for example, to 0.9%) and redoing the previous processing steps. That is, start with the MSnID prior to any filtering and redo the FDR filtering steps.
+**Note:** If the peptide or accession-level FDR increases significantly above 1% after inference of the parsimonious protein set, consider lowering the FDR cutoff (for example, to 0.9%) and redoing the previous processing steps. That is, start with the MSnID prior to any filtering and redo the FDR filtering steps.
 
 ### Remove Decoy PSMs
 
@@ -247,7 +250,7 @@ msnid <- apply_filter(msnid, "!isDecoy")
 show(msnid)
 ```
 
-After processing, we are left with 444,345 PSMs, 90,232 peptides, and 5,196 proteins. Table \@ref(tab:global-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
+After processing, we are left with 450,928 PSMs, 90,411 peptides, and 5,201 proteins. Table \@ref(tab:global-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
 
 ```{r global-msnid-table, echo=FALSE}
 kable(head(psms(msnid), 6), digits = 3, row.names = FALSE, 
@@ -272,7 +275,7 @@ Similar to the MS-GF+ results, we can read the MASIC results from a local folder
 ```{r read-masic-1, eval=FALSE}
 ## Get MASIC results from local folder - not run
 # Get file path
-path_to_MASIC_results <- "path_to_masic_results"
+path_to_MASIC_results <- "path_to_folder_containing_necessary_files"
 # Read MASIC results from path
 masic_data <- read_masic_data(path_to_MASIC_results, 
                               interference_score = TRUE)
@@ -286,11 +289,11 @@ masic_data <- read_masic_data_from_DMS(data_package_num,
 
 Normally, this would display progress bars in the console as the data is being fetched. However, the output was suppressed to save space.
 
-Table \@ref(tab:global-masic-table) shows the first 6 rows of `masic_data`.
+Table \@ref(tab:global-masic-unfiltered) shows the first 6 rows of the unfiltered `masic_data`.
 
-```{r global-masic-table, echo=FALSE}
+```{r global-masic-unfiltered, echo=FALSE}
 kable(head(masic_data, 6), digits = 3, row.names = FALSE, 
-      caption = "<left>First 6 rows of the MASIC data.</left>",
+      caption = "<left>First 6 rows of the unfiltered MASIC data.</left>",
       escape = FALSE, format = "html") %>% 
   kable_styling(full_width = FALSE, font_size = 12,
                 bootstrap_options = c("hover", "condensed")) %>% 
@@ -311,7 +314,18 @@ masic_data <- filter_masic_data(masic_data,
                                 s2n_threshold = 0)
 ```
 
-Lastly, we will save the processed MSnID and MASIC data to an .RData file with compression. This is useful in case we want to create different crosstabs with new study design tables later on.
+Table \@ref(tab:global-masic-unfiltered) shows the first 6 rows of the filtered `masic_data`.
+
+```{r global-masic-filtered, echo=FALSE}
+kable(head(masic_data, 6), digits = 3, row.names = FALSE, 
+      caption = "<left>First 6 rows of the filtered MASIC data.</left>",
+      escape = FALSE, format = "html") %>% 
+  kable_styling(full_width = FALSE, font_size = 12,
+                bootstrap_options = c("hover", "condensed")) %>% 
+  scroll_box(height = "90%") # restrict width
+```
+
+Lastly, we will save the processed MSnID and MASIC data to an .RData file with compression. This is useful in case we want to create different cross-tabs with new study design tables later on.
 
 ```{r eval=FALSE}
 # Save processed MSnID and MASIC data
@@ -329,7 +343,7 @@ To convert from PSMs and reporter ion intensities to meaningful quantitative dat
 
 ### Fractions 
 
-The fractions table consists of two columns: `Dataset` and `PlexID`. The `Dataset` column contains all of the unique datasets that are common to `msnid` and `masic_data`. Sometimes, entire datasets may be removed during the FDR filtering steps, so that is why we use the unique intersection of datasets. The `PlexID` column contains the plex ID associated with each dataset, and is typically a letter followed by a number ("S1", "S2", etc.). We can extract the plex ID from the datasets. In this case, the plex ID always comes after "_W_", so we can use a regular expression (use `help(topic = regex, package = base)` to learn more). The regular expression below says to capture an "S" followed by a single digit that appears after "\_W\_" and before an underscore.
+The fractions table consists of two columns: `Dataset` and `PlexID`. The `Dataset` column contains all of the unique datasets that are common to `msnid` and `masic_data`. Sometimes, entire datasets may be removed during the FDR filtering steps, so that is why we use the unique intersection of datasets. The `PlexID` column contains the plex ID associated with each dataset, and is typically a letter followed by a number ("S1", "S2", etc.). A plex is a set of samples that are processed together (under the same conditions). We can extract the plex ID from the datasets. In this case, the plex ID always comes after "_W_", so we can use a regular expression (use `help(topic = regex, package = base)` to learn more). The regular expression below says to capture an "S" followed by a single digit that appears after "\_W\_" and before an underscore. The plex ID is always included in the dataset names, but the format of the names will be different.
 
 ```{r}
 # Create fractions table
@@ -358,13 +372,13 @@ The samples table contains columns `PlexID`, `QuantBlock`, `ReporterName`, `Repo
 - `MeasurementName` determines the column names for the final cross-tab, and must be unique and begin with a letter. If any values of `ReporterAlias` are "ref", the corresponding `MeasurementName` should be `NA`. `NA` measurement names will not appear as columns in the final cross-tab.
 - `QuantBlock` defines the sub-plex. In a typical TMT experiment, `QuantBlock` is always 1. In case of 5 pairwise comparisons within TMT10, there will be 5 QuantBlocks (1-5) with a reference for each `QuantBlock`.
 
-For this experiment, TMT10 was used as the basis for two plexes. Channel 131 is the reference, so we set `ReporterAlias` to "ref" and `MeasurementName` to `NA` when `ReporterName` is `"131"`. This will make the reference channel absent from the quantitative cross-tab. In cases where reporter ion intensities are not normalized by a reference channel (reference = 1) or they are normalized by the average of select channels, do not set any `ReporterAlias` to "ref" or `MeasurementName` to `NA`.
+For this experiment, TMT10 was used as the basis for two plexes, and channel 131 is the reference, so we set `ReporterAlias` to "ref" and `MeasurementName` to `NA` when `ReporterName` is `"131"`. This will divide the intensities of each channel by their associated reference and make the reference channel absent from the quantitative cross-tab. In cases where reporter ion intensities are not normalized by a reference channel (reference = 1) or they are normalized by the average of select channels, do not set any `ReporterAlias` to "ref" or `MeasurementName` to `NA`.
 
 ```{r}
 # Create samples table
 samples <- reporter_converter$tmt10 %>% 
-  select(-ReporterIon) %>% # remove ReporterIon column
-  slice(rep(1:n(), times = 2)) %>% # Copy TMT10 table two times (2 plexes)
+  dplyr::select(ReporterName) %>% # only keep ReporterName column
+  dplyr::slice(rep(1:n(), times = 2)) %>% # Copy TMT10 table twice (2 plexes)
   # Create PlexID and QuantBlock columns. 
   # Plex S1 goes with first 10 rows, plex S2 with last 10
   mutate(PlexID = paste0("S", rep(1:2, each = 10)),
@@ -394,9 +408,9 @@ kable(samples, row.names = FALSE,
 Table \@ref(tab:samples-table) shows the `samples` table.
 
 
-### References 
+### References {#global-references}
 
-The reference can be a certain channel, average of multiple channels, or 1. The general form is an expression with `ReporterAlias` names as variables. It is evaluated for each `PlexID`/`QuantBlock` combination and applied to divide reporter ion intensities within corresponding `PlexID`/`QuantBlock`. A reference is used to convert raw intensities to relative intensities.
+The reference can be a certain channel, average of multiple channels, or 1 (no reference). The general form is an expression with `ReporterAlias` names as variables. It is evaluated for each `PlexID`/`QuantBlock` combination and applied to divide reporter ion intensities within corresponding `PlexID`/`QuantBlock`. A reference is used to convert raw intensities to relative intensities.
 
 ```{r}
 # Create references table
@@ -421,27 +435,23 @@ Table \@ref(tab:references-table) shows the `references` table. The code to use 
 **Note:** if using the geometric average or no reference, make sure the samples table is correct. There should not be any `ReporterAlias` that are "ref" or `MeasurementName` that are `NA`.
 
 ```{r eval=FALSE}
-# Use geometric average as reference
+## Example of how to use the geometric average as reference - not run
 references <- samples %>%
   group_by(PlexID, QuantBlock) %>%
-  summarise(Reference = sprintf(
-    "(%s)^(1/%d)", paste(ReporterAlias, collapse = "*"), n()
-  ))
+  summarise(Reference = sprintf("(%s)^(1/%d)", 
+                                paste(ReporterAlias, collapse = "*"), 
+                                n()),
+            .groups = "keep")
 ```
 
 ```{r eval=FALSE}
-# Do not normalize by reference channel (use 1 as the reference)
+## Example of how to set the reference to 1 - not run
 references <- samples %>% 
   distinct(PlexID, QuantBlock) %>% 
   mutate(Reference = 1)
 ```
 
-Now that we have the three study design tables, we should save them so they can be used by others. We typically save them using `write.table`, which allows them to be opened in Excel, though we could also use `save` to save all three tables to the same .RData file.
-
-<!---
-TODO:
-Explain how to add the study design tables to the DMS.
---->
+Now that we have the three study design tables, we should save them.
 
 ```{r}
 # Save study design tables with write.table
@@ -453,15 +463,16 @@ write.table(references, file = "data/3442_references.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 ```
 
-```{r eval=FALSE}
-# Save study design tables with save
-save(fractions, samples, references, file = "data/study_design_tables.RData")
+Once the study design tables have been saved to text files, it is good practice to make them available to others. To do so, navigate to the Share Path provided in the DMS Data Package Detail Report (shown in Figure \@ref(fig:DMS-share-path)), and copy the three study design files to this location. This allows them to be accessed by others with the `get_study_design_by_dataset_package` function in the future.
+
+```{r DMS-share-path, echo=FALSE, fig.cap="Location of the Share Path used to add the study design tables."}
+include_graphics("images/data_package_share_path.PNG")
 ```
 
 
 ## Create Quantitative Cross-tab {#global-quant-crosstab}
 
-This is the step where MS/MS IDs and reporter ions are linked together and aggregated to the peptide or accession (i.e. protein) level. To retain protein IDs while aggregating to peptide level, set `aggregation_level <- c("accession","peptide")`. The intensities are converted to relative intensities by dividing by a reference, if specified in the study design tables. Then, they are log$_2$-transformed.
+This is the step where MS/MS IDs and reporter ions are linked together and aggregated to the peptide or accession (i.e. protein) level. To retain protein IDs while aggregating to peptide level, set `aggregation_level <- c("accession","peptide")`. The aggregation level can be any column or combination of columns in `psms(msnid)`. If specified by the study design tables, the intensities are converted to relative intensities by dividing by a reference. Then, they are log$_2$-transformed.
 
 ```{r}
 # Create protein-level cross-tab by aggregating to accession level
@@ -499,4 +510,23 @@ We will also save the proteins (row names) of this cross-tab in order to demonst
 global_proteins <- rownames(crosstab)
 save(global_proteins, file = "data/3442_global_proteins.RData")
 ```
+
+
+## Create MSnSet {#global-msnset}
+
+The `create_msnset` function can be used to easily create an MSnSet from the cross-tab and samples tables. More details about MSnSets will be added in a separate section at a later date. For now, read the documentation with `help("MSnSet")` or `?MSnSet`.
+
+```{r}
+# Create MSnSet
+m <- create_msnset(crosstab = crosstab, samples = samples)
+m
+```
+
+
+```{r}
+# Save global MSnSet
+save(m, file = "data/global_msnset.RData", compress = TRUE)
+```
+
+
 

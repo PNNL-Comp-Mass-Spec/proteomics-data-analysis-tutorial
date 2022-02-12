@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>4.3 PCA | Proteomics Data Analysis in R/Bioconductor</title>
+  <title>5.4 PCA | Proteomics Data Analysis in R/Bioconductor</title>
   <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="4.3 PCA | Proteomics Data Analysis in R/Bioconductor" />
+  <meta property="og:title" content="5.4 PCA | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="4.3 PCA | Proteomics Data Analysis in R/Bioconductor" />
+  <meta name="twitter:title" content="5.4 PCA | Proteomics Data Analysis in R/Bioconductor" />
   
   <meta name="twitter:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-01-14" />
+<meta name="date" content="2022-02-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -183,9 +183,10 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="1.3.1" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#fractions"><i class="fa fa-check"></i><b>1.3.1</b> Fractions</a></li>
 <li class="chapter" data-level="1.3.2" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#samples"><i class="fa fa-check"></i><b>1.3.2</b> Samples</a></li>
-<li class="chapter" data-level="1.3.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#references"><i class="fa fa-check"></i><b>1.3.3</b> References</a></li>
+<li class="chapter" data-level="1.3.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#global-references"><i class="fa fa-check"></i><b>1.3.3</b> References</a></li>
 </ul></li>
 <li class="chapter" data-level="1.4" data-path="global-quant-crosstab.html"><a href="global-quant-crosstab.html"><i class="fa fa-check"></i><b>1.4</b> Create Quantitative Cross-tab</a></li>
+<li class="chapter" data-level="1.5" data-path="global-msnset.html"><a href="global-msnset.html"><i class="fa fa-check"></i><b>1.5</b> Create MSnSet</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="iso-phospho.html"><a href="iso-phospho.html"><i class="fa fa-check"></i><b>2</b> Isobaric Quantification: Phosphoproteomics</a>
 <ul>
@@ -209,91 +210,98 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="create-study-design-tables.html"><a href="create-study-design-tables.html"><i class="fa fa-check"></i><b>2.3</b> Create Study Design Tables</a></li>
 <li class="chapter" data-level="2.4" data-path="create-quantitative-cross-tab.html"><a href="create-quantitative-cross-tab.html"><i class="fa fa-check"></i><b>2.4</b> Create Quantitative Cross-tab</a></li>
+<li class="chapter" data-level="2.5" data-path="phospho-msnset.html"><a href="phospho-msnset.html"><i class="fa fa-check"></i><b>2.5</b> Create MSnSet</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="spectral-counting.html"><a href="spectral-counting.html"><i class="fa fa-check"></i><b>3</b> Spectral Counting</a></li>
-<li class="chapter" data-level="4" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>4</b> Exploratory Data Analysis</a>
+<li class="chapter" data-level="4" data-path="id-conversion.html"><a href="id-conversion.html"><i class="fa fa-check"></i><b>4</b> Feature ID Conversion</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>4.1</b> Count Features in Samples</a></li>
-<li class="chapter" data-level="4.2" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>4.2</b> Estimate Blood Contamination</a></li>
-<li class="chapter" data-level="4.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>4.3</b> PCA</a></li>
+<li class="chapter" data-level="4.1" data-path="conversion-with-biomart.html"><a href="conversion-with-biomart.html"><i class="fa fa-check"></i><b>4.1</b> Conversion with <code>biomaRt</code></a></li>
+<li class="chapter" data-level="4.2" data-path="conversion-with-annotationhub.html"><a href="conversion-with-annotationhub.html"><i class="fa fa-check"></i><b>4.2</b> Conversion with <code>AnnotationHub</code></a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>5</b> Heatmaps</a>
+<li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory Data Analysis</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>5.1</b> Expression Heatmaps</a></li>
-<li class="chapter" data-level="5.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>5.2</b> Correlation Heatmaps</a>
-<ul>
-<li class="chapter" data-level="5.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>5.2.1</b> Sample Correlation</a></li>
-<li class="chapter" data-level="5.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>5.2.2</b> Feature Correlation</a></li>
+<li class="chapter" data-level="5.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>5.1</b> Count Features in Samples</a></li>
+<li class="chapter" data-level="5.2" data-path="sample-boxplots.html"><a href="sample-boxplots.html"><i class="fa fa-check"></i><b>5.2</b> Sample Boxplots</a></li>
+<li class="chapter" data-level="5.3" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>5.3</b> Estimate Blood Contamination</a></li>
+<li class="chapter" data-level="5.4" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>5.4</b> PCA</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>5.3</b> Heatmap Annotation</a>
+<li class="chapter" data-level="6" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>6</b> Heatmaps</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>5.3.1</b> Modifying Default Colors</a></li>
+<li class="chapter" data-level="6.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>6.1</b> Expression Heatmaps</a></li>
+<li class="chapter" data-level="6.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>6.2</b> Correlation Heatmaps</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>6.2.1</b> Sample Correlation</a></li>
+<li class="chapter" data-level="6.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>6.2.2</b> Feature Correlation</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="modifications.html"><a href="modifications.html"><i class="fa fa-check"></i><b>5.4</b> Modifications</a>
+<li class="chapter" data-level="6.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>6.3</b> Heatmap Annotation</a>
 <ul>
-<li class="chapter" data-level="5.4.1" data-path="modifications.html"><a href="modifications.html#row-and-column-labels"><i class="fa fa-check"></i><b>5.4.1</b> Row and column labels</a></li>
-<li class="chapter" data-level="5.4.2" data-path="modifications.html"><a href="modifications.html#label-colors"><i class="fa fa-check"></i><b>5.4.2</b> Label colors</a></li>
-<li class="chapter" data-level="5.4.3" data-path="modifications.html"><a href="modifications.html#label-specific-features"><i class="fa fa-check"></i><b>5.4.3</b> Label specific features</a></li>
-<li class="chapter" data-level="5.4.4" data-path="modifications.html"><a href="modifications.html#heatmap-body-color"><i class="fa fa-check"></i><b>5.4.4</b> Heatmap body color</a></li>
-<li class="chapter" data-level="5.4.5" data-path="modifications.html"><a href="modifications.html#horizontal-heatmaps"><i class="fa fa-check"></i><b>5.4.5</b> Horizontal heatmaps</a></li>
-<li class="chapter" data-level="5.4.6" data-path="modifications.html"><a href="modifications.html#legends"><i class="fa fa-check"></i><b>5.4.6</b> Legends</a></li>
+<li class="chapter" data-level="6.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>6.3.1</b> Modifying Default Colors</a></li>
 </ul></li>
-</ul></li>
-<li class="chapter" data-level="6" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>6</b> Differential Expression Analysis</a>
+<li class="chapter" data-level="6.4" data-path="modifications.html"><a href="modifications.html"><i class="fa fa-check"></i><b>6.4</b> Modifications</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="mult-comp.html"><a href="mult-comp.html"><i class="fa fa-check"></i><b>6.1</b> Multiple Comparisons</a></li>
-<li class="chapter" data-level="6.2" data-path="linear-reg.html"><a href="linear-reg.html"><i class="fa fa-check"></i><b>6.2</b> Linear Regression</a></li>
-<li class="chapter" data-level="6.3" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>6.3</b> Two-Sample t-tests</a>
-<ul>
-<li class="chapter" data-level="6.3.1" data-path="t-tests.html"><a href="t-tests.html#t-single"><i class="fa fa-check"></i><b>6.3.1</b> One comparison</a></li>
-<li class="chapter" data-level="6.3.2" data-path="t-tests.html"><a href="t-tests.html#t-mult"><i class="fa fa-check"></i><b>6.3.2</b> Multiple comparisons</a></li>
-</ul></li>
-<li class="chapter" data-level="6.4" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>6.4</b> One-Way ANOVA</a></li>
-<li class="chapter" data-level="6.5" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>6.5</b> p-value Histograms</a></li>
-<li class="chapter" data-level="6.6" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>6.6</b> Volcano Plots</a>
-<ul>
-<li class="chapter" data-level="6.6.1" data-path="volcano-plots.html"><a href="volcano-plots.html#base-plot"><i class="fa fa-check"></i><b>6.6.1</b> Base plot</a></li>
-<li class="chapter" data-level="6.6.2" data-path="volcano-plots.html"><a href="volcano-plots.html#label-top-features"><i class="fa fa-check"></i><b>6.6.2</b> Label top features</a></li>
-<li class="chapter" data-level="6.6.3" data-path="volcano-plots.html"><a href="volcano-plots.html#label-specific-features-1"><i class="fa fa-check"></i><b>6.6.3</b> Label specific features</a></li>
-<li class="chapter" data-level="6.6.4" data-path="volcano-plots.html"><a href="volcano-plots.html#modify-point-colors"><i class="fa fa-check"></i><b>6.6.4</b> Modify point colors</a></li>
-<li class="chapter" data-level="6.6.5" data-path="volcano-plots.html"><a href="volcano-plots.html#multiple-volcano-plots"><i class="fa fa-check"></i><b>6.6.5</b> Multiple volcano plots</a></li>
+<li class="chapter" data-level="6.4.1" data-path="modifications.html"><a href="modifications.html#row-and-column-labels"><i class="fa fa-check"></i><b>6.4.1</b> Row and column labels</a></li>
+<li class="chapter" data-level="6.4.2" data-path="modifications.html"><a href="modifications.html#label-colors"><i class="fa fa-check"></i><b>6.4.2</b> Label colors</a></li>
+<li class="chapter" data-level="6.4.3" data-path="modifications.html"><a href="modifications.html#label-specific-features"><i class="fa fa-check"></i><b>6.4.3</b> Label specific features</a></li>
+<li class="chapter" data-level="6.4.4" data-path="modifications.html"><a href="modifications.html#heatmap-body-color"><i class="fa fa-check"></i><b>6.4.4</b> Heatmap body color</a></li>
+<li class="chapter" data-level="6.4.5" data-path="modifications.html"><a href="modifications.html#horizontal-heatmaps"><i class="fa fa-check"></i><b>6.4.5</b> Horizontal heatmaps</a></li>
+<li class="chapter" data-level="6.4.6" data-path="modifications.html"><a href="modifications.html#legends"><i class="fa fa-check"></i><b>6.4.6</b> Legends</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>7</b> Pathway Analysis</a>
+<li class="chapter" data-level="7" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>7</b> Differential Analysis</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>7.1</b> Annotation Databases</a>
+<li class="chapter" data-level="7.1" data-path="linear-reg.html"><a href="linear-reg.html"><i class="fa fa-check"></i><b>7.1</b> Linear Regression</a></li>
+<li class="chapter" data-level="7.2" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>7.2</b> Two-Sample t-tests</a>
 <ul>
-<li class="chapter" data-level="7.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>7.1.1</b> Gene Ontology</a>
+<li class="chapter" data-level="7.2.1" data-path="t-tests.html"><a href="t-tests.html#t-single"><i class="fa fa-check"></i><b>7.2.1</b> One comparison</a></li>
+<li class="chapter" data-level="7.2.2" data-path="t-tests.html"><a href="t-tests.html#t-mult"><i class="fa fa-check"></i><b>7.2.2</b> Multiple comparisons</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>7.3</b> One-Way ANOVA</a></li>
+<li class="chapter" data-level="7.4" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>7.4</b> p-value Histograms</a></li>
+<li class="chapter" data-level="7.5" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>7.5</b> Volcano Plots</a>
 <ul>
-<li class="chapter" data-level="7.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>7.1.1.1</b> Semantic Similarity</a></li>
-<li class="chapter" data-level="7.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>7.1.1.2</b> GO Subsets/Slims</a></li>
+<li class="chapter" data-level="7.5.1" data-path="volcano-plots.html"><a href="volcano-plots.html#base-plot"><i class="fa fa-check"></i><b>7.5.1</b> Base plot</a></li>
+<li class="chapter" data-level="7.5.2" data-path="volcano-plots.html"><a href="volcano-plots.html#label-top-features"><i class="fa fa-check"></i><b>7.5.2</b> Label top features</a></li>
+<li class="chapter" data-level="7.5.3" data-path="volcano-plots.html"><a href="volcano-plots.html#label-specific-features-1"><i class="fa fa-check"></i><b>7.5.3</b> Label specific features</a></li>
+<li class="chapter" data-level="7.5.4" data-path="volcano-plots.html"><a href="volcano-plots.html#modify-point-colors"><i class="fa fa-check"></i><b>7.5.4</b> Modify point colors</a></li>
+<li class="chapter" data-level="7.5.5" data-path="volcano-plots.html"><a href="volcano-plots.html#multiple-volcano-plots"><i class="fa fa-check"></i><b>7.5.5</b> Multiple volcano plots</a></li>
 </ul></li>
-<li class="chapter" data-level="7.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>7.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="7.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>7.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="7.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>7.1.4</b> Pfam</a></li>
+<li class="chapter" data-level="7.6" data-path="upset-plots.html"><a href="upset-plots.html"><i class="fa fa-check"></i><b>7.6</b> UpSet Plots</a></li>
 </ul></li>
-<li class="chapter" data-level="7.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>7.2</b> Over-Representation Analysis</a>
+<li class="chapter" data-level="8" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>8</b> Pathway Analysis</a>
 <ul>
-<li class="chapter" data-level="7.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>7.2.1</b> Examples</a>
+<li class="chapter" data-level="8.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>8.1</b> Annotation Databases</a>
 <ul>
-<li class="chapter" data-level="7.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>7.2.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="7.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>7.2.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="7.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>7.2.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="7.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>7.2.1.4</b> Other Databases</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="7.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>7.3</b> Gene Set Enrichment Analysis</a>
+<li class="chapter" data-level="8.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>8.1.1</b> Gene Ontology</a>
 <ul>
-<li class="chapter" data-level="7.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>7.3.1</b> Examples</a>
+<li class="chapter" data-level="8.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>8.1.1.1</b> Semantic Similarity</a></li>
+<li class="chapter" data-level="8.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>8.1.1.2</b> GO Subsets/Slims</a></li>
+</ul></li>
+<li class="chapter" data-level="8.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>8.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>8.1.3</b> KEGG</a></li>
+<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>8.1.4</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>8.2</b> Over-Representation Analysis</a>
 <ul>
-<li class="chapter" data-level="7.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>7.3.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="7.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>7.3.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="7.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>7.3.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="7.3.1.4" data-path="gsea.html"><a href="gsea.html#other-databases"><i class="fa fa-check"></i><b>7.3.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="8.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>8.2.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="8.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>8.2.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>8.2.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="8.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>8.2.1.4</b> Other Databases</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>8.3</b> Gene Set Enrichment Analysis</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>8.3.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="8.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>8.3.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="8.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>8.3.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>8.3.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="8.3.1.4" data-path="gsea.html"><a href="gsea.html#gsea-other"><i class="fa fa-check"></i><b>8.3.1.4</b> Other Databases</a></li>
 </ul></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="references-1.html"><a href="references-1.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -311,28 +319,28 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="pca" class="section level2" number="4.3">
-<h2><span class="header-section-number">4.3</span> PCA</h2>
+<div id="pca" class="section level2" number="5.4">
+<h2><span class="header-section-number">5.4</span> PCA</h2>
 <p>Principal Component Analysis (PCA) is an unsupervised dimensionality reduction technique. It is useful for visualizing high-dimensional data in a lower-dimensional (usually 2D) space while retaining as much information from the original data as possible. It does this by creating linear combinations of features called principal components in such a way that that the first principal component (PC1) explains the most variation in the original data, PC2 explains the second most, and so on. Typically, we create scatterplots of PC1 vs PC2 to visualize relationships between samples with the <code>plot_pca</code> function from the MSnSet.utils package.</p>
 <p>PCA plots are used to check for batch effects and sample differences due to variables of interest. If samples appear to separate by group or according to a continuous variable and the first two principal components explain a decent percentage of the variance in the original data, then we are fairly confident that the predictor affected the data in some way or is at least correlated to something that did.</p>
 <p>Note that while there are PCA methods that allow some degree of missing data (see <code>pcaMethods::pca</code> for details), <code>plot_pca</code> makes use of the <code>prcomp</code> function, which does not. We do not need to filter data prior to running <code>plot_pca</code>, as it handles that and prints a message to tell us how many complete rows remained. If there are very few complete features, PCA will still work, but the results may not be very meaningful. In this case, it may be a good idea to impute missing values.</p>
 <p>We will begin with the base plot. The axis titles show how much variance in the original data is explained by each component. This is built with the ggplot2 package, so it can be customized with other functions in the package.</p>
-<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="pca.html#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Default plot</span></span>
-<span id="cb79-2"><a href="pca.html#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pca</span>(oca.set)</span></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="pca.html#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Default plot</span></span>
+<span id="cb90-2"><a href="pca.html#cb90-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pca</span>(oca.set)</span></code></pre></div>
 <p><img src="EDA_files/figure-html/pca-plot-1-1.png" width="75%" style="display: block; margin: auto;" /></p>
 <p>Of the total 8103 features, 4738 were present in all 73 samples and used for PCA. Also notice that PC1 and PC2 explain less than 1/5 of the variance in the original data.</p>
 <p>Now, we will color points according to their “SUBTYPE” group label and add a 50% Normal confidence ellipse for each group. We could remove the ellipse by setting <code>show_ellipse</code> to <code>FALSE</code>. We will also change the legend title to “Subtype.”</p>
-<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="pca.html#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Points colored by SUBTYPE</span></span>
-<span id="cb80-2"><a href="pca.html#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pca</span>(oca.set, <span class="at">phenotype =</span> <span class="st">&quot;SUBTYPE&quot;</span>, <span class="at">legend_title =</span> <span class="st">&quot;Subtype&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="pca.html#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Points colored by SUBTYPE</span></span>
+<span id="cb91-2"><a href="pca.html#cb91-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pca</span>(oca.set, <span class="at">phenotype =</span> <span class="st">&quot;SUBTYPE&quot;</span>, <span class="at">legend_title =</span> <span class="st">&quot;Subtype&quot;</span>)</span></code></pre></div>
 <p><img src="EDA_files/figure-html/pca-plot-2-1.png" width="75%" style="display: block; margin: auto;" /></p>
 <p>It looks like samples slightly separate by SUBTYPE, and there may be features that are statistically different between the Proliferative and Mesenchymal groups. Something to keep in mind when performing differential analysis. Now, we will check for potential batch effects by coloring points by their “Batch” group.</p>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="pca.html#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Points colored by Batch</span></span>
-<span id="cb81-2"><a href="pca.html#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pca</span>(oca.set, <span class="at">phenotype =</span> <span class="st">&quot;Batch&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="pca.html#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Points colored by Batch</span></span>
+<span id="cb92-2"><a href="pca.html#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pca</span>(oca.set, <span class="at">phenotype =</span> <span class="st">&quot;Batch&quot;</span>)</span></code></pre></div>
 <p><img src="EDA_files/figure-html/plot-pca-3-1.png" width="75%" style="display: block; margin: auto;" /></p>
 <p>For the most part, it seems like all of the batches overlap and are somewhat centered on the origin (aside from batch X17). It is difficult to determine if there is a batch effect, so it may be a good idea to correct for it anyway. This is covered in a different section.</p>
 <p>We can also use this function to identify the most influential features in PCA space with the <code>biplot</code> argument.</p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="pca.html#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pca</span>(oca.set, <span class="at">phenotype =</span> <span class="st">&quot;SUBTYPE&quot;</span>, <span class="at">biplot =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb82-2"><a href="pca.html#cb82-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">label_args =</span> <span class="fu">list</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="pca.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_pca</span>(oca.set, <span class="at">phenotype =</span> <span class="st">&quot;SUBTYPE&quot;</span>, <span class="at">biplot =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb93-2"><a href="pca.html#cb93-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">label_args =</span> <span class="fu">list</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>))</span></code></pre></div>
 <p><img src="EDA_files/figure-html/plot-pca-4-1.png" width="75%" style="display: block; margin: auto;" /></p>
 <p>From the biplot, we can see that proteins that begin with “NP_9976” are major drivers in the separation of the Mesenchymal and Proliferative samples. Similarly, we can see that there are a few blood proteins (hemoglobin subunits: NP000549.1 and NP_000550.2) that are major drivers of separation along PC2, though PC2 only explains about 6% of the variance in the original data. See <code>?plot_pca</code> for more customization options.</p>
 <!-- ## UMAP -->
@@ -422,7 +430,7 @@ gitbook.start({
 "instapaper": false,
 "vk": false,
 "whatsapp": false,
-"all": false
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",

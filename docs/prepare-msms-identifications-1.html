@@ -24,7 +24,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-01-14" />
+<meta name="date" content="2022-02-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -183,9 +183,10 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="1.3.1" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#fractions"><i class="fa fa-check"></i><b>1.3.1</b> Fractions</a></li>
 <li class="chapter" data-level="1.3.2" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#samples"><i class="fa fa-check"></i><b>1.3.2</b> Samples</a></li>
-<li class="chapter" data-level="1.3.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#references"><i class="fa fa-check"></i><b>1.3.3</b> References</a></li>
+<li class="chapter" data-level="1.3.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#global-references"><i class="fa fa-check"></i><b>1.3.3</b> References</a></li>
 </ul></li>
 <li class="chapter" data-level="1.4" data-path="global-quant-crosstab.html"><a href="global-quant-crosstab.html"><i class="fa fa-check"></i><b>1.4</b> Create Quantitative Cross-tab</a></li>
+<li class="chapter" data-level="1.5" data-path="global-msnset.html"><a href="global-msnset.html"><i class="fa fa-check"></i><b>1.5</b> Create MSnSet</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="iso-phospho.html"><a href="iso-phospho.html"><i class="fa fa-check"></i><b>2</b> Isobaric Quantification: Phosphoproteomics</a>
 <ul>
@@ -209,91 +210,98 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="create-study-design-tables.html"><a href="create-study-design-tables.html"><i class="fa fa-check"></i><b>2.3</b> Create Study Design Tables</a></li>
 <li class="chapter" data-level="2.4" data-path="create-quantitative-cross-tab.html"><a href="create-quantitative-cross-tab.html"><i class="fa fa-check"></i><b>2.4</b> Create Quantitative Cross-tab</a></li>
+<li class="chapter" data-level="2.5" data-path="phospho-msnset.html"><a href="phospho-msnset.html"><i class="fa fa-check"></i><b>2.5</b> Create MSnSet</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="spectral-counting.html"><a href="spectral-counting.html"><i class="fa fa-check"></i><b>3</b> Spectral Counting</a></li>
-<li class="chapter" data-level="4" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>4</b> Exploratory Data Analysis</a>
+<li class="chapter" data-level="4" data-path="id-conversion.html"><a href="id-conversion.html"><i class="fa fa-check"></i><b>4</b> Feature ID Conversion</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>4.1</b> Count Features in Samples</a></li>
-<li class="chapter" data-level="4.2" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>4.2</b> Estimate Blood Contamination</a></li>
-<li class="chapter" data-level="4.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>4.3</b> PCA</a></li>
+<li class="chapter" data-level="4.1" data-path="conversion-with-biomart.html"><a href="conversion-with-biomart.html"><i class="fa fa-check"></i><b>4.1</b> Conversion with <code>biomaRt</code></a></li>
+<li class="chapter" data-level="4.2" data-path="conversion-with-annotationhub.html"><a href="conversion-with-annotationhub.html"><i class="fa fa-check"></i><b>4.2</b> Conversion with <code>AnnotationHub</code></a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>5</b> Heatmaps</a>
+<li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory Data Analysis</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>5.1</b> Expression Heatmaps</a></li>
-<li class="chapter" data-level="5.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>5.2</b> Correlation Heatmaps</a>
-<ul>
-<li class="chapter" data-level="5.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>5.2.1</b> Sample Correlation</a></li>
-<li class="chapter" data-level="5.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>5.2.2</b> Feature Correlation</a></li>
+<li class="chapter" data-level="5.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>5.1</b> Count Features in Samples</a></li>
+<li class="chapter" data-level="5.2" data-path="sample-boxplots.html"><a href="sample-boxplots.html"><i class="fa fa-check"></i><b>5.2</b> Sample Boxplots</a></li>
+<li class="chapter" data-level="5.3" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>5.3</b> Estimate Blood Contamination</a></li>
+<li class="chapter" data-level="5.4" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>5.4</b> PCA</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>5.3</b> Heatmap Annotation</a>
+<li class="chapter" data-level="6" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>6</b> Heatmaps</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>5.3.1</b> Modifying Default Colors</a></li>
+<li class="chapter" data-level="6.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>6.1</b> Expression Heatmaps</a></li>
+<li class="chapter" data-level="6.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>6.2</b> Correlation Heatmaps</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>6.2.1</b> Sample Correlation</a></li>
+<li class="chapter" data-level="6.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>6.2.2</b> Feature Correlation</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="modifications.html"><a href="modifications.html"><i class="fa fa-check"></i><b>5.4</b> Modifications</a>
+<li class="chapter" data-level="6.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>6.3</b> Heatmap Annotation</a>
 <ul>
-<li class="chapter" data-level="5.4.1" data-path="modifications.html"><a href="modifications.html#row-and-column-labels"><i class="fa fa-check"></i><b>5.4.1</b> Row and column labels</a></li>
-<li class="chapter" data-level="5.4.2" data-path="modifications.html"><a href="modifications.html#label-colors"><i class="fa fa-check"></i><b>5.4.2</b> Label colors</a></li>
-<li class="chapter" data-level="5.4.3" data-path="modifications.html"><a href="modifications.html#label-specific-features"><i class="fa fa-check"></i><b>5.4.3</b> Label specific features</a></li>
-<li class="chapter" data-level="5.4.4" data-path="modifications.html"><a href="modifications.html#heatmap-body-color"><i class="fa fa-check"></i><b>5.4.4</b> Heatmap body color</a></li>
-<li class="chapter" data-level="5.4.5" data-path="modifications.html"><a href="modifications.html#horizontal-heatmaps"><i class="fa fa-check"></i><b>5.4.5</b> Horizontal heatmaps</a></li>
-<li class="chapter" data-level="5.4.6" data-path="modifications.html"><a href="modifications.html#legends"><i class="fa fa-check"></i><b>5.4.6</b> Legends</a></li>
+<li class="chapter" data-level="6.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>6.3.1</b> Modifying Default Colors</a></li>
 </ul></li>
-</ul></li>
-<li class="chapter" data-level="6" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>6</b> Differential Expression Analysis</a>
+<li class="chapter" data-level="6.4" data-path="modifications.html"><a href="modifications.html"><i class="fa fa-check"></i><b>6.4</b> Modifications</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="mult-comp.html"><a href="mult-comp.html"><i class="fa fa-check"></i><b>6.1</b> Multiple Comparisons</a></li>
-<li class="chapter" data-level="6.2" data-path="linear-reg.html"><a href="linear-reg.html"><i class="fa fa-check"></i><b>6.2</b> Linear Regression</a></li>
-<li class="chapter" data-level="6.3" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>6.3</b> Two-Sample t-tests</a>
-<ul>
-<li class="chapter" data-level="6.3.1" data-path="t-tests.html"><a href="t-tests.html#t-single"><i class="fa fa-check"></i><b>6.3.1</b> One comparison</a></li>
-<li class="chapter" data-level="6.3.2" data-path="t-tests.html"><a href="t-tests.html#t-mult"><i class="fa fa-check"></i><b>6.3.2</b> Multiple comparisons</a></li>
-</ul></li>
-<li class="chapter" data-level="6.4" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>6.4</b> One-Way ANOVA</a></li>
-<li class="chapter" data-level="6.5" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>6.5</b> p-value Histograms</a></li>
-<li class="chapter" data-level="6.6" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>6.6</b> Volcano Plots</a>
-<ul>
-<li class="chapter" data-level="6.6.1" data-path="volcano-plots.html"><a href="volcano-plots.html#base-plot"><i class="fa fa-check"></i><b>6.6.1</b> Base plot</a></li>
-<li class="chapter" data-level="6.6.2" data-path="volcano-plots.html"><a href="volcano-plots.html#label-top-features"><i class="fa fa-check"></i><b>6.6.2</b> Label top features</a></li>
-<li class="chapter" data-level="6.6.3" data-path="volcano-plots.html"><a href="volcano-plots.html#label-specific-features-1"><i class="fa fa-check"></i><b>6.6.3</b> Label specific features</a></li>
-<li class="chapter" data-level="6.6.4" data-path="volcano-plots.html"><a href="volcano-plots.html#modify-point-colors"><i class="fa fa-check"></i><b>6.6.4</b> Modify point colors</a></li>
-<li class="chapter" data-level="6.6.5" data-path="volcano-plots.html"><a href="volcano-plots.html#multiple-volcano-plots"><i class="fa fa-check"></i><b>6.6.5</b> Multiple volcano plots</a></li>
+<li class="chapter" data-level="6.4.1" data-path="modifications.html"><a href="modifications.html#row-and-column-labels"><i class="fa fa-check"></i><b>6.4.1</b> Row and column labels</a></li>
+<li class="chapter" data-level="6.4.2" data-path="modifications.html"><a href="modifications.html#label-colors"><i class="fa fa-check"></i><b>6.4.2</b> Label colors</a></li>
+<li class="chapter" data-level="6.4.3" data-path="modifications.html"><a href="modifications.html#label-specific-features"><i class="fa fa-check"></i><b>6.4.3</b> Label specific features</a></li>
+<li class="chapter" data-level="6.4.4" data-path="modifications.html"><a href="modifications.html#heatmap-body-color"><i class="fa fa-check"></i><b>6.4.4</b> Heatmap body color</a></li>
+<li class="chapter" data-level="6.4.5" data-path="modifications.html"><a href="modifications.html#horizontal-heatmaps"><i class="fa fa-check"></i><b>6.4.5</b> Horizontal heatmaps</a></li>
+<li class="chapter" data-level="6.4.6" data-path="modifications.html"><a href="modifications.html#legends"><i class="fa fa-check"></i><b>6.4.6</b> Legends</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>7</b> Pathway Analysis</a>
+<li class="chapter" data-level="7" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>7</b> Differential Analysis</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>7.1</b> Annotation Databases</a>
+<li class="chapter" data-level="7.1" data-path="linear-reg.html"><a href="linear-reg.html"><i class="fa fa-check"></i><b>7.1</b> Linear Regression</a></li>
+<li class="chapter" data-level="7.2" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>7.2</b> Two-Sample t-tests</a>
 <ul>
-<li class="chapter" data-level="7.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>7.1.1</b> Gene Ontology</a>
+<li class="chapter" data-level="7.2.1" data-path="t-tests.html"><a href="t-tests.html#t-single"><i class="fa fa-check"></i><b>7.2.1</b> One comparison</a></li>
+<li class="chapter" data-level="7.2.2" data-path="t-tests.html"><a href="t-tests.html#t-mult"><i class="fa fa-check"></i><b>7.2.2</b> Multiple comparisons</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>7.3</b> One-Way ANOVA</a></li>
+<li class="chapter" data-level="7.4" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>7.4</b> p-value Histograms</a></li>
+<li class="chapter" data-level="7.5" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>7.5</b> Volcano Plots</a>
 <ul>
-<li class="chapter" data-level="7.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>7.1.1.1</b> Semantic Similarity</a></li>
-<li class="chapter" data-level="7.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>7.1.1.2</b> GO Subsets/Slims</a></li>
+<li class="chapter" data-level="7.5.1" data-path="volcano-plots.html"><a href="volcano-plots.html#base-plot"><i class="fa fa-check"></i><b>7.5.1</b> Base plot</a></li>
+<li class="chapter" data-level="7.5.2" data-path="volcano-plots.html"><a href="volcano-plots.html#label-top-features"><i class="fa fa-check"></i><b>7.5.2</b> Label top features</a></li>
+<li class="chapter" data-level="7.5.3" data-path="volcano-plots.html"><a href="volcano-plots.html#label-specific-features-1"><i class="fa fa-check"></i><b>7.5.3</b> Label specific features</a></li>
+<li class="chapter" data-level="7.5.4" data-path="volcano-plots.html"><a href="volcano-plots.html#modify-point-colors"><i class="fa fa-check"></i><b>7.5.4</b> Modify point colors</a></li>
+<li class="chapter" data-level="7.5.5" data-path="volcano-plots.html"><a href="volcano-plots.html#multiple-volcano-plots"><i class="fa fa-check"></i><b>7.5.5</b> Multiple volcano plots</a></li>
 </ul></li>
-<li class="chapter" data-level="7.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>7.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="7.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>7.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="7.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>7.1.4</b> Pfam</a></li>
+<li class="chapter" data-level="7.6" data-path="upset-plots.html"><a href="upset-plots.html"><i class="fa fa-check"></i><b>7.6</b> UpSet Plots</a></li>
 </ul></li>
-<li class="chapter" data-level="7.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>7.2</b> Over-Representation Analysis</a>
+<li class="chapter" data-level="8" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>8</b> Pathway Analysis</a>
 <ul>
-<li class="chapter" data-level="7.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>7.2.1</b> Examples</a>
+<li class="chapter" data-level="8.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>8.1</b> Annotation Databases</a>
 <ul>
-<li class="chapter" data-level="7.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>7.2.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="7.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>7.2.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="7.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>7.2.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="7.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>7.2.1.4</b> Other Databases</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="7.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>7.3</b> Gene Set Enrichment Analysis</a>
+<li class="chapter" data-level="8.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>8.1.1</b> Gene Ontology</a>
 <ul>
-<li class="chapter" data-level="7.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>7.3.1</b> Examples</a>
+<li class="chapter" data-level="8.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>8.1.1.1</b> Semantic Similarity</a></li>
+<li class="chapter" data-level="8.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>8.1.1.2</b> GO Subsets/Slims</a></li>
+</ul></li>
+<li class="chapter" data-level="8.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>8.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>8.1.3</b> KEGG</a></li>
+<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>8.1.4</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>8.2</b> Over-Representation Analysis</a>
 <ul>
-<li class="chapter" data-level="7.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>7.3.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="7.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>7.3.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="7.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>7.3.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="7.3.1.4" data-path="gsea.html"><a href="gsea.html#other-databases"><i class="fa fa-check"></i><b>7.3.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="8.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>8.2.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="8.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>8.2.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>8.2.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="8.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>8.2.1.4</b> Other Databases</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>8.3</b> Gene Set Enrichment Analysis</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>8.3.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="8.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>8.3.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="8.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>8.3.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>8.3.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="8.3.1.4" data-path="gsea.html"><a href="gsea.html#gsea-other"><i class="fa fa-check"></i><b>8.3.1.4</b> Other Databases</a></li>
 </ul></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="references-1.html"><a href="references-1.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -315,10 +323,10 @@ div.csl-indent {
 <h2><span class="header-section-number">2.1</span> Prepare MS/MS Identifications</h2>
 <div id="read-ms-gf-data-1" class="section level3" number="2.1.1">
 <h3><span class="header-section-number">2.1.1</span> Read MS-GF+ Data</h3>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="prepare-msms-identifications-1.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read MS-GF+ data</span></span>
-<span id="cb35-2"><a href="prepare-msms-identifications-1.html#cb35-2" aria-hidden="true" tabindex="-1"></a>data_package_num <span class="ot">&lt;-</span> <span class="dv">3626</span> <span class="co"># phospho</span></span>
-<span id="cb35-3"><a href="prepare-msms-identifications-1.html#cb35-3" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">read_msgf_data_from_DMS</span>(data_package_num)</span></code></pre></div>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="prepare-msms-identifications-1.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="prepare-msms-identifications-1.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Read MS-GF+ data</span></span>
+<span id="cb37-2"><a href="prepare-msms-identifications-1.html#cb37-2" aria-hidden="true" tabindex="-1"></a>data_package_num <span class="ot">&lt;-</span> <span class="dv">3626</span> <span class="co"># phospho</span></span>
+<span id="cb37-3"><a href="prepare-msms-identifications-1.html#cb37-3" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">read_msgf_data_from_DMS</span>(data_package_num)</span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="prepare-msms-identifications-1.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
 <pre><code>## MSnID object
 ## Working directory: &quot;.&quot;
 ## #Spectrum Files:  23 
@@ -328,17 +336,17 @@ div.csl-indent {
 </div>
 <div id="correct-isotope-selection-error-1" class="section level3" number="2.1.2">
 <h3><span class="header-section-number">2.1.2</span> Correct Isotope Selection Error</h3>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="prepare-msms-identifications-1.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correct for isotope selection error</span></span>
-<span id="cb38-2"><a href="prepare-msms-identifications-1.html#cb38-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">correct_peak_selection</span>(msnid)</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="prepare-msms-identifications-1.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Correct for isotope selection error</span></span>
+<span id="cb40-2"><a href="prepare-msms-identifications-1.html#cb40-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">correct_peak_selection</span>(msnid)</span></code></pre></div>
 </div>
 <div id="remove-unmodified-peptides" class="section level3" number="2.1.3">
 <h3><span class="header-section-number">2.1.3</span> Remove Unmodified Peptides</h3>
 <p>Generally, we will remove unmodified peptides before any sort of filtering steps; however, unmodified peptides will be removed automatically in Section <a href="prepare-msms-identifications-1.html#map-mod-sites">2.1.9</a>, so this step can be skipped if we need to tally the number of modified and unmodified peptides toward the end of processing.</p>
 <p>In this case, the phosphorylation of an amino acid is marked by a <code>*</code> appearing next in the sequence. We can filter out peptides that do not contain this symbol with <code>apply_filter</code>. In regular expressions, the <code>*</code> is a special character called a metacharacter that must be escaped with backslashes, and the backslashes must also be escaped, since they are enclosed within a nested string (<code>"''"</code>). For non-metacharacters, it is not necessary to include the backslashes.</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="prepare-msms-identifications-1.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove non-phosphorylated peptides</span></span>
-<span id="cb39-2"><a href="prepare-msms-identifications-1.html#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (peptides that do not contain a *)</span></span>
-<span id="cb39-3"><a href="prepare-msms-identifications-1.html#cb39-3" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">apply_filter</span>(msnid, <span class="st">&quot;grepl(&#39;</span><span class="sc">\\\\</span><span class="st">*&#39;, peptide)&quot;</span>)</span>
-<span id="cb39-4"><a href="prepare-msms-identifications-1.html#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="prepare-msms-identifications-1.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove non-phosphorylated peptides</span></span>
+<span id="cb41-2"><a href="prepare-msms-identifications-1.html#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (peptides that do not contain a *)</span></span>
+<span id="cb41-3"><a href="prepare-msms-identifications-1.html#cb41-3" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">apply_filter</span>(msnid, <span class="st">&quot;grepl(&#39;</span><span class="sc">\\\\</span><span class="st">*&#39;, peptide)&quot;</span>)</span>
+<span id="cb41-4"><a href="prepare-msms-identifications-1.html#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
 <pre><code>## MSnID object
 ## Working directory: &quot;.&quot;
 ## #Spectrum Files:  23 
@@ -348,9 +356,9 @@ div.csl-indent {
 </div>
 <div id="remove-contaminants-1" class="section level3" number="2.1.4">
 <h3><span class="header-section-number">2.1.4</span> Remove Contaminants</h3>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="prepare-msms-identifications-1.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove contaminants</span></span>
-<span id="cb41-2"><a href="prepare-msms-identifications-1.html#cb41-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">apply_filter</span>(msnid, <span class="st">&quot;!grepl(&#39;Contaminant&#39;, accession)&quot;</span>)</span>
-<span id="cb41-3"><a href="prepare-msms-identifications-1.html#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="prepare-msms-identifications-1.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove contaminants</span></span>
+<span id="cb43-2"><a href="prepare-msms-identifications-1.html#cb43-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">apply_filter</span>(msnid, <span class="st">&quot;!grepl(&#39;Contaminant&#39;, accession)&quot;</span>)</span>
+<span id="cb43-3"><a href="prepare-msms-identifications-1.html#cb43-3" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
 <pre><code>## MSnID object
 ## Working directory: &quot;.&quot;
 ## #Spectrum Files:  23 
@@ -360,87 +368,96 @@ div.csl-indent {
 </div>
 <div id="improve-phosphosite-localization" class="section level3" number="2.1.5">
 <h3><span class="header-section-number">2.1.5</span> Improve Phosphosite Localization</h3>
-<p>Phospho datasets involve AScore jobs for improving phosphosite localization. There should be one AScore job per data package. If the AScore job does not exist, see <a href="https://prismwiki.pnl.gov/wiki/AScore_Job_Creation">AScore Job Creation</a> for how to set it up. The fetched object is a data.frame that links datasets, scans and original PTM localization to newly suggested locations. Importantly, it contains <code>AScore</code> column that signifies the confidence of PTM assignment. AScore &gt; 17 is considered confident.</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="prepare-msms-identifications-1.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter PTMs by Ascore - only for phospho data</span></span>
-<span id="cb43-2"><a href="prepare-msms-identifications-1.html#cb43-2" aria-hidden="true" tabindex="-1"></a>ascore <span class="ot">&lt;-</span> <span class="fu">get_AScore_results</span>(data_package_num)</span>
-<span id="cb43-3"><a href="prepare-msms-identifications-1.html#cb43-3" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">best_PTM_location_by_ascore</span>(msnid, ascore)</span></code></pre></div>
+<p>Phospho datasets involve Ascore jobs for improving phosphosite localization. There should be one AScore job per data package. If the Ascore job does not exist, see <a href="https://prismwiki.pnl.gov/wiki/AScore_Job_Creation">AScore Job Creation</a> for how to set it up. The fetched object is a data.frame that links datasets, scans and original PTM localization to newly suggested locations. Importantly, it contains <code>AScore</code> column that “measures the probability of correct phosphorylation site localization” <span class="citation">(<a href="#ref-beausoleil_probability-based_2006" role="doc-biblioref">Beausoleil et al., 2006</a>)</span>. AScore &gt; 17 is considered confident.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="prepare-msms-identifications-1.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter PTMs by Ascore - only for phospho data</span></span>
+<span id="cb45-2"><a href="prepare-msms-identifications-1.html#cb45-2" aria-hidden="true" tabindex="-1"></a>ascore <span class="ot">&lt;-</span> <span class="fu">get_AScore_results</span>(data_package_num)</span>
+<span id="cb45-3"><a href="prepare-msms-identifications-1.html#cb45-3" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">best_PTM_location_by_ascore</span>(msnid, ascore)</span></code></pre></div>
 </div>
 <div id="msms-id-filter-peptide-level" class="section level3" number="2.1.6">
 <h3><span class="header-section-number">2.1.6</span> MS/MS ID Filter: Peptide Level</h3>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="prepare-msms-identifications-1.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1% FDR filter at the peptide level</span></span>
-<span id="cb44-2"><a href="prepare-msms-identifications-1.html#cb44-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">filter_msgf_data</span>(msnid, <span class="at">level =</span> <span class="st">&quot;peptide&quot;</span>, <span class="at">fdr.max =</span> <span class="fl">0.01</span>)</span>
-<span id="cb44-3"><a href="prepare-msms-identifications-1.html#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="prepare-msms-identifications-1.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1% FDR filter at the peptide level</span></span>
+<span id="cb46-2"><a href="prepare-msms-identifications-1.html#cb46-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">filter_msgf_data</span>(msnid, <span class="at">level =</span> <span class="st">&quot;peptide&quot;</span>, <span class="at">fdr.max =</span> <span class="fl">0.01</span>)</span>
+<span id="cb46-3"><a href="prepare-msms-identifications-1.html#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
 <pre><code>## MSnID object
 ## Working directory: &quot;.&quot;
 ## #Spectrum Files:  23 
-## #PSMs: 76103 at 0.49 % FDR
-## #peptides: 23378 at 1 % FDR
-## #accessions: 16090 at 4.7 % FDR</code></pre>
+## #PSMs: 77741 at 0.51 % FDR
+## #peptides: 23118 at 1 % FDR
+## #accessions: 15964 at 4.8 % FDR</code></pre>
 </div>
 <div id="msms-id-filter-protein-level-1" class="section level3" number="2.1.7">
 <h3><span class="header-section-number">2.1.7</span> MS/MS ID Filter: Protein Level</h3>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="prepare-msms-identifications-1.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get path to FASTA file</span></span>
-<span id="cb46-2"><a href="prepare-msms-identifications-1.html#cb46-2" aria-hidden="true" tabindex="-1"></a>path_to_FASTA <span class="ot">&lt;-</span> <span class="fu">path_to_FASTA_used_by_DMS</span>(data_package_num)</span>
-<span id="cb46-3"><a href="prepare-msms-identifications-1.html#cb46-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-4"><a href="prepare-msms-identifications-1.html#cb46-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute number of peptides per 1000 amino acids</span></span>
-<span id="cb46-5"><a href="prepare-msms-identifications-1.html#cb46-5" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">compute_num_peptides_per_1000aa</span>(msnid, path_to_FASTA)</span>
-<span id="cb46-6"><a href="prepare-msms-identifications-1.html#cb46-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-7"><a href="prepare-msms-identifications-1.html#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 1% FDR filter at the protein level</span></span>
-<span id="cb46-8"><a href="prepare-msms-identifications-1.html#cb46-8" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">filter_msgf_data</span>(msnid, <span class="at">level =</span> <span class="st">&quot;accession&quot;</span>, <span class="at">fdr.max =</span> <span class="fl">0.01</span>)</span>
-<span id="cb46-9"><a href="prepare-msms-identifications-1.html#cb46-9" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="prepare-msms-identifications-1.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get path to FASTA file</span></span>
+<span id="cb48-2"><a href="prepare-msms-identifications-1.html#cb48-2" aria-hidden="true" tabindex="-1"></a>path_to_FASTA <span class="ot">&lt;-</span> <span class="fu">path_to_FASTA_used_by_DMS</span>(data_package_num)</span>
+<span id="cb48-3"><a href="prepare-msms-identifications-1.html#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="prepare-msms-identifications-1.html#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute number of peptides per 1000 amino acids</span></span>
+<span id="cb48-5"><a href="prepare-msms-identifications-1.html#cb48-5" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">compute_num_peptides_per_1000aa</span>(msnid, path_to_FASTA)</span>
+<span id="cb48-6"><a href="prepare-msms-identifications-1.html#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="prepare-msms-identifications-1.html#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 1% FDR filter at the protein level</span></span>
+<span id="cb48-8"><a href="prepare-msms-identifications-1.html#cb48-8" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">filter_msgf_data</span>(msnid, <span class="at">level =</span> <span class="st">&quot;accession&quot;</span>, <span class="at">fdr.max =</span> <span class="fl">0.01</span>)</span>
+<span id="cb48-9"><a href="prepare-msms-identifications-1.html#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
 <pre><code>## MSnID object
 ## Working directory: &quot;.&quot;
 ## #Spectrum Files:  23 
-## #PSMs: 72481 at 0.12 % FDR
-## #peptides: 21266 at 0.26 % FDR
-## #accessions: 9424 at 0.98 % FDR</code></pre>
+## #PSMs: 74590 at 0.13 % FDR
+## #peptides: 21300 at 0.28 % FDR
+## #accessions: 9887 at 0.98 % FDR</code></pre>
 </div>
 <div id="inference-of-parsimonious-protein-set-1" class="section level3" number="2.1.8">
 <h3><span class="header-section-number">2.1.8</span> Inference of Parsimonious Protein Set</h3>
 <p>If a protein was detected in the global proteomics results, we may be more confident that it will appear in the PTM results. We can perform prioritized inference of the protein set to ensure that, if a protein is reported in the global cross-tab, and it is present in the PTM MSnID after filtering, it will be included in the final PTM MSnID. We set the proteins from the global cross-tab as the prior.</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="prepare-msms-identifications-1.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Proteins from global proteomics cross-tab</span></span>
-<span id="cb48-2"><a href="prepare-msms-identifications-1.html#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/3442_global_proteins.RData&quot;</span>)</span>
-<span id="cb48-3"><a href="prepare-msms-identifications-1.html#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-4"><a href="prepare-msms-identifications-1.html#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Prioritized inference of parsimonious protein set</span></span>
-<span id="cb48-5"><a href="prepare-msms-identifications-1.html#cb48-5" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">infer_parsimonious_accessions</span>(msnid, <span class="at">unique_only =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb48-6"><a href="prepare-msms-identifications-1.html#cb48-6" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">prior =</span> global_proteins)</span>
-<span id="cb48-7"><a href="prepare-msms-identifications-1.html#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="prepare-msms-identifications-1.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Proteins from global proteomics cross-tab</span></span>
+<span id="cb50-2"><a href="prepare-msms-identifications-1.html#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/3442_global_proteins.RData&quot;</span>)</span>
+<span id="cb50-3"><a href="prepare-msms-identifications-1.html#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="prepare-msms-identifications-1.html#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Prioritized inference of parsimonious protein set</span></span>
+<span id="cb50-5"><a href="prepare-msms-identifications-1.html#cb50-5" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">infer_parsimonious_accessions</span>(msnid, <span class="at">unique_only =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb50-6"><a href="prepare-msms-identifications-1.html#cb50-6" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">prior =</span> global_proteins)</span>
+<span id="cb50-7"><a href="prepare-msms-identifications-1.html#cb50-7" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
 <pre><code>## MSnID object
 ## Working directory: &quot;.&quot;
 ## #Spectrum Files:  23 
-## #PSMs: 72481 at 0.12 % FDR
-## #peptides: 21266 at 0.26 % FDR
-## #accessions: 2895 at 1.6 % FDR</code></pre>
+## #PSMs: 74590 at 0.13 % FDR
+## #peptides: 21300 at 0.28 % FDR
+## #accessions: 3021 at 1.6 % FDR</code></pre>
+<p>Figure <a href="prepare-msms-identifications-1.html#fig:prior-inference">2.1</a> shows the steps used to perform prioritized inference. If <code>unique_only = TRUE</code>, any prior will be ignored. See Figure <a href="prepare-msms-identifications.html#fig:parsimony">1.7</a> for parsimonious inference without a prior.</p>
+<div class="figure" style="text-align: center"><span id="fig:prior-inference"></span>
+<img src="images/prioritized-inference.PNG" alt="Visual explanation of prioritized inference." width="75%" />
+<p class="caption">
+Figure 2.1: Visual explanation of prioritized inference.
+</p>
+</div>
+<p></br></p>
 </div>
 <div id="map-mod-sites" class="section level3" number="2.1.9">
 <h3><span class="header-section-number">2.1.9</span> Map Sites to Protein Sequences</h3>
-<p><code>MSnID::map_mod_sites</code> creates a number of columns describing mapping of the modification sites onto the protein sequences. The most important for the user is <code>SiteID</code>. <code>names(fst)</code> must match <code>accessions(msnid)</code>; usually, we will have to modify names to select everything before the first space.</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="prepare-msms-identifications-1.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create AAStringSet</span></span>
-<span id="cb50-2"><a href="prepare-msms-identifications-1.html#cb50-2" aria-hidden="true" tabindex="-1"></a>fst <span class="ot">&lt;-</span> <span class="fu">readAAStringSet</span>(path_to_FASTA)</span>
-<span id="cb50-3"><a href="prepare-msms-identifications-1.html#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove contaminants</span></span>
-<span id="cb50-4"><a href="prepare-msms-identifications-1.html#cb50-4" aria-hidden="true" tabindex="-1"></a>fst <span class="ot">&lt;-</span> fst[<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">&quot;Contaminant&quot;</span>, <span class="fu">names</span>(fst)), ]</span>
-<span id="cb50-5"><a href="prepare-msms-identifications-1.html#cb50-5" aria-hidden="true" tabindex="-1"></a><span class="co"># First 6 names</span></span>
-<span id="cb50-6"><a href="prepare-msms-identifications-1.html#cb50-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">names</span>(fst))</span></code></pre></div>
+<p><code>MSnID::map_mod_sites</code> creates a number of columns describing mapping of the modification sites onto the protein sequences. The most important for the user is <code>SiteID</code>. <code>names(fst)</code> must match <code>accessions(msnid)</code>; usually, we will have to modify names to remove everything after the first word.</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="prepare-msms-identifications-1.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create AAStringSet</span></span>
+<span id="cb52-2"><a href="prepare-msms-identifications-1.html#cb52-2" aria-hidden="true" tabindex="-1"></a>fst <span class="ot">&lt;-</span> <span class="fu">readAAStringSet</span>(path_to_FASTA)</span>
+<span id="cb52-3"><a href="prepare-msms-identifications-1.html#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove contaminants</span></span>
+<span id="cb52-4"><a href="prepare-msms-identifications-1.html#cb52-4" aria-hidden="true" tabindex="-1"></a>fst <span class="ot">&lt;-</span> fst[<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">&quot;Contaminant&quot;</span>, <span class="fu">names</span>(fst)), ]</span>
+<span id="cb52-5"><a href="prepare-msms-identifications-1.html#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="co"># First 6 names</span></span>
+<span id="cb52-6"><a href="prepare-msms-identifications-1.html#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">names</span>(fst))</span></code></pre></div>
 <pre><code>## [1] &quot;NP_783171.2 cathepsin R precursor [Rattus norvegicus]&quot;                    
 ## [2] &quot;NP_001101862.2 zinc finger protein ZIC 2 [Rattus norvegicus]&quot;             
 ## [3] &quot;NP_113721.4 UDP-glucuronosyltransferase 2B2 precursor [Rattus norvegicus]&quot;
 ## [4] &quot;NP_714948.1 Ly-49 stimulatory receptor 3 [Rattus norvegicus]&quot;             
 ## [5] &quot;NP_001000704.1 olfactory receptor Olr931 [Rattus norvegicus]&quot;             
 ## [6] &quot;NP_001000638.1 olfactory receptor Olr652 [Rattus norvegicus]&quot;</code></pre>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="prepare-msms-identifications-1.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify names to match accessions(msnid)</span></span>
-<span id="cb52-2"><a href="prepare-msms-identifications-1.html#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(fst) <span class="ot">&lt;-</span> <span class="fu">gsub</span>(<span class="st">&quot; .*$&quot;</span>, <span class="st">&quot;&quot;</span>, <span class="fu">names</span>(fst))</span>
-<span id="cb52-3"><a href="prepare-msms-identifications-1.html#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="co"># First 6 names</span></span>
-<span id="cb52-4"><a href="prepare-msms-identifications-1.html#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">names</span>(fst))</span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="prepare-msms-identifications-1.html#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Modify names to match accessions(msnid)</span></span>
+<span id="cb54-2"><a href="prepare-msms-identifications-1.html#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove any space followed by any number of characters</span></span>
+<span id="cb54-3"><a href="prepare-msms-identifications-1.html#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(fst) <span class="ot">&lt;-</span> <span class="fu">sub</span>(<span class="st">&quot; .*$&quot;</span>, <span class="st">&quot;&quot;</span>, <span class="fu">names</span>(fst))</span>
+<span id="cb54-4"><a href="prepare-msms-identifications-1.html#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="co"># First 6 names</span></span>
+<span id="cb54-5"><a href="prepare-msms-identifications-1.html#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">names</span>(fst))</span></code></pre></div>
 <pre><code>## [1] &quot;NP_783171.2&quot;    &quot;NP_001101862.2&quot; &quot;NP_113721.4&quot;    &quot;NP_714948.1&quot;   
 ## [5] &quot;NP_001000704.1&quot; &quot;NP_001000638.1&quot;</code></pre>
-<p>The names are in the proper format, so we can continue with the main mapping call.</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="prepare-msms-identifications-1.html#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Main mapping call</span></span>
-<span id="cb54-2"><a href="prepare-msms-identifications-1.html#cb54-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">map_mod_sites</span>(<span class="at">object =</span> msnid, </span>
-<span id="cb54-3"><a href="prepare-msms-identifications-1.html#cb54-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">fasta =</span> fst, </span>
-<span id="cb54-4"><a href="prepare-msms-identifications-1.html#cb54-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">accession_col =</span> <span class="st">&quot;accession&quot;</span>, </span>
-<span id="cb54-5"><a href="prepare-msms-identifications-1.html#cb54-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">peptide_mod_col =</span> <span class="st">&quot;peptide&quot;</span>,</span>
-<span id="cb54-6"><a href="prepare-msms-identifications-1.html#cb54-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">mod_char =</span> <span class="st">&quot;*&quot;</span>, <span class="co"># modification character</span></span>
-<span id="cb54-7"><a href="prepare-msms-identifications-1.html#cb54-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">site_delimiter =</span> <span class="st">&quot;;&quot;</span>) <span class="co"># ; between multiple sites</span></span></code></pre></div>
+<p>The names are in the proper format, so we can continue with the main mapping call. This will also remove any unmodified peptides, if Section <a href="prepare-msms-identifications-1.html#remove-unmodified-peptides">2.1.3</a> was skipped.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="prepare-msms-identifications-1.html#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Main mapping call</span></span>
+<span id="cb56-2"><a href="prepare-msms-identifications-1.html#cb56-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">map_mod_sites</span>(<span class="at">object =</span> msnid, </span>
+<span id="cb56-3"><a href="prepare-msms-identifications-1.html#cb56-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">fasta =</span> fst, </span>
+<span id="cb56-4"><a href="prepare-msms-identifications-1.html#cb56-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">accession_col =</span> <span class="st">&quot;accession&quot;</span>, </span>
+<span id="cb56-5"><a href="prepare-msms-identifications-1.html#cb56-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">peptide_mod_col =</span> <span class="st">&quot;peptide&quot;</span>,</span>
+<span id="cb56-6"><a href="prepare-msms-identifications-1.html#cb56-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">mod_char =</span> <span class="st">&quot;*&quot;</span>, <span class="co"># asterisk for phosphorylation</span></span>
+<span id="cb56-7"><a href="prepare-msms-identifications-1.html#cb56-7" aria-hidden="true" tabindex="-1"></a>                       <span class="at">site_delimiter =</span> <span class="st">&quot;;&quot;</span>) <span class="co"># semicolon between multiple sites</span></span></code></pre></div>
 <p>Table <a href="prepare-msms-identifications-1.html#tab:phospho-msnid-table">2.1</a> shows the first 6 rows of the processed MS-GF+ output.</p>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:90%; ">
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
@@ -1015,6 +1032,146 @@ XP_006232986.1-T250
 MoTrPAC_Pilot_TMT_P_S2_07_3Nov17_Elm_AQ-17-10-03
 </td>
 <td style="text-align:right;">
+1793
+</td>
+<td style="text-align:right;">
+23803
+</td>
+<td style="text-align:left;">
+HCD
+</td>
+<td style="text-align:right;">
+349
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+952.472
+</td>
+<td style="text-align:right;">
+-0.015
+</td>
+<td style="text-align:right;">
+-5.362
+</td>
+<td style="text-align:right;">
+2854.412
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIAT*PGTEDSDDALLK.M
+</td>
+<td style="text-align:left;">
+XP_006232986.1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+146
+</td>
+<td style="text-align:right;">
+116
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+XP_006232986.1
+</td>
+<td style="text-align:right;">
+952.142
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+952.137
+</td>
+<td style="text-align:left;">
+FALSE
+</td>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S2_07_3Nov17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
+23803
+</td>
+<td style="text-align:left;">
+AAAASAAEAGIATPGTEDSDDALLK
+</td>
+<td style="text-align:left;">
+R.AAAASAAEAGIAT*PGTEDSDDALLK.M
+</td>
+<td style="text-align:right;">
+52.349
+</td>
+<td style="text-align:right;">
+Inf
+</td>
+<td style="text-align:right;">
+5.277
+</td>
+<td style="text-align:right;">
+5.305
+</td>
+<td style="text-align:left;">
+238
+</td>
+<td style="text-align:left;">
+262
+</td>
+<td style="text-align:right;">
+238
+</td>
+<td style="text-align:right;">
+262
+</td>
+<td style="text-align:right;">
+377
+</td>
+<td style="text-align:left;">
+12
+</td>
+<td style="text-align:left;">
+T
+</td>
+<td style="text-align:left;">
+250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+T250
+</td>
+<td style="text-align:left;">
+XP_006232986.1-T250
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+MoTrPAC_Pilot_TMT_P_S2_07_3Nov17_Elm_AQ-17-10-03
+</td>
+<td style="text-align:right;">
 2731
 </td>
 <td style="text-align:right;">
@@ -1290,146 +1447,6 @@ T253
 NP_112621.1-T253
 </td>
 </tr>
-<tr>
-<td style="text-align:left;">
-MoTrPAC_Pilot_TMT_P_S1_07_DIL_28Oct17_Elm_AQ-17-10-03
-</td>
-<td style="text-align:right;">
-6826
-</td>
-<td style="text-align:right;">
-21280
-</td>
-<td style="text-align:left;">
-HCD
-</td>
-<td style="text-align:right;">
-1251
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-1066.532
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
--0.095
-</td>
-<td style="text-align:right;">
-3196.577
-</td>
-<td style="text-align:left;">
-R.AAAASAAEAGIATPGT*EGERDSDDALLK.M
-</td>
-<td style="text-align:left;">
-NP_112621.1
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-200
-</td>
-<td style="text-align:right;">
-94
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:left;">
-NP_112621.1
-</td>
-<td style="text-align:right;">
-1066.197
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-1066.197
-</td>
-<td style="text-align:left;">
-FALSE
-</td>
-<td style="text-align:left;">
-MoTrPAC_Pilot_TMT_P_S1_07_DIL_28Oct17_Elm_AQ-17-10-03
-</td>
-<td style="text-align:right;">
-21280
-</td>
-<td style="text-align:left;">
-AAAASAAEAGIATPGTEGERDSDDALLK
-</td>
-<td style="text-align:left;">
-R.AAAASAAEAGIATPGT*EGERDSDDALLK.M
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-Inf
-</td>
-<td style="text-align:right;">
-0.043
-</td>
-<td style="text-align:right;">
-10.526
-</td>
-<td style="text-align:left;">
-238
-</td>
-<td style="text-align:left;">
-265
-</td>
-<td style="text-align:right;">
-238
-</td>
-<td style="text-align:right;">
-265
-</td>
-<td style="text-align:right;">
-380
-</td>
-<td style="text-align:left;">
-15
-</td>
-<td style="text-align:left;">
-T
-</td>
-<td style="text-align:left;">
-253
-</td>
-<td style="text-align:left;">
-T253
-</td>
-<td style="text-align:left;">
-T253
-</td>
-<td style="text-align:left;">
-T253
-</td>
-<td style="text-align:left;">
-NP_112621.1-T253
-</td>
-</tr>
 </tbody>
 </table>
 </div>
@@ -1437,15 +1454,21 @@ NP_112621.1-T253
 </div>
 <div id="remove-decoy-psms-1" class="section level3" number="2.1.10">
 <h3><span class="header-section-number">2.1.10</span> Remove Decoy PSMs</h3>
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="prepare-msms-identifications-1.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove Decoy PSMs</span></span>
-<span id="cb55-2"><a href="prepare-msms-identifications-1.html#cb55-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">apply_filter</span>(msnid, <span class="st">&quot;!isDecoy&quot;</span>)</span>
-<span id="cb55-3"><a href="prepare-msms-identifications-1.html#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="prepare-msms-identifications-1.html#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove Decoy PSMs</span></span>
+<span id="cb57-2"><a href="prepare-msms-identifications-1.html#cb57-2" aria-hidden="true" tabindex="-1"></a>msnid <span class="ot">&lt;-</span> <span class="fu">apply_filter</span>(msnid, <span class="st">&quot;!isDecoy&quot;</span>)</span>
+<span id="cb57-3"><a href="prepare-msms-identifications-1.html#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">show</span>(msnid)</span></code></pre></div>
 <pre><code>## MSnID object
 ## Working directory: &quot;.&quot;
 ## #Spectrum Files:  23 
-## #PSMs: 72391 at 0 % FDR
-## #peptides: 21211 at 0 % FDR
-## #accessions: 2849 at 0 % FDR</code></pre>
+## #PSMs: 74490 at 0 % FDR
+## #peptides: 21240 at 0 % FDR
+## #accessions: 2972 at 0 % FDR</code></pre>
+</div>
+</div>
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-beausoleil_probability-based_2006" class="csl-entry">
+Beausoleil, S. A., Villén, J., Gerber, S. A., Rush, J. and Gygi, S. P., A Probability-Based Approach for High-Throughput Protein Phosphorylation Analysis and Site Localization, <em>Nature Biotechnology</em>, vol. <strong>24</strong>, no. 10, pp. 1285–92, accessed February 12, 2022, from <a href="https://www.nature.com/articles/nbt1240">https://www.nature.com/articles/nbt1240</a>, October 2006. DOI: <a href="https://doi.org/10.1038/nbt1240">10.1038/nbt1240</a>
 </div>
 </div>
             </section>
@@ -1478,7 +1501,7 @@ gitbook.start({
 "instapaper": false,
 "vk": false,
 "whatsapp": false,
-"all": false
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",

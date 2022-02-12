@@ -1,19 +1,17 @@
 # Exploratory Data Analysis
 
-Exploratory Data Analysis (EDA) is an important step before any sort of statistical analyses. The goal of EDA is to get a big picture view of the data and identify potential outlier samples and batch effects that need to be corrected. For this section, we need to load the MSnSet.utils, dplyr, and car packages. MSnSet.utils contains the `cptac_oca` data that we will use to illustrate these EDA approaches, as well as the `plot_pca` function for creating PCA plots of samples. The dplyr package is used for data frame manipulation, though it is only used for the pipe operator (`%>%`) in this section. The car package is used to create density plots with the `plotDensity` function, though similar plots can be made by combining `stats::density` with `base::plot`.
+Exploratory Data Analysis (EDA) is an important step before any sort of statistical analyses. The goal of EDA is to get a big picture view of the data and identify potential outlier samples and batch effects that need to be corrected. For this section, we need the MSnSet.utils package, which contains the `cptac_oca` data that we will use to illustrate these EDA approaches, as well as the `plot_pca` function for creating PCA plots of samples.
 
 
 
 
 ```r
-## Uncomment to install missing packages
-# install.packages("remotes")
-# remotes::install_github("PNNL-Comp-Mass-Spec/MSnSet.utils")
-# install.packages("dplyr")
-# install.packages("car")
+## Install missing packages
+if (!require("remotes", quietly = T)) install.packages("remotes")
+if (!require("MSnSet.utils", quietly = T))
+  remotes::install_github("PNNL-Comp-Mass-Spec/MSnSet.utils")
+## ------------------------
 library(MSnSet.utils)
-library(dplyr)
-library(car)
 
 # Load the example MSnSet
 data(cptac_oca)
@@ -65,19 +63,29 @@ plot(oca.set$num_proteins, pch = 19, xlab = "Sample Index",
 
 While harder to interpret at a glance than a boxplot, scatterplots are useful for identifying potential outliers and possible trends in the data. In the plot above, it doesn't appear than there are any samples with significantly fewer identifications. 
 
-The other plot type we could use balances the summary of the boxplot with the finer detail of the scatterplot: density plots. We will pipe the vector of protein counts to two arguments of the `densityPlot` function from the car package with the `.` placeholder.
+The other plot type we could use balances the summary of the boxplot with the finer detail of the scatterplot: kernel density plots. We can use a combination of `stats::density` and `base::plot` to quickly create a density plot.
 
 
 ```r
-# Density plot - pipe the vector to multiple arguments with .
-oca.set$num_proteins %>% 
-  densityPlot(x = ., xlim = range(.), main = "Density Plot", 
-              xlab = "Number of Proteins Detected")
+# Kernel density plot
+plot(density(oca.set$num_proteins, na.rm = TRUE), 
+     xlim = range(oca.set$num_proteins, na.rm = TRUE),
+     main = "Density Plot", xlab = "Number of Proteins Detected")
 ```
 
 <img src="EDA_files/figure-html/num-prot-density-1.png" width="75%" style="display: block; margin: auto;" />
 
-It looks like there are peaks around 6900-7000 and 7300-7500 proteins. The rug plot (one-dimensional scatterplot) at the bottom of the density estimate shows the counts, so this particular density plot presents much of the same information as the scatterplot.
+It looks like there are peaks around 6900-7000 and 7300-7500 proteins.
+
+
+## Sample Boxplots
+
+
+```r
+boxplot(exprs(oca.set))
+```
+
+<img src="EDA_files/figure-html/unnamed-chunk-1-1.png" width="75%" style="display: block; margin: auto;" />
 
 
 ## Estimate Blood Contamination
@@ -87,18 +95,18 @@ Strong contamination of samples with blood may lead to the inability to identify
 We will need to search for the blood protein identifiers that match the protein identifiers in the MSnSet. Since we are using the `cptac_oca` data for these examples, we will need to know the NCBI RefSeq protein IDs for the following blood proteins: hemoglobin, fibrinogen, albumin, and spectrin. Unfortunately, this means manually searching for these identifiers, which are provided in the list below.
 
 * hemoglobin 
-  +  subunit alpha 1: NP_000549.1
-  +  subunit alpha 2: NP_000508.1
-  +  subunit beta: NP_000509.1
-  +  subunit gamma-1: NP_000550.2
-  +  subunit gamma-2: NP_000175.1
++  subunit alpha 1: NP_000549.1
++  subunit alpha 2: NP_000508.1
++  subunit beta: NP_000509.1
++  subunit gamma-1: NP_000550.2
++  subunit gamma-2: NP_000175.1
 * albumin: NP_000468.1
 * fibrinogen
-  +  alpha chain isoform alpha precursor: NP_068657.1
-  +  alpha chain isoform alpha-E preprotein: NP_000499.1
++  alpha chain isoform alpha precursor: NP_068657.1
++  alpha chain isoform alpha-E preprotein: NP_000499.1
 * spectrin
-  +  alpha chain, erythrocytic 1: NP_003117.2
-  +  beta chain, erythrocytic 1: NP_001342365.1
++  alpha chain, erythrocytic 1: NP_003117.2
++  beta chain, erythrocytic 1: NP_001342365.1
 
 We need to create a vector of these blood protein IDs. We will use this to check if each feature is a blood protein. Doing so will create a logical vector that we can use to subset the data to the abundance values of those matches. With the subset data, we can then calculate the column (sample) averages with `colMeans` to get a single vector that estimates the average blood contamination of each sample.
 
@@ -111,47 +119,21 @@ blood_prot <- c("NP_000549.1", "NP_000508.1", "NP_000509.1", "NP_000550.2",
 
 # Select entries that match one of the blood proteins
 idx <- featureNames(oca.set) %in% blood_prot # indexing matches
-blood_contam <- colMeans(exprs(oca.set)[idx, ], na.rm = TRUE)
+blood_contam <- colMeans(exprs(oca.set)[idx, ], na.rm = TRUE) # sample means
 ```
 
-We can visualize the blood contamination with any of the previously shown methods for visualizing number of protein identifications. We will use a density plot.
+We can visualize the blood contamination with any of the previously shown methods for visualizing the number of protein identifications. We will use a density plot.
 
 
 ```r
-# Pipe vector to densityPlot
-blood_contam %>% 
-  densityPlot(x = ., xlim = range(.), main = "Blood Contamination",
-              xlab = "Average Protein Abundance")
+# Kernel density plot
+plot(density(blood_contam, na.rm = TRUE), 
+     xlim = range(blood_contam, na.rm = TRUE),
+     main = "Blood Contamination", xlab = "Average Protein Abundance")
 ```
 
-<img src="EDA_files/figure-html/unnamed-chunk-2-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="EDA_files/figure-html/unnamed-chunk-3-1.png" width="75%" style="display: block; margin: auto;" />
 
-
-
-<!---
-## Estimate Blood Contamination
-
-
-TODO:
-* What are the major blood proteins?
-
-* Hemoglobin alpha, beta, delta, gamma 1; fibrinogen alpha, beta, gamma; albumin, spectrin, 
-
-Sometimes, it may be of interest to check for blood contamination.
-
-
-```r
-# NOTE: eval set to FALSE
-blood_proteins <- c("HBA_HUMAN HBB_HUMAN HBD_HUMAN HBG1_HUMAN FIBA_HUMAN
-FIBB_HUMAN FIBG_HUMAN SPTB1_HUMAN THRB_HUMAN ALBU_HUMAN A1AG1_HUMAN A1AG2_HUMAN CAH1_HUMAN GLPA_HUMAN GLPB_HUMAN GLPC_HUMAN") %>% 
-gsub("\\s|\\n", "\\|", .)
-
-m1$blood_contamination <-
-apply(exprs(m1)[grepl(blood_proteins, featureNames(m1)), ],
-2, mean, na.rm = TRUE)
-```
-
---->
 
 ## PCA
 

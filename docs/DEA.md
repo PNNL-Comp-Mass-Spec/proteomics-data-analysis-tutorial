@@ -1,43 +1,32 @@
-# Differential Expression Analysis {#DEA}
-
-<!---
-TODO:
-* Add more information about LIMMA.
-* Add section on UpSet plots
---->
+# Differential Analysis {#DEA}
 
 In this section, we will use wrappers around functions from the <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a> package to fit linear models (linear regression, t-test, and ANOVA) to proteomics data. While LIMMA was originally intended for use with microarray data, it is useful for other data types. When working with LIMMA, the <a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/limma/inst/doc/usersguide.pdf">LIMMA User's Guide</a> is an invaluable resource.
 
-<!---
-, though it is not a required reading unless you intend to modify the wrapper functions in <a href="https://github.com/PNNL-Comp-Mass-Spec/MSnSet.utils">MSnSet.utils</a>; the `limma_*` functions will handle all the usual steps required to go from an MSnSet to a results table. Users should understand enough such that these wrappers are not black boxes, as that may result in incorrect usage and interpretation of results. When in doubt, read the function documentation, look at the code (`View(function_name)`), and/or ask for help.
---->
+LIMMA makes use of empirical Bayes techniques to borrow information across all features being tested to increase the degrees of freedom available for the test statistics. This results in so-called moderated test statistics and improved power to detect differential expression [@smyth_linear_2004].
 
-LIMMA makes use of empirical Bayes techniques to borrow information across all features being tested to increase the degrees of freedom available for the test statistics. This results in so-called "moderated" test statistics and improved ability to detect differential expression/abundance.
-
-We will use the CPTAC ovarian cancer proteomics dataset for this section. The required packages are MSnSet.utils for the LIMMA wrappers and volcano plots, dplyr for data frame manipulation, and ggplot2 for p-value histograms and to further customize the volcano plots. We load the `cptac_oca` data and copy `oca.set` to `m`, which will be used in the examples.
+We will use the CPTAC ovarian cancer proteomics dataset for this section. The required packages are MSnSet.utils for the LIMMA wrappers and volcano plots, dplyr for data frame manipulation, and ggplot2 for p-value histograms and to further customize the volcano plots. We load the `cptac_oca` data and assign `oca.set` to `m`, which will be used in the examples.
 
 
 
 
 ```r
-## Uncomment to install missing packages
-# install.packages("remotes")
-# remotes::install_github("PNNL-Comp-Mass-Spec/MSnSet.utils")
-# install.packages("dplyr")
-# install.packages("ggplot2")
+## Install missing packages
+cran_packages <- c("remotes", "dplyr", "ggplot2")
+for (pkg_i in cran_packages) {
+  if (!require(pkg_i, quietly = T, character.only = T))
+    install.packages(pkg_i)
+}
+if (!require("MSnSet.utils", quietly = T))
+  remotes::install_github("PNNL-Comp-Mass-Spec/MSnSet.utils")
+## ------------------------
 library(MSnSet.utils)
 library(dplyr)
 library(ggplot2)
 
-# MSnSet
+# MSnSet for testing
 data("cptac_oca")
 m <- oca.set
 ```
-
-
-## Multiple Comparisons {#mult-comp}
-
-By default, the LIMMA wrappers from MSnSet.utils adjust the p-values to account for multiple comparisons using the Benjamini-Hochberg (BH) procedure. This controls the false discovery rate (FDR), and the resulting adjusted p-values are called q-values. To understand q-values, suppose we test whether there is a difference between the means of two groups. We do this for a set of 10,000 features. Suppose that, of these 10,000 tests, 1050 results in q-values less than $\alpha = 0.05$ (a typical threshold for statistical significance). We would say that these 1050 most significant features have an estimated FDR of 0.05. That is, we expect that at most $0.05 \cdot 1050 \approx 53$ of these results are false positives (features that are wrongly classified as significantly different between groups).
 
 
 ## Linear Regression {#linear-reg}
@@ -73,14 +62,14 @@ The `logFC` column is the slope of the regression line, and the `AveExpr` column
 
 - `t` moderated t-statistic
 - `P.Value` p-value
-- `adj.P.Val` p-values adjusted with the Benjamini-Hocheberg procedure. Also called q-values.
+- `adj.P.Val` p-values adjusted with the Benjamini-Hocheberg procedure
 - `B` log-odds of differential expression
 
-Since the table was sorted by q-values, and the lowest q-value is ~ 0.6, none of the features have a significant linear relationship with AGE (after adjustment for multiple comparisons).
+Since the table was sorted by adjusted p-value, and the lowest adjusted p-value is ~0.6, none of the features have a significant linear relationship with AGE (after adjustment for multiple comparisons).
 
 Below is a graphical representation of the results for a specific feature. This is not a required plot; it is just to visually explain the results.
 
-<img src="DEA_files/figure-html/unnamed-chunk-2-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="DEA_files/figure-html/unnamed-chunk-2-1.png" width="80%" style="display: block; margin: auto;" />
 
 To adjust for the presence of one or more covariates, such as accounting for batch differences, we modify the `model.str` argument. For this example, we will include Batch as a covariate. We add it *after* the variable being tested.
 
@@ -110,7 +99,7 @@ head(arrange(lm_res_cov, adj.P.Val))
 
 When accounting for differences due to Batch, no features have a significant linear relationship with AGE. Again, we will show a graphical representation of the top feature.
 
-<img src="DEA_files/figure-html/unnamed-chunk-4-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="DEA_files/figure-html/unnamed-chunk-4-1.png" width="80%" style="display: block; margin: auto;" />
 
 ## Two-Sample t-tests {#t-tests}
 
@@ -150,14 +139,14 @@ The `logFC` column is the difference in means between the "RESISTANT" and "SENSI
 - `AveExpr` overall mean (same as `rowMeans(exprs(m), na.rm = TRUE)`)
 - `t` moderated t-statistic
 - `P.Value` p-values
-- `adj.P.Val` BH-adjusted p-values (q-values)
+- `adj.P.Val` BH-adjusted p-values
 - `B` log-odds of differential expression/abundance
 
 Below is a graphical representation of the results for a specific feature. This is not a required step. It is just to visually explain the results.
 
-<img src="DEA_files/figure-html/t-lm-plot-1-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="DEA_files/figure-html/t-lm-plot-1-1.png" width="80%" style="display: block; margin: auto;" />
 
-The next step would be to check the p-value histograms. If those look fine, we can tally the number of q-values that have an FDR of 0.05.
+The next step would be to check the p-value histograms. If those look fine, we can tally the number of significant features.
 
 
 ```r
@@ -207,29 +196,29 @@ head(arrange(t_res2, adj.P.Val)) # top 6 rows sorted by adjusted p-value
 ```
 
 ```
-##           feature                     contrast         RefSeq      logFC
-## 1:    NP_000388.2 Proliferative-Immunoreactive    NP_000388.2 -1.2232098
-## 2:    NP_001944.1 Proliferative-Immunoreactive    NP_001944.1 -1.3465807
-## 3:    NP_112092.1 Proliferative-Immunoreactive    NP_112092.1 -1.0268282
-## 4:    NP_002323.2   Mesenchymal-Immunoreactive    NP_002323.2  0.6707465
-## 5: NP_001120963.1 Proliferative-Immunoreactive NP_001120963.1 -0.9267318
-## 6:    NP_009005.1 Proliferative-Immunoreactive    NP_009005.1 -1.0097220
-##          AveExpr         t      P.Value    adj.P.Val         B
-## 1: -3.421920e-18 -7.703025 4.549213e-11 1.105868e-06 14.750586
-## 2: -5.322987e-18 -6.637345 4.520647e-09 3.191542e-05 10.463800
-## 3: -9.315227e-18 -6.602133 5.251623e-09 3.191542e-05 10.323954
-## 4:  3.564500e-18  6.698537 3.482606e-09 3.191542e-05 10.602125
-## 5: -2.281280e-18 -6.358267 1.475334e-08 7.172780e-05  9.360149
-## 6: -1.273715e-17 -6.243353 2.392300e-08 8.017389e-05  8.909146
+##            RefSeq      logFC       AveExpr         t      P.Value    adj.P.Val
+## 1:    NP_000388.2 -1.2232098 -3.421920e-18 -7.703025 4.549213e-11 1.105868e-06
+## 2:    NP_001944.1 -1.3465807 -5.322987e-18 -6.637345 4.520647e-09 3.191542e-05
+## 3:    NP_112092.1 -1.0268282 -9.315227e-18 -6.602133 5.251623e-09 3.191542e-05
+## 4:    NP_002323.2  0.6707465  3.564500e-18  6.698537 3.482606e-09 3.191542e-05
+## 5: NP_001120963.1 -0.9267318 -2.281280e-18 -6.358267 1.475334e-08 7.172780e-05
+## 6:    NP_009005.1 -1.0097220 -1.273715e-17 -6.243353 2.392300e-08 8.017389e-05
+##            B        feature                     contrast
+## 1: 14.750586    NP_000388.2 Proliferative-Immunoreactive
+## 2: 10.463800    NP_001944.1 Proliferative-Immunoreactive
+## 3: 10.323954    NP_112092.1 Proliferative-Immunoreactive
+## 4: 10.602125    NP_002323.2   Mesenchymal-Immunoreactive
+## 5:  9.360149 NP_001120963.1 Proliferative-Immunoreactive
+## 6:  8.909146    NP_009005.1 Proliferative-Immunoreactive
 ```
 
 In addition to the columns from the output of `limma_a_b`, `limma_contrasts` creates a column for the contrasts and includes all columns from `fData`. It is important to note that p-values in the `adj.P.Val` column have been adjusted across all features and contrasts, so testing more contrasts results in fewer significant features. It is best to test only a small number of related contrasts.
 
 Below is a graphical representation of the results for a specific feature.
 
-<img src="DEA_files/figure-html/unnamed-chunk-9-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="DEA_files/figure-html/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" />
 
-The next step would be to check the p-value histograms. If those look fine, we can tally the number of q-values that pass the threshold for statistical significance.
+The next step would be to check the p-value histograms. If those look fine, we can tally the number of significant features.
 
 
 ```r
@@ -245,7 +234,7 @@ table(t_res2$contrast, t_res2$adj.P.Val < 0.05)
 ##   Proliferative-Immunoreactive   7848  255
 ```
 
-If we take the 51, 195, and 255 features with the lowest q-values from the "Differentiated-Immunoreactive", "Mesenchymal-Immunoreactive", and "Proliferative-Immunoreactive" comparisons, respectively, the overall estimated FDR is at most 0.05. That is, we expect ~25 out of those 501 to be false positives.
+If we take the 51, 195, and 255 features with the lowest adjusted p-values from the "Differentiated-Immunoreactive", "Mesenchymal-Immunoreactive", and "Proliferative-Immunoreactive" comparisons, respectively, the overall estimated FDR is at most 0.05. That is, we expect ~25 out of those 501 to be false positives.
 
 More features are significantly different between the "Proliferative" and "Immunoreactive" groups than in the other comparisons.
 
@@ -295,17 +284,17 @@ The row names are the features that were tested, and the first three columns are
 - `AveExpr` overall mean (same as `rowMeans(exprs(m), na.rm = TRUE)`)
 - `F` moderated F-statistic
 - `P.Value` p-value
-- `adj.P.Val` BH-adjusted p-value (q-value)
+- `adj.P.Val` BH-adjusted p-value
 
 Below is a graphical representation of the results for a specific feature. This is not a required step; it is just a visual explanation of the results.
 
-<img src="DEA_files/figure-html/unnamed-chunk-12-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="DEA_files/figure-html/unnamed-chunk-12-1.png" width="80%" style="display: block; margin: auto;" />
 
 <!---
 The next step would be to check the p-value histograms. If those look fine, we can tally the number of adjusted p-values that pass the threshold for statistical significance. We will use $\alpha = 0.05$ for the significance cutoff. Since we use the BH adjustment, we say that the FDR of the features that pass the significance threshold after adjustment is at most $alpha$. For example, if 100 features are considered significant at the 0.05 level after adjustment, we expect at most 5 of them to be false positives.
 --->
 
-The next step would be to check the p-value histograms. If those look fine, we can tally the number of q-values with an FDR of 0.05.
+The next step would be to check the p-value histograms. If those look fine, we can tally the number of significant features.
 
 
 ```r
@@ -318,7 +307,7 @@ table(anova_res$adj.P.Val < 0.05)
 ##  7049  1054
 ```
 
-1054 features have q-values less than 0.05. Since the expected FDR is 0.05, we estimate that at most ~53 of these are false positives.
+1054 features have adjusted p-values less than 0.05. Since the expected FDR is 0.05, we estimate that at most ~53 of these are false positives.
 
 ## p-value Histograms
 
@@ -338,7 +327,7 @@ hist(t_res1$P.Value,
      xlab = "p-value")
 ```
 
-<img src="DEA_files/figure-html/p-val-hist-1-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="DEA_files/figure-html/p-val-hist-1-1.png" width="80%" style="display: block; margin: auto;" />
 
 The histogram is uniform, which means it is unlikely that any features will be significantly different between any two PLATINUM.STATUS groups after adjustment for multiple comparisons. Indeed, when we check with `sum(t_res1$adj.P.Val < 0.05)`, none of the features pass the significance threshold after BH adjustment.
 
@@ -350,7 +339,7 @@ hist(anova_res$P.Value,
      xlab = "p-value")
 ```
 
-<img src="DEA_files/figure-html/p-val-hist-2-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="DEA_files/figure-html/p-val-hist-2-1.png" width="80%" style="display: block; margin: auto;" />
 
 There is a peak around 0 that indicates the null hypothesis is false for some of the tests. If plotting results from `limma_contrasts`, it is better to use the ggplot2 package to create separate histograms for each contrast.
 
@@ -358,22 +347,22 @@ There is a peak around 0 that indicates the null hypothesis is false for some of
 ```r
 # Histogram faceted by contrast
 ggplot(t_res2) +
-        geom_histogram(aes(x = P.Value), breaks = seq(0, 1, 0.05),
-                       color = "black", fill = "grey") +
-        # Remove space between x-axis and min(y)
-        scale_y_continuous(expand = expansion(c(0, 0.05))) +
-        facet_wrap(vars(contrast)) + # separate plots
-        theme_bw(base_size = 12)
+  geom_histogram(aes(x = P.Value), breaks = seq(0, 1, 0.05),
+                 color = "black", fill = "grey") +
+  # Remove space between x-axis and min(y)
+  scale_y_continuous(expand = expansion(c(0, 0.05))) +
+  facet_wrap(vars(contrast)) + # separate plots
+  theme_bw(base_size = 12)
 ```
 
-<img src="DEA_files/figure-html/unnamed-chunk-14-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="DEA_files/figure-html/unnamed-chunk-14-1.png" width="80%" style="display: block; margin: auto;" />
 
 Based on the p-values, it appears that there are more features that are significantly different between the "Proliferative" vs. "Immunoreactive" comparison than the other two comparisons. The counts were shown at the end of Section \@ref(t-mult).
 
 
 ## Volcano Plots {#volcano-plots}
 
-Volcano plots are used to summarize the results of differential analysis. They are scatter plots that show log$_2$ fold-change vs statistical significance (p-values or q-values). The `plot_volcano` function in the MSnSet.utils package is used to create volcano plots. For ANOVA results, volcano plots will not be useful, since the p-values are based on two or more contrasts; the volcano plots would not display the characteristic "V" shape.
+Volcano plots are used to summarize the results of differential analysis. They are scatter plots that show log$_2$ fold-change vs statistical significance. The `plot_volcano` function in the MSnSet.utils package is used to create volcano plots. For ANOVA results, volcano plots will not be useful, since the p-values are based on two or more contrasts; the volcano plots would not display the characteristic "V" shape.
 
 ### Base plot
 
@@ -385,7 +374,7 @@ plot_volcano(df = t_res1, logFC = "logFC",
              pvals = "P.Value", sig_threshold = 0.05)
 ```
 
-<img src="DEA_files/figure-html/unnamed-chunk-15-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="DEA_files/figure-html/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" />
 
 ### Label top features
 
@@ -402,7 +391,7 @@ plot_volcano(df = t_res1, logFC = "logFC",
              label = "RefSeq") # label by RefSeq - top 8
 ```
 
-<img src="DEA_files/figure-html/unnamed-chunk-16-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="DEA_files/figure-html/unnamed-chunk-16-1.png" width="80%" style="display: block; margin: auto;" />
 
 
 ### Label specific features
@@ -424,7 +413,7 @@ plot_volcano(df = t_res1, logFC = "logFC",
              label = "custom_labels", num_features = nrow(t_res1))
 ```
 
-<img src="DEA_files/figure-html/unnamed-chunk-17-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="DEA_files/figure-html/unnamed-chunk-17-1.png" width="80%" style="display: block; margin: auto;" />
 
 ### Modify point colors
 
@@ -435,11 +424,11 @@ We will change the color of points to reflect their significance and the sign of
 # Determine point colors based on significance and sign of the logFC
 # We would normally use adj.P.Value instead of P.Value
 t_res1 <- t_res1 %>% 
-        mutate(point_color = case_when(
-                P.Value < 0.05 & logFC < 0 ~ "down", # significantly down
-                P.Value < 0.05 & logFC > 0 ~ "up", # significantly up
-                TRUE ~ "NS") # not significant
-        )
+  mutate(point_color = case_when(
+    P.Value < 0.05 & logFC < 0 ~ "down", # significantly down
+    P.Value < 0.05 & logFC > 0 ~ "up", # significantly up
+    TRUE ~ "NS") # not significant
+  )
 
 # Color points
 v1 <- plot_volcano(df = t_res1, logFC = "logFC", 
@@ -449,7 +438,7 @@ v1 <- plot_volcano(df = t_res1, logFC = "logFC",
 v1
 ```
 
-<img src="DEA_files/figure-html/unnamed-chunk-18-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="DEA_files/figure-html/unnamed-chunk-18-1.png" width="80%" style="display: block; margin: auto;" />
 
 We will change the default colors to be more informative. Points in the "down" group will be #5555ff (blue), points in the "up" group will be red3, and points in the "NS" group will be lightgrey. We will also remove the legend, since it doesn't add much information.
 
@@ -458,10 +447,10 @@ We will change the default colors to be more informative. Points in the "down" g
 # Change colors
 v1 + scale_color_manual(values = c("#5555ff", "red3", "lightgrey"), 
                         breaks = c("down", "up", "NS")) +
-        theme(legend.position = "none") # do not show legend
+  theme(legend.position = "none") # do not show legend
 ```
 
-<img src="DEA_files/figure-html/unnamed-chunk-19-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="DEA_files/figure-html/unnamed-chunk-19-1.png" width="80%" style="display: block; margin: auto;" />
 
 ### Multiple volcano plots
 
@@ -472,16 +461,34 @@ For results generated by `limma_contrasts`, we should make separate plots for ea
 # Basic volcano plot
 plot_volcano(df = t_res2, logFC = "logFC", pvals = "adj.P.Val", 
              sig_threshold = 0.05) + 
-        facet_wrap(vars(contrast)) + # plot for each contrast
-        labs(title = "Volcano Plots of limma_contrasts Results")
+  facet_wrap(vars(contrast)) + # plot for each contrast
+  labs(title = "Volcano Plots of limma_contrasts Results")
 ```
 
-<img src="DEA_files/figure-html/volcano-plot-contrasts-1.png" width="75%" style="display: block; margin: auto;" />
+<img src="DEA_files/figure-html/volcano-plot-contrasts-1.png" width="80%" style="display: block; margin: auto;" />
 
 <!---
 ## UpSet Plots
 
 "An UpSet plot is an alternative to a Venn Diagram" (R graph gallery).
 --->
+
+## UpSet Plots
+
+An UpSet plot is an alternative to a Venn diagram. It is not limited to visualizing differential analysis results, though I have found this to be a common use case. Another is to compare the protein identifications between groups of samples.
+
+
+```r
+# Filter to significant features
+temp <- filter(t_res2, adj.P.Val < 0.05)
+# List of significant features by contrast
+input_list <- split(temp$RefSeq, temp$contrast)
+# UpSet plot
+plot_upset(input_list)
+```
+
+<img src="DEA_files/figure-html/unnamed-chunk-20-1.png" width="90%" style="display: block; margin: auto;" />
+
+216 proteins are only significant in the "Proliferative-Immunoreactive" comparison, 191 are only significant in the "Mesenchymal-Immunoreactive" comparison, 35 are significant in both the "Differentiated-Immunoreactive" and "Proliferative-Immunoreactive" comparisons, etc.
 
 

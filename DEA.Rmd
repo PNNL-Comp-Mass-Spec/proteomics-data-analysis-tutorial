@@ -1,46 +1,36 @@
-# Differential Expression Analysis {#DEA}
-
-<!---
-TODO:
-* Add more information about LIMMA.
-* Add section on UpSet plots
---->
+# Differential Analysis {#DEA}
 
 In this section, we will use wrappers around functions from the <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a> package to fit linear models (linear regression, t-test, and ANOVA) to proteomics data. While LIMMA was originally intended for use with microarray data, it is useful for other data types. When working with LIMMA, the <a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/limma/inst/doc/usersguide.pdf">LIMMA User's Guide</a> is an invaluable resource.
 
-<!---
-, though it is not a required reading unless you intend to modify the wrapper functions in <a href="https://github.com/PNNL-Comp-Mass-Spec/MSnSet.utils">MSnSet.utils</a>; the `limma_*` functions will handle all the usual steps required to go from an MSnSet to a results table. Users should understand enough such that these wrappers are not black boxes, as that may result in incorrect usage and interpretation of results. When in doubt, read the function documentation, look at the code (`View(function_name)`), and/or ask for help.
---->
+LIMMA makes use of empirical Bayes techniques to borrow information across all features being tested to increase the degrees of freedom available for the test statistics. This results in so-called moderated test statistics and improved power to detect differential expression [@smyth_linear_2004].
 
-LIMMA makes use of empirical Bayes techniques to borrow information across all features being tested to increase the degrees of freedom available for the test statistics. This results in so-called "moderated" test statistics and improved ability to detect differential expression/abundance.
-
-We will use the CPTAC ovarian cancer proteomics dataset for this section. The required packages are MSnSet.utils for the LIMMA wrappers and volcano plots, dplyr for data frame manipulation, and ggplot2 for p-value histograms and to further customize the volcano plots. We load the `cptac_oca` data and copy `oca.set` to `m`, which will be used in the examples.
+We will use the CPTAC ovarian cancer proteomics dataset for this section. The required packages are MSnSet.utils for the LIMMA wrappers and volcano plots, dplyr for data frame manipulation, and ggplot2 for p-value histograms and to further customize the volcano plots. We load the `cptac_oca` data and assign `oca.set` to `m`, which will be used in the examples.
 
 ```{r lm-chunk-opts, include=FALSE}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, 
-                      fig.align='center', out.width='75%', fig.asp=0.65)
+                      fig.align='center', out.width='80%', 
+                      fig.asp=0.65)
 library(ggplot2); theme_set(theme_bw(base_size = 12))
 ```
 
 ```{r DEA_setup, warning=FALSE, message=FALSE}
-## Uncomment to install missing packages
-# install.packages("remotes")
-# remotes::install_github("PNNL-Comp-Mass-Spec/MSnSet.utils")
-# install.packages("dplyr")
-# install.packages("ggplot2")
+## Install missing packages
+cran_packages <- c("remotes", "dplyr", "ggplot2")
+for (pkg_i in cran_packages) {
+  if (!require(pkg_i, quietly = T, character.only = T))
+    install.packages(pkg_i)
+}
+if (!require("MSnSet.utils", quietly = T))
+  remotes::install_github("PNNL-Comp-Mass-Spec/MSnSet.utils")
+## ------------------------
 library(MSnSet.utils)
 library(dplyr)
 library(ggplot2)
 
-# MSnSet
+# MSnSet for testing
 data("cptac_oca")
 m <- oca.set
 ```
-
-
-## Multiple Comparisons {#mult-comp}
-
-By default, the LIMMA wrappers from MSnSet.utils adjust the p-values to account for multiple comparisons using the Benjamini-Hochberg (BH) procedure. This controls the false discovery rate (FDR), and the resulting adjusted p-values are called q-values. To understand q-values, suppose we test whether there is a difference between the means of two groups. We do this for a set of 10,000 features. Suppose that, of these 10,000 tests, 1050 results in q-values less than $\alpha = 0.05$ (a typical threshold for statistical significance). We would say that these 1050 most significant features have an estimated FDR of 0.05. That is, we expect that at most $0.05 \cdot 1050 \approx 53$ of these results are false positives (features that are wrongly classified as significantly different between groups).
 
 
 ## Linear Regression {#linear-reg}
@@ -58,10 +48,10 @@ The `logFC` column is the slope of the regression line, and the `AveExpr` column
 
 - `t` moderated t-statistic
 - `P.Value` p-value
-- `adj.P.Val` p-values adjusted with the Benjamini-Hocheberg procedure. Also called q-values.
+- `adj.P.Val` p-values adjusted with the Benjamini-Hocheberg procedure
 - `B` log-odds of differential expression
 
-Since the table was sorted by q-values, and the lowest q-value is ~ 0.6, none of the features have a significant linear relationship with AGE (after adjustment for multiple comparisons).
+Since the table was sorted by adjusted p-value, and the lowest adjusted p-value is ~0.6, none of the features have a significant linear relationship with AGE (after adjustment for multiple comparisons).
 
 Below is a graphical representation of the results for a specific feature. This is not a required plot; it is just to visually explain the results.
 
@@ -79,17 +69,17 @@ subtitle <- sprintf("logFC (slope) = %g, AveExpr (overall mean) = %g",
 
 data.frame(exprs = exprs(m)[feature, ],
            AGE = m$AGE) %>% 
-        ggplot(aes(x = AGE, y = exprs)) +
-        geom_point(na.rm = TRUE, size = 3) +
-        geom_abline(slope = slope, intercept = intercept, 
-                    color = "#3366ff", lty = "dashed", size = 1) +
-        scale_x_continuous(limits = c(35, 80),
-                           expand = expansion(0)) +
-        labs(x = "Age (years)",
-             y = "Value in exprs(m)",
-             title = feature,
-             subtitle = subtitle) +
-        theme_bw(base_size = 12)
+  ggplot(aes(x = AGE, y = exprs)) +
+  geom_point(na.rm = TRUE, size = 3) +
+  geom_abline(slope = slope, intercept = intercept, 
+              color = "#3366ff", lty = "dashed", size = 1) +
+  scale_x_continuous(limits = c(35, 80),
+                     expand = expansion(0)) +
+  labs(x = "Age (years)",
+       y = "Value in exprs(m)",
+       title = feature,
+       subtitle = subtitle) +
+  theme_bw(base_size = 12)
 ```
 
 To adjust for the presence of one or more covariates, such as accounting for batch differences, we modify the `model.str` argument. For this example, we will include Batch as a covariate. We add it *after* the variable being tested.
@@ -115,17 +105,17 @@ subtitle <- sprintf("logFC (slope) = %g, AveExpr (overall mean) = %g",
 
 data.frame(exprs = exprs(m)[feature, ],
            AGE = m$AGE) %>% 
-        ggplot(aes(x = AGE, y = exprs)) +
-        geom_point(na.rm = TRUE, size = 3) +
-        geom_abline(slope = slope_cov, intercept = intercept_cov, 
-                    color = "#3366ff", lty = "dashed", size = 1) +
-        scale_x_continuous(limits = c(35, 80),
-                           expand = expansion(0)) +
-        labs(x = "Age (years)",
-             y = "Value in exprs(m)",
-             title = feature,
-             subtitle = subtitle) +
-        theme_bw(base_size = 12)
+  ggplot(aes(x = AGE, y = exprs)) +
+  geom_point(na.rm = TRUE, size = 3) +
+  geom_abline(slope = slope_cov, intercept = intercept_cov, 
+              color = "#3366ff", lty = "dashed", size = 1) +
+  scale_x_continuous(limits = c(35, 80),
+                     expand = expansion(0)) +
+  labs(x = "Age (years)",
+       y = "Value in exprs(m)",
+       title = feature,
+       subtitle = subtitle) +
+  theme_bw(base_size = 12)
 ```
 
 ## Two-Sample t-tests {#t-tests}
@@ -155,7 +145,7 @@ The `logFC` column is the difference in means between the "RESISTANT" and "SENSI
 - `AveExpr` overall mean (same as `rowMeans(exprs(m), na.rm = TRUE)`)
 - `t` moderated t-statistic
 - `P.Value` p-values
-- `adj.P.Val` BH-adjusted p-values (q-values)
+- `adj.P.Val` BH-adjusted p-values
 - `B` log-odds of differential expression/abundance
 
 Below is a graphical representation of the results for a specific feature. This is not a required step. It is just to visually explain the results.
@@ -169,19 +159,19 @@ subtitle <- sprintf("logFC = %g, AveExpr (overall mean) = %g",
 
 data.frame(exprs = exprs(m1)[feature, ],
            PLATINUM.STATUS = m1$PLATINUM.STATUS) %>% 
-        ggplot(aes(x = PLATINUM.STATUS, y = exprs)) +
-        geom_point(size = 3, na.rm = TRUE) +
-        stat_summary(fun = "mean", size = 0.3, geom = "crossbar",
-                     width = 0.7, lty = "longdash", color = "#3366ff") +
-        # stat_summary(fun = mean, geom = "line", aes(group = 1),
-        #              color = "blue", lty = "longdash") +
-        labs(y = "Value in exprs(m)",
-             title = feature,
-             subtitle = subtitle) +
-        theme_bw(base_size = 12)
+  ggplot(aes(x = PLATINUM.STATUS, y = exprs)) +
+  geom_point(size = 3, na.rm = TRUE) +
+  stat_summary(fun = "mean", size = 0.3, geom = "crossbar",
+               width = 0.7, lty = "longdash", color = "#3366ff") +
+  # stat_summary(fun = mean, geom = "line", aes(group = 1),
+  #              color = "blue", lty = "longdash") +
+  labs(y = "Value in exprs(m)",
+       title = feature,
+       subtitle = subtitle) +
+  theme_bw(base_size = 12)
 ```
 
-The next step would be to check the p-value histograms. If those look fine, we can tally the number of q-values that have an FDR of 0.05.
+The next step would be to check the p-value histograms. If those look fine, we can tally the number of significant features.
 
 ```{r}
 # TRUE - significant, FALSE - not significant
@@ -223,60 +213,60 @@ Below is a graphical representation of the results for a specific feature.
 feature <- "NP_000388.2"
 
 temp <- lapply(levels(m$SUBTYPE), function(level) {
-        m_sub <- m[, m$SUBTYPE == level]
-        df <- data.frame(exprs = exprs(m_sub)[feature, ]) %>% 
-                mutate(SUBTYPE = substr(level, 1, 1))
-        n <- nrow(df)
-        if (level == "Immunoreactive") {
-                df <- do.call("rbind", replicate(3, df, simplify = FALSE))
-                df$contrast <- rep(gsub("SUBTYPE", "", contrasts), each = n)
-        } else {
-                df$contrast <- rep(sprintf("%s-Immunoreactive", level))
-        }
-        df
+  m_sub <- m[, m$SUBTYPE == level]
+  df <- data.frame(exprs = exprs(m_sub)[feature, ]) %>% 
+    mutate(SUBTYPE = substr(level, 1, 1))
+  n <- nrow(df)
+  if (level == "Immunoreactive") {
+    df <- do.call("rbind", replicate(3, df, simplify = FALSE))
+    df$contrast <- rep(gsub("SUBTYPE", "", contrasts), each = n)
+  } else {
+    df$contrast <- rep(sprintf("%s-Immunoreactive", level))
+  }
+  df
 }) %>% 
-        data.table::rbindlist() %>% 
-        as.data.frame() %>%
-        # Convert to factors to plot in specific order
-        mutate(SUBTYPE = factor(SUBTYPE, levels = c("I", "P", "M", "D")),
-               contrast = factor(contrast, 
-                                 levels = unique(contrast)[c(2,3,1)]))
+  data.table::rbindlist() %>% 
+  as.data.frame() %>%
+  # Convert to factors to plot in specific order
+  mutate(SUBTYPE = factor(SUBTYPE, levels = c("I", "P", "M", "D")),
+         contrast = factor(contrast, 
+                           levels = unique(contrast)[c(2,3,1)]))
 
 t_res2 <- as.data.frame(t_res2)
 
 # Facet labels
 contrast_labs <- sprintf(
-        "%s\nlogFC = %g",
-        gsub("-", " - ", levels(temp$contrast)),
-        signif(t_res2[t_res2$feature == feature, "logFC"], 2)[c(2,3,1)])
+  "%s\nlogFC = %g",
+  gsub("-", " - ", levels(temp$contrast)),
+  signif(t_res2[t_res2$feature == feature, "logFC"], 2)[c(2,3,1)])
 names(contrast_labs) <- levels(temp$contrast)
 
 # Plot
 ggplot(temp, aes(x = SUBTYPE, y = exprs)) +
-        geom_point(size = 3) +
-        stat_summary(fun = "mean", size = 0.3, geom = "crossbar",
-                     width = 0.7, lty = "longdash", color = "#3366ff") +
-        # stat_summary(fun = mean, geom = "line", aes(group = 1),
-        #              color = "blue", lty = "longdash") +
-        facet_wrap(vars(contrast), scales = "free_x", 
-                   labeller = labeller(contrast = contrast_labs)) +
-        labs(x = "Ovarian Cancer Subtype",
-             y = "Value in exprs(m)",
-             title = feature,
-             subtitle = sprintf(
-                     "AveExpr (overall mean) = %s", 
-                     signif(mean(exprs(m)[feature, ], na.rm = TRUE), 2))) +
-        theme_bw(base_size = 12)
+  geom_point(size = 3) +
+  stat_summary(fun = "mean", size = 0.3, geom = "crossbar",
+               width = 0.7, lty = "longdash", color = "#3366ff") +
+  # stat_summary(fun = mean, geom = "line", aes(group = 1),
+  #              color = "blue", lty = "longdash") +
+  facet_wrap(vars(contrast), scales = "free_x", 
+             labeller = labeller(contrast = contrast_labs)) +
+  labs(x = "Ovarian Cancer Subtype",
+       y = "Value in exprs(m)",
+       title = feature,
+       subtitle = sprintf(
+         "AveExpr (overall mean) = %s", 
+         signif(mean(exprs(m)[feature, ], na.rm = TRUE), 2))) +
+  theme_bw(base_size = 12)
 ```
 
-The next step would be to check the p-value histograms. If those look fine, we can tally the number of q-values that pass the threshold for statistical significance.
+The next step would be to check the p-value histograms. If those look fine, we can tally the number of significant features.
 
 ```{r}
 # TRUE - significant, FALSE - not significant
 table(t_res2$contrast, t_res2$adj.P.Val < 0.05)
 ```
 
-If we take the 51, 195, and 255 features with the lowest q-values from the "Differentiated-Immunoreactive", "Mesenchymal-Immunoreactive", and "Proliferative-Immunoreactive" comparisons, respectively, the overall estimated FDR is at most 0.05. That is, we expect ~25 out of those 501 to be false positives.
+If we take the 51, 195, and 255 features with the lowest adjusted p-values from the "Differentiated-Immunoreactive", "Mesenchymal-Immunoreactive", and "Proliferative-Immunoreactive" comparisons, respectively, the overall estimated FDR is at most 0.05. That is, we expect ~25 out of those 501 to be false positives.
 
 More features are significantly different between the "Proliferative" and "Immunoreactive" groups than in the other comparisons.
 
@@ -308,7 +298,7 @@ The row names are the features that were tested, and the first three columns are
 - `AveExpr` overall mean (same as `rowMeans(exprs(m), na.rm = TRUE)`)
 - `F` moderated F-statistic
 - `P.Value` p-value
-- `adj.P.Val` BH-adjusted p-value (q-value)
+- `adj.P.Val` BH-adjusted p-value
 
 Below is a graphical representation of the results for a specific feature. This is not a required step; it is just a visual explanation of the results.
 
@@ -318,27 +308,27 @@ m3 <- m[, !is.na(m$SUBTYPE)]
 
 data.frame(exprs = exprs(m3)[feature, ],
            SUBTYPE = m3$SUBTYPE) %>% 
-        ggplot(aes(x = SUBTYPE, y = exprs)) +
-        geom_point(size = 3, na.rm = TRUE) +
-        stat_summary(fun = "mean", size = 0.3, geom = "crossbar",
-                     width = 0.7, lty = "longdash", color = "#3366ff") +
-        labs(x = "Ovarian Cancer Subtype",
-             y = "Value in exprs(m)", 
-             title = feature) +
-        theme_bw(base_size = 12)
+  ggplot(aes(x = SUBTYPE, y = exprs)) +
+  geom_point(size = 3, na.rm = TRUE) +
+  stat_summary(fun = "mean", size = 0.3, geom = "crossbar",
+               width = 0.7, lty = "longdash", color = "#3366ff") +
+  labs(x = "Ovarian Cancer Subtype",
+       y = "Value in exprs(m)", 
+       title = feature) +
+  theme_bw(base_size = 12)
 ```
 
 <!---
 The next step would be to check the p-value histograms. If those look fine, we can tally the number of adjusted p-values that pass the threshold for statistical significance. We will use $\alpha = 0.05$ for the significance cutoff. Since we use the BH adjustment, we say that the FDR of the features that pass the significance threshold after adjustment is at most $alpha$. For example, if 100 features are considered significant at the 0.05 level after adjustment, we expect at most 5 of them to be false positives.
 --->
 
-The next step would be to check the p-value histograms. If those look fine, we can tally the number of q-values with an FDR of 0.05.
+The next step would be to check the p-value histograms. If those look fine, we can tally the number of significant features.
 
 ```{r}
 table(anova_res$adj.P.Val < 0.05)
 ```
 
-1054 features have q-values less than 0.05. Since the expected FDR is 0.05, we estimate that at most ~53 of these are false positives.
+1054 features have adjusted p-values less than 0.05. Since the expected FDR is 0.05, we estimate that at most ~53 of these are false positives.
 
 ## p-value Histograms
 
@@ -371,12 +361,12 @@ There is a peak around 0 that indicates the null hypothesis is false for some of
 ```{r}
 # Histogram faceted by contrast
 ggplot(t_res2) +
-        geom_histogram(aes(x = P.Value), breaks = seq(0, 1, 0.05),
-                       color = "black", fill = "grey") +
-        # Remove space between x-axis and min(y)
-        scale_y_continuous(expand = expansion(c(0, 0.05))) +
-        facet_wrap(vars(contrast)) + # separate plots
-        theme_bw(base_size = 12)
+  geom_histogram(aes(x = P.Value), breaks = seq(0, 1, 0.05),
+                 color = "black", fill = "grey") +
+  # Remove space between x-axis and min(y)
+  scale_y_continuous(expand = expansion(c(0, 0.05))) +
+  facet_wrap(vars(contrast)) + # separate plots
+  theme_bw(base_size = 12)
 ```
 
 Based on the p-values, it appears that there are more features that are significantly different between the "Proliferative" vs. "Immunoreactive" comparison than the other two comparisons. The counts were shown at the end of Section \@ref(t-mult).
@@ -384,7 +374,7 @@ Based on the p-values, it appears that there are more features that are signific
 
 ## Volcano Plots {#volcano-plots}
 
-Volcano plots are used to summarize the results of differential analysis. They are scatter plots that show log$_2$ fold-change vs statistical significance (p-values or q-values). The `plot_volcano` function in the MSnSet.utils package is used to create volcano plots. For ANOVA results, volcano plots will not be useful, since the p-values are based on two or more contrasts; the volcano plots would not display the characteristic "V" shape.
+Volcano plots are used to summarize the results of differential analysis. They are scatter plots that show log$_2$ fold-change vs statistical significance. The `plot_volcano` function in the MSnSet.utils package is used to create volcano plots. For ANOVA results, volcano plots will not be useful, since the p-values are based on two or more contrasts; the volcano plots would not display the characteristic "V" shape.
 
 ### Base plot
 
@@ -436,11 +426,11 @@ We will change the color of points to reflect their significance and the sign of
 # Determine point colors based on significance and sign of the logFC
 # We would normally use adj.P.Value instead of P.Value
 t_res1 <- t_res1 %>% 
-        mutate(point_color = case_when(
-                P.Value < 0.05 & logFC < 0 ~ "down", # significantly down
-                P.Value < 0.05 & logFC > 0 ~ "up", # significantly up
-                TRUE ~ "NS") # not significant
-        )
+  mutate(point_color = case_when(
+    P.Value < 0.05 & logFC < 0 ~ "down", # significantly down
+    P.Value < 0.05 & logFC > 0 ~ "up", # significantly up
+    TRUE ~ "NS") # not significant
+  )
 
 # Color points
 v1 <- plot_volcano(df = t_res1, logFC = "logFC", 
@@ -456,7 +446,7 @@ We will change the default colors to be more informative. Points in the "down" g
 # Change colors
 v1 + scale_color_manual(values = c("#5555ff", "red3", "lightgrey"), 
                         breaks = c("down", "up", "NS")) +
-        theme(legend.position = "none") # do not show legend
+  theme(legend.position = "none") # do not show legend
 ```
 
 ### Multiple volcano plots
@@ -467,8 +457,8 @@ For results generated by `limma_contrasts`, we should make separate plots for ea
 # Basic volcano plot
 plot_volcano(df = t_res2, logFC = "logFC", pvals = "adj.P.Val", 
              sig_threshold = 0.05) + 
-        facet_wrap(vars(contrast)) + # plot for each contrast
-        labs(title = "Volcano Plots of limma_contrasts Results")
+  facet_wrap(vars(contrast)) + # plot for each contrast
+  labs(title = "Volcano Plots of limma_contrasts Results")
 ```
 
 <!---
@@ -476,5 +466,20 @@ plot_volcano(df = t_res2, logFC = "logFC", pvals = "adj.P.Val",
 
 "An UpSet plot is an alternative to a Venn Diagram" (R graph gallery).
 --->
+
+## UpSet Plots
+
+An UpSet plot is an alternative to a Venn diagram. It is not limited to visualizing differential analysis results, though I have found this to be a common use case. Another is to compare the protein identifications between groups of samples.
+
+```{r, out.width='90%', fig.asp=0.4}
+# Filter to significant features
+temp <- filter(t_res2, adj.P.Val < 0.05)
+# List of significant features by contrast
+input_list <- split(temp$RefSeq, temp$contrast)
+# UpSet plot
+plot_upset(input_list)
+```
+
+216 proteins are only significant in the "Proliferative-Immunoreactive" comparison, 191 are only significant in the "Mesenchymal-Immunoreactive" comparison, 35 are significant in both the "Differentiated-Immunoreactive" and "Proliferative-Immunoreactive" comparisons, etc.
 
 

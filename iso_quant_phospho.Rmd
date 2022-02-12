@@ -9,15 +9,19 @@ knitr::opts_chunk$set(message=FALSE, warning=FALSE,
 ```
 
 ```{r iso-lab-setup-2}
-## Uncomment to install missing packages
-# install.packages("remotes")
-# library(remotes)
-# install_github("PNNL-Comp-Mass-Spec/MSnID@pnnl-master")
-# install_github("PNNL-Comp-Mass-Spec/PlexedPiper")
-# install_github("PNNL-Comp-Mass-Spec/PNNL.DMS.utils")
-# if (!requireNamespace("BiocManager", quietly = TRUE))
-#     install.packages("BiocManager")
-# BiocManager::install("Biostrings")
+## Install missing packages
+if (!require("remotes", quietly = T)) install.packages("remotes")
+git_packages <- c("MSnID@pnnl-master", "PlexedPiper", "PNNL.DMS.utils")
+for (pkg_i in git_packages) {
+  if (!require(sub("@.*", "", pkg_i), quietly = T, character.only = T))
+    remotes::install_github(file.path("PNNL-Comp-Mass-Spec", pkg_i))
+}
+if (!requireNamespace("BiocManager", quietly = T))
+  install.packages("BiocManager")
+if (!require("Biostrings", quietly = T))
+  BiocManager::install("Biostrings")
+## ------------------------
+
 library(MSnID)
 library(PlexedPiper)
 library(PNNL.DMS.utils)
@@ -54,7 +58,7 @@ msnid <- correct_peak_selection(msnid)
 ```
 
 
-### Remove Unmodified Peptides
+### Remove Unmodified Peptides {#remove-unmodified-peptides}
 
 Generally, we will remove unmodified peptides before any sort of filtering steps; however, unmodified peptides will be removed automatically in Section \@ref(map-mod-sites), so this step can be skipped if we need to tally the number of modified and unmodified peptides toward the end of processing.
 
@@ -79,7 +83,7 @@ show(msnid)
 
 ### Improve Phosphosite Localization
 
-Phospho datasets involve AScore jobs for improving phosphosite localization. There should be one AScore job per data package. If the AScore job does not exist, see <a href="https://prismwiki.pnl.gov/wiki/AScore_Job_Creation">AScore Job Creation</a> for how to set it up. The fetched object is a data.frame that links datasets, scans and original PTM localization to newly suggested locations. Importantly, it contains `AScore` column that signifies the confidence of PTM assignment. AScore > 17 is considered confident.
+Phospho datasets involve Ascore jobs for improving phosphosite localization. There should be one AScore job per data package. If the Ascore job does not exist, see <a href="https://prismwiki.pnl.gov/wiki/AScore_Job_Creation">AScore Job Creation</a> for how to set it up. The fetched object is a data.frame that links datasets, scans and original PTM localization to newly suggested locations. Importantly, it contains `AScore` column that "measures the probability of correct phosphorylation site localization" [@beausoleil_probability-based_2006]. AScore > 17 is considered confident.
 
 ```{r results='hide'}
 # Filter PTMs by Ascore - only for phospho data
@@ -123,9 +127,17 @@ msnid <- infer_parsimonious_accessions(msnid, unique_only = FALSE,
 show(msnid)
 ```
 
+Figure \@ref(fig:prior-inference) shows the steps used to perform prioritized inference. If `unique_only = TRUE`, any prior will be ignored. See Figure \@ref(fig:parsimony) for parsimonious inference without a prior.
+
+```{r prior-inference, echo=FALSE, fig.cap="Visual explanation of prioritized inference."}
+include_graphics("images/prioritized-inference.PNG")
+```
+
+</br>
+
 ### Map Sites to Protein Sequences {#map-mod-sites}
 
-`MSnID::map_mod_sites` creates a number of columns describing mapping of the modification sites onto the protein sequences. The most important for the user is `SiteID`. `names(fst)` must match `accessions(msnid)`; usually, we will have to modify names to select everything before the first space.
+`MSnID::map_mod_sites` creates a number of columns describing mapping of the modification sites onto the protein sequences. The most important for the user is `SiteID`. `names(fst)` must match `accessions(msnid)`; usually, we will have to modify names to remove everything after the first word.
 
 ```{r}
 # Create AAStringSet
@@ -138,12 +150,13 @@ head(names(fst))
 
 ```{r}
 # Modify names to match accessions(msnid)
-names(fst) <- gsub(" .*$", "", names(fst))
+# Remove any space followed by any number of characters
+names(fst) <- sub(" .*$", "", names(fst))
 # First 6 names
 head(names(fst))
 ```
 
-The names are in the proper format, so we can continue with the main mapping call.
+The names are in the proper format, so we can continue with the main mapping call. This will also remove any unmodified peptides, if Section \@ref(remove-unmodified-peptides) was skipped.
 
 ```{r}
 # Main mapping call
@@ -151,8 +164,8 @@ msnid <- map_mod_sites(object = msnid,
                        fasta = fst, 
                        accession_col = "accession", 
                        peptide_mod_col = "peptide",
-                       mod_char = "*", # modification character
-                       site_delimiter = ";") # ; between multiple sites
+                       mod_char = "*", # asterisk for phosphorylation
+                       site_delimiter = ";") # semicolon between multiple sites
 ```
 
 Table \@ref(tab:phospho-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
@@ -202,7 +215,7 @@ masic_data <- filter_masic_data(masic_data,
 
 ## Create Study Design Tables
 
-Aside from the fractions table, the other study design tables can be the same as those created for the global proteomics data.
+Aside from the fractions table, the other study design tables can be the same as those created for the global proteomics data. This is because the datasets are different. The study design tables have been added to the data package (end of Section \@ref(global-references)), so we can use `get_study_design_by_dataset_package`.
 
 ```{r}
 # Create fractions table
@@ -211,8 +224,9 @@ fractions <- data.frame(Dataset = datasets) %>%
   mutate(PlexID = gsub(".*_P_(S\\d{1})_.*", "\\1", Dataset))
 
 # Use global samples and references tables
-samples <- read.delim("data/3442_samples.txt")
-references <- read.delim("data/3442_references.txt")
+study_design <- get_study_design_by_dataset_package(3442)
+samples <- study_design$samples
+references <- study_design$references
 ```
 
 ```{r}
@@ -253,5 +267,20 @@ kable(x, row.names = TRUE,
 write.table(crosstab, file = "data/3662_phospho_crosstab.txt",
             sep = "\t", quote = FALSE, row.names = TRUE)
 ```
+
+
+## Create MSnSet {#phospho-msnset}
+
+```{r}
+# Create MSnSet
+m <- create_msnset(crosstab = crosstab, samples = samples)
+m
+```
+
+```{r}
+# Save phospho MSnSet
+save(m, file = "data/phospho_msnset.RData", compress = TRUE)
+```
+
 
 

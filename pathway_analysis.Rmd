@@ -6,7 +6,7 @@ knitr::opts_chunk$set(warning=FALSE, message=FALSE,
 ```
 
 
-In Section \@ref(DEA), we covered analysis at the individual feature level (protein, peptide, phosphoprotein, etc.). While this is useful, it is not without its own set of shortcomings. For instance, there may be no features that pass the significance threshold after correcting for multiple hypothesis testing. Alternatively, there may be many features that are statistically significant, and interpreting this list can be tedious and "prone to investigator bias toward a hypothesis of interest" [@maleki_gene_2020]. Another issue is that single-feature analysis fails to detect subtle, yet coordinated changes in groups of related features [@subramanian_gene_2005]. 
+In Section \@ref(DEA), we covered analysis at the individual feature level (protein, peptide, phosphoprotein, etc.). While this is useful, it is not without its own set of shortcomings. For instance, there may be no features that pass the significance threshold after correcting for multiple hypothesis testing. Alternatively, there may be many features that are statistically significant, and interpreting this list can be tedious and "prone to investigator bias toward a hypothesis of interest" [@maleki_gene_2020]. Another issue is that differential analysis fails to detect subtle, yet coordinated changes in groups of related features [@subramanian_gene_2005]. 
 
 In order to address these, and other, issues, pathway analysis instead examines *a priori* defined **gene sets**---groups of genes that participate in the same biological pathway, share the same cellular location, etc. In this section, we will explore some common annotation databases, as well as two pathway analysis methods: Over-Representation Analysis (ORA) and Gene Set Enrichment Analysis (GSEA).
 
@@ -206,7 +206,7 @@ sig_genes <- gcSample[[8]] # significant genes
 universe <- unique(unlist(gcSample)) # universe
 ```
 
-It is important to note that the genes should be unique from the start. The terms between any two clusters of `gcSample` may overlap, so we must use `unique` for the sake of these examples. *If your DEA results are not gene-centric, do NOT use ORA. Instead, switch to GSEA and summarize the ranking metric in some way to make it gene-centric (i.e. take the average, min, max, etc. of the metrics for each gene group)*.
+It is important to note that the genes should be unique from the start. The terms between any two clusters of `gcSample` may overlap, so we must use `unique` for the sake of these examples. **If your DEA results are not gene-centric, do NOT use ORA. Instead, switch to GSEA and summarize the ranking metric in some way to make it gene-centric (i.e. take the average, min, max, etc. of the metrics for each gene group)**.
 
 ```{r cp-table-format, include=FALSE}
 # Function to format the result table of an enrichResult object
@@ -672,6 +672,23 @@ The choice of ranking metric is important: `-log10(p-value) * sign(logFC)`, `-lo
 ### Examples
 
 ```{r warning=FALSE, message=FALSE}
+## Install missing packages
+cran_packages <- c("remotes", "dplyr", "BiocManager")
+for (pkg_i in cran_packages) {
+  if (!require(pkg_i, quietly = T, character.only = T))
+    install.packages(pkg_i)
+}
+bio_packages <- c("org.Hs.eg.db", "clusterProfiler", "ReactomePA")
+for (pkg_i in bio_packages) {
+  if (!require(pkg_i, quietly = T, character.only = T))
+    BiocManager::install(pkg_i)
+}
+git_packages <- c("MSnID@pnnl-master", "MSnSet.utils")
+for (pkg_i in git_packages) {
+  if (!require(sub("@.*", "", pkg_i), quietly = T, character.only = T))
+    remotes::install_github(file.path("PNNL-Comp-Mass-Spec", pkg_i))
+}
+## ------------------------
 library(MSnID) # fetch_conversion_table
 library(MSnSet.utils) # oca.set data
 library(org.Hs.eg.db) # Human database package
@@ -697,13 +714,14 @@ head(conv_tbl)
 
 ```{r}
 # Add RefSeq_no_iso and entrez_gene columns to fData(m)
-fData(m) <- mutate(fData(m),
-                   # Remove isoform number from RefSeq
-                   RefSeq_no_iso = gsub("(.*)\\.\\d{+}", "\\1", RefSeq)) %>% 
+temp <- fData(m) %>% 
+  # Remove isoform number from RefSeq
+  mutate(RefSeq_no_iso = gsub("\\.\\d+", "", RefSeq)) %>% 
   # Add entrez_gene column
-  left_join(conv_tbl, by = "RefSeq_no_iso") %>% 
-  # Set rownames to RefSeq column
-  {rownames(.) <- .[["RefSeq"]]; .}
+  left_join(conv_tbl, by = "RefSeq_no_iso")
+rownames(temp) <- temp$RefSeq # Set rownames to RefSeq column
+
+fData(m) <- temp # overwrite fData
 head(fData(m))
 ```
 
@@ -713,23 +731,23 @@ Not every RefSeq mapped to an Entrez gene. We will not be able to use these feat
 table(!is.na(fData(m)$entrez_gene))
 ```
 
-110 proteins (~1.4% in table below) were not mapped to any gene. We will remove those rows.
+109 proteins (~1.3% in table below) were not mapped to any gene. We will remove those rows.
 
 ```{r}
 100 * prop.table(table(!is.na(fData(m)$entrez_gene)))
 ```
 
-Now that we have an Entrez ID column in the `fData`, we can move on to the next steps. I have combined all steps below so that the code is easier to copy. First, we need a table of differential analysis results. We combine it with the `fData` in order to include the Entrez gene column. From there, we subset to rows without any missing values. This removes proteins that did not map to a gene, as well as proteins with no test statistics or p-values. Then, we create a column for the ranking metric. We will use $-log10(\text{p-value}) \cdot sign(\text{log}_2 \text{ fold-change})$. We could have also used the moderated t-statistic, which is similar (see Figure \@ref(fig:rank-metric-comp)). Now, we need to make sure that there is only one value per gene. We do so by calculating the average ranking metric for each gene. The last step is to sort from high to low by ranking metric and convert to a named vector. We can see the first and last 6 entries of this named vector below.
+Now that we have an Entrez ID column in the `fData`, we can move on to the next steps. I have combined all steps below so that the code is easier to copy. First, we need a table of differential analysis results. From there, we subset to rows without any missing values. This removes proteins that did not map to a gene, as well as proteins with no test statistics or p-values. Then, we create a column for the ranking metric. We will use $-log10(\text{p-value}) \cdot sign(\text{log}_2 \text{ fold-change})$. We could have also used the moderated t-statistic, which is similar (see Figure \@ref(fig:rank-metric-comp)). Now, we need to make sure that there is only one value per gene. We do so by calculating the average ranking metric for each gene. The last step is to sort from high to low by ranking metric and convert to a named vector. We can see the first and last 6 entries of this named vector below.
 
 ```{r}
-# Named vector for GSEA
+## Named vector for GSEA
 # Start with differential analysis results
 gsea_input <- limma_gen(m, model.str = "~ PLATINUM.STATUS", 
                         coef.str = "PLATINUM.STATUS") %>% 
   mutate(RefSeq = rownames(.)) %>% # Create RefSeq column
-  left_join(fData(m), by = "RefSeq") %>%  # Add columns from fData
-  # Remove rows with missing entrez_gene or P.Value
-  filter(!is.na(entrez_gene), !is.na(P.Value)) %>%
+  left_join(fData(m), by = "RefSeq") %>% # Add entrez_gene column
+  # Remove rows missing entrez_gene or P.Value
+  filter(!if_any(c(entrez_gene, P.Value), is.na)) %>%
   # Create GSEA ranking metric column: signed -log10 p-value
   mutate(ranking_metric = -log10(P.Value) * sign(logFC)) %>% 
   # Average ranking metric for each gene
@@ -741,7 +759,6 @@ gsea_input <- limma_gen(m, model.str = "~ PLATINUM.STATUS",
   tibble::deframe()
 
 head(gsea_input)
-tail(gsea_input)
 ```
 
 ```{r rank-metric-comp, echo=FALSE, fig.cap="Comparison of two common GSEA ranking metrics."}
@@ -814,6 +831,7 @@ go_gsea <- gseGO(geneList = gsea_input,
                  eps = 0,
                  OrgDb = org.Hs.eg.db, 
                  nPermSimple = 1000) # may need to increase nPermSimple
+# View(go_gsea@result) # uncomment to view results
 ```
 
 ```{r echo=FALSE}
@@ -830,12 +848,13 @@ react_gsea <- gsePathway(geneList = gsea_input,
                          organism = "human", 
                          eps = 0,
                          nPermSimple = 1000)
+# View(react_gsea@result) # uncomment to view results
 ```
 
 
 #### Pfam
 
-#### Other Databases
+#### Other Databases {#gsea-other}
 
 
 

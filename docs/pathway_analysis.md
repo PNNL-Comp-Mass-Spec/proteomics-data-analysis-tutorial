@@ -3,7 +3,7 @@
 
 
 
-In Section \@ref(DEA), we covered analysis at the individual feature level (protein, peptide, phosphoprotein, etc.). While this is useful, it is not without its own set of shortcomings. For instance, there may be no features that pass the significance threshold after correcting for multiple hypothesis testing. Alternatively, there may be many features that are statistically significant, and interpreting this list can be tedious and "prone to investigator bias toward a hypothesis of interest" [@maleki_gene_2020]. Another issue is that single-feature analysis fails to detect subtle, yet coordinated changes in groups of related features [@subramanian_gene_2005]. 
+In Section \@ref(DEA), we covered analysis at the individual feature level (protein, peptide, phosphoprotein, etc.). While this is useful, it is not without its own set of shortcomings. For instance, there may be no features that pass the significance threshold after correcting for multiple hypothesis testing. Alternatively, there may be many features that are statistically significant, and interpreting this list can be tedious and "prone to investigator bias toward a hypothesis of interest" [@maleki_gene_2020]. Another issue is that differential analysis fails to detect subtle, yet coordinated changes in groups of related features [@subramanian_gene_2005]. 
 
 In order to address these, and other, issues, pathway analysis instead examines *a priori* defined **gene sets**---groups of genes that participate in the same biological pathway, share the same cellular location, etc. In this section, we will explore some common annotation databases, as well as two pathway analysis methods: Over-Representation Analysis (ORA) and Gene Set Enrichment Analysis (GSEA).
 
@@ -252,7 +252,7 @@ sig_genes <- gcSample[[8]] # significant genes
 universe <- unique(unlist(gcSample)) # universe
 ```
 
-It is important to note that the genes should be unique from the start. The terms between any two clusters of `gcSample` may overlap, so we must use `unique` for the sake of these examples. *If your DEA results are not gene-centric, do NOT use ORA. Instead, switch to GSEA and summarize the ranking metric in some way to make it gene-centric (i.e. take the average, min, max, etc. of the metrics for each gene group)*.
+It is important to note that the genes should be unique from the start. The terms between any two clusters of `gcSample` may overlap, so we must use `unique` for the sake of these examples. **If your DEA results are not gene-centric, do NOT use ORA. Instead, switch to GSEA and summarize the ranking metric in some way to make it gene-centric (i.e. take the average, min, max, etc. of the metrics for each gene group)**.
 
 
 
@@ -1498,6 +1498,23 @@ The choice of ranking metric is important: `-log10(p-value) * sign(logFC)`, `-lo
 
 
 ```r
+## Install missing packages
+cran_packages <- c("remotes", "dplyr", "BiocManager")
+for (pkg_i in cran_packages) {
+  if (!require(pkg_i, quietly = T, character.only = T))
+    install.packages(pkg_i)
+}
+bio_packages <- c("org.Hs.eg.db", "clusterProfiler", "ReactomePA")
+for (pkg_i in bio_packages) {
+  if (!require(pkg_i, quietly = T, character.only = T))
+    BiocManager::install(pkg_i)
+}
+git_packages <- c("MSnID@pnnl-master", "MSnSet.utils")
+for (pkg_i in git_packages) {
+  if (!require(sub("@.*", "", pkg_i), quietly = T, character.only = T))
+    remotes::install_github(file.path("PNNL-Comp-Mass-Spec", pkg_i))
+}
+## ------------------------
 library(MSnID) # fetch_conversion_table
 library(MSnSet.utils) # oca.set data
 library(org.Hs.eg.db) # Human database package
@@ -1535,13 +1552,14 @@ head(conv_tbl)
 
 ```r
 # Add RefSeq_no_iso and entrez_gene columns to fData(m)
-fData(m) <- mutate(fData(m),
-                   # Remove isoform number from RefSeq
-                   RefSeq_no_iso = gsub("(.*)\\.\\d{+}", "\\1", RefSeq)) %>% 
+temp <- fData(m) %>% 
+  # Remove isoform number from RefSeq
+  mutate(RefSeq_no_iso = gsub("\\.\\d+", "", RefSeq)) %>% 
   # Add entrez_gene column
-  left_join(conv_tbl, by = "RefSeq_no_iso") %>% 
-  # Set rownames to RefSeq column
-  {rownames(.) <- .[["RefSeq"]]; .}
+  left_join(conv_tbl, by = "RefSeq_no_iso")
+rownames(temp) <- temp$RefSeq # Set rownames to RefSeq column
+
+fData(m) <- temp # overwrite fData
 head(fData(m))
 ```
 
@@ -1565,10 +1583,10 @@ table(!is.na(fData(m)$entrez_gene))
 ```
 ## 
 ## FALSE  TRUE 
-##   110  7993
+##   109  7994
 ```
 
-110 proteins (~1.4% in table below) were not mapped to any gene. We will remove those rows.
+109 proteins (~1.3% in table below) were not mapped to any gene. We will remove those rows.
 
 
 ```r
@@ -1578,21 +1596,21 @@ table(!is.na(fData(m)$entrez_gene))
 ```
 ## 
 ##     FALSE      TRUE 
-##  1.357522 98.642478
+##  1.345181 98.654819
 ```
 
-Now that we have an Entrez ID column in the `fData`, we can move on to the next steps. I have combined all steps below so that the code is easier to copy. First, we need a table of differential analysis results. We combine it with the `fData` in order to include the Entrez gene column. From there, we subset to rows without any missing values. This removes proteins that did not map to a gene, as well as proteins with no test statistics or p-values. Then, we create a column for the ranking metric. We will use $-log10(\text{p-value}) \cdot sign(\text{log}_2 \text{ fold-change})$. We could have also used the moderated t-statistic, which is similar (see Figure \@ref(fig:rank-metric-comp)). Now, we need to make sure that there is only one value per gene. We do so by calculating the average ranking metric for each gene. The last step is to sort from high to low by ranking metric and convert to a named vector. We can see the first and last 6 entries of this named vector below.
+Now that we have an Entrez ID column in the `fData`, we can move on to the next steps. I have combined all steps below so that the code is easier to copy. First, we need a table of differential analysis results. From there, we subset to rows without any missing values. This removes proteins that did not map to a gene, as well as proteins with no test statistics or p-values. Then, we create a column for the ranking metric. We will use $-log10(\text{p-value}) \cdot sign(\text{log}_2 \text{ fold-change})$. We could have also used the moderated t-statistic, which is similar (see Figure \@ref(fig:rank-metric-comp)). Now, we need to make sure that there is only one value per gene. We do so by calculating the average ranking metric for each gene. The last step is to sort from high to low by ranking metric and convert to a named vector. We can see the first and last 6 entries of this named vector below.
 
 
 ```r
-# Named vector for GSEA
+## Named vector for GSEA
 # Start with differential analysis results
 gsea_input <- limma_gen(m, model.str = "~ PLATINUM.STATUS", 
                         coef.str = "PLATINUM.STATUS") %>% 
   mutate(RefSeq = rownames(.)) %>% # Create RefSeq column
-  left_join(fData(m), by = "RefSeq") %>%  # Add columns from fData
-  # Remove rows with missing entrez_gene or P.Value
-  filter(!is.na(entrez_gene), !is.na(P.Value)) %>%
+  left_join(fData(m), by = "RefSeq") %>% # Add entrez_gene column
+  # Remove rows missing entrez_gene or P.Value
+  filter(!if_any(c(entrez_gene, P.Value), is.na)) %>%
   # Create GSEA ranking metric column: signed -log10 p-value
   mutate(ranking_metric = -log10(P.Value) * sign(logFC)) %>% 
   # Average ranking metric for each gene
@@ -1609,15 +1627,6 @@ head(gsea_input)
 ```
 ##     1729     3696    10313     1738    23277      178 
 ## 3.714891 3.327848 3.303450 3.208326 2.908294 2.772761
-```
-
-```r
-tail(gsea_input)
-```
-
-```
-##     79969     79977      4925      2953     10970      3486 
-## -2.578652 -2.621050 -2.713811 -2.899121 -2.984474 -3.284757
 ```
 
 <div class="figure" style="text-align: center">
@@ -1640,6 +1649,7 @@ go_gsea <- gseGO(geneList = gsea_input,
                  eps = 0,
                  OrgDb = org.Hs.eg.db, 
                  nPermSimple = 1000) # may need to increase nPermSimple
+# View(go_gsea@result) # uncomment to view results
 ```
 
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; "><table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
@@ -1665,7 +1675,7 @@ go_gsea <- gseGO(geneList = gsea_input,
    <td style="text-align:left;"> keratinization </td>
    <td style="text-align:right;"> 54 </td>
    <td style="text-align:right;"> 0.7794 </td>
-   <td style="text-align:right;"> 2.7349 </td>
+   <td style="text-align:right;"> 2.7248 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
@@ -1678,7 +1688,7 @@ go_gsea <- gseGO(geneList = gsea_input,
    <td style="text-align:left;"> cornification </td>
    <td style="text-align:right;"> 50 </td>
    <td style="text-align:right;"> 0.7820 </td>
-   <td style="text-align:right;"> 2.6803 </td>
+   <td style="text-align:right;"> 2.7073 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
@@ -1691,7 +1701,7 @@ go_gsea <- gseGO(geneList = gsea_input,
    <td style="text-align:left;"> ATP metabolic process </td>
    <td style="text-align:right;"> 234 </td>
    <td style="text-align:right;"> 0.5070 </td>
-   <td style="text-align:right;"> 2.2107 </td>
+   <td style="text-align:right;"> 2.2324 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
@@ -1700,24 +1710,11 @@ go_gsea <- gseGO(geneList = gsea_input,
    <td style="text-align:left;"> 1738/64802/11315... </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" style="     ">GO:0006119</a> </td>
-   <td style="text-align:left;"> oxidative phosphorylation </td>
-   <td style="text-align:right;"> 112 </td>
-   <td style="text-align:right;"> 0.6049 </td>
-   <td style="text-align:right;"> 2.4034 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1916 </td>
-   <td style="text-align:left;"> tags=54%, list=25%, signal=41% </td>
-   <td style="text-align:left;"> 1738/11315/1340... </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0007005" style="     ">GO:0007005</a> </td>
    <td style="text-align:left;"> mitochondrion organization </td>
    <td style="text-align:right;"> 370 </td>
-   <td style="text-align:right;"> 0.4318 </td>
-   <td style="text-align:right;"> 1.9854 </td>
+   <td style="text-align:right;"> 0.4319 </td>
+   <td style="text-align:right;"> 2.0000 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
@@ -1726,11 +1723,50 @@ go_gsea <- gseGO(geneList = gsea_input,
    <td style="text-align:left;"> 23277/54927/9141... </td>
   </tr>
   <tr>
+   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" style="     ">GO:0006119</a> </td>
+   <td style="text-align:left;"> oxidative phosphorylation </td>
+   <td style="text-align:right;"> 112 </td>
+   <td style="text-align:right;"> 0.6049 </td>
+   <td style="text-align:right;"> 2.4027 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1916 </td>
+   <td style="text-align:left;"> tags=54%, list=25%, signal=41% </td>
+   <td style="text-align:left;"> 1738/11315/1340... </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0030198" style="     ">GO:0030198</a> </td>
+   <td style="text-align:left;"> extracellular matrix organization </td>
+   <td style="text-align:right;"> 224 </td>
+   <td style="text-align:right;"> -0.4934 </td>
+   <td style="text-align:right;"> -2.1201 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1624 </td>
+   <td style="text-align:left;"> tags=46%, list=21%, signal=37% </td>
+   <td style="text-align:left;"> 780/9510/3687... </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0043062" style="     ">GO:0043062</a> </td>
+   <td style="text-align:left;"> extracellular structure organization </td>
+   <td style="text-align:right;"> 224 </td>
+   <td style="text-align:right;"> -0.4934 </td>
+   <td style="text-align:right;"> -2.1201 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1624 </td>
+   <td style="text-align:left;"> tags=46%, list=21%, signal=37% </td>
+   <td style="text-align:left;"> 780/9510/3687... </td>
+  </tr>
+  <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0045229" style="     ">GO:0045229</a> </td>
    <td style="text-align:left;"> external encapsulating structure organization </td>
    <td style="text-align:right;"> 225 </td>
-   <td style="text-align:right;"> -0.4919 </td>
-   <td style="text-align:right;"> -2.1305 </td>
+   <td style="text-align:right;"> -0.4920 </td>
+   <td style="text-align:right;"> -2.1150 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
@@ -1743,7 +1779,7 @@ go_gsea <- gseGO(geneList = gsea_input,
    <td style="text-align:left;"> inner mitochondrial membrane organization </td>
    <td style="text-align:right;"> 47 </td>
    <td style="text-align:right;"> 0.7458 </td>
-   <td style="text-align:right;"> 2.5235 </td>
+   <td style="text-align:right;"> 2.5741 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
@@ -1752,37 +1788,11 @@ go_gsea <- gseGO(geneList = gsea_input,
    <td style="text-align:left;"> 54927/10989/55735... </td>
   </tr>
   <tr>
-   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0030198" style="     ">GO:0030198</a> </td>
-   <td style="text-align:left;"> extracellular matrix organization </td>
-   <td style="text-align:right;"> 224 </td>
-   <td style="text-align:right;"> -0.4933 </td>
-   <td style="text-align:right;"> -2.1377 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1624 </td>
-   <td style="text-align:left;"> tags=46%, list=21%, signal=37% </td>
-   <td style="text-align:left;"> 780/9510/3687... </td>
-  </tr>
-  <tr>
-   <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0043062" style="     ">GO:0043062</a> </td>
-   <td style="text-align:left;"> extracellular structure organization </td>
-   <td style="text-align:right;"> 224 </td>
-   <td style="text-align:right;"> -0.4933 </td>
-   <td style="text-align:right;"> -2.1377 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1624 </td>
-   <td style="text-align:left;"> tags=46%, list=21%, signal=37% </td>
-   <td style="text-align:left;"> 780/9510/3687... </td>
-  </tr>
-  <tr>
    <td style="text-align:left;"> <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0015980" style="     ">GO:0015980</a> </td>
    <td style="text-align:left;"> energy derivation by oxidation of organic compounds </td>
    <td style="text-align:right;"> 190 </td>
    <td style="text-align:right;"> 0.5048 </td>
-   <td style="text-align:right;"> 2.1419 </td>
+   <td style="text-align:right;"> 2.1713 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
    <td style="text-align:right;"> 0 </td>
@@ -1804,12 +1814,13 @@ react_gsea <- gsePathway(geneList = gsea_input,
                          organism = "human", 
                          eps = 0,
                          nPermSimple = 1000)
+# View(react_gsea@result) # uncomment to view results
 ```
 
 
 #### Pfam
 
-#### Other Databases
+#### Other Databases {#gsea-other}
 
 
 

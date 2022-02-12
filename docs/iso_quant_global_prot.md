@@ -6,12 +6,15 @@ This pipeline shows how to process global proteomics TMT data with `PlexedPiper`
 
 
 ```r
-## Uncomment to install missing packages
-# install.packages("remotes")
-# library(remotes)
-# install_github("PNNL-Comp-Mass-Spec/MSnID@pnnl-master")
-# install_github("PNNL-Comp-Mass-Spec/PlexedPiper")
-# install_github("PNNL-Comp-Mass-Spec/PNNL.DMS.utils")
+## Install missing packages
+if (!require("remotes", quietly = T)) install.packages("remotes")
+git_packages <- c("MSnID@pnnl-master", "PlexedPiper", "PNNL.DMS.utils")
+for (pkg_i in git_packages) {
+  if (!require(sub("@.*", "", pkg_i), quietly = T, character.only = T))
+    remotes::install_github(file.path("PNNL-Comp-Mass-Spec", pkg_i))
+}
+## ------------------------
+
 library(MSnID)
 library(PlexedPiper)
 library(PNNL.DMS.utils)
@@ -19,7 +22,7 @@ library(PNNL.DMS.utils)
 
 
 
-The pipeline can be broken up into four major parts: prepare MS/MS identifications, prepare reporter ion intensities, create study design tables, and create a quantitative cross-tab.
+The pipeline can be broken up into four major parts: prepare MS/MS identifications, prepare reporter ion intensities, create study design tables, and create a quantitative cross-tab. There is another step that is required for statistical testing, which is to create an MSnSet.
 
 ## Prepare MS/MS Identifications
 
@@ -63,7 +66,7 @@ This summary tells us that `msnid` consists of 4 spectrum files (datasets), and 
 
 ### Correct Isotope Selection Error 
 
-Carbon has two stable isotopes: $^{12}\text{C}$ and $^{13}\text{C}$, with natural abundances of 98.93% and 1.07%, respectively. That is, we expect that about 1 out of every 100 carbon atoms is naturally going to be a $^{13}\text{C}$, while the rest are $^{12}\text{C}$. In larger peptides with many carbon atoms, it is more likely that at least one atom will be a $^{13}\text{C}$ than all atoms will be $^{12}\text{C}$. In cases such as these, a non-monoisotopic ion will be selected by the instrument for fragmentation.
+Carbon has two stable isotopes: $^{12}\text{C}$ and $^{13}\text{C}$, with natural abundances of 98.93% and 1.07%, respectively [@berglund_isotopic_2011]. That is, we expect that about 1 out of every 100 carbon atoms is naturally going to be a $^{13}\text{C}$, while the rest are $^{12}\text{C}$. In larger peptides with many carbon atoms, it is more likely that at least one atom will be a $^{13}\text{C}$ than all atoms will be $^{12}\text{C}$. In cases such as these, a non-monoisotopic ion will be selected by the instrument for fragmentation.
 
 <div class="figure" style="text-align: center">
 <img src="images/MS1_non_monoisotopic.PNG" alt="MS1 spectra with peak at non-monoisotopic precursor ion." width="75%" />
@@ -127,7 +130,7 @@ The other filtering criteria is the absolute deviation of the mass measurement e
 
 </br>
 
-Now, we will filter the PSMs.
+These new columns `msmsScore` and `absParentMassErrorPPM` are generated automatically by `filter_msgf_data`, so we don't need to worry about creating them ourselves.
 
 
 ```r
@@ -140,9 +143,9 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  48 
-## #PSMs: 464474 at 0.45 % FDR
-## #peptides: 96485 at 1 % FDR
-## #accessions: 27119 at 9.2 % FDR
+## #PSMs: 471295 at 0.46 % FDR
+## #peptides: 96663 at 1 % FDR
+## #accessions: 27098 at 9.1 % FDR
 ```
 
 We can see that filtering drastically reduces the number of PSMs, and the empirical peptide-level FDR is now 1%. However, notice that the empirical protein-level FDR is still fairly high.
@@ -160,12 +163,12 @@ We will need the lengths of each protein, which can be obtained from the FASTA (
 
 </br>
 
-The path to the FASTA file can be specified as the path to a local folder or it can be obtained with `PNNL.DMS.utils::path_to_FASTA_used_by_DMS`. We will use the latter method.
+The path to the FASTA file can be specified as a local file path or it can be obtained with `PNNL.DMS.utils::path_to_FASTA_used_by_DMS`. We will use the latter method.
 
 
 ```r
 ## Get path to FASTA file from local folder - not run
-path_to_FASTA <- "path_to_FASTA_file"
+path_to_FASTA <- "some_folder/name_of_fasta_file.fasta"
 ```
 
 
@@ -199,9 +202,9 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  48 
-## #PSMs: 458090 at 0.16 % FDR
-## #peptides: 92036 at 0.32 % FDR
-## #accessions: 15631 at 1 % FDR
+## #PSMs: 464788 at 0.17 % FDR
+## #peptides: 92176 at 0.34 % FDR
+## #accessions: 15629 at 0.98 % FDR
 ```
 
 
@@ -231,14 +234,14 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  48 
-## #PSMs: 444999 at 0.15 % FDR
-## #peptides: 90478 at 0.27 % FDR
-## #accessions: 5251 at 1.1 % FDR
+## #PSMs: 451568 at 0.16 % FDR
+## #peptides: 90639 at 0.28 % FDR
+## #accessions: 5247 at 1.1 % FDR
 ```
 
 Notice that the protein-level FDR increased slightly above the 1% threshold. In this case, the difference isn't significant, so we can ignore it. 
 
-*Note:* If the peptide or accession-level FDR increases significantly above 1% after inference of the parsimonious protein set, consider lowering the FDR cutoff (for example, to 0.9%) and redoing the previous processing steps. That is, start with the MSnID prior to any filtering and redo the FDR filtering steps.
+**Note:** If the peptide or accession-level FDR increases significantly above 1% after inference of the parsimonious protein set, consider lowering the FDR cutoff (for example, to 0.9%) and redoing the previous processing steps. That is, start with the MSnID prior to any filtering and redo the FDR filtering steps.
 
 ### Remove Decoy PSMs
 
@@ -255,12 +258,12 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  48 
-## #PSMs: 444338 at 0 % FDR
-## #peptides: 90232 at 0 % FDR
-## #accessions: 5196 at 0 % FDR
+## #PSMs: 450857 at 0 % FDR
+## #peptides: 90382 at 0 % FDR
+## #accessions: 5191 at 0 % FDR
 ```
 
-After processing, we are left with 444,345 PSMs, 90,232 peptides, and 5,196 proteins. Table \@ref(tab:global-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
+After processing, we are left with 450,928 PSMs, 90,411 peptides, and 5,201 proteins. Table \@ref(tab:global-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
 
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:90%; "><table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">(\#tab:global-msnid-table)<left>First 6 rows of the processed MS-GF+ results.</left>
@@ -334,7 +337,7 @@ After processing, we are left with 444,345 PSMs, 90,232 peptides, and 5,196 prot
    <td style="text-align:left;"> AAAAAAAAAAAAAAGAAGK </td>
    <td style="text-align:right;"> Inf </td>
    <td style="text-align:right;"> 0.589 </td>
-   <td style="text-align:right;"> 25.769 </td>
+   <td style="text-align:right;"> 24.938 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S1_07_12Oct17_Elm_AQ-17-09-02 </td>
@@ -368,7 +371,7 @@ After processing, we are left with 444,345 PSMs, 90,232 peptides, and 5,196 prot
    <td style="text-align:left;"> AAAAAAAAAAAAAAGAAGK </td>
    <td style="text-align:right;"> Inf </td>
    <td style="text-align:right;"> 0.991 </td>
-   <td style="text-align:right;"> 25.769 </td>
+   <td style="text-align:right;"> 24.938 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S2_06_12Oct17_Elm_AQ-17-09-02 </td>
@@ -402,7 +405,7 @@ After processing, we are left with 444,345 PSMs, 90,232 peptides, and 5,196 prot
    <td style="text-align:left;"> AAAAAAAAAAAAAAGAAGK </td>
    <td style="text-align:right;"> Inf </td>
    <td style="text-align:right;"> 0.091 </td>
-   <td style="text-align:right;"> 25.769 </td>
+   <td style="text-align:right;"> 24.938 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S2_07_12Oct17_Elm_AQ-17-09-02 </td>
@@ -436,7 +439,7 @@ After processing, we are left with 444,345 PSMs, 90,232 peptides, and 5,196 prot
    <td style="text-align:left;"> AAAAAAAAAAAAAAGAAGK </td>
    <td style="text-align:right;"> Inf </td>
    <td style="text-align:right;"> 0.684 </td>
-   <td style="text-align:right;"> 25.769 </td>
+   <td style="text-align:right;"> 24.938 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S2_05_12Oct17_Elm_AQ-17-09-02 </td>
@@ -504,7 +507,7 @@ After processing, we are left with 444,345 PSMs, 90,232 peptides, and 5,196 prot
    <td style="text-align:left;"> AAAAAEAESGGGGGK </td>
    <td style="text-align:right;"> 2.583 </td>
    <td style="text-align:right;"> 0.106 </td>
-   <td style="text-align:right;"> 580.844 </td>
+   <td style="text-align:right;"> 579.815 </td>
   </tr>
 </tbody>
 </table></div>
@@ -524,7 +527,7 @@ Similar to the MS-GF+ results, we can read the MASIC results from a local folder
 ```r
 ## Get MASIC results from local folder - not run
 # Get file path
-path_to_MASIC_results <- "path_to_masic_results"
+path_to_MASIC_results <- "path_to_folder_containing_necessary_files"
 # Read MASIC results from path
 masic_data <- read_masic_data(path_to_MASIC_results, 
                               interference_score = TRUE)
@@ -539,10 +542,10 @@ masic_data <- read_masic_data_from_DMS(data_package_num,
 
 Normally, this would display progress bars in the console as the data is being fetched. However, the output was suppressed to save space.
 
-Table \@ref(tab:global-masic-table) shows the first 6 rows of `masic_data`.
+Table \@ref(tab:global-masic-unfiltered) shows the first 6 rows of the unfiltered `masic_data`.
 
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:90%; "><table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">(\#tab:global-masic-table)<left>First 6 rows of the MASIC data.</left>
+<caption style="font-size: initial !important;">(\#tab:global-masic-unfiltered)<left>First 6 rows of the unfiltered MASIC data.</left>
 </caption>
  <thead>
   <tr>
@@ -740,7 +743,116 @@ masic_data <- filter_masic_data(masic_data,
                                 s2n_threshold = 0)
 ```
 
-Lastly, we will save the processed MSnID and MASIC data to an .RData file with compression. This is useful in case we want to create different crosstabs with new study design tables later on.
+Table \@ref(tab:global-masic-unfiltered) shows the first 6 rows of the filtered `masic_data`.
+
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:90%; "><table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<caption style="font-size: initial !important;">(\#tab:global-masic-filtered)<left>First 6 rows of the filtered MASIC data.</left>
+</caption>
+ <thead>
+  <tr>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Dataset </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> ScanNumber </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_126.128 </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_127.125 </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_127.131 </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_128.128 </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_128.134 </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_129.131 </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_129.138 </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_130.135 </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_130.141 </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> Ion_131.138 </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 70562.39 </td>
+   <td style="text-align:right;"> 24864.62 </td>
+   <td style="text-align:right;"> 17165.80 </td>
+   <td style="text-align:right;"> 35625.00 </td>
+   <td style="text-align:right;"> 92236.87 </td>
+   <td style="text-align:right;"> 9640.23 </td>
+   <td style="text-align:right;"> 8578.05 </td>
+   <td style="text-align:right;"> 6996.69 </td>
+   <td style="text-align:right;"> 11833.07 </td>
+   <td style="text-align:right;"> 32281.34 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 23706.89 </td>
+   <td style="text-align:right;"> 13559.32 </td>
+   <td style="text-align:right;"> 5856.83 </td>
+   <td style="text-align:right;"> 16322.71 </td>
+   <td style="text-align:right;"> 34294.90 </td>
+   <td style="text-align:right;"> 4853.11 </td>
+   <td style="text-align:right;"> 7938.24 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 1465.03 </td>
+   <td style="text-align:right;"> 18182.27 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02 </td>
+   <td style="text-align:right;"> 4 </td>
+   <td style="text-align:right;"> 12459.86 </td>
+   <td style="text-align:right;"> 11785.91 </td>
+   <td style="text-align:right;"> 10932.51 </td>
+   <td style="text-align:right;"> 10653.32 </td>
+   <td style="text-align:right;"> 12328.62 </td>
+   <td style="text-align:right;"> 5959.86 </td>
+   <td style="text-align:right;"> 9905.82 </td>
+   <td style="text-align:right;"> 8387.04 </td>
+   <td style="text-align:right;"> 11166.70 </td>
+   <td style="text-align:right;"> 14053.40 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02 </td>
+   <td style="text-align:right;"> 5 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02 </td>
+   <td style="text-align:right;"> 6 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 10998.67 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 21077.05 </td>
+   <td style="text-align:right;"> 2725.50 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 6800.70 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_W_S1_01_12Oct17_Elm_AQ-17-09-02 </td>
+   <td style="text-align:right;"> 8 </td>
+   <td style="text-align:right;"> 6166.82 </td>
+   <td style="text-align:right;"> 1371.27 </td>
+   <td style="text-align:right;"> 2418.35 </td>
+   <td style="text-align:right;"> 8087.76 </td>
+   <td style="text-align:right;"> 5485.35 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 0.00 </td>
+   <td style="text-align:right;"> 1543.48 </td>
+   <td style="text-align:right;"> 1943.96 </td>
+   <td style="text-align:right;"> 7436.60 </td>
+  </tr>
+</tbody>
+</table></div>
+
+Lastly, we will save the processed MSnID and MASIC data to an .RData file with compression. This is useful in case we want to create different cross-tabs with new study design tables later on.
 
 
 ```r
@@ -759,7 +871,7 @@ To convert from PSMs and reporter ion intensities to meaningful quantitative dat
 
 ### Fractions 
 
-The fractions table consists of two columns: `Dataset` and `PlexID`. The `Dataset` column contains all of the unique datasets that are common to `msnid` and `masic_data`. Sometimes, entire datasets may be removed during the FDR filtering steps, so that is why we use the unique intersection of datasets. The `PlexID` column contains the plex ID associated with each dataset, and is typically a letter followed by a number ("S1", "S2", etc.). We can extract the plex ID from the datasets. In this case, the plex ID always comes after "_W_", so we can use a regular expression (use `help(topic = regex, package = base)` to learn more). The regular expression below says to capture an "S" followed by a single digit that appears after "\_W\_" and before an underscore.
+The fractions table consists of two columns: `Dataset` and `PlexID`. The `Dataset` column contains all of the unique datasets that are common to `msnid` and `masic_data`. Sometimes, entire datasets may be removed during the FDR filtering steps, so that is why we use the unique intersection of datasets. The `PlexID` column contains the plex ID associated with each dataset, and is typically a letter followed by a number ("S1", "S2", etc.). A plex is a set of samples that are processed together (under the same conditions). We can extract the plex ID from the datasets. In this case, the plex ID always comes after "_W_", so we can use a regular expression (use `help(topic = regex, package = base)` to learn more). The regular expression below says to capture an "S" followed by a single digit that appears after "\_W\_" and before an underscore. The plex ID is always included in the dataset names, but the format of the names will be different.
 
 
 ```r
@@ -985,14 +1097,14 @@ The samples table contains columns `PlexID`, `QuantBlock`, `ReporterName`, `Repo
 - `MeasurementName` determines the column names for the final cross-tab, and must be unique and begin with a letter. If any values of `ReporterAlias` are "ref", the corresponding `MeasurementName` should be `NA`. `NA` measurement names will not appear as columns in the final cross-tab.
 - `QuantBlock` defines the sub-plex. In a typical TMT experiment, `QuantBlock` is always 1. In case of 5 pairwise comparisons within TMT10, there will be 5 QuantBlocks (1-5) with a reference for each `QuantBlock`.
 
-For this experiment, TMT10 was used as the basis for two plexes. Channel 131 is the reference, so we set `ReporterAlias` to "ref" and `MeasurementName` to `NA` when `ReporterName` is `"131"`. This will make the reference channel absent from the quantitative cross-tab. In cases where reporter ion intensities are not normalized by a reference channel (reference = 1) or they are normalized by the average of select channels, do not set any `ReporterAlias` to "ref" or `MeasurementName` to `NA`.
+For this experiment, TMT10 was used as the basis for two plexes, and channel 131 is the reference, so we set `ReporterAlias` to "ref" and `MeasurementName` to `NA` when `ReporterName` is `"131"`. This will divide the intensities of each channel by their associated reference and make the reference channel absent from the quantitative cross-tab. In cases where reporter ion intensities are not normalized by a reference channel (reference = 1) or they are normalized by the average of select channels, do not set any `ReporterAlias` to "ref" or `MeasurementName` to `NA`.
 
 
 ```r
 # Create samples table
 samples <- reporter_converter$tmt10 %>% 
-  select(-ReporterIon) %>% # remove ReporterIon column
-  slice(rep(1:n(), times = 2)) %>% # Copy TMT10 table two times (2 plexes)
+  dplyr::select(ReporterName) %>% # only keep ReporterName column
+  dplyr::slice(rep(1:n(), times = 2)) %>% # Copy TMT10 table twice (2 plexes)
   # Create PlexID and QuantBlock columns. 
   # Plex S1 goes with first 10 rows, plex S2 with last 10
   mutate(PlexID = paste0("S", rep(1:2, each = 10)),
@@ -1169,9 +1281,9 @@ samples <- reporter_converter$tmt10 %>%
 Table \@ref(tab:samples-table) shows the `samples` table.
 
 
-### References 
+### References {#global-references}
 
-The reference can be a certain channel, average of multiple channels, or 1. The general form is an expression with `ReporterAlias` names as variables. It is evaluated for each `PlexID`/`QuantBlock` combination and applied to divide reporter ion intensities within corresponding `PlexID`/`QuantBlock`. A reference is used to convert raw intensities to relative intensities.
+The reference can be a certain channel, average of multiple channels, or 1 (no reference). The general form is an expression with `ReporterAlias` names as variables. It is evaluated for each `PlexID`/`QuantBlock` combination and applied to divide reporter ion intensities within corresponding `PlexID`/`QuantBlock`. A reference is used to convert raw intensities to relative intensities.
 
 
 ```r
@@ -1214,28 +1326,24 @@ Table \@ref(tab:references-table) shows the `references` table. The code to use 
 
 
 ```r
-# Use geometric average as reference
+## Example of how to use the geometric average as reference - not run
 references <- samples %>%
   group_by(PlexID, QuantBlock) %>%
-  summarise(Reference = sprintf(
-    "(%s)^(1/%d)", paste(ReporterAlias, collapse = "*"), n()
-  ))
+  summarise(Reference = sprintf("(%s)^(1/%d)", 
+                                paste(ReporterAlias, collapse = "*"), 
+                                n()),
+            .groups = "keep")
 ```
 
 
 ```r
-# Do not normalize by reference channel (use 1 as the reference)
+## Example of how to set the reference to 1 - not run
 references <- samples %>% 
   distinct(PlexID, QuantBlock) %>% 
   mutate(Reference = 1)
 ```
 
-Now that we have the three study design tables, we should save them so they can be used by others. We typically save them using `write.table`, which allows them to be opened in Excel, though we could also use `save` to save all three tables to the same .RData file.
-
-<!---
-TODO:
-Explain how to add the study design tables to the DMS.
---->
+Now that we have the three study design tables, we should save them.
 
 
 ```r
@@ -1248,16 +1356,17 @@ write.table(references, file = "data/3442_references.txt",
             sep = "\t", quote = FALSE, row.names = FALSE)
 ```
 
+Once the study design tables have been saved to text files, it is good practice to make them available to others. To do so, navigate to the Share Path provided in the DMS Data Package Detail Report (shown in Figure \@ref(fig:DMS-share-path)), and copy the three study design files to this location. This allows them to be accessed by others with the `get_study_design_by_dataset_package` function in the future.
 
-```r
-# Save study design tables with save
-save(fractions, samples, references, file = "data/study_design_tables.RData")
-```
+<div class="figure" style="text-align: center">
+<img src="images/data_package_share_path.PNG" alt="Location of the Share Path used to add the study design tables." width="75%" />
+<p class="caption">(\#fig:DMS-share-path)Location of the Share Path used to add the study design tables.</p>
+</div>
 
 
 ## Create Quantitative Cross-tab {#global-quant-crosstab}
 
-This is the step where MS/MS IDs and reporter ions are linked together and aggregated to the peptide or accession (i.e. protein) level. To retain protein IDs while aggregating to peptide level, set `aggregation_level <- c("accession","peptide")`. The intensities are converted to relative intensities by dividing by a reference, if specified in the study design tables. Then, they are log$_2$-transformed.
+This is the step where MS/MS IDs and reporter ions are linked together and aggregated to the peptide or accession (i.e. protein) level. To retain protein IDs while aggregating to peptide level, set `aggregation_level <- c("accession","peptide")`. The aggregation level can be any column or combination of columns in `psms(msnid)`. If specified by the study design tables, the intensities are converted to relative intensities by dividing by a reference. Then, they are log$_2$-transformed.
 
 
 ```r
@@ -1320,15 +1429,15 @@ crosstab <- create_crosstab(msnid = msnid,
   </tr>
   <tr>
    <td style="text-align:left;"> AP_004894.1 </td>
-   <td style="text-align:right;"> 0.8092676 </td>
-   <td style="text-align:right;"> -0.3113350 </td>
-   <td style="text-align:right;"> -0.0976095 </td>
-   <td style="text-align:right;"> 0.2171255 </td>
-   <td style="text-align:right;"> 0.3215692 </td>
-   <td style="text-align:right;"> -0.1638689 </td>
-   <td style="text-align:right;"> -0.3678781 </td>
-   <td style="text-align:right;"> -1.2039041 </td>
-   <td style="text-align:right;"> -0.6696829 </td>
+   <td style="text-align:right;"> 0.7947114 </td>
+   <td style="text-align:right;"> -0.3151990 </td>
+   <td style="text-align:right;"> -0.0913574 </td>
+   <td style="text-align:right;"> 0.1974134 </td>
+   <td style="text-align:right;"> 0.3033858 </td>
+   <td style="text-align:right;"> -0.1750536 </td>
+   <td style="text-align:right;"> -0.3527197 </td>
+   <td style="text-align:right;"> -1.1762004 </td>
+   <td style="text-align:right;"> -0.6438817 </td>
    <td style="text-align:right;"> -0.5124954 </td>
    <td style="text-align:right;"> -0.4428327 </td>
    <td style="text-align:right;"> -0.2364175 </td>
@@ -1350,15 +1459,15 @@ crosstab <- create_crosstab(msnid = msnid,
    <td style="text-align:right;"> -1.1240967 </td>
    <td style="text-align:right;"> -0.7140383 </td>
    <td style="text-align:right;"> -0.6652575 </td>
-   <td style="text-align:right;"> 0.2717217 </td>
-   <td style="text-align:right;"> -0.1200736 </td>
-   <td style="text-align:right;"> -0.1448289 </td>
-   <td style="text-align:right;"> -0.4287771 </td>
-   <td style="text-align:right;"> -0.6435709 </td>
-   <td style="text-align:right;"> -0.6102404 </td>
-   <td style="text-align:right;"> -0.6780284 </td>
-   <td style="text-align:right;"> -0.1548544 </td>
-   <td style="text-align:right;"> -0.3896190 </td>
+   <td style="text-align:right;"> 0.2843676 </td>
+   <td style="text-align:right;"> -0.1312555 </td>
+   <td style="text-align:right;"> -0.1477038 </td>
+   <td style="text-align:right;"> -0.4352950 </td>
+   <td style="text-align:right;"> -0.6371609 </td>
+   <td style="text-align:right;"> -0.6150788 </td>
+   <td style="text-align:right;"> -0.6819180 </td>
+   <td style="text-align:right;"> -0.1602120 </td>
+   <td style="text-align:right;"> -0.3978979 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> AP_004896.1 </td>
@@ -1445,4 +1554,41 @@ We will also save the proteins (row names) of this cross-tab in order to demonst
 global_proteins <- rownames(crosstab)
 save(global_proteins, file = "data/3442_global_proteins.RData")
 ```
+
+
+## Create MSnSet {#global-msnset}
+
+The `create_msnset` function can be used to easily create an MSnSet from the cross-tab and samples tables. More details about MSnSets will be added in a separate section at a later date. For now, read the documentation with `help("MSnSet")` or `?MSnSet`.
+
+
+```r
+# Create MSnSet
+m <- create_msnset(crosstab = crosstab, samples = samples)
+m
+```
+
+```
+## MSnSet (storageMode: lockedEnvironment)
+## assayData: 5173 features, 18 samples 
+##   element names: exprs 
+## protocolData: none
+## phenoData
+##   sampleNames: S1_1 S1_2 ... S2_9 (18 total)
+##   varLabels: ReporterName PlexID ... MeasurementName (5 total)
+##   varMetadata: labelDescription
+## featureData: none
+## experimentData: use 'experimentData(object)'
+## Annotation:  
+## - - - Processing information - - -
+##  MSnbase version: 2.18.0
+```
+
+
+
+```r
+# Save global MSnSet
+save(m, file = "data/global_msnset.RData", compress = TRUE)
+```
+
+
 

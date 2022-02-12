@@ -77,9 +77,9 @@ show(m) # Assessment of filtering quality
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  8 
-## #PSMs: 87392 at 0.044 % FDR
-## #peptides: 21634 at 0.12 % FDR
-## #accessions: 2421 at 1 % FDR
+## #PSMs: 114127 at 0.012 % FDR
+## #peptides: 23210 at 0.043 % FDR
+## #accessions: 2363 at 0.38 % FDR
 ```
 
 The results look reasonable, so we will continue on to spectral counting.

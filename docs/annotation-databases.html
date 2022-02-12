@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>7.1 Annotation Databases | Proteomics Data Analysis in R/Bioconductor</title>
+  <title>8.1 Annotation Databases | Proteomics Data Analysis in R/Bioconductor</title>
   <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="7.1 Annotation Databases | Proteomics Data Analysis in R/Bioconductor" />
+  <meta property="og:title" content="8.1 Annotation Databases | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="7.1 Annotation Databases | Proteomics Data Analysis in R/Bioconductor" />
+  <meta name="twitter:title" content="8.1 Annotation Databases | Proteomics Data Analysis in R/Bioconductor" />
   
   <meta name="twitter:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -24,7 +24,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-01-14" />
+<meta name="date" content="2022-02-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -183,9 +183,10 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="1.3.1" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#fractions"><i class="fa fa-check"></i><b>1.3.1</b> Fractions</a></li>
 <li class="chapter" data-level="1.3.2" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#samples"><i class="fa fa-check"></i><b>1.3.2</b> Samples</a></li>
-<li class="chapter" data-level="1.3.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#references"><i class="fa fa-check"></i><b>1.3.3</b> References</a></li>
+<li class="chapter" data-level="1.3.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#global-references"><i class="fa fa-check"></i><b>1.3.3</b> References</a></li>
 </ul></li>
 <li class="chapter" data-level="1.4" data-path="global-quant-crosstab.html"><a href="global-quant-crosstab.html"><i class="fa fa-check"></i><b>1.4</b> Create Quantitative Cross-tab</a></li>
+<li class="chapter" data-level="1.5" data-path="global-msnset.html"><a href="global-msnset.html"><i class="fa fa-check"></i><b>1.5</b> Create MSnSet</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="iso-phospho.html"><a href="iso-phospho.html"><i class="fa fa-check"></i><b>2</b> Isobaric Quantification: Phosphoproteomics</a>
 <ul>
@@ -209,91 +210,98 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="create-study-design-tables.html"><a href="create-study-design-tables.html"><i class="fa fa-check"></i><b>2.3</b> Create Study Design Tables</a></li>
 <li class="chapter" data-level="2.4" data-path="create-quantitative-cross-tab.html"><a href="create-quantitative-cross-tab.html"><i class="fa fa-check"></i><b>2.4</b> Create Quantitative Cross-tab</a></li>
+<li class="chapter" data-level="2.5" data-path="phospho-msnset.html"><a href="phospho-msnset.html"><i class="fa fa-check"></i><b>2.5</b> Create MSnSet</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="spectral-counting.html"><a href="spectral-counting.html"><i class="fa fa-check"></i><b>3</b> Spectral Counting</a></li>
-<li class="chapter" data-level="4" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>4</b> Exploratory Data Analysis</a>
+<li class="chapter" data-level="4" data-path="id-conversion.html"><a href="id-conversion.html"><i class="fa fa-check"></i><b>4</b> Feature ID Conversion</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>4.1</b> Count Features in Samples</a></li>
-<li class="chapter" data-level="4.2" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>4.2</b> Estimate Blood Contamination</a></li>
-<li class="chapter" data-level="4.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>4.3</b> PCA</a></li>
+<li class="chapter" data-level="4.1" data-path="conversion-with-biomart.html"><a href="conversion-with-biomart.html"><i class="fa fa-check"></i><b>4.1</b> Conversion with <code>biomaRt</code></a></li>
+<li class="chapter" data-level="4.2" data-path="conversion-with-annotationhub.html"><a href="conversion-with-annotationhub.html"><i class="fa fa-check"></i><b>4.2</b> Conversion with <code>AnnotationHub</code></a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>5</b> Heatmaps</a>
+<li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory Data Analysis</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>5.1</b> Expression Heatmaps</a></li>
-<li class="chapter" data-level="5.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>5.2</b> Correlation Heatmaps</a>
-<ul>
-<li class="chapter" data-level="5.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>5.2.1</b> Sample Correlation</a></li>
-<li class="chapter" data-level="5.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>5.2.2</b> Feature Correlation</a></li>
+<li class="chapter" data-level="5.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>5.1</b> Count Features in Samples</a></li>
+<li class="chapter" data-level="5.2" data-path="sample-boxplots.html"><a href="sample-boxplots.html"><i class="fa fa-check"></i><b>5.2</b> Sample Boxplots</a></li>
+<li class="chapter" data-level="5.3" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>5.3</b> Estimate Blood Contamination</a></li>
+<li class="chapter" data-level="5.4" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>5.4</b> PCA</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>5.3</b> Heatmap Annotation</a>
+<li class="chapter" data-level="6" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>6</b> Heatmaps</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>5.3.1</b> Modifying Default Colors</a></li>
+<li class="chapter" data-level="6.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>6.1</b> Expression Heatmaps</a></li>
+<li class="chapter" data-level="6.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>6.2</b> Correlation Heatmaps</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>6.2.1</b> Sample Correlation</a></li>
+<li class="chapter" data-level="6.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>6.2.2</b> Feature Correlation</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="modifications.html"><a href="modifications.html"><i class="fa fa-check"></i><b>5.4</b> Modifications</a>
+<li class="chapter" data-level="6.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>6.3</b> Heatmap Annotation</a>
 <ul>
-<li class="chapter" data-level="5.4.1" data-path="modifications.html"><a href="modifications.html#row-and-column-labels"><i class="fa fa-check"></i><b>5.4.1</b> Row and column labels</a></li>
-<li class="chapter" data-level="5.4.2" data-path="modifications.html"><a href="modifications.html#label-colors"><i class="fa fa-check"></i><b>5.4.2</b> Label colors</a></li>
-<li class="chapter" data-level="5.4.3" data-path="modifications.html"><a href="modifications.html#label-specific-features"><i class="fa fa-check"></i><b>5.4.3</b> Label specific features</a></li>
-<li class="chapter" data-level="5.4.4" data-path="modifications.html"><a href="modifications.html#heatmap-body-color"><i class="fa fa-check"></i><b>5.4.4</b> Heatmap body color</a></li>
-<li class="chapter" data-level="5.4.5" data-path="modifications.html"><a href="modifications.html#horizontal-heatmaps"><i class="fa fa-check"></i><b>5.4.5</b> Horizontal heatmaps</a></li>
-<li class="chapter" data-level="5.4.6" data-path="modifications.html"><a href="modifications.html#legends"><i class="fa fa-check"></i><b>5.4.6</b> Legends</a></li>
+<li class="chapter" data-level="6.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>6.3.1</b> Modifying Default Colors</a></li>
 </ul></li>
-</ul></li>
-<li class="chapter" data-level="6" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>6</b> Differential Expression Analysis</a>
+<li class="chapter" data-level="6.4" data-path="modifications.html"><a href="modifications.html"><i class="fa fa-check"></i><b>6.4</b> Modifications</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="mult-comp.html"><a href="mult-comp.html"><i class="fa fa-check"></i><b>6.1</b> Multiple Comparisons</a></li>
-<li class="chapter" data-level="6.2" data-path="linear-reg.html"><a href="linear-reg.html"><i class="fa fa-check"></i><b>6.2</b> Linear Regression</a></li>
-<li class="chapter" data-level="6.3" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>6.3</b> Two-Sample t-tests</a>
-<ul>
-<li class="chapter" data-level="6.3.1" data-path="t-tests.html"><a href="t-tests.html#t-single"><i class="fa fa-check"></i><b>6.3.1</b> One comparison</a></li>
-<li class="chapter" data-level="6.3.2" data-path="t-tests.html"><a href="t-tests.html#t-mult"><i class="fa fa-check"></i><b>6.3.2</b> Multiple comparisons</a></li>
-</ul></li>
-<li class="chapter" data-level="6.4" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>6.4</b> One-Way ANOVA</a></li>
-<li class="chapter" data-level="6.5" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>6.5</b> p-value Histograms</a></li>
-<li class="chapter" data-level="6.6" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>6.6</b> Volcano Plots</a>
-<ul>
-<li class="chapter" data-level="6.6.1" data-path="volcano-plots.html"><a href="volcano-plots.html#base-plot"><i class="fa fa-check"></i><b>6.6.1</b> Base plot</a></li>
-<li class="chapter" data-level="6.6.2" data-path="volcano-plots.html"><a href="volcano-plots.html#label-top-features"><i class="fa fa-check"></i><b>6.6.2</b> Label top features</a></li>
-<li class="chapter" data-level="6.6.3" data-path="volcano-plots.html"><a href="volcano-plots.html#label-specific-features-1"><i class="fa fa-check"></i><b>6.6.3</b> Label specific features</a></li>
-<li class="chapter" data-level="6.6.4" data-path="volcano-plots.html"><a href="volcano-plots.html#modify-point-colors"><i class="fa fa-check"></i><b>6.6.4</b> Modify point colors</a></li>
-<li class="chapter" data-level="6.6.5" data-path="volcano-plots.html"><a href="volcano-plots.html#multiple-volcano-plots"><i class="fa fa-check"></i><b>6.6.5</b> Multiple volcano plots</a></li>
+<li class="chapter" data-level="6.4.1" data-path="modifications.html"><a href="modifications.html#row-and-column-labels"><i class="fa fa-check"></i><b>6.4.1</b> Row and column labels</a></li>
+<li class="chapter" data-level="6.4.2" data-path="modifications.html"><a href="modifications.html#label-colors"><i class="fa fa-check"></i><b>6.4.2</b> Label colors</a></li>
+<li class="chapter" data-level="6.4.3" data-path="modifications.html"><a href="modifications.html#label-specific-features"><i class="fa fa-check"></i><b>6.4.3</b> Label specific features</a></li>
+<li class="chapter" data-level="6.4.4" data-path="modifications.html"><a href="modifications.html#heatmap-body-color"><i class="fa fa-check"></i><b>6.4.4</b> Heatmap body color</a></li>
+<li class="chapter" data-level="6.4.5" data-path="modifications.html"><a href="modifications.html#horizontal-heatmaps"><i class="fa fa-check"></i><b>6.4.5</b> Horizontal heatmaps</a></li>
+<li class="chapter" data-level="6.4.6" data-path="modifications.html"><a href="modifications.html#legends"><i class="fa fa-check"></i><b>6.4.6</b> Legends</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>7</b> Pathway Analysis</a>
+<li class="chapter" data-level="7" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>7</b> Differential Analysis</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>7.1</b> Annotation Databases</a>
+<li class="chapter" data-level="7.1" data-path="linear-reg.html"><a href="linear-reg.html"><i class="fa fa-check"></i><b>7.1</b> Linear Regression</a></li>
+<li class="chapter" data-level="7.2" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>7.2</b> Two-Sample t-tests</a>
 <ul>
-<li class="chapter" data-level="7.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>7.1.1</b> Gene Ontology</a>
+<li class="chapter" data-level="7.2.1" data-path="t-tests.html"><a href="t-tests.html#t-single"><i class="fa fa-check"></i><b>7.2.1</b> One comparison</a></li>
+<li class="chapter" data-level="7.2.2" data-path="t-tests.html"><a href="t-tests.html#t-mult"><i class="fa fa-check"></i><b>7.2.2</b> Multiple comparisons</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>7.3</b> One-Way ANOVA</a></li>
+<li class="chapter" data-level="7.4" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>7.4</b> p-value Histograms</a></li>
+<li class="chapter" data-level="7.5" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>7.5</b> Volcano Plots</a>
 <ul>
-<li class="chapter" data-level="7.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>7.1.1.1</b> Semantic Similarity</a></li>
-<li class="chapter" data-level="7.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>7.1.1.2</b> GO Subsets/Slims</a></li>
+<li class="chapter" data-level="7.5.1" data-path="volcano-plots.html"><a href="volcano-plots.html#base-plot"><i class="fa fa-check"></i><b>7.5.1</b> Base plot</a></li>
+<li class="chapter" data-level="7.5.2" data-path="volcano-plots.html"><a href="volcano-plots.html#label-top-features"><i class="fa fa-check"></i><b>7.5.2</b> Label top features</a></li>
+<li class="chapter" data-level="7.5.3" data-path="volcano-plots.html"><a href="volcano-plots.html#label-specific-features-1"><i class="fa fa-check"></i><b>7.5.3</b> Label specific features</a></li>
+<li class="chapter" data-level="7.5.4" data-path="volcano-plots.html"><a href="volcano-plots.html#modify-point-colors"><i class="fa fa-check"></i><b>7.5.4</b> Modify point colors</a></li>
+<li class="chapter" data-level="7.5.5" data-path="volcano-plots.html"><a href="volcano-plots.html#multiple-volcano-plots"><i class="fa fa-check"></i><b>7.5.5</b> Multiple volcano plots</a></li>
 </ul></li>
-<li class="chapter" data-level="7.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>7.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="7.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>7.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="7.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>7.1.4</b> Pfam</a></li>
+<li class="chapter" data-level="7.6" data-path="upset-plots.html"><a href="upset-plots.html"><i class="fa fa-check"></i><b>7.6</b> UpSet Plots</a></li>
 </ul></li>
-<li class="chapter" data-level="7.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>7.2</b> Over-Representation Analysis</a>
+<li class="chapter" data-level="8" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>8</b> Pathway Analysis</a>
 <ul>
-<li class="chapter" data-level="7.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>7.2.1</b> Examples</a>
+<li class="chapter" data-level="8.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>8.1</b> Annotation Databases</a>
 <ul>
-<li class="chapter" data-level="7.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>7.2.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="7.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>7.2.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="7.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>7.2.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="7.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>7.2.1.4</b> Other Databases</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="7.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>7.3</b> Gene Set Enrichment Analysis</a>
+<li class="chapter" data-level="8.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>8.1.1</b> Gene Ontology</a>
 <ul>
-<li class="chapter" data-level="7.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>7.3.1</b> Examples</a>
+<li class="chapter" data-level="8.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>8.1.1.1</b> Semantic Similarity</a></li>
+<li class="chapter" data-level="8.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>8.1.1.2</b> GO Subsets/Slims</a></li>
+</ul></li>
+<li class="chapter" data-level="8.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>8.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>8.1.3</b> KEGG</a></li>
+<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>8.1.4</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>8.2</b> Over-Representation Analysis</a>
 <ul>
-<li class="chapter" data-level="7.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>7.3.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="7.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>7.3.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="7.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>7.3.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="7.3.1.4" data-path="gsea.html"><a href="gsea.html#other-databases"><i class="fa fa-check"></i><b>7.3.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="8.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>8.2.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="8.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>8.2.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>8.2.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="8.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>8.2.1.4</b> Other Databases</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>8.3</b> Gene Set Enrichment Analysis</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>8.3.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="8.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>8.3.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="8.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>8.3.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>8.3.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="8.3.1.4" data-path="gsea.html"><a href="gsea.html#gsea-other"><i class="fa fa-check"></i><b>8.3.1.4</b> Other Databases</a></li>
 </ul></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="references-1.html"><a href="references-1.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -311,31 +319,31 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="annotation-databases" class="section level2" number="7.1">
-<h2><span class="header-section-number">7.1</span> Annotation Databases</h2>
+<div id="annotation-databases" class="section level2" number="8.1">
+<h2><span class="header-section-number">8.1</span> Annotation Databases</h2>
 <p>In this section, we will explore some of the common annotation databases used for pathway analysis.</p>
-<div id="gene-ontology" class="section level3" number="7.1.1">
-<h3><span class="header-section-number">7.1.1</span> Gene Ontology</h3>
+<div id="gene-ontology" class="section level3" number="8.1.1">
+<h3><span class="header-section-number">8.1.1</span> Gene Ontology</h3>
 <p>The Gene Ontology (GO) database is divided into three separate domains: Biological Process, Cellular Component, and Molecular Function (see the <a href="http://geneontology.org/docs/ontology-documentation/" title = "Gene Ontology overview">Gene Ontology overview</a> for more details regarding each domain). Each domain is structured as a directed acyclic graph (DAG) where nodes are terms and edges are the <a href="http://geneontology.org/docs/ontology-relations/#:~:text=Main%20relations%20used%20in%20GO" title = "Main relations used in GO">relations</a> between the terms (part of, is a, has part, regulates). Nodes can be connected to multiple child and parent nodes, where the group of genes annotated to a child node is a subset of those that are annotated to its parent node(s) <span class="citation">(<a href="#ref-noauthor_relations_2021" role="doc-biblioref">2021</a>; <a href="#ref-goeman_multiple_2008" role="doc-biblioref">Goeman et al., 2008</a>)</span>.</p>
-<div id="semantic-similarity" class="section level4" number="7.1.1.1">
-<h4><span class="header-section-number">7.1.1.1</span> Semantic Similarity</h4>
+<div id="semantic-similarity" class="section level4" number="8.1.1.1">
+<h4><span class="header-section-number">8.1.1.1</span> Semantic Similarity</h4>
 <p>Due to the DAG structure of each domain, there is often redundancy in pathway analysis results. For example, suppose terms <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a>, <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a>, and <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0046034" title = "ATP metabolic process">GO:0046034</a> are significantly over-represented biological processes. <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a> and <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0046034" title = "ATP metabolic process">GO:0046034</a> are the parent terms of <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a>. Due to this relationship, the terms likely provide much of the same information, so the inclusion of all three terms in the output is unnecessary. In order to resolve this redundancy, we can calculate the <strong>semantic similarity</strong> between pairs of GO terms, which “assesses the likeness in meaning of two concepts” <span class="citation">(<a href="#ref-pesquita_semantic_2017" role="doc-biblioref">Pesquita, 2017</a>)</span>. Basically, if two terms are highly related, we can use some other criteria (such as adjusted p-value or level in the DAG) to retain only one of the terms. Below, we use the <code>GOSemSim</code> package to calculate the semantic similarity between the terms.</p>
-<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="annotation-databases.html#cb131-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate semantic similarity between GO terms</span></span>
-<span id="cb131-2"><a href="annotation-databases.html#cb131-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GOSemSim)</span>
-<span id="cb131-3"><a href="annotation-databases.html#cb131-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(org.Hs.eg.db)</span>
-<span id="cb131-4"><a href="annotation-databases.html#cb131-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb131-5"><a href="annotation-databases.html#cb131-5" aria-hidden="true" tabindex="-1"></a><span class="co"># GO DATA for measuring semantic similarity.</span></span>
-<span id="cb131-6"><a href="annotation-databases.html#cb131-6" aria-hidden="true" tabindex="-1"></a><span class="co"># keytype is &quot;ENTREZID&quot; by default and </span></span>
-<span id="cb131-7"><a href="annotation-databases.html#cb131-7" aria-hidden="true" tabindex="-1"></a><span class="co"># information content is calculated (computeIC = TRUE)</span></span>
-<span id="cb131-8"><a href="annotation-databases.html#cb131-8" aria-hidden="true" tabindex="-1"></a>semData <span class="ot">&lt;-</span> <span class="fu">godata</span>(<span class="at">OrgDb =</span> <span class="st">&quot;org.Hs.eg.db&quot;</span>, <span class="at">ont =</span> <span class="st">&quot;BP&quot;</span>)</span>
-<span id="cb131-9"><a href="annotation-databases.html#cb131-9" aria-hidden="true" tabindex="-1"></a>terms <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;GO:0006119&quot;</span>, <span class="st">&quot;GO:0009060&quot;</span>, <span class="st">&quot;GO:0046034&quot;</span>)</span>
-<span id="cb131-10"><a href="annotation-databases.html#cb131-10" aria-hidden="true" tabindex="-1"></a><span class="co"># measure = &quot;Rel&quot; is the default for clusterProfiler::simplify</span></span>
-<span id="cb131-11"><a href="annotation-databases.html#cb131-11" aria-hidden="true" tabindex="-1"></a><span class="co"># See code for clusterProfiler:::simplify_internal</span></span>
-<span id="cb131-12"><a href="annotation-databases.html#cb131-12" aria-hidden="true" tabindex="-1"></a>sim <span class="ot">&lt;-</span> <span class="fu">mgoSim</span>(<span class="at">GO1 =</span> terms, <span class="at">GO2 =</span> terms, <span class="at">semData =</span> semData, </span>
-<span id="cb131-13"><a href="annotation-databases.html#cb131-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">measure =</span> <span class="st">&quot;Rel&quot;</span>, <span class="at">combine =</span> <span class="cn">NULL</span>) </span></code></pre></div>
+<div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb143-1"><a href="annotation-databases.html#cb143-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate semantic similarity between GO terms</span></span>
+<span id="cb143-2"><a href="annotation-databases.html#cb143-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GOSemSim)</span>
+<span id="cb143-3"><a href="annotation-databases.html#cb143-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(org.Hs.eg.db)</span>
+<span id="cb143-4"><a href="annotation-databases.html#cb143-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb143-5"><a href="annotation-databases.html#cb143-5" aria-hidden="true" tabindex="-1"></a><span class="co"># GO DATA for measuring semantic similarity.</span></span>
+<span id="cb143-6"><a href="annotation-databases.html#cb143-6" aria-hidden="true" tabindex="-1"></a><span class="co"># keytype is &quot;ENTREZID&quot; by default and </span></span>
+<span id="cb143-7"><a href="annotation-databases.html#cb143-7" aria-hidden="true" tabindex="-1"></a><span class="co"># information content is calculated (computeIC = TRUE)</span></span>
+<span id="cb143-8"><a href="annotation-databases.html#cb143-8" aria-hidden="true" tabindex="-1"></a>semData <span class="ot">&lt;-</span> <span class="fu">godata</span>(<span class="at">OrgDb =</span> <span class="st">&quot;org.Hs.eg.db&quot;</span>, <span class="at">ont =</span> <span class="st">&quot;BP&quot;</span>)</span>
+<span id="cb143-9"><a href="annotation-databases.html#cb143-9" aria-hidden="true" tabindex="-1"></a>terms <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;GO:0006119&quot;</span>, <span class="st">&quot;GO:0009060&quot;</span>, <span class="st">&quot;GO:0046034&quot;</span>)</span>
+<span id="cb143-10"><a href="annotation-databases.html#cb143-10" aria-hidden="true" tabindex="-1"></a><span class="co"># measure = &quot;Rel&quot; is the default for clusterProfiler::simplify</span></span>
+<span id="cb143-11"><a href="annotation-databases.html#cb143-11" aria-hidden="true" tabindex="-1"></a><span class="co"># See code for clusterProfiler:::simplify_internal</span></span>
+<span id="cb143-12"><a href="annotation-databases.html#cb143-12" aria-hidden="true" tabindex="-1"></a>sim <span class="ot">&lt;-</span> <span class="fu">mgoSim</span>(<span class="at">GO1 =</span> terms, <span class="at">GO2 =</span> terms, <span class="at">semData =</span> semData, </span>
+<span id="cb143-13"><a href="annotation-databases.html#cb143-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">measure =</span> <span class="st">&quot;Rel&quot;</span>, <span class="at">combine =</span> <span class="cn">NULL</span>) </span></code></pre></div>
 <table class="table table-condensed" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
-<span id="tab:sem-sim-table">Table 7.1: </span>Semantic Similarity of select GO terms
+<span id="tab:sem-sim-table">Table 8.1: </span>Semantic Similarity of select GO terms
 </caption>
 <thead>
 <tr>
@@ -398,34 +406,34 @@ div.csl-indent {
 </tbody>
 </table>
 <p>If <code>measure</code> is <code>"Lin"</code>, <code>"Jiang"</code>, or <code>"Wang"</code>, the semantic similarity of a term with itself will be 1. This is not true for the other methods.</p>
-<p>We can see from Table <a href="annotation-databases.html#tab:sem-sim-table">7.1</a> that <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a> and <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0046034" title = "ATP metabolic process">GO:0046034</a> have low semantic similarity, while <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a> is highly similar to its parent terms. This makes sense because the parent terms are not related/connected in the DAG.</p>
+<p>We can see from Table <a href="annotation-databases.html#tab:sem-sim-table">8.1</a> that <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0009060" title = "aerobic respiration">GO:0009060</a> and <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0046034" title = "ATP metabolic process">GO:0046034</a> have low semantic similarity, while <a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" title = "oxidative phosphorylation">GO:0006119</a> is highly similar to its parent terms. This makes sense because the parent terms are not related/connected in the DAG.</p>
 <p>Now that we have the semantic similarities, we can remove redundant terms. <code>clusterProfiler</code> has a function called <code>simplify</code> that will calculate semantic similarity and remove terms. By default, if there are two terms with a semantic similarity greater than 0.7, <code>simplify</code> retains the term with the lowest adjusted p-value. See <a href="https://guangchuangyu.github.io/2015/10/use-simplify-to-remove-redundancy-of-enriched-go-terms/" title = "use simplify to remove redundancy of enriched GO terms">this post</a> by Guangchuang Yu for more details on <code>clusterProfiler::simplify</code>.</p>
 </div>
-<div id="go-slim" class="section level4" number="7.1.1.2">
-<h4><span class="header-section-number">7.1.1.2</span> GO Subsets/Slims</h4>
+<div id="go-slim" class="section level4" number="8.1.1.2">
+<h4><span class="header-section-number">8.1.1.2</span> GO Subsets/Slims</h4>
 <p>Another way to handle the redundancy of GO terms is to use a <a href="http://geneontology.org/docs/go-subset-guide/" title = "Guide to GO subsets">GO slim</a>, which is a subset of more general or research-relevant terms from the GO. GO slims can be <a href="http://geneontology.org/docs/download-ontology/#subsets" title = "Download the ontology">downloaded</a> or the <code>biomaRt</code> package can be used to access GO slim accessions.</p>
-<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="annotation-databases.html#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Create human GO slim</span></span>
-<span id="cb132-2"><a href="annotation-databases.html#cb132-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biomaRt)</span>
-<span id="cb132-3"><a href="annotation-databases.html#cb132-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clusterProfiler) <span class="co"># gcSample data</span></span>
-<span id="cb132-4"><a href="annotation-databases.html#cb132-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb132-5"><a href="annotation-databases.html#cb132-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-6"><a href="annotation-databases.html#cb132-6" aria-hidden="true" tabindex="-1"></a>mart <span class="ot">&lt;-</span> <span class="fu">useMart</span>(<span class="at">biomart =</span> <span class="st">&quot;ENSEMBL_MART_ENSEMBL&quot;</span>,</span>
-<span id="cb132-7"><a href="annotation-databases.html#cb132-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">dataset =</span> <span class="st">&quot;hsapiens_gene_ensembl&quot;</span>)</span>
-<span id="cb132-8"><a href="annotation-databases.html#cb132-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment to determine which attributes to select in getBM()</span></span>
-<span id="cb132-9"><a href="annotation-databases.html#cb132-9" aria-hidden="true" tabindex="-1"></a><span class="co"># View(listAttributes(mart)) </span></span>
-<span id="cb132-10"><a href="annotation-databases.html#cb132-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb132-11"><a href="annotation-databases.html#cb132-11" aria-hidden="true" tabindex="-1"></a><span class="co"># The GO slim columns are goslim_goa_accession and goslim_goa_description.</span></span>
-<span id="cb132-12"><a href="annotation-databases.html#cb132-12" aria-hidden="true" tabindex="-1"></a><span class="co"># We will map from the Entrez IDs in gcSample to these attributes.</span></span>
-<span id="cb132-13"><a href="annotation-databases.html#cb132-13" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(gcSample)</span>
-<span id="cb132-14"><a href="annotation-databases.html#cb132-14" aria-hidden="true" tabindex="-1"></a>universe <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">unlist</span>(gcSample))</span>
-<span id="cb132-15"><a href="annotation-databases.html#cb132-15" aria-hidden="true" tabindex="-1"></a>GO_slim <span class="ot">&lt;-</span> <span class="fu">getBM</span>(<span class="at">filters =</span> <span class="st">&quot;entrezgene_id&quot;</span>,</span>
-<span id="cb132-16"><a href="annotation-databases.html#cb132-16" aria-hidden="true" tabindex="-1"></a>                 <span class="at">attributes =</span> <span class="fu">c</span>(<span class="st">&quot;entrezgene_id&quot;</span>,</span>
-<span id="cb132-17"><a href="annotation-databases.html#cb132-17" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;goslim_goa_accession&quot;</span>,</span>
-<span id="cb132-18"><a href="annotation-databases.html#cb132-18" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;goslim_goa_description&quot;</span>),</span>
-<span id="cb132-19"><a href="annotation-databases.html#cb132-19" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values =</span> universe, <span class="co"># Subset to these Entrez IDs</span></span>
-<span id="cb132-20"><a href="annotation-databases.html#cb132-20" aria-hidden="true" tabindex="-1"></a>                 <span class="at">mart =</span> mart) <span class="sc">%&gt;%</span> </span>
-<span id="cb132-21"><a href="annotation-databases.html#cb132-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert entrezgene_id from integer to character</span></span>
-<span id="cb132-22"><a href="annotation-databases.html#cb132-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.character)</span></code></pre></div>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="annotation-databases.html#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Create human GO slim</span></span>
+<span id="cb144-2"><a href="annotation-databases.html#cb144-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biomaRt)</span>
+<span id="cb144-3"><a href="annotation-databases.html#cb144-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clusterProfiler) <span class="co"># gcSample data</span></span>
+<span id="cb144-4"><a href="annotation-databases.html#cb144-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb144-5"><a href="annotation-databases.html#cb144-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb144-6"><a href="annotation-databases.html#cb144-6" aria-hidden="true" tabindex="-1"></a>mart <span class="ot">&lt;-</span> <span class="fu">useMart</span>(<span class="at">biomart =</span> <span class="st">&quot;ENSEMBL_MART_ENSEMBL&quot;</span>,</span>
+<span id="cb144-7"><a href="annotation-databases.html#cb144-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">dataset =</span> <span class="st">&quot;hsapiens_gene_ensembl&quot;</span>)</span>
+<span id="cb144-8"><a href="annotation-databases.html#cb144-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Uncomment to determine which attributes to select in getBM()</span></span>
+<span id="cb144-9"><a href="annotation-databases.html#cb144-9" aria-hidden="true" tabindex="-1"></a><span class="co"># View(listAttributes(mart)) </span></span>
+<span id="cb144-10"><a href="annotation-databases.html#cb144-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb144-11"><a href="annotation-databases.html#cb144-11" aria-hidden="true" tabindex="-1"></a><span class="co"># The GO slim columns are goslim_goa_accession and goslim_goa_description.</span></span>
+<span id="cb144-12"><a href="annotation-databases.html#cb144-12" aria-hidden="true" tabindex="-1"></a><span class="co"># We will map from the Entrez IDs in gcSample to these attributes.</span></span>
+<span id="cb144-13"><a href="annotation-databases.html#cb144-13" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(gcSample)</span>
+<span id="cb144-14"><a href="annotation-databases.html#cb144-14" aria-hidden="true" tabindex="-1"></a>universe <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">unlist</span>(gcSample))</span>
+<span id="cb144-15"><a href="annotation-databases.html#cb144-15" aria-hidden="true" tabindex="-1"></a>GO_slim <span class="ot">&lt;-</span> <span class="fu">getBM</span>(<span class="at">filters =</span> <span class="st">&quot;entrezgene_id&quot;</span>,</span>
+<span id="cb144-16"><a href="annotation-databases.html#cb144-16" aria-hidden="true" tabindex="-1"></a>                 <span class="at">attributes =</span> <span class="fu">c</span>(<span class="st">&quot;entrezgene_id&quot;</span>,</span>
+<span id="cb144-17"><a href="annotation-databases.html#cb144-17" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;goslim_goa_accession&quot;</span>,</span>
+<span id="cb144-18"><a href="annotation-databases.html#cb144-18" aria-hidden="true" tabindex="-1"></a>                                <span class="st">&quot;goslim_goa_description&quot;</span>),</span>
+<span id="cb144-19"><a href="annotation-databases.html#cb144-19" aria-hidden="true" tabindex="-1"></a>                 <span class="at">values =</span> universe, <span class="co"># Subset to these Entrez IDs</span></span>
+<span id="cb144-20"><a href="annotation-databases.html#cb144-20" aria-hidden="true" tabindex="-1"></a>                 <span class="at">mart =</span> mart) <span class="sc">%&gt;%</span> </span>
+<span id="cb144-21"><a href="annotation-databases.html#cb144-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert entrezgene_id from integer to character</span></span>
+<span id="cb144-22"><a href="annotation-databases.html#cb144-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_all</span>(as.character)</span></code></pre></div>
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -509,19 +517,19 @@ cellular nitrogen compound metabolic process
 </tr>
 </tbody>
 </table>
-<p>Unfortunately, not every GO accession maps to a domain when we use <code>biomaRt</code> (unsure why this is the case), so we won’t be able to separate the terms. However, there are two ways that we can still use these GO slim accessions. Either follow the steps for using <code>clusterProfiler::enricher</code> (shown in the Pfam subsection of Section <a href="ora.html#ora-examples">7.2.1</a>) with conversion tables created from <code>org.Hs.eg.db</code> that have been subset to the GO slim accessions, or remove any non GO slim accessions from the final results and readjust the remaining p-values (the easier approach).</p>
+<p>Unfortunately, not every GO accession maps to a domain when we use <code>biomaRt</code> (unsure why this is the case), so we won’t be able to separate the terms. However, there are two ways that we can still use these GO slim accessions. Either follow the steps for using <code>clusterProfiler::enricher</code> (shown in the Pfam subsection of Section <a href="ora.html#ora-examples">8.2.1</a>) with conversion tables created from <code>org.Hs.eg.db</code> that have been subset to the GO slim accessions, or remove any non GO slim accessions from the final results and readjust the remaining p-values (the easier approach).</p>
 </div>
 </div>
-<div id="reactome" class="section level3" number="7.1.2">
-<h3><span class="header-section-number">7.1.2</span> Reactome</h3>
+<div id="reactome" class="section level3" number="8.1.2">
+<h3><span class="header-section-number">8.1.2</span> Reactome</h3>
 <p><a href="https://reactome.org/">Home - Reactome Pathway Database</a></p>
 </div>
-<div id="kegg" class="section level3" number="7.1.3">
-<h3><span class="header-section-number">7.1.3</span> KEGG</h3>
+<div id="kegg" class="section level3" number="8.1.3">
+<h3><span class="header-section-number">8.1.3</span> KEGG</h3>
 <p><a href="https://www.genome.jp/kegg/">KEGG: Kyoto Encyclopedia of Genes and Genomes</a></p>
 </div>
-<div id="pfam" class="section level3" number="7.1.4">
-<h3><span class="header-section-number">7.1.4</span> Pfam</h3>
+<div id="pfam" class="section level3" number="8.1.4">
+<h3><span class="header-section-number">8.1.4</span> Pfam</h3>
 <p><a href="http://pfam.xfam.org/">Pfam: Home page</a>
 <a href="https://pfam-docs.readthedocs.io/en/latest/">Pfam Documentation</a>
 <a href="https://watermark.silverchair.com/140755.pdf?token=AQECAHi208BE49Ooan9kkhW_Ercy7Dm3ZL_9Cf3qfKAc485ysgAAAvYwggLyBgkqhkiG9w0BBwagggLjMIIC3wIBADCCAtgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM8AYKH-bv0m2nHfTQAgEQgIICqYjz7XAVxAREVHGvJofH3peUmhTifphKa4BaiK7Xw4XUV41B2Eolc7IBL6Q9Oh0MAVCD0yHlxqBSwJ3cETaSRp60T6Bk9Cl6nUyjTUpq-4f8YW1pUgOxvd7OCLkE11Twa60Y9T6JFyIUuCxHs6UgbRBAbwNZ-6HG9-WRHxiWzCSf6SbrH74ouzlsabLh1OZMSoJ3dfbNrBYRz-bkonlmHUBASLKee1YA6Eg4EavR1Qa07g5FwDJhGVUgDw4IyhkyGAucfJTwl5_FxFGrs8-FEQ01LZqQDzZLsL0zcH7NsD8dB6PaWcP-lrH0TQpRK-WHhSC2WmL6rEoV_zwzUE9faUkLRzbg82siXNFUhgR9cwpe_ycHF-ffmIVMjpPWYvmMzrk4YfMfp_A0OsNbu0S7vSL7gqJ-uD2HyeJ8XkAZ1HXDjBKGHyQmQX6otAHfdNHbHUMl8GaFmgUPDkfj9swuUeQ0udhKRRssJNF8cqrs-xDzNQnB3-cGhi0bfV7PT1CZxGBMhlC4UsTu0hLZUfMxozxXfDjLY0kZEu66lTJL7CYGru4JCx7qFHvaQZg3icjHLOAiwov7v9-CimdXepQrZxZQ588N2ZlgsZ5f0xiZ5qdGkGwDyhdFmLPj2f_RFXRe5TuCWLU1DTkX5NyIUYGwGJECn6n_qSsA37n73ek--_eBPV-F6GBYQe1oRWP2S5SQTxP0r3yPyh7dIlqcqQxWozlsew1fGCMjRoUv1e3SFU7LZ0j8bUSXXEAgOxjjOBSxWu1QzgjLa-MRV0IQ61tDXfGdJhSuuZSxRwlxTbpZKQWfaS3s1jFU9Hm-B-9CvhmJQgb7elOeD0cbpVMeM03ebaK-NgPA0dX5slcIe1--BtOdKoKjepE7--RS4Z4Bls4ZI0d0valj-zsHiw">profile Hidden Markov Models</a></p>
@@ -569,7 +577,7 @@ gitbook.start({
 "instapaper": false,
 "vk": false,
 "whatsapp": false,
-"all": false
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",

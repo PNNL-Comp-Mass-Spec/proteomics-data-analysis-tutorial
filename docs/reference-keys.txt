@@ -6,11 +6,14 @@ fig:fasta-ex
 fig:plot-num-pep
 fig:parsimony
 tab:global-msnid-table
-tab:global-masic-table
+tab:global-masic-unfiltered
+tab:global-masic-filtered
 tab:fractions-table
 tab:samples-table
 tab:references-table
+fig:DMS-share-path
 tab:cross-tab
+fig:prior-inference
 tab:phospho-msnid-table
 tab:unnamed-chunk-21
 tab:sem-sim-table
@@ -37,8 +40,9 @@ filter-masic-data
 fetch-study-design-tables
 fractions
 samples
-references
+global-references
 global-quant-crosstab
+global-msnset
 iso-phospho
 prepare-msms-identifications-1
 read-ms-gf-data-1
@@ -56,9 +60,14 @@ read-masic-output-1
 filter-masic-data-1
 create-study-design-tables
 create-quantitative-cross-tab
+phospho-msnset
 spectral-counting
+id-conversion
+conversion-with-biomart
+conversion-with-annotationhub
 exploratory-data-analysis
 count-features-in-samples
+sample-boxplots
 estimate-blood-contamination
 pca
 heatmaps
@@ -76,7 +85,6 @@ heatmap-body-color
 horizontal-heatmaps
 legends
 DEA
-mult-comp
 linear-reg
 t-tests
 t-single
@@ -89,6 +97,7 @@ label-top-features
 label-specific-features-1
 modify-point-colors
 multiple-volcano-plots
+upset-plots
 pathway-analysis
 annotation-databases
 gene-ontology
@@ -108,4 +117,4 @@ examples
 gene-ontology-1
 reactome-1
 pfam-1
-other-databases
+gsea-other

@@ -24,7 +24,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-01-14" />
+<meta name="date" content="2022-02-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -183,9 +183,10 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="1.3.1" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#fractions"><i class="fa fa-check"></i><b>1.3.1</b> Fractions</a></li>
 <li class="chapter" data-level="1.3.2" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#samples"><i class="fa fa-check"></i><b>1.3.2</b> Samples</a></li>
-<li class="chapter" data-level="1.3.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#references"><i class="fa fa-check"></i><b>1.3.3</b> References</a></li>
+<li class="chapter" data-level="1.3.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#global-references"><i class="fa fa-check"></i><b>1.3.3</b> References</a></li>
 </ul></li>
 <li class="chapter" data-level="1.4" data-path="global-quant-crosstab.html"><a href="global-quant-crosstab.html"><i class="fa fa-check"></i><b>1.4</b> Create Quantitative Cross-tab</a></li>
+<li class="chapter" data-level="1.5" data-path="global-msnset.html"><a href="global-msnset.html"><i class="fa fa-check"></i><b>1.5</b> Create MSnSet</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="iso-phospho.html"><a href="iso-phospho.html"><i class="fa fa-check"></i><b>2</b> Isobaric Quantification: Phosphoproteomics</a>
 <ul>
@@ -209,91 +210,98 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="create-study-design-tables.html"><a href="create-study-design-tables.html"><i class="fa fa-check"></i><b>2.3</b> Create Study Design Tables</a></li>
 <li class="chapter" data-level="2.4" data-path="create-quantitative-cross-tab.html"><a href="create-quantitative-cross-tab.html"><i class="fa fa-check"></i><b>2.4</b> Create Quantitative Cross-tab</a></li>
+<li class="chapter" data-level="2.5" data-path="phospho-msnset.html"><a href="phospho-msnset.html"><i class="fa fa-check"></i><b>2.5</b> Create MSnSet</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="spectral-counting.html"><a href="spectral-counting.html"><i class="fa fa-check"></i><b>3</b> Spectral Counting</a></li>
-<li class="chapter" data-level="4" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>4</b> Exploratory Data Analysis</a>
+<li class="chapter" data-level="4" data-path="id-conversion.html"><a href="id-conversion.html"><i class="fa fa-check"></i><b>4</b> Feature ID Conversion</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>4.1</b> Count Features in Samples</a></li>
-<li class="chapter" data-level="4.2" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>4.2</b> Estimate Blood Contamination</a></li>
-<li class="chapter" data-level="4.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>4.3</b> PCA</a></li>
+<li class="chapter" data-level="4.1" data-path="conversion-with-biomart.html"><a href="conversion-with-biomart.html"><i class="fa fa-check"></i><b>4.1</b> Conversion with <code>biomaRt</code></a></li>
+<li class="chapter" data-level="4.2" data-path="conversion-with-annotationhub.html"><a href="conversion-with-annotationhub.html"><i class="fa fa-check"></i><b>4.2</b> Conversion with <code>AnnotationHub</code></a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>5</b> Heatmaps</a>
+<li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory Data Analysis</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>5.1</b> Expression Heatmaps</a></li>
-<li class="chapter" data-level="5.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>5.2</b> Correlation Heatmaps</a>
-<ul>
-<li class="chapter" data-level="5.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>5.2.1</b> Sample Correlation</a></li>
-<li class="chapter" data-level="5.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>5.2.2</b> Feature Correlation</a></li>
+<li class="chapter" data-level="5.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>5.1</b> Count Features in Samples</a></li>
+<li class="chapter" data-level="5.2" data-path="sample-boxplots.html"><a href="sample-boxplots.html"><i class="fa fa-check"></i><b>5.2</b> Sample Boxplots</a></li>
+<li class="chapter" data-level="5.3" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>5.3</b> Estimate Blood Contamination</a></li>
+<li class="chapter" data-level="5.4" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>5.4</b> PCA</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>5.3</b> Heatmap Annotation</a>
+<li class="chapter" data-level="6" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>6</b> Heatmaps</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>5.3.1</b> Modifying Default Colors</a></li>
+<li class="chapter" data-level="6.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>6.1</b> Expression Heatmaps</a></li>
+<li class="chapter" data-level="6.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>6.2</b> Correlation Heatmaps</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>6.2.1</b> Sample Correlation</a></li>
+<li class="chapter" data-level="6.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>6.2.2</b> Feature Correlation</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="modifications.html"><a href="modifications.html"><i class="fa fa-check"></i><b>5.4</b> Modifications</a>
+<li class="chapter" data-level="6.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>6.3</b> Heatmap Annotation</a>
 <ul>
-<li class="chapter" data-level="5.4.1" data-path="modifications.html"><a href="modifications.html#row-and-column-labels"><i class="fa fa-check"></i><b>5.4.1</b> Row and column labels</a></li>
-<li class="chapter" data-level="5.4.2" data-path="modifications.html"><a href="modifications.html#label-colors"><i class="fa fa-check"></i><b>5.4.2</b> Label colors</a></li>
-<li class="chapter" data-level="5.4.3" data-path="modifications.html"><a href="modifications.html#label-specific-features"><i class="fa fa-check"></i><b>5.4.3</b> Label specific features</a></li>
-<li class="chapter" data-level="5.4.4" data-path="modifications.html"><a href="modifications.html#heatmap-body-color"><i class="fa fa-check"></i><b>5.4.4</b> Heatmap body color</a></li>
-<li class="chapter" data-level="5.4.5" data-path="modifications.html"><a href="modifications.html#horizontal-heatmaps"><i class="fa fa-check"></i><b>5.4.5</b> Horizontal heatmaps</a></li>
-<li class="chapter" data-level="5.4.6" data-path="modifications.html"><a href="modifications.html#legends"><i class="fa fa-check"></i><b>5.4.6</b> Legends</a></li>
+<li class="chapter" data-level="6.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>6.3.1</b> Modifying Default Colors</a></li>
 </ul></li>
-</ul></li>
-<li class="chapter" data-level="6" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>6</b> Differential Expression Analysis</a>
+<li class="chapter" data-level="6.4" data-path="modifications.html"><a href="modifications.html"><i class="fa fa-check"></i><b>6.4</b> Modifications</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="mult-comp.html"><a href="mult-comp.html"><i class="fa fa-check"></i><b>6.1</b> Multiple Comparisons</a></li>
-<li class="chapter" data-level="6.2" data-path="linear-reg.html"><a href="linear-reg.html"><i class="fa fa-check"></i><b>6.2</b> Linear Regression</a></li>
-<li class="chapter" data-level="6.3" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>6.3</b> Two-Sample t-tests</a>
-<ul>
-<li class="chapter" data-level="6.3.1" data-path="t-tests.html"><a href="t-tests.html#t-single"><i class="fa fa-check"></i><b>6.3.1</b> One comparison</a></li>
-<li class="chapter" data-level="6.3.2" data-path="t-tests.html"><a href="t-tests.html#t-mult"><i class="fa fa-check"></i><b>6.3.2</b> Multiple comparisons</a></li>
-</ul></li>
-<li class="chapter" data-level="6.4" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>6.4</b> One-Way ANOVA</a></li>
-<li class="chapter" data-level="6.5" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>6.5</b> p-value Histograms</a></li>
-<li class="chapter" data-level="6.6" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>6.6</b> Volcano Plots</a>
-<ul>
-<li class="chapter" data-level="6.6.1" data-path="volcano-plots.html"><a href="volcano-plots.html#base-plot"><i class="fa fa-check"></i><b>6.6.1</b> Base plot</a></li>
-<li class="chapter" data-level="6.6.2" data-path="volcano-plots.html"><a href="volcano-plots.html#label-top-features"><i class="fa fa-check"></i><b>6.6.2</b> Label top features</a></li>
-<li class="chapter" data-level="6.6.3" data-path="volcano-plots.html"><a href="volcano-plots.html#label-specific-features-1"><i class="fa fa-check"></i><b>6.6.3</b> Label specific features</a></li>
-<li class="chapter" data-level="6.6.4" data-path="volcano-plots.html"><a href="volcano-plots.html#modify-point-colors"><i class="fa fa-check"></i><b>6.6.4</b> Modify point colors</a></li>
-<li class="chapter" data-level="6.6.5" data-path="volcano-plots.html"><a href="volcano-plots.html#multiple-volcano-plots"><i class="fa fa-check"></i><b>6.6.5</b> Multiple volcano plots</a></li>
+<li class="chapter" data-level="6.4.1" data-path="modifications.html"><a href="modifications.html#row-and-column-labels"><i class="fa fa-check"></i><b>6.4.1</b> Row and column labels</a></li>
+<li class="chapter" data-level="6.4.2" data-path="modifications.html"><a href="modifications.html#label-colors"><i class="fa fa-check"></i><b>6.4.2</b> Label colors</a></li>
+<li class="chapter" data-level="6.4.3" data-path="modifications.html"><a href="modifications.html#label-specific-features"><i class="fa fa-check"></i><b>6.4.3</b> Label specific features</a></li>
+<li class="chapter" data-level="6.4.4" data-path="modifications.html"><a href="modifications.html#heatmap-body-color"><i class="fa fa-check"></i><b>6.4.4</b> Heatmap body color</a></li>
+<li class="chapter" data-level="6.4.5" data-path="modifications.html"><a href="modifications.html#horizontal-heatmaps"><i class="fa fa-check"></i><b>6.4.5</b> Horizontal heatmaps</a></li>
+<li class="chapter" data-level="6.4.6" data-path="modifications.html"><a href="modifications.html#legends"><i class="fa fa-check"></i><b>6.4.6</b> Legends</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>7</b> Pathway Analysis</a>
+<li class="chapter" data-level="7" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>7</b> Differential Analysis</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>7.1</b> Annotation Databases</a>
+<li class="chapter" data-level="7.1" data-path="linear-reg.html"><a href="linear-reg.html"><i class="fa fa-check"></i><b>7.1</b> Linear Regression</a></li>
+<li class="chapter" data-level="7.2" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>7.2</b> Two-Sample t-tests</a>
 <ul>
-<li class="chapter" data-level="7.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>7.1.1</b> Gene Ontology</a>
+<li class="chapter" data-level="7.2.1" data-path="t-tests.html"><a href="t-tests.html#t-single"><i class="fa fa-check"></i><b>7.2.1</b> One comparison</a></li>
+<li class="chapter" data-level="7.2.2" data-path="t-tests.html"><a href="t-tests.html#t-mult"><i class="fa fa-check"></i><b>7.2.2</b> Multiple comparisons</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>7.3</b> One-Way ANOVA</a></li>
+<li class="chapter" data-level="7.4" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>7.4</b> p-value Histograms</a></li>
+<li class="chapter" data-level="7.5" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>7.5</b> Volcano Plots</a>
 <ul>
-<li class="chapter" data-level="7.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>7.1.1.1</b> Semantic Similarity</a></li>
-<li class="chapter" data-level="7.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>7.1.1.2</b> GO Subsets/Slims</a></li>
+<li class="chapter" data-level="7.5.1" data-path="volcano-plots.html"><a href="volcano-plots.html#base-plot"><i class="fa fa-check"></i><b>7.5.1</b> Base plot</a></li>
+<li class="chapter" data-level="7.5.2" data-path="volcano-plots.html"><a href="volcano-plots.html#label-top-features"><i class="fa fa-check"></i><b>7.5.2</b> Label top features</a></li>
+<li class="chapter" data-level="7.5.3" data-path="volcano-plots.html"><a href="volcano-plots.html#label-specific-features-1"><i class="fa fa-check"></i><b>7.5.3</b> Label specific features</a></li>
+<li class="chapter" data-level="7.5.4" data-path="volcano-plots.html"><a href="volcano-plots.html#modify-point-colors"><i class="fa fa-check"></i><b>7.5.4</b> Modify point colors</a></li>
+<li class="chapter" data-level="7.5.5" data-path="volcano-plots.html"><a href="volcano-plots.html#multiple-volcano-plots"><i class="fa fa-check"></i><b>7.5.5</b> Multiple volcano plots</a></li>
 </ul></li>
-<li class="chapter" data-level="7.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>7.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="7.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>7.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="7.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>7.1.4</b> Pfam</a></li>
+<li class="chapter" data-level="7.6" data-path="upset-plots.html"><a href="upset-plots.html"><i class="fa fa-check"></i><b>7.6</b> UpSet Plots</a></li>
 </ul></li>
-<li class="chapter" data-level="7.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>7.2</b> Over-Representation Analysis</a>
+<li class="chapter" data-level="8" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>8</b> Pathway Analysis</a>
 <ul>
-<li class="chapter" data-level="7.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>7.2.1</b> Examples</a>
+<li class="chapter" data-level="8.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>8.1</b> Annotation Databases</a>
 <ul>
-<li class="chapter" data-level="7.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>7.2.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="7.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>7.2.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="7.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>7.2.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="7.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>7.2.1.4</b> Other Databases</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="7.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>7.3</b> Gene Set Enrichment Analysis</a>
+<li class="chapter" data-level="8.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>8.1.1</b> Gene Ontology</a>
 <ul>
-<li class="chapter" data-level="7.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>7.3.1</b> Examples</a>
+<li class="chapter" data-level="8.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>8.1.1.1</b> Semantic Similarity</a></li>
+<li class="chapter" data-level="8.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>8.1.1.2</b> GO Subsets/Slims</a></li>
+</ul></li>
+<li class="chapter" data-level="8.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>8.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>8.1.3</b> KEGG</a></li>
+<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>8.1.4</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>8.2</b> Over-Representation Analysis</a>
 <ul>
-<li class="chapter" data-level="7.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>7.3.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="7.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>7.3.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="7.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>7.3.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="7.3.1.4" data-path="gsea.html"><a href="gsea.html#other-databases"><i class="fa fa-check"></i><b>7.3.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="8.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>8.2.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="8.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>8.2.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>8.2.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="8.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>8.2.1.4</b> Other Databases</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>8.3</b> Gene Set Enrichment Analysis</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>8.3.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="8.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>8.3.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="8.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>8.3.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>8.3.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="8.3.1.4" data-path="gsea.html"><a href="gsea.html#gsea-other"><i class="fa fa-check"></i><b>8.3.1.4</b> Other Databases</a></li>
 </ul></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="references-1.html"><a href="references-1.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -314,16 +322,19 @@ div.csl-indent {
 <div id="iso-global" class="section level1" number="1">
 <h1><span class="header-section-number">Section 1</span> Isobaric Quantification: Proteomics</h1>
 <p>This pipeline shows how to process global proteomics TMT data with <code>PlexedPiper</code>. We will use data package 3442, which is “PlexedPiperTestData global.” In addition to PlexedPiper, we will also need MSnID (the basis for PlexedPiper) and PNNL.DMS.utils to interface with PNNL’s DMS.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="iso-global.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Uncomment to install missing packages</span></span>
-<span id="cb1-2"><a href="iso-global.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages(&quot;remotes&quot;)</span></span>
-<span id="cb1-3"><a href="iso-global.html#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># library(remotes)</span></span>
-<span id="cb1-4"><a href="iso-global.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># install_github(&quot;PNNL-Comp-Mass-Spec/MSnID@pnnl-master&quot;)</span></span>
-<span id="cb1-5"><a href="iso-global.html#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># install_github(&quot;PNNL-Comp-Mass-Spec/PlexedPiper&quot;)</span></span>
-<span id="cb1-6"><a href="iso-global.html#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># install_github(&quot;PNNL-Comp-Mass-Spec/PNNL.DMS.utils&quot;)</span></span>
-<span id="cb1-7"><a href="iso-global.html#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MSnID)</span>
-<span id="cb1-8"><a href="iso-global.html#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PlexedPiper)</span>
-<span id="cb1-9"><a href="iso-global.html#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PNNL.DMS.utils)</span></code></pre></div>
-<p>The pipeline can be broken up into four major parts: prepare MS/MS identifications, prepare reporter ion intensities, create study design tables, and create a quantitative cross-tab.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="iso-global.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Install missing packages</span></span>
+<span id="cb1-2"><a href="iso-global.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;remotes&quot;</span>, <span class="at">quietly =</span> T)) <span class="fu">install.packages</span>(<span class="st">&quot;remotes&quot;</span>)</span>
+<span id="cb1-3"><a href="iso-global.html#cb1-3" aria-hidden="true" tabindex="-1"></a>git_packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;MSnID@pnnl-master&quot;</span>, <span class="st">&quot;PlexedPiper&quot;</span>, <span class="st">&quot;PNNL.DMS.utils&quot;</span>)</span>
+<span id="cb1-4"><a href="iso-global.html#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pkg_i <span class="cf">in</span> git_packages) {</span>
+<span id="cb1-5"><a href="iso-global.html#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="fu">sub</span>(<span class="st">&quot;@.*&quot;</span>, <span class="st">&quot;&quot;</span>, pkg_i), <span class="at">quietly =</span> T, <span class="at">character.only =</span> T))</span>
+<span id="cb1-6"><a href="iso-global.html#cb1-6" aria-hidden="true" tabindex="-1"></a>    remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="fu">file.path</span>(<span class="st">&quot;PNNL-Comp-Mass-Spec&quot;</span>, pkg_i))</span>
+<span id="cb1-7"><a href="iso-global.html#cb1-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-8"><a href="iso-global.html#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="do">## ------------------------</span></span>
+<span id="cb1-9"><a href="iso-global.html#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="iso-global.html#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MSnID)</span>
+<span id="cb1-11"><a href="iso-global.html#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PlexedPiper)</span>
+<span id="cb1-12"><a href="iso-global.html#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(PNNL.DMS.utils)</span></code></pre></div>
+<p>The pipeline can be broken up into four major parts: prepare MS/MS identifications, prepare reporter ion intensities, create study design tables, and create a quantitative cross-tab. There is another step that is required for statistical testing, which is to create an MSnSet.</p>
 </div>
             </section>
 
@@ -355,7 +366,7 @@ gitbook.start({
 "instapaper": false,
 "vk": false,
 "whatsapp": false,
-"all": false
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",

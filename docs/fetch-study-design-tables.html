@@ -24,7 +24,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-01-14" />
+<meta name="date" content="2022-02-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -183,9 +183,10 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="1.3.1" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#fractions"><i class="fa fa-check"></i><b>1.3.1</b> Fractions</a></li>
 <li class="chapter" data-level="1.3.2" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#samples"><i class="fa fa-check"></i><b>1.3.2</b> Samples</a></li>
-<li class="chapter" data-level="1.3.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#references"><i class="fa fa-check"></i><b>1.3.3</b> References</a></li>
+<li class="chapter" data-level="1.3.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#global-references"><i class="fa fa-check"></i><b>1.3.3</b> References</a></li>
 </ul></li>
 <li class="chapter" data-level="1.4" data-path="global-quant-crosstab.html"><a href="global-quant-crosstab.html"><i class="fa fa-check"></i><b>1.4</b> Create Quantitative Cross-tab</a></li>
+<li class="chapter" data-level="1.5" data-path="global-msnset.html"><a href="global-msnset.html"><i class="fa fa-check"></i><b>1.5</b> Create MSnSet</a></li>
 </ul></li>
 <li class="chapter" data-level="2" data-path="iso-phospho.html"><a href="iso-phospho.html"><i class="fa fa-check"></i><b>2</b> Isobaric Quantification: Phosphoproteomics</a>
 <ul>
@@ -209,91 +210,98 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="create-study-design-tables.html"><a href="create-study-design-tables.html"><i class="fa fa-check"></i><b>2.3</b> Create Study Design Tables</a></li>
 <li class="chapter" data-level="2.4" data-path="create-quantitative-cross-tab.html"><a href="create-quantitative-cross-tab.html"><i class="fa fa-check"></i><b>2.4</b> Create Quantitative Cross-tab</a></li>
+<li class="chapter" data-level="2.5" data-path="phospho-msnset.html"><a href="phospho-msnset.html"><i class="fa fa-check"></i><b>2.5</b> Create MSnSet</a></li>
 </ul></li>
 <li class="chapter" data-level="3" data-path="spectral-counting.html"><a href="spectral-counting.html"><i class="fa fa-check"></i><b>3</b> Spectral Counting</a></li>
-<li class="chapter" data-level="4" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>4</b> Exploratory Data Analysis</a>
+<li class="chapter" data-level="4" data-path="id-conversion.html"><a href="id-conversion.html"><i class="fa fa-check"></i><b>4</b> Feature ID Conversion</a>
 <ul>
-<li class="chapter" data-level="4.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>4.1</b> Count Features in Samples</a></li>
-<li class="chapter" data-level="4.2" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>4.2</b> Estimate Blood Contamination</a></li>
-<li class="chapter" data-level="4.3" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>4.3</b> PCA</a></li>
+<li class="chapter" data-level="4.1" data-path="conversion-with-biomart.html"><a href="conversion-with-biomart.html"><i class="fa fa-check"></i><b>4.1</b> Conversion with <code>biomaRt</code></a></li>
+<li class="chapter" data-level="4.2" data-path="conversion-with-annotationhub.html"><a href="conversion-with-annotationhub.html"><i class="fa fa-check"></i><b>4.2</b> Conversion with <code>AnnotationHub</code></a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>5</b> Heatmaps</a>
+<li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory Data Analysis</a>
 <ul>
-<li class="chapter" data-level="5.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>5.1</b> Expression Heatmaps</a></li>
-<li class="chapter" data-level="5.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>5.2</b> Correlation Heatmaps</a>
-<ul>
-<li class="chapter" data-level="5.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>5.2.1</b> Sample Correlation</a></li>
-<li class="chapter" data-level="5.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>5.2.2</b> Feature Correlation</a></li>
+<li class="chapter" data-level="5.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>5.1</b> Count Features in Samples</a></li>
+<li class="chapter" data-level="5.2" data-path="sample-boxplots.html"><a href="sample-boxplots.html"><i class="fa fa-check"></i><b>5.2</b> Sample Boxplots</a></li>
+<li class="chapter" data-level="5.3" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>5.3</b> Estimate Blood Contamination</a></li>
+<li class="chapter" data-level="5.4" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>5.4</b> PCA</a></li>
 </ul></li>
-<li class="chapter" data-level="5.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>5.3</b> Heatmap Annotation</a>
+<li class="chapter" data-level="6" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>6</b> Heatmaps</a>
 <ul>
-<li class="chapter" data-level="5.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>5.3.1</b> Modifying Default Colors</a></li>
+<li class="chapter" data-level="6.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>6.1</b> Expression Heatmaps</a></li>
+<li class="chapter" data-level="6.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>6.2</b> Correlation Heatmaps</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>6.2.1</b> Sample Correlation</a></li>
+<li class="chapter" data-level="6.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>6.2.2</b> Feature Correlation</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="modifications.html"><a href="modifications.html"><i class="fa fa-check"></i><b>5.4</b> Modifications</a>
+<li class="chapter" data-level="6.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>6.3</b> Heatmap Annotation</a>
 <ul>
-<li class="chapter" data-level="5.4.1" data-path="modifications.html"><a href="modifications.html#row-and-column-labels"><i class="fa fa-check"></i><b>5.4.1</b> Row and column labels</a></li>
-<li class="chapter" data-level="5.4.2" data-path="modifications.html"><a href="modifications.html#label-colors"><i class="fa fa-check"></i><b>5.4.2</b> Label colors</a></li>
-<li class="chapter" data-level="5.4.3" data-path="modifications.html"><a href="modifications.html#label-specific-features"><i class="fa fa-check"></i><b>5.4.3</b> Label specific features</a></li>
-<li class="chapter" data-level="5.4.4" data-path="modifications.html"><a href="modifications.html#heatmap-body-color"><i class="fa fa-check"></i><b>5.4.4</b> Heatmap body color</a></li>
-<li class="chapter" data-level="5.4.5" data-path="modifications.html"><a href="modifications.html#horizontal-heatmaps"><i class="fa fa-check"></i><b>5.4.5</b> Horizontal heatmaps</a></li>
-<li class="chapter" data-level="5.4.6" data-path="modifications.html"><a href="modifications.html#legends"><i class="fa fa-check"></i><b>5.4.6</b> Legends</a></li>
+<li class="chapter" data-level="6.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>6.3.1</b> Modifying Default Colors</a></li>
 </ul></li>
-</ul></li>
-<li class="chapter" data-level="6" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>6</b> Differential Expression Analysis</a>
+<li class="chapter" data-level="6.4" data-path="modifications.html"><a href="modifications.html"><i class="fa fa-check"></i><b>6.4</b> Modifications</a>
 <ul>
-<li class="chapter" data-level="6.1" data-path="mult-comp.html"><a href="mult-comp.html"><i class="fa fa-check"></i><b>6.1</b> Multiple Comparisons</a></li>
-<li class="chapter" data-level="6.2" data-path="linear-reg.html"><a href="linear-reg.html"><i class="fa fa-check"></i><b>6.2</b> Linear Regression</a></li>
-<li class="chapter" data-level="6.3" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>6.3</b> Two-Sample t-tests</a>
-<ul>
-<li class="chapter" data-level="6.3.1" data-path="t-tests.html"><a href="t-tests.html#t-single"><i class="fa fa-check"></i><b>6.3.1</b> One comparison</a></li>
-<li class="chapter" data-level="6.3.2" data-path="t-tests.html"><a href="t-tests.html#t-mult"><i class="fa fa-check"></i><b>6.3.2</b> Multiple comparisons</a></li>
-</ul></li>
-<li class="chapter" data-level="6.4" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>6.4</b> One-Way ANOVA</a></li>
-<li class="chapter" data-level="6.5" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>6.5</b> p-value Histograms</a></li>
-<li class="chapter" data-level="6.6" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>6.6</b> Volcano Plots</a>
-<ul>
-<li class="chapter" data-level="6.6.1" data-path="volcano-plots.html"><a href="volcano-plots.html#base-plot"><i class="fa fa-check"></i><b>6.6.1</b> Base plot</a></li>
-<li class="chapter" data-level="6.6.2" data-path="volcano-plots.html"><a href="volcano-plots.html#label-top-features"><i class="fa fa-check"></i><b>6.6.2</b> Label top features</a></li>
-<li class="chapter" data-level="6.6.3" data-path="volcano-plots.html"><a href="volcano-plots.html#label-specific-features-1"><i class="fa fa-check"></i><b>6.6.3</b> Label specific features</a></li>
-<li class="chapter" data-level="6.6.4" data-path="volcano-plots.html"><a href="volcano-plots.html#modify-point-colors"><i class="fa fa-check"></i><b>6.6.4</b> Modify point colors</a></li>
-<li class="chapter" data-level="6.6.5" data-path="volcano-plots.html"><a href="volcano-plots.html#multiple-volcano-plots"><i class="fa fa-check"></i><b>6.6.5</b> Multiple volcano plots</a></li>
+<li class="chapter" data-level="6.4.1" data-path="modifications.html"><a href="modifications.html#row-and-column-labels"><i class="fa fa-check"></i><b>6.4.1</b> Row and column labels</a></li>
+<li class="chapter" data-level="6.4.2" data-path="modifications.html"><a href="modifications.html#label-colors"><i class="fa fa-check"></i><b>6.4.2</b> Label colors</a></li>
+<li class="chapter" data-level="6.4.3" data-path="modifications.html"><a href="modifications.html#label-specific-features"><i class="fa fa-check"></i><b>6.4.3</b> Label specific features</a></li>
+<li class="chapter" data-level="6.4.4" data-path="modifications.html"><a href="modifications.html#heatmap-body-color"><i class="fa fa-check"></i><b>6.4.4</b> Heatmap body color</a></li>
+<li class="chapter" data-level="6.4.5" data-path="modifications.html"><a href="modifications.html#horizontal-heatmaps"><i class="fa fa-check"></i><b>6.4.5</b> Horizontal heatmaps</a></li>
+<li class="chapter" data-level="6.4.6" data-path="modifications.html"><a href="modifications.html#legends"><i class="fa fa-check"></i><b>6.4.6</b> Legends</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="7" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>7</b> Pathway Analysis</a>
+<li class="chapter" data-level="7" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>7</b> Differential Analysis</a>
 <ul>
-<li class="chapter" data-level="7.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>7.1</b> Annotation Databases</a>
+<li class="chapter" data-level="7.1" data-path="linear-reg.html"><a href="linear-reg.html"><i class="fa fa-check"></i><b>7.1</b> Linear Regression</a></li>
+<li class="chapter" data-level="7.2" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>7.2</b> Two-Sample t-tests</a>
 <ul>
-<li class="chapter" data-level="7.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>7.1.1</b> Gene Ontology</a>
+<li class="chapter" data-level="7.2.1" data-path="t-tests.html"><a href="t-tests.html#t-single"><i class="fa fa-check"></i><b>7.2.1</b> One comparison</a></li>
+<li class="chapter" data-level="7.2.2" data-path="t-tests.html"><a href="t-tests.html#t-mult"><i class="fa fa-check"></i><b>7.2.2</b> Multiple comparisons</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>7.3</b> One-Way ANOVA</a></li>
+<li class="chapter" data-level="7.4" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>7.4</b> p-value Histograms</a></li>
+<li class="chapter" data-level="7.5" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>7.5</b> Volcano Plots</a>
 <ul>
-<li class="chapter" data-level="7.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>7.1.1.1</b> Semantic Similarity</a></li>
-<li class="chapter" data-level="7.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>7.1.1.2</b> GO Subsets/Slims</a></li>
+<li class="chapter" data-level="7.5.1" data-path="volcano-plots.html"><a href="volcano-plots.html#base-plot"><i class="fa fa-check"></i><b>7.5.1</b> Base plot</a></li>
+<li class="chapter" data-level="7.5.2" data-path="volcano-plots.html"><a href="volcano-plots.html#label-top-features"><i class="fa fa-check"></i><b>7.5.2</b> Label top features</a></li>
+<li class="chapter" data-level="7.5.3" data-path="volcano-plots.html"><a href="volcano-plots.html#label-specific-features-1"><i class="fa fa-check"></i><b>7.5.3</b> Label specific features</a></li>
+<li class="chapter" data-level="7.5.4" data-path="volcano-plots.html"><a href="volcano-plots.html#modify-point-colors"><i class="fa fa-check"></i><b>7.5.4</b> Modify point colors</a></li>
+<li class="chapter" data-level="7.5.5" data-path="volcano-plots.html"><a href="volcano-plots.html#multiple-volcano-plots"><i class="fa fa-check"></i><b>7.5.5</b> Multiple volcano plots</a></li>
 </ul></li>
-<li class="chapter" data-level="7.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>7.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="7.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>7.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="7.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>7.1.4</b> Pfam</a></li>
+<li class="chapter" data-level="7.6" data-path="upset-plots.html"><a href="upset-plots.html"><i class="fa fa-check"></i><b>7.6</b> UpSet Plots</a></li>
 </ul></li>
-<li class="chapter" data-level="7.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>7.2</b> Over-Representation Analysis</a>
+<li class="chapter" data-level="8" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>8</b> Pathway Analysis</a>
 <ul>
-<li class="chapter" data-level="7.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>7.2.1</b> Examples</a>
+<li class="chapter" data-level="8.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>8.1</b> Annotation Databases</a>
 <ul>
-<li class="chapter" data-level="7.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>7.2.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="7.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>7.2.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="7.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>7.2.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="7.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>7.2.1.4</b> Other Databases</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="7.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>7.3</b> Gene Set Enrichment Analysis</a>
+<li class="chapter" data-level="8.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>8.1.1</b> Gene Ontology</a>
 <ul>
-<li class="chapter" data-level="7.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>7.3.1</b> Examples</a>
+<li class="chapter" data-level="8.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>8.1.1.1</b> Semantic Similarity</a></li>
+<li class="chapter" data-level="8.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>8.1.1.2</b> GO Subsets/Slims</a></li>
+</ul></li>
+<li class="chapter" data-level="8.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>8.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>8.1.3</b> KEGG</a></li>
+<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>8.1.4</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>8.2</b> Over-Representation Analysis</a>
 <ul>
-<li class="chapter" data-level="7.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>7.3.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="7.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>7.3.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="7.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>7.3.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="7.3.1.4" data-path="gsea.html"><a href="gsea.html#other-databases"><i class="fa fa-check"></i><b>7.3.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="8.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>8.2.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="8.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>8.2.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>8.2.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="8.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>8.2.1.4</b> Other Databases</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>8.3</b> Gene Set Enrichment Analysis</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>8.3.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="8.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>8.3.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="8.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>8.3.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>8.3.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="8.3.1.4" data-path="gsea.html"><a href="gsea.html#gsea-other"><i class="fa fa-check"></i><b>8.3.1.4</b> Other Databases</a></li>
 </ul></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="references-1.html"><a href="references-1.html"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -317,7 +325,7 @@ div.csl-indent {
 <p><strong>NOTE:</strong> simple study designs can be created in Excel and read in with <code>readxl::read_excel</code>, though R is the better choice when dealing with many samples.</p>
 <div id="fractions" class="section level3" number="1.3.1">
 <h3><span class="header-section-number">1.3.1</span> Fractions</h3>
-<p>The fractions table consists of two columns: <code>Dataset</code> and <code>PlexID</code>. The <code>Dataset</code> column contains all of the unique datasets that are common to <code>msnid</code> and <code>masic_data</code>. Sometimes, entire datasets may be removed during the FDR filtering steps, so that is why we use the unique intersection of datasets. The <code>PlexID</code> column contains the plex ID associated with each dataset, and is typically a letter followed by a number (“S1,” “S2,” etc.). We can extract the plex ID from the datasets. In this case, the plex ID always comes after “<em>W</em>,” so we can use a regular expression (use <code>help(topic = regex, package = base)</code> to learn more). The regular expression below says to capture an “S” followed by a single digit that appears after “_W_” and before an underscore.</p>
+<p>The fractions table consists of two columns: <code>Dataset</code> and <code>PlexID</code>. The <code>Dataset</code> column contains all of the unique datasets that are common to <code>msnid</code> and <code>masic_data</code>. Sometimes, entire datasets may be removed during the FDR filtering steps, so that is why we use the unique intersection of datasets. The <code>PlexID</code> column contains the plex ID associated with each dataset, and is typically a letter followed by a number (“S1,” “S2,” etc.). A plex is a set of samples that are processed together (under the same conditions). We can extract the plex ID from the datasets. In this case, the plex ID always comes after “<em>W</em>,” so we can use a regular expression (use <code>help(topic = regex, package = base)</code> to learn more). The regular expression below says to capture an “S” followed by a single digit that appears after “_W_” and before an underscore. The plex ID is always included in the dataset names, but the format of the names will be different.</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="fetch-study-design-tables.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create fractions table</span></span>
 <span id="cb24-2"><a href="fetch-study-design-tables.html#cb24-2" aria-hidden="true" tabindex="-1"></a>datasets <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">intersect</span>(msnid<span class="sc">$</span>Dataset, masic_data<span class="sc">$</span>Dataset))</span>
 <span id="cb24-3"><a href="fetch-study-design-tables.html#cb24-3" aria-hidden="true" tabindex="-1"></a>fractions <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Dataset =</span> datasets) <span class="sc">%&gt;%</span> </span>
@@ -325,7 +333,7 @@ div.csl-indent {
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; ">
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-<span id="tab:fractions-table">Table 1.3: </span><left>Fractions</left>
+<span id="tab:fractions-table">Table 1.4: </span><left>Fractions</left>
 </caption>
 <thead>
 <tr>
@@ -736,11 +744,11 @@ S2
 <li><code>MeasurementName</code> determines the column names for the final cross-tab, and must be unique and begin with a letter. If any values of <code>ReporterAlias</code> are “ref,” the corresponding <code>MeasurementName</code> should be <code>NA</code>. <code>NA</code> measurement names will not appear as columns in the final cross-tab.</li>
 <li><code>QuantBlock</code> defines the sub-plex. In a typical TMT experiment, <code>QuantBlock</code> is always 1. In case of 5 pairwise comparisons within TMT10, there will be 5 QuantBlocks (1-5) with a reference for each <code>QuantBlock</code>.</li>
 </ul>
-<p>For this experiment, TMT10 was used as the basis for two plexes. Channel 131 is the reference, so we set <code>ReporterAlias</code> to “ref” and <code>MeasurementName</code> to <code>NA</code> when <code>ReporterName</code> is <code>"131"</code>. This will make the reference channel absent from the quantitative cross-tab. In cases where reporter ion intensities are not normalized by a reference channel (reference = 1) or they are normalized by the average of select channels, do not set any <code>ReporterAlias</code> to “ref” or <code>MeasurementName</code> to <code>NA</code>.</p>
+<p>For this experiment, TMT10 was used as the basis for two plexes, and channel 131 is the reference, so we set <code>ReporterAlias</code> to “ref” and <code>MeasurementName</code> to <code>NA</code> when <code>ReporterName</code> is <code>"131"</code>. This will divide the intensities of each channel by their associated reference and make the reference channel absent from the quantitative cross-tab. In cases where reporter ion intensities are not normalized by a reference channel (reference = 1) or they are normalized by the average of select channels, do not set any <code>ReporterAlias</code> to “ref” or <code>MeasurementName</code> to <code>NA</code>.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="fetch-study-design-tables.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create samples table</span></span>
 <span id="cb25-2"><a href="fetch-study-design-tables.html#cb25-2" aria-hidden="true" tabindex="-1"></a>samples <span class="ot">&lt;-</span> reporter_converter<span class="sc">$</span>tmt10 <span class="sc">%&gt;%</span> </span>
-<span id="cb25-3"><a href="fetch-study-design-tables.html#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>ReporterIon) <span class="sc">%&gt;%</span> <span class="co"># remove ReporterIon column</span></span>
-<span id="cb25-4"><a href="fetch-study-design-tables.html#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>(), <span class="at">times =</span> <span class="dv">2</span>)) <span class="sc">%&gt;%</span> <span class="co"># Copy TMT10 table two times (2 plexes)</span></span>
+<span id="cb25-3"><a href="fetch-study-design-tables.html#cb25-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(ReporterName) <span class="sc">%&gt;%</span> <span class="co"># only keep ReporterName column</span></span>
+<span id="cb25-4"><a href="fetch-study-design-tables.html#cb25-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">slice</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>(), <span class="at">times =</span> <span class="dv">2</span>)) <span class="sc">%&gt;%</span> <span class="co"># Copy TMT10 table twice (2 plexes)</span></span>
 <span id="cb25-5"><a href="fetch-study-design-tables.html#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create PlexID and QuantBlock columns. </span></span>
 <span id="cb25-6"><a href="fetch-study-design-tables.html#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Plex S1 goes with first 10 rows, plex S2 with last 10</span></span>
 <span id="cb25-7"><a href="fetch-study-design-tables.html#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">PlexID =</span> <span class="fu">paste0</span>(<span class="st">&quot;S&quot;</span>, <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">each =</span> <span class="dv">10</span>)),</span>
@@ -757,7 +765,7 @@ S2
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; ">
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-<span id="tab:samples-table">Table 1.4: </span><left>Samples</left>
+<span id="tab:samples-table">Table 1.5: </span><left>Samples</left>
 </caption>
 <thead>
 <tr>
@@ -1123,11 +1131,11 @@ NA
 </table>
 </div>
 <p></br></p>
-<p>Table <a href="fetch-study-design-tables.html#tab:samples-table">1.4</a> shows the <code>samples</code> table.</p>
+<p>Table <a href="fetch-study-design-tables.html#tab:samples-table">1.5</a> shows the <code>samples</code> table.</p>
 </div>
-<div id="references" class="section level3" number="1.3.3">
+<div id="global-references" class="section level3" number="1.3.3">
 <h3><span class="header-section-number">1.3.3</span> References</h3>
-<p>The reference can be a certain channel, average of multiple channels, or 1. The general form is an expression with <code>ReporterAlias</code> names as variables. It is evaluated for each <code>PlexID</code>/<code>QuantBlock</code> combination and applied to divide reporter ion intensities within corresponding <code>PlexID</code>/<code>QuantBlock</code>. A reference is used to convert raw intensities to relative intensities.</p>
+<p>The reference can be a certain channel, average of multiple channels, or 1 (no reference). The general form is an expression with <code>ReporterAlias</code> names as variables. It is evaluated for each <code>PlexID</code>/<code>QuantBlock</code> combination and applied to divide reporter ion intensities within corresponding <code>PlexID</code>/<code>QuantBlock</code>. A reference is used to convert raw intensities to relative intensities.</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="fetch-study-design-tables.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create references table</span></span>
 <span id="cb26-2"><a href="fetch-study-design-tables.html#cb26-2" aria-hidden="true" tabindex="-1"></a>references <span class="ot">&lt;-</span> samples <span class="sc">%&gt;%</span> </span>
 <span id="cb26-3"><a href="fetch-study-design-tables.html#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ReporterAlias <span class="sc">==</span> <span class="st">&quot;ref&quot;</span>) <span class="sc">%&gt;%</span> </span>
@@ -1135,7 +1143,7 @@ NA
 <span id="cb26-5"><a href="fetch-study-design-tables.html#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(PlexID, QuantBlock, <span class="at">Reference =</span> ReporterAlias)</span></code></pre></div>
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
-<span id="tab:references-table">Table 1.5: </span><left>References</left>
+<span id="tab:references-table">Table 1.6: </span><left>References</left>
 </caption>
 <thead>
 <tr>
@@ -1176,23 +1184,20 @@ ref
 </tbody>
 </table>
 <p></br></p>
-<p>Table <a href="fetch-study-design-tables.html#tab:references-table">1.5</a> shows the <code>references</code> table. The code to use the geometric average instead of a single channel as the reference is shown below. The geometric average is the product of the reporter ion channels to the power of (1/number of channels). For each <code>PlexID</code> group, collapse the vector of reporter ion names with <code>*</code>, surround them in parentheses, and raise to the power of (1/number of channels).</p>
+<p>Table <a href="fetch-study-design-tables.html#tab:references-table">1.6</a> shows the <code>references</code> table. The code to use the geometric average instead of a single channel as the reference is shown below. The geometric average is the product of the reporter ion channels to the power of (1/number of channels). For each <code>PlexID</code> group, collapse the vector of reporter ion names with <code>*</code>, surround them in parentheses, and raise to the power of (1/number of channels).</p>
 <p><strong>Note:</strong> if using the geometric average or no reference, make sure the samples table is correct. There should not be any <code>ReporterAlias</code> that are “ref” or <code>MeasurementName</code> that are <code>NA</code>.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="fetch-study-design-tables.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use geometric average as reference</span></span>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="fetch-study-design-tables.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Example of how to use the geometric average as reference - not run</span></span>
 <span id="cb27-2"><a href="fetch-study-design-tables.html#cb27-2" aria-hidden="true" tabindex="-1"></a>references <span class="ot">&lt;-</span> samples <span class="sc">%&gt;%</span></span>
 <span id="cb27-3"><a href="fetch-study-design-tables.html#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PlexID, QuantBlock) <span class="sc">%&gt;%</span></span>
-<span id="cb27-4"><a href="fetch-study-design-tables.html#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Reference =</span> <span class="fu">sprintf</span>(</span>
-<span id="cb27-5"><a href="fetch-study-design-tables.html#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;(%s)^(1/%d)&quot;</span>, <span class="fu">paste</span>(ReporterAlias, <span class="at">collapse =</span> <span class="st">&quot;*&quot;</span>), <span class="fu">n</span>()</span>
-<span id="cb27-6"><a href="fetch-study-design-tables.html#cb27-6" aria-hidden="true" tabindex="-1"></a>  ))</span></code></pre></div>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="fetch-study-design-tables.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Do not normalize by reference channel (use 1 as the reference)</span></span>
+<span id="cb27-4"><a href="fetch-study-design-tables.html#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Reference =</span> <span class="fu">sprintf</span>(<span class="st">&quot;(%s)^(1/%d)&quot;</span>, </span>
+<span id="cb27-5"><a href="fetch-study-design-tables.html#cb27-5" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">paste</span>(ReporterAlias, <span class="at">collapse =</span> <span class="st">&quot;*&quot;</span>), </span>
+<span id="cb27-6"><a href="fetch-study-design-tables.html#cb27-6" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">n</span>()),</span>
+<span id="cb27-7"><a href="fetch-study-design-tables.html#cb27-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">.groups =</span> <span class="st">&quot;keep&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="fetch-study-design-tables.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Example of how to set the reference to 1 - not run</span></span>
 <span id="cb28-2"><a href="fetch-study-design-tables.html#cb28-2" aria-hidden="true" tabindex="-1"></a>references <span class="ot">&lt;-</span> samples <span class="sc">%&gt;%</span> </span>
 <span id="cb28-3"><a href="fetch-study-design-tables.html#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(PlexID, QuantBlock) <span class="sc">%&gt;%</span> </span>
 <span id="cb28-4"><a href="fetch-study-design-tables.html#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Reference =</span> <span class="dv">1</span>)</span></code></pre></div>
-<p>Now that we have the three study design tables, we should save them so they can be used by others. We typically save them using <code>write.table</code>, which allows them to be opened in Excel, though we could also use <code>save</code> to save all three tables to the same .RData file.</p>
-<!---
-TODO:
-Explain how to add the study design tables to the DMS.
---->
+<p>Now that we have the three study design tables, we should save them.</p>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="fetch-study-design-tables.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save study design tables with write.table</span></span>
 <span id="cb29-2"><a href="fetch-study-design-tables.html#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(fractions, <span class="at">file =</span> <span class="st">&quot;data/3442_fractions.txt&quot;</span>,</span>
 <span id="cb29-3"><a href="fetch-study-design-tables.html#cb29-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
@@ -1200,8 +1205,13 @@ Explain how to add the study design tables to the DMS.
 <span id="cb29-5"><a href="fetch-study-design-tables.html#cb29-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb29-6"><a href="fetch-study-design-tables.html#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(references, <span class="at">file =</span> <span class="st">&quot;data/3442_references.txt&quot;</span>,</span>
 <span id="cb29-7"><a href="fetch-study-design-tables.html#cb29-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="fetch-study-design-tables.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save study design tables with save</span></span>
-<span id="cb30-2"><a href="fetch-study-design-tables.html#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(fractions, samples, references, <span class="at">file =</span> <span class="st">&quot;data/study_design_tables.RData&quot;</span>)</span></code></pre></div>
+<p>Once the study design tables have been saved to text files, it is good practice to make them available to others. To do so, navigate to the Share Path provided in the DMS Data Package Detail Report (shown in Figure <a href="fetch-study-design-tables.html#fig:DMS-share-path">1.8</a>), and copy the three study design files to this location. This allows them to be accessed by others with the <code>get_study_design_by_dataset_package</code> function in the future.</p>
+<div class="figure" style="text-align: center"><span id="fig:DMS-share-path"></span>
+<img src="images/data_package_share_path.PNG" alt="Location of the Share Path used to add the study design tables." width="75%" />
+<p class="caption">
+Figure 1.8: Location of the Share Path used to add the study design tables.
+</p>
+</div>
 </div>
 </div>
             </section>
@@ -1234,7 +1244,7 @@ gitbook.start({
 "instapaper": false,
 "vk": false,
 "whatsapp": false,
-"all": false
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",

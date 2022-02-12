@@ -24,14 +24,14 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-01-04" />
+<meta name="date" content="2022-02-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="volcano-plots.html"/>
+<link rel="prev" href="gsea.html"/>
 
 <script src="libs/header-attrs-2.11/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
@@ -53,6 +53,8 @@
 
 <link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -159,41 +161,145 @@ div.csl-indent {
 <li><a href=".">Proteomics Data Analysis in R/Bioconductor</a></li>
 
 <li class="divider"></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome!</a>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome!</a></li>
+<li class="chapter" data-level="1" data-path="iso-global.html"><a href="iso-global.html"><i class="fa fa-check"></i><b>1</b> Isobaric Quantification: Proteomics</a>
 <ul>
-<li class="chapter" data-level="" data-path="miscellaneous-resources.html"><a href="miscellaneous-resources.html"><i class="fa fa-check"></i>Miscellaneous Resources</a></li>
+<li class="chapter" data-level="1.1" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html"><i class="fa fa-check"></i><b>1.1</b> Prepare MS/MS Identifications</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#read-ms-gf-data"><i class="fa fa-check"></i><b>1.1.1</b> Read MS-GF+ Data</a></li>
+<li class="chapter" data-level="1.1.2" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#correct-isotope-selection-error"><i class="fa fa-check"></i><b>1.1.2</b> Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="1.1.3" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#remove-contaminants"><i class="fa fa-check"></i><b>1.1.3</b> Remove Contaminants</a></li>
+<li class="chapter" data-level="1.1.4" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#global-peptide-filter"><i class="fa fa-check"></i><b>1.1.4</b> MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="1.1.5" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#msms-id-filter-protein-level"><i class="fa fa-check"></i><b>1.1.5</b> MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="1.1.6" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#inference-of-parsimonious-protein-set"><i class="fa fa-check"></i><b>1.1.6</b> Inference of Parsimonious Protein Set</a></li>
+<li class="chapter" data-level="1.1.7" data-path="prepare-msms-identifications.html"><a href="prepare-msms-identifications.html#remove-decoy-psms"><i class="fa fa-check"></i><b>1.1.7</b> Remove Decoy PSMs</a></li>
 </ul></li>
-<li class="chapter" data-level="1" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>1</b> Heatmaps</a>
+<li class="chapter" data-level="1.2" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html"><i class="fa fa-check"></i><b>1.2</b> Prepare Reporter Ion Intensities</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>1.1</b> Expression Heatmaps</a></li>
-<li class="chapter" data-level="1.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>1.2</b> Correlation Heatmaps</a>
-<ul>
-<li class="chapter" data-level="1.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>1.2.1</b> Sample Correlation</a></li>
-<li class="chapter" data-level="1.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>1.2.2</b> Feature Correlation</a></li>
+<li class="chapter" data-level="1.2.1" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html#read-masic-output"><i class="fa fa-check"></i><b>1.2.1</b> Read MASIC Output</a></li>
+<li class="chapter" data-level="1.2.2" data-path="prepare-reporter-ion-intensities.html"><a href="prepare-reporter-ion-intensities.html#filter-masic-data"><i class="fa fa-check"></i><b>1.2.2</b> Filter MASIC Data</a></li>
 </ul></li>
-<li class="chapter" data-level="1.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>1.3</b> Heatmap Annotation</a>
+<li class="chapter" data-level="1.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html"><i class="fa fa-check"></i><b>1.3</b> Create Study Design Tables</a>
 <ul>
-<li class="chapter" data-level="1.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>1.3.1</b> Modifying Default Colors</a></li>
+<li class="chapter" data-level="1.3.1" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#fractions"><i class="fa fa-check"></i><b>1.3.1</b> Fractions</a></li>
+<li class="chapter" data-level="1.3.2" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#samples"><i class="fa fa-check"></i><b>1.3.2</b> Samples</a></li>
+<li class="chapter" data-level="1.3.3" data-path="fetch-study-design-tables.html"><a href="fetch-study-design-tables.html#global-references"><i class="fa fa-check"></i><b>1.3.3</b> References</a></li>
 </ul></li>
-<li class="chapter" data-level="1.4" data-path="additional-modifications.html"><a href="additional-modifications.html"><i class="fa fa-check"></i><b>1.4</b> Additional Modifications</a>
+<li class="chapter" data-level="1.4" data-path="global-quant-crosstab.html"><a href="global-quant-crosstab.html"><i class="fa fa-check"></i><b>1.4</b> Create Quantitative Cross-tab</a></li>
+<li class="chapter" data-level="1.5" data-path="global-msnset.html"><a href="global-msnset.html"><i class="fa fa-check"></i><b>1.5</b> Create MSnSet</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="iso-phospho.html"><a href="iso-phospho.html"><i class="fa fa-check"></i><b>2</b> Isobaric Quantification: Phosphoproteomics</a>
 <ul>
-<li class="chapter" data-level="1.4.1" data-path="additional-modifications.html"><a href="additional-modifications.html#change-row-or-column-labels"><i class="fa fa-check"></i><b>1.4.1</b> Change row or column labels</a></li>
-<li class="chapter" data-level="1.4.2" data-path="additional-modifications.html"><a href="additional-modifications.html#change-label-colors"><i class="fa fa-check"></i><b>1.4.2</b> Change label colors</a></li>
-<li class="chapter" data-level="1.4.3" data-path="additional-modifications.html"><a href="additional-modifications.html#label-specific-features"><i class="fa fa-check"></i><b>1.4.3</b> Label specific features</a></li>
-<li class="chapter" data-level="1.4.4" data-path="additional-modifications.html"><a href="additional-modifications.html#change-heatmap-body-color"><i class="fa fa-check"></i><b>1.4.4</b> Change heatmap body color</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="2" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>2</b> Differential Analysis</a>
+<li class="chapter" data-level="2.1" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html"><i class="fa fa-check"></i><b>2.1</b> Prepare MS/MS Identifications</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2.1</b> Linear Regression</a></li>
-<li class="chapter" data-level="2.2" data-path="one-way-anova.html"><a href="one-way-anova.html"><i class="fa fa-check"></i><b>2.2</b> One-Way ANOVA</a></li>
-<li class="chapter" data-level="2.3" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>2.3</b> t-tests</a>
-<ul>
-<li class="chapter" data-level="2.3.1" data-path="t-tests.html"><a href="t-tests.html#one-comparison"><i class="fa fa-check"></i><b>2.3.1</b> One Comparison</a></li>
-<li class="chapter" data-level="2.3.2" data-path="t-tests.html"><a href="t-tests.html#multiple-comparisons"><i class="fa fa-check"></i><b>2.3.2</b> Multiple Comparisons</a></li>
+<li class="chapter" data-level="2.1.1" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#read-ms-gf-data-1"><i class="fa fa-check"></i><b>2.1.1</b> Read MS-GF+ Data</a></li>
+<li class="chapter" data-level="2.1.2" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#correct-isotope-selection-error-1"><i class="fa fa-check"></i><b>2.1.2</b> Correct Isotope Selection Error</a></li>
+<li class="chapter" data-level="2.1.3" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-unmodified-peptides"><i class="fa fa-check"></i><b>2.1.3</b> Remove Unmodified Peptides</a></li>
+<li class="chapter" data-level="2.1.4" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-contaminants-1"><i class="fa fa-check"></i><b>2.1.4</b> Remove Contaminants</a></li>
+<li class="chapter" data-level="2.1.5" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#improve-phosphosite-localization"><i class="fa fa-check"></i><b>2.1.5</b> Improve Phosphosite Localization</a></li>
+<li class="chapter" data-level="2.1.6" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#msms-id-filter-peptide-level"><i class="fa fa-check"></i><b>2.1.6</b> MS/MS ID Filter: Peptide Level</a></li>
+<li class="chapter" data-level="2.1.7" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#msms-id-filter-protein-level-1"><i class="fa fa-check"></i><b>2.1.7</b> MS/MS ID Filter: Protein Level</a></li>
+<li class="chapter" data-level="2.1.8" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#inference-of-parsimonious-protein-set-1"><i class="fa fa-check"></i><b>2.1.8</b> Inference of Parsimonious Protein Set</a></li>
+<li class="chapter" data-level="2.1.9" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#map-mod-sites"><i class="fa fa-check"></i><b>2.1.9</b> Map Sites to Protein Sequences</a></li>
+<li class="chapter" data-level="2.1.10" data-path="prepare-msms-identifications-1.html"><a href="prepare-msms-identifications-1.html#remove-decoy-psms-1"><i class="fa fa-check"></i><b>2.1.10</b> Remove Decoy PSMs</a></li>
 </ul></li>
-<li class="chapter" data-level="2.4" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>2.4</b> p-value Histograms</a></li>
-<li class="chapter" data-level="2.5" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>2.5</b> Volcano Plots</a></li>
+<li class="chapter" data-level="2.2" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html"><i class="fa fa-check"></i><b>2.2</b> Prepare Reporter Ion Intensities</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html#read-masic-output-1"><i class="fa fa-check"></i><b>2.2.1</b> Read MASIC Output</a></li>
+<li class="chapter" data-level="2.2.2" data-path="prepare-reporter-ion-intensities-1.html"><a href="prepare-reporter-ion-intensities-1.html#filter-masic-data-1"><i class="fa fa-check"></i><b>2.2.2</b> Filter MASIC Data</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="create-study-design-tables.html"><a href="create-study-design-tables.html"><i class="fa fa-check"></i><b>2.3</b> Create Study Design Tables</a></li>
+<li class="chapter" data-level="2.4" data-path="create-quantitative-cross-tab.html"><a href="create-quantitative-cross-tab.html"><i class="fa fa-check"></i><b>2.4</b> Create Quantitative Cross-tab</a></li>
+<li class="chapter" data-level="2.5" data-path="phospho-msnset.html"><a href="phospho-msnset.html"><i class="fa fa-check"></i><b>2.5</b> Create MSnSet</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="spectral-counting.html"><a href="spectral-counting.html"><i class="fa fa-check"></i><b>3</b> Spectral Counting</a></li>
+<li class="chapter" data-level="4" data-path="id-conversion.html"><a href="id-conversion.html"><i class="fa fa-check"></i><b>4</b> Feature ID Conversion</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="conversion-with-biomart.html"><a href="conversion-with-biomart.html"><i class="fa fa-check"></i><b>4.1</b> Conversion with <code>biomaRt</code></a></li>
+<li class="chapter" data-level="4.2" data-path="conversion-with-annotationhub.html"><a href="conversion-with-annotationhub.html"><i class="fa fa-check"></i><b>4.2</b> Conversion with <code>AnnotationHub</code></a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory Data Analysis</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="count-features-in-samples.html"><a href="count-features-in-samples.html"><i class="fa fa-check"></i><b>5.1</b> Count Features in Samples</a></li>
+<li class="chapter" data-level="5.2" data-path="sample-boxplots.html"><a href="sample-boxplots.html"><i class="fa fa-check"></i><b>5.2</b> Sample Boxplots</a></li>
+<li class="chapter" data-level="5.3" data-path="estimate-blood-contamination.html"><a href="estimate-blood-contamination.html"><i class="fa fa-check"></i><b>5.3</b> Estimate Blood Contamination</a></li>
+<li class="chapter" data-level="5.4" data-path="pca.html"><a href="pca.html"><i class="fa fa-check"></i><b>5.4</b> PCA</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="heatmaps.html"><a href="heatmaps.html"><i class="fa fa-check"></i><b>6</b> Heatmaps</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="expression-heatmaps.html"><a href="expression-heatmaps.html"><i class="fa fa-check"></i><b>6.1</b> Expression Heatmaps</a></li>
+<li class="chapter" data-level="6.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html"><i class="fa fa-check"></i><b>6.2</b> Correlation Heatmaps</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#sample-correlation"><i class="fa fa-check"></i><b>6.2.1</b> Sample Correlation</a></li>
+<li class="chapter" data-level="6.2.2" data-path="correlation-heatmaps.html"><a href="correlation-heatmaps.html#feature-correlation"><i class="fa fa-check"></i><b>6.2.2</b> Feature Correlation</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html"><i class="fa fa-check"></i><b>6.3</b> Heatmap Annotation</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="heatmap-annotation.html"><a href="heatmap-annotation.html#modifying-default-colors"><i class="fa fa-check"></i><b>6.3.1</b> Modifying Default Colors</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="modifications.html"><a href="modifications.html"><i class="fa fa-check"></i><b>6.4</b> Modifications</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="modifications.html"><a href="modifications.html#row-and-column-labels"><i class="fa fa-check"></i><b>6.4.1</b> Row and column labels</a></li>
+<li class="chapter" data-level="6.4.2" data-path="modifications.html"><a href="modifications.html#label-colors"><i class="fa fa-check"></i><b>6.4.2</b> Label colors</a></li>
+<li class="chapter" data-level="6.4.3" data-path="modifications.html"><a href="modifications.html#label-specific-features"><i class="fa fa-check"></i><b>6.4.3</b> Label specific features</a></li>
+<li class="chapter" data-level="6.4.4" data-path="modifications.html"><a href="modifications.html#heatmap-body-color"><i class="fa fa-check"></i><b>6.4.4</b> Heatmap body color</a></li>
+<li class="chapter" data-level="6.4.5" data-path="modifications.html"><a href="modifications.html#horizontal-heatmaps"><i class="fa fa-check"></i><b>6.4.5</b> Horizontal heatmaps</a></li>
+<li class="chapter" data-level="6.4.6" data-path="modifications.html"><a href="modifications.html#legends"><i class="fa fa-check"></i><b>6.4.6</b> Legends</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="DEA.html"><a href="DEA.html"><i class="fa fa-check"></i><b>7</b> Differential Analysis</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="linear-reg.html"><a href="linear-reg.html"><i class="fa fa-check"></i><b>7.1</b> Linear Regression</a></li>
+<li class="chapter" data-level="7.2" data-path="t-tests.html"><a href="t-tests.html"><i class="fa fa-check"></i><b>7.2</b> Two-Sample t-tests</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="t-tests.html"><a href="t-tests.html#t-single"><i class="fa fa-check"></i><b>7.2.1</b> One comparison</a></li>
+<li class="chapter" data-level="7.2.2" data-path="t-tests.html"><a href="t-tests.html#t-mult"><i class="fa fa-check"></i><b>7.2.2</b> Multiple comparisons</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="anova.html"><a href="anova.html"><i class="fa fa-check"></i><b>7.3</b> One-Way ANOVA</a></li>
+<li class="chapter" data-level="7.4" data-path="p-value-histograms.html"><a href="p-value-histograms.html"><i class="fa fa-check"></i><b>7.4</b> p-value Histograms</a></li>
+<li class="chapter" data-level="7.5" data-path="volcano-plots.html"><a href="volcano-plots.html"><i class="fa fa-check"></i><b>7.5</b> Volcano Plots</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="volcano-plots.html"><a href="volcano-plots.html#base-plot"><i class="fa fa-check"></i><b>7.5.1</b> Base plot</a></li>
+<li class="chapter" data-level="7.5.2" data-path="volcano-plots.html"><a href="volcano-plots.html#label-top-features"><i class="fa fa-check"></i><b>7.5.2</b> Label top features</a></li>
+<li class="chapter" data-level="7.5.3" data-path="volcano-plots.html"><a href="volcano-plots.html#label-specific-features-1"><i class="fa fa-check"></i><b>7.5.3</b> Label specific features</a></li>
+<li class="chapter" data-level="7.5.4" data-path="volcano-plots.html"><a href="volcano-plots.html#modify-point-colors"><i class="fa fa-check"></i><b>7.5.4</b> Modify point colors</a></li>
+<li class="chapter" data-level="7.5.5" data-path="volcano-plots.html"><a href="volcano-plots.html#multiple-volcano-plots"><i class="fa fa-check"></i><b>7.5.5</b> Multiple volcano plots</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="upset-plots.html"><a href="upset-plots.html"><i class="fa fa-check"></i><b>7.6</b> UpSet Plots</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="pathway-analysis.html"><a href="pathway-analysis.html"><i class="fa fa-check"></i><b>8</b> Pathway Analysis</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="annotation-databases.html"><a href="annotation-databases.html"><i class="fa fa-check"></i><b>8.1</b> Annotation Databases</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#gene-ontology"><i class="fa fa-check"></i><b>8.1.1</b> Gene Ontology</a>
+<ul>
+<li class="chapter" data-level="8.1.1.1" data-path="annotation-databases.html"><a href="annotation-databases.html#semantic-similarity"><i class="fa fa-check"></i><b>8.1.1.1</b> Semantic Similarity</a></li>
+<li class="chapter" data-level="8.1.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#go-slim"><i class="fa fa-check"></i><b>8.1.1.2</b> GO Subsets/Slims</a></li>
+</ul></li>
+<li class="chapter" data-level="8.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>8.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>8.1.3</b> KEGG</a></li>
+<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>8.1.4</b> Pfam</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>8.2</b> Over-Representation Analysis</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="8.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>8.2.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="8.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>8.2.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>8.2.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="8.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>8.2.1.4</b> Other Databases</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>8.3</b> Gene Set Enrichment Analysis</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>8.3.1</b> Examples</a>
+<ul>
+<li class="chapter" data-level="8.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>8.3.1.1</b> Gene Ontology</a></li>
+<li class="chapter" data-level="8.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>8.3.1.2</b> Reactome</a></li>
+<li class="chapter" data-level="8.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>8.3.1.3</b> Pfam</a></li>
+<li class="chapter" data-level="8.3.1.4" data-path="gsea.html"><a href="gsea.html#gsea-other"><i class="fa fa-check"></i><b>8.3.1.4</b> Other Databases</a></li>
+</ul></li>
+</ul></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
@@ -221,13 +327,16 @@ div.csl-indent {
 Allaire, J., Xie, Y., McPherson, J., Luraschi, J., Ushey, K., Atkins, A., Wickham, H., Cheng, J., Chang, W. and Iannone, R., <em>Rmarkdown: Dynamic Documents for r</em>, from <a href="https://CRAN.R-project.org/package=rmarkdown">https://CRAN.R-project.org/package=rmarkdown</a>, 2021.
 </div>
 <div class="csl-entry">
+Beausoleil, S. A., Villén, J., Gerber, S. A., Rush, J. and Gygi, S. P., A Probability-Based Approach for High-Throughput Protein Phosphorylation Analysis and Site Localization, <em>Nature Biotechnology</em>, vol. <strong>24</strong>, no. 10, pp. 1285–92, accessed February 12, 2022, from <a href="https://www.nature.com/articles/nbt1240">https://www.nature.com/articles/nbt1240</a>, October 2006. DOI: <a href="https://doi.org/10.1038/nbt1240">10.1038/nbt1240</a>
+</div>
+<div class="csl-entry">
+Berglund, M. and Wieser, M. E., Isotopic Compositions of the Elements 2009 (<span>IUPAC</span> <span>Technical</span> <span>Report</span>), <em>Pure and Applied Chemistry</em>, vol. <strong>83</strong>, no. 2, pp. 397–410, accessed February 12, 2022, from <a href="https://www.degruyter.com/document/doi/10.1351/PAC-REP-10-06-02/html">https://www.degruyter.com/document/doi/10.1351/PAC-REP-10-06-02/html</a>, January 2011. DOI: <a href="https://doi.org/10.1351/PAC-REP-10-06-02">10.1351/PAC-REP-10-06-02</a>
+</div>
+<div class="csl-entry">
 Carlson, M., <em>Org.hs.eg.db: Genome Wide Annotation for Human</em>, 2021.
 </div>
 <div class="csl-entry">
 Carlson, M., Liu, T.-Y., Lin, C., Falcon, S., Zhang, J. and MacDonald, J. W., <em>PFAM.db: A Set of Protein ID Mappings for PFAM</em>, 2021.
-</div>
-<div class="csl-entry">
-Cohen, P., The Origins of Protein Phosphorylation, <em>Nature Cell Biology</em>, vol. <strong>4</strong>, no. 5, pp. E127–30, accessed October 21, 2021, from <a href="https://www.nature.com/articles/ncb0502-e127">https://www.nature.com/articles/ncb0502-e127</a>, May 2002. DOI: <a href="https://doi.org/10.1038/ncb0502-e127">10.1038/ncb0502-e127</a>
 </div>
 <div class="csl-entry">
 Durinck, S. and Huber, W., <em>biomaRt: Interface to BioMart Databases (i.e. Ensembl)</em>, 2021.
@@ -296,7 +405,7 @@ Petyuk, V., <em>MSnSet.utils: Miscellaneous Functions for Proteomics Data Analys
 Petyuk, V., <em>PlexedPiperTestData: Example of MASIC and MS-GF+ Ouput</em>, 2021c.
 </div>
 <div class="csl-entry">
-Petyuk, V., Nestor, M. and Moon, J., <em>PNNL.DMS.utils: Tools for Accessing PNNL’s Data Management System</em>, 2021.
+Petyuk, V., Nestor, M. and Moon, J., <em>PNNL.DMS.utils: Tools for Accessing PNNL’s Data Management System</em>, 2022.
 </div>
 <div class="csl-entry">
 Relations in the <span>Gene</span> <span>Ontology</span>, <em>Gene Ontology Resource</em>, October 2021.
@@ -305,13 +414,16 @@ Relations in the <span>Gene</span> <span>Ontology</span>, <em>Gene Ontology Reso
 Ritchie, M. E., Phipson, B., Wu, D., Hu, Y., Law, C. W., Shi, W. and Smyth, G. K., <span class="nocase">limma</span> Powers Differential Expression Analyses for <span>RNA</span>-Sequencing and Microarray Studies, <em>Nucleic Acids Research</em>, vol. <strong>43</strong>, no. 7, p. e47, 2015. DOI: <a href="https://doi.org/10.1093/nar/gkv007">10.1093/nar/gkv007</a>
 </div>
 <div class="csl-entry">
+Smyth, G. K., Linear Models and Empirical Bayes Methods for Assessing Differential Expression in Microarray Experiments, <em>Statistical Applications in Genetics and Molecular Biology</em>, vol. <strong>3</strong>, p. Article3, 2004. DOI: <a href="https://doi.org/10.2202/1544-6115.1027">10.2202/1544-6115.1027</a>
+</div>
+<div class="csl-entry">
 Smyth, G., Hu, Y., Ritchie, M., Silver, J., Wettenhall, J., McCarthy, D., Wu, D., et al., <em>Limma: Linear Models for Microarray Data</em>, from <a href="http://bioinf.wehi.edu.au/limma">http://bioinf.wehi.edu.au/limma</a>, 2021.
 </div>
 <div class="csl-entry">
 Subramanian, A., Tamayo, P., Mootha, V. K., Mukherjee, S., Ebert, B. L., Gillette, M. A., Paulovich, A., et al., Gene Set Enrichment Analysis: <span>A</span> Knowledge-Based Approach for Interpreting Genome-Wide Expression Profiles, <em>Proceedings of the National Academy of Sciences of the United States of America</em>, vol. <strong>102</strong>, no. 43, pp. 15545–50, accessed September 7, 2021, from <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1239896/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1239896/</a>, October 2005. DOI: <a href="https://doi.org/10.1073/pnas.0506580102">10.1073/pnas.0506580102</a>
 </div>
 <div class="csl-entry">
-vladislav.petyuk@pnnl.gov, V. P., <em>PlexedPiper: Pipeline for Isobaric Quantification.</em>, 2021.
+vladislav.petyuk@pnnl.gov, V. P., <em>PlexedPiper: Pipeline for Isobaric Quantification</em>, 2021.
 </div>
 <div class="csl-entry">
 Wickham, H., <em>Downlit: Syntax Highlighting and Automatic Linking</em>, from <a href="https://CRAN.R-project.org/package=downlit">https://CRAN.R-project.org/package=downlit</a>, 2020.
@@ -383,7 +495,7 @@ Zyla, J., Marczyk, M., Weiner, J. and Polanska, J., Ranking Metrics in Gene Set 
           </div>
         </div>
       </div>
-<a href="volcano-plots.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="gsea.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
 
     </div>
   </div>
@@ -408,7 +520,7 @@ gitbook.start({
 "instapaper": false,
 "vk": false,
 "whatsapp": false,
-"all": false
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -429,12 +541,26 @@ gitbook.start({
 },
 "download": null,
 "toc": {
-"collapse": "section"
+"collapse": "subsection"
 }
 });
 });
 </script>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 </body>
 
 </html>

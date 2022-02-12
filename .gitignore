@@ -5,4 +5,4 @@
 .Rbuildignore
 proteomics-data-analysis-tutorial.Rproj
 .Rcache
-styleguide.txt
+*.txt

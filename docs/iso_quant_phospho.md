@@ -6,15 +6,19 @@ This pipeline shows how to process phosphoproteomics TMT data with `PlexedPiper`
 
 
 ```r
-## Uncomment to install missing packages
-# install.packages("remotes")
-# library(remotes)
-# install_github("PNNL-Comp-Mass-Spec/MSnID@pnnl-master")
-# install_github("PNNL-Comp-Mass-Spec/PlexedPiper")
-# install_github("PNNL-Comp-Mass-Spec/PNNL.DMS.utils")
-# if (!requireNamespace("BiocManager", quietly = TRUE))
-#     install.packages("BiocManager")
-# BiocManager::install("Biostrings")
+## Install missing packages
+if (!require("remotes", quietly = T)) install.packages("remotes")
+git_packages <- c("MSnID@pnnl-master", "PlexedPiper", "PNNL.DMS.utils")
+for (pkg_i in git_packages) {
+  if (!require(sub("@.*", "", pkg_i), quietly = T, character.only = T))
+    remotes::install_github(file.path("PNNL-Comp-Mass-Spec", pkg_i))
+}
+if (!requireNamespace("BiocManager", quietly = T))
+  install.packages("BiocManager")
+if (!require("Biostrings", quietly = T))
+  BiocManager::install("Biostrings")
+## ------------------------
+
 library(MSnID)
 library(PlexedPiper)
 library(PNNL.DMS.utils)
@@ -59,7 +63,7 @@ msnid <- correct_peak_selection(msnid)
 ```
 
 
-### Remove Unmodified Peptides
+### Remove Unmodified Peptides {#remove-unmodified-peptides}
 
 Generally, we will remove unmodified peptides before any sort of filtering steps; however, unmodified peptides will be removed automatically in Section \@ref(map-mod-sites), so this step can be skipped if we need to tally the number of modified and unmodified peptides toward the end of processing.
 
@@ -104,7 +108,7 @@ show(msnid)
 
 ### Improve Phosphosite Localization
 
-Phospho datasets involve AScore jobs for improving phosphosite localization. There should be one AScore job per data package. If the AScore job does not exist, see <a href="https://prismwiki.pnl.gov/wiki/AScore_Job_Creation">AScore Job Creation</a> for how to set it up. The fetched object is a data.frame that links datasets, scans and original PTM localization to newly suggested locations. Importantly, it contains `AScore` column that signifies the confidence of PTM assignment. AScore > 17 is considered confident.
+Phospho datasets involve Ascore jobs for improving phosphosite localization. There should be one AScore job per data package. If the Ascore job does not exist, see <a href="https://prismwiki.pnl.gov/wiki/AScore_Job_Creation">AScore Job Creation</a> for how to set it up. The fetched object is a data.frame that links datasets, scans and original PTM localization to newly suggested locations. Importantly, it contains `AScore` column that "measures the probability of correct phosphorylation site localization" [@beausoleil_probability-based_2006]. AScore > 17 is considered confident.
 
 
 ```r
@@ -126,9 +130,9 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  23 
-## #PSMs: 76103 at 0.49 % FDR
-## #peptides: 23378 at 1 % FDR
-## #accessions: 16090 at 4.7 % FDR
+## #PSMs: 77741 at 0.51 % FDR
+## #peptides: 23118 at 1 % FDR
+## #accessions: 15964 at 4.8 % FDR
 ```
 
 ### MS/MS ID Filter: Protein Level
@@ -150,9 +154,9 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  23 
-## #PSMs: 72481 at 0.12 % FDR
-## #peptides: 21266 at 0.26 % FDR
-## #accessions: 9424 at 0.98 % FDR
+## #PSMs: 74590 at 0.13 % FDR
+## #peptides: 21300 at 0.28 % FDR
+## #accessions: 9887 at 0.98 % FDR
 ```
 
 ### Inference of Parsimonious Protein Set
@@ -174,14 +178,23 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  23 
-## #PSMs: 72481 at 0.12 % FDR
-## #peptides: 21266 at 0.26 % FDR
-## #accessions: 2895 at 1.6 % FDR
+## #PSMs: 74590 at 0.13 % FDR
+## #peptides: 21300 at 0.28 % FDR
+## #accessions: 3021 at 1.6 % FDR
 ```
+
+Figure \@ref(fig:prior-inference) shows the steps used to perform prioritized inference. If `unique_only = TRUE`, any prior will be ignored. See Figure \@ref(fig:parsimony) for parsimonious inference without a prior.
+
+<div class="figure" style="text-align: center">
+<img src="images/prioritized-inference.PNG" alt="Visual explanation of prioritized inference." width="75%" />
+<p class="caption">(\#fig:prior-inference)Visual explanation of prioritized inference.</p>
+</div>
+
+</br>
 
 ### Map Sites to Protein Sequences {#map-mod-sites}
 
-`MSnID::map_mod_sites` creates a number of columns describing mapping of the modification sites onto the protein sequences. The most important for the user is `SiteID`. `names(fst)` must match `accessions(msnid)`; usually, we will have to modify names to select everything before the first space.
+`MSnID::map_mod_sites` creates a number of columns describing mapping of the modification sites onto the protein sequences. The most important for the user is `SiteID`. `names(fst)` must match `accessions(msnid)`; usually, we will have to modify names to remove everything after the first word.
 
 
 ```r
@@ -205,7 +218,8 @@ head(names(fst))
 
 ```r
 # Modify names to match accessions(msnid)
-names(fst) <- gsub(" .*$", "", names(fst))
+# Remove any space followed by any number of characters
+names(fst) <- sub(" .*$", "", names(fst))
 # First 6 names
 head(names(fst))
 ```
@@ -215,7 +229,7 @@ head(names(fst))
 ## [5] "NP_001000704.1" "NP_001000638.1"
 ```
 
-The names are in the proper format, so we can continue with the main mapping call.
+The names are in the proper format, so we can continue with the main mapping call. This will also remove any unmodified peptides, if Section \@ref(remove-unmodified-peptides) was skipped.
 
 
 ```r
@@ -224,8 +238,8 @@ msnid <- map_mod_sites(object = msnid,
                        fasta = fst, 
                        accession_col = "accession", 
                        peptide_mod_col = "peptide",
-                       mod_char = "*", # modification character
-                       site_delimiter = ";") # ; between multiple sites
+                       mod_char = "*", # asterisk for phosphorylation
+                       site_delimiter = ";") # semicolon between multiple sites
 ```
 
 Table \@ref(tab:phospho-msnid-table) shows the first 6 rows of the processed MS-GF+ output.
@@ -430,6 +444,54 @@ Table \@ref(tab:phospho-msnid-table) shows the first 6 rows of the processed MS-
   </tr>
   <tr>
    <td style="text-align:left;"> MoTrPAC_Pilot_TMT_P_S2_07_3Nov17_Elm_AQ-17-10-03 </td>
+   <td style="text-align:right;"> 1793 </td>
+   <td style="text-align:right;"> 23803 </td>
+   <td style="text-align:left;"> HCD </td>
+   <td style="text-align:right;"> 349 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 952.472 </td>
+   <td style="text-align:right;"> -0.015 </td>
+   <td style="text-align:right;"> -5.362 </td>
+   <td style="text-align:right;"> 2854.412 </td>
+   <td style="text-align:left;"> R.AAAASAAEAGIAT\*PGTEDSDDALLK.M </td>
+   <td style="text-align:left;"> XP_006232986.1 </td>
+   <td style="text-align:right;"> 2 </td>
+   <td style="text-align:right;"> 146 </td>
+   <td style="text-align:right;"> 116 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 1 </td>
+   <td style="text-align:left;"> XP_006232986.1 </td>
+   <td style="text-align:right;"> 952.142 </td>
+   <td style="text-align:right;"> 3 </td>
+   <td style="text-align:right;"> 952.137 </td>
+   <td style="text-align:left;"> FALSE </td>
+   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_P_S2_07_3Nov17_Elm_AQ-17-10-03 </td>
+   <td style="text-align:right;"> 23803 </td>
+   <td style="text-align:left;"> AAAASAAEAGIATPGTEDSDDALLK </td>
+   <td style="text-align:left;"> R.AAAASAAEAGIAT\*PGTEDSDDALLK.M </td>
+   <td style="text-align:right;"> 52.349 </td>
+   <td style="text-align:right;"> Inf </td>
+   <td style="text-align:right;"> 5.277 </td>
+   <td style="text-align:right;"> 5.305 </td>
+   <td style="text-align:left;"> 238 </td>
+   <td style="text-align:left;"> 262 </td>
+   <td style="text-align:right;"> 238 </td>
+   <td style="text-align:right;"> 262 </td>
+   <td style="text-align:right;"> 377 </td>
+   <td style="text-align:left;"> 12 </td>
+   <td style="text-align:left;"> T </td>
+   <td style="text-align:left;"> 250 </td>
+   <td style="text-align:left;"> T250 </td>
+   <td style="text-align:left;"> T250 </td>
+   <td style="text-align:left;"> T250 </td>
+   <td style="text-align:left;"> XP_006232986.1-T250 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_P_S2_07_3Nov17_Elm_AQ-17-10-03 </td>
    <td style="text-align:right;"> 2731 </td>
    <td style="text-align:right;"> 23697 </td>
    <td style="text-align:left;"> HCD </td>
@@ -524,54 +586,6 @@ Table \@ref(tab:phospho-msnid-table) shows the first 6 rows of the processed MS-
    <td style="text-align:left;"> T253 </td>
    <td style="text-align:left;"> NP_112621.1-T253 </td>
   </tr>
-  <tr>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_P_S1_07_DIL_28Oct17_Elm_AQ-17-10-03 </td>
-   <td style="text-align:right;"> 6826 </td>
-   <td style="text-align:right;"> 21280 </td>
-   <td style="text-align:left;"> HCD </td>
-   <td style="text-align:right;"> 1251 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 1066.532 </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> -0.095 </td>
-   <td style="text-align:right;"> 3196.577 </td>
-   <td style="text-align:left;"> R.AAAASAAEAGIATPGT\*EGERDSDDALLK.M </td>
-   <td style="text-align:left;"> NP_112621.1 </td>
-   <td style="text-align:right;"> 2 </td>
-   <td style="text-align:right;"> 200 </td>
-   <td style="text-align:right;"> 94 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 0 </td>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:left;"> NP_112621.1 </td>
-   <td style="text-align:right;"> 1066.197 </td>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 1066.197 </td>
-   <td style="text-align:left;"> FALSE </td>
-   <td style="text-align:left;"> MoTrPAC_Pilot_TMT_P_S1_07_DIL_28Oct17_Elm_AQ-17-10-03 </td>
-   <td style="text-align:right;"> 21280 </td>
-   <td style="text-align:left;"> AAAASAAEAGIATPGTEGERDSDDALLK </td>
-   <td style="text-align:left;"> R.AAAASAAEAGIATPGT\*EGERDSDDALLK.M </td>
-   <td style="text-align:right;"> 0.000 </td>
-   <td style="text-align:right;"> Inf </td>
-   <td style="text-align:right;"> 0.043 </td>
-   <td style="text-align:right;"> 10.526 </td>
-   <td style="text-align:left;"> 238 </td>
-   <td style="text-align:left;"> 265 </td>
-   <td style="text-align:right;"> 238 </td>
-   <td style="text-align:right;"> 265 </td>
-   <td style="text-align:right;"> 380 </td>
-   <td style="text-align:left;"> 15 </td>
-   <td style="text-align:left;"> T </td>
-   <td style="text-align:left;"> 253 </td>
-   <td style="text-align:left;"> T253 </td>
-   <td style="text-align:left;"> T253 </td>
-   <td style="text-align:left;"> T253 </td>
-   <td style="text-align:left;"> NP_112621.1-T253 </td>
-  </tr>
 </tbody>
 </table></div>
 
@@ -590,9 +604,9 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  23 
-## #PSMs: 72391 at 0 % FDR
-## #peptides: 21211 at 0 % FDR
-## #accessions: 2849 at 0 % FDR
+## #PSMs: 74490 at 0 % FDR
+## #peptides: 21240 at 0 % FDR
+## #accessions: 2972 at 0 % FDR
 ```
 
 ## Prepare Reporter Ion Intensities
@@ -618,7 +632,7 @@ masic_data <- filter_masic_data(masic_data,
 
 ## Create Study Design Tables
 
-Aside from the fractions table, the other study design tables can be the same as those created for the global proteomics data.
+Aside from the fractions table, the other study design tables can be the same as those created for the global proteomics data. This is because the datasets are different. The study design tables have been added to the data package (end of Section \@ref(global-references)), so we can use `get_study_design_by_dataset_package`.
 
 
 ```r
@@ -628,8 +642,9 @@ fractions <- data.frame(Dataset = datasets) %>%
   mutate(PlexID = gsub(".*_P_(S\\d{1})_.*", "\\1", Dataset))
 
 # Use global samples and references tables
-samples <- read.delim("data/3442_samples.txt")
-references <- read.delim("data/3442_references.txt")
+study_design <- get_study_design_by_dataset_package(3442)
+samples <- study_design$samples
+references <- study_design$references
 ```
 
 
@@ -680,27 +695,6 @@ crosstab <- create_crosstab(msnid = msnid,
   </tr>
  </thead>
 <tbody>
-  <tr>
-   <td style="text-align:left;"> NP_001000283.1-Y132;S137 </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> NA </td>
-   <td style="text-align:right;"> 0.0038421 </td>
-   <td style="text-align:right;"> -0.7416622 </td>
-   <td style="text-align:right;"> -0.2425074 </td>
-   <td style="text-align:right;"> -0.4879016 </td>
-   <td style="text-align:right;"> -0.7497171 </td>
-   <td style="text-align:right;"> -0.5428785 </td>
-   <td style="text-align:right;"> -0.7653521 </td>
-   <td style="text-align:right;"> -0.1239261 </td>
-   <td style="text-align:right;"> -0.2119856 </td>
-  </tr>
   <tr>
    <td style="text-align:left;"> NP_001001064.1-Y129 </td>
    <td style="text-align:right;"> NA </td>
@@ -806,6 +800,27 @@ crosstab <- create_crosstab(msnid = msnid,
    <td style="text-align:right;"> -0.4736739 </td>
    <td style="text-align:right;"> -2.4732843 </td>
   </tr>
+  <tr>
+   <td style="text-align:left;"> NP_001001512.2-S748 </td>
+   <td style="text-align:right;"> -1.4431878 </td>
+   <td style="text-align:right;"> -1.3790462 </td>
+   <td style="text-align:right;"> -1.5034294 </td>
+   <td style="text-align:right;"> 0.0053341 </td>
+   <td style="text-align:right;"> -2.1869459 </td>
+   <td style="text-align:right;"> -1.879176 </td>
+   <td style="text-align:right;"> -0.5153039 </td>
+   <td style="text-align:right;"> -1.7646633 </td>
+   <td style="text-align:right;"> -1.6533568 </td>
+   <td style="text-align:right;"> 0.3139811 </td>
+   <td style="text-align:right;"> -0.8132341 </td>
+   <td style="text-align:right;"> -0.6805752 </td>
+   <td style="text-align:right;"> 0.0127816 </td>
+   <td style="text-align:right;"> -1.7933771 </td>
+   <td style="text-align:right;"> 0.2266855 </td>
+   <td style="text-align:right;"> 0.2726023 </td>
+   <td style="text-align:right;"> 0.9332038 </td>
+   <td style="text-align:right;"> 0.5058189 </td>
+  </tr>
 </tbody>
 </table></div>
 
@@ -817,5 +832,38 @@ crosstab <- create_crosstab(msnid = msnid,
 write.table(crosstab, file = "data/3662_phospho_crosstab.txt",
             sep = "\t", quote = FALSE, row.names = TRUE)
 ```
+
+
+## Create MSnSet {#phospho-msnset}
+
+
+```r
+# Create MSnSet
+m <- create_msnset(crosstab = crosstab, samples = samples)
+m
+```
+
+```
+## MSnSet (storageMode: lockedEnvironment)
+## assayData: 24412 features, 18 samples 
+##   element names: exprs 
+## protocolData: none
+## phenoData
+##   sampleNames: S1_1 S1_2 ... S2_9 (18 total)
+##   varLabels: ReporterName PlexID ... MeasurementName (5 total)
+##   varMetadata: labelDescription
+## featureData: none
+## experimentData: use 'experimentData(object)'
+## Annotation:  
+## - - - Processing information - - -
+##  MSnbase version: 2.18.0
+```
+
+
+```r
+# Save phospho MSnSet
+save(m, file = "data/phospho_msnset.RData", compress = TRUE)
+```
+
 
 
