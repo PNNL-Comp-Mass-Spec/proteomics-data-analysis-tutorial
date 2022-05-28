@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>5.1 Count Features in Samples | Proteomics Data Analysis in R/Bioconductor</title>
   <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content="5.1 Count Features in Samples | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-02-11" />
+<meta name="date" content="2022-05-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +32,8 @@
   
 <link rel="prev" href="exploratory-data-analysis.html"/>
 <link rel="next" href="sample-boxplots.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,9 +49,9 @@
 
 
 
-
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -217,6 +216,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="4.1" data-path="conversion-with-biomart.html"><a href="conversion-with-biomart.html"><i class="fa fa-check"></i><b>4.1</b> Conversion with <code>biomaRt</code></a></li>
 <li class="chapter" data-level="4.2" data-path="conversion-with-annotationhub.html"><a href="conversion-with-annotationhub.html"><i class="fa fa-check"></i><b>4.2</b> Conversion with <code>AnnotationHub</code></a></li>
+<li class="chapter" data-level="4.3" data-path="conversion-using-fasta-headers.html"><a href="conversion-using-fasta-headers.html"><i class="fa fa-check"></i><b>4.3</b> Conversion Using FASTA Headers</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory Data Analysis</a>
 <ul>
@@ -278,26 +278,27 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="8.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>8.1.2</b> Reactome</a></li>
 <li class="chapter" data-level="8.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>8.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>8.1.4</b> Pfam</a></li>
+<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#msigdb"><i class="fa fa-check"></i><b>8.1.4</b> MSigDB</a></li>
 </ul></li>
 <li class="chapter" data-level="8.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>8.2</b> Over-Representation Analysis</a>
 <ul>
-<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.1</b> Examples</a>
+<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>8.2.1</b> Overview</a></li>
+<li class="chapter" data-level="8.2.2" data-path="ora.html"><a href="ora.html#ora-math"><i class="fa fa-check"></i><b>8.2.2</b> Mathematical Details</a></li>
+<li class="chapter" data-level="8.2.3" data-path="ora.html"><a href="ora.html#ora-drawbacks"><i class="fa fa-check"></i><b>8.2.3</b> Drawbacks</a></li>
+<li class="chapter" data-level="8.2.4" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.4</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>8.2.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>8.2.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>8.2.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>8.2.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.2.4.1" data-path="ora.html"><a href="ora.html#fgsea-ora"><i class="fa fa-check"></i><b>8.2.4.1</b> ORA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.2.4.2" data-path="ora.html"><a href="ora.html#ora-clustprof"><i class="fa fa-check"></i><b>8.2.4.2</b> ORA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
+<li class="chapter" data-level="8.2.4.3" data-path="ora.html"><a href="ora.html#ora-with-gostats"><i class="fa fa-check"></i><b>8.2.4.3</b> ORA with <code>GOstats</code></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>8.3</b> Gene Set Enrichment Analysis</a>
 <ul>
-<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>8.3.1</b> Examples</a>
+<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>8.3.1</b> Overview</a></li>
+<li class="chapter" data-level="8.3.2" data-path="gsea.html"><a href="gsea.html#gsea-examples"><i class="fa fa-check"></i><b>8.3.2</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>8.3.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>8.3.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>8.3.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.3.1.4" data-path="gsea.html"><a href="gsea.html#gsea-other"><i class="fa fa-check"></i><b>8.3.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.3.2.1" data-path="gsea.html"><a href="gsea.html#gsea-with-fgsea"><i class="fa fa-check"></i><b>8.3.2.1</b> GSEA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.3.2.2" data-path="gsea.html"><a href="gsea.html#gsea-with-clusterprofilerreactomepa"><i class="fa fa-check"></i><b>8.3.2.2</b> GSEA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -319,30 +320,30 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="count-features-in-samples" class="section level2" number="5.1">
-<h2><span class="header-section-number">5.1</span> Count Features in Samples</h2>
+<div id="count-features-in-samples" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Count Features in Samples<a href="count-features-in-samples.html#count-features-in-samples" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>To count the number of features identified in each sample, we use <code>colSums</code> to tally the number of entries that are not <code>NA</code> in each column of <code>exprs(oca.set)</code>.</p>
-<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="count-features-in-samples.html#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the number of proteins identified (not NA) in each sample</span></span>
-<span id="cb81-2"><a href="count-features-in-samples.html#cb81-2" aria-hidden="true" tabindex="-1"></a>oca.set<span class="sc">$</span>num_proteins <span class="ot">&lt;-</span> <span class="fu">colSums</span>(<span class="sc">!</span><span class="fu">is.na</span>(<span class="fu">exprs</span>(oca.set)))</span></code></pre></div>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="count-features-in-samples.html#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the number of proteins identified (not NA) in each sample</span></span>
+<span id="cb89-2"><a href="count-features-in-samples.html#cb89-2" aria-hidden="true" tabindex="-1"></a>oca.set<span class="sc">$</span>num_proteins <span class="ot">&lt;-</span> <span class="fu">colSums</span>(<span class="sc">!</span><span class="fu">is.na</span>(<span class="fu">exprs</span>(oca.set)))</span></code></pre></div>
 <p>Now that we have a vector of the number of proteins detected in each sample stored in <code>pData(oca.set)</code>, there are a few ways to present it. The first is a simple summary, which is accomplished with the <code>summary</code> function. This outputs the average value, as well as a 5-number summary that includes the minimum, the 1st quartile, the median (2nd quartile), the 3rd quartile, and the maximum value.</p>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="count-features-in-samples.html#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(oca.set<span class="sc">$</span>num_proteins)</span></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="count-features-in-samples.html#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(oca.set<span class="sc">$</span>num_proteins)</span></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##    6594    6957    7286    7225    7463    7798</code></pre>
 <p>The 5-number summary can also be presented as a boxplot, which is typically more useful at a glance. Below is an example of how to create a horizontal boxplot.</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="count-features-in-samples.html#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Horizontal boxplot</span></span>
-<span id="cb84-2"><a href="count-features-in-samples.html#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(oca.set<span class="sc">$</span>num_proteins, <span class="at">horizontal =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb84-3"><a href="count-features-in-samples.html#cb84-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;Number of Proteins Detected&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="count-features-in-samples.html#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Horizontal boxplot</span></span>
+<span id="cb92-2"><a href="count-features-in-samples.html#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(oca.set<span class="sc">$</span>num_proteins, <span class="at">horizontal =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb92-3"><a href="count-features-in-samples.html#cb92-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">xlab =</span> <span class="st">&quot;Number of Proteins Detected&quot;</span>)</span></code></pre></div>
 <p><img src="EDA_files/figure-html/num-prot-boxplot-1.png" width="75%" style="display: block; margin: auto;" /></p>
 <p>Boxplots are useful, but a lot of the finer details about the distribution are lost when summarizing. To remedy this, we could instead show a scatterplot of the individual values with the base <code>plot</code> function. We will change the point type with <code>pch</code> to plot solid circles and change the axis titles with <code>xlab</code> and <code>ylab</code>.</p>
-<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="count-features-in-samples.html#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(oca.set<span class="sc">$</span>num_proteins, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">xlab =</span> <span class="st">&quot;Sample Index&quot;</span>, </span>
-<span id="cb85-2"><a href="count-features-in-samples.html#cb85-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Number of Proteins Detected&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="count-features-in-samples.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(oca.set<span class="sc">$</span>num_proteins, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">xlab =</span> <span class="st">&quot;Sample Index&quot;</span>, </span>
+<span id="cb93-2"><a href="count-features-in-samples.html#cb93-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">&quot;Number of Proteins Detected&quot;</span>)</span></code></pre></div>
 <p><img src="EDA_files/figure-html/num-prot-scatterplot-1.png" width="75%" style="display: block; margin: auto;" /></p>
 <p>While harder to interpret at a glance than a boxplot, scatterplots are useful for identifying potential outliers and possible trends in the data. In the plot above, it doesn’t appear than there are any samples with significantly fewer identifications.</p>
 <p>The other plot type we could use balances the summary of the boxplot with the finer detail of the scatterplot: kernel density plots. We can use a combination of <code>stats::density</code> and <code>base::plot</code> to quickly create a density plot.</p>
-<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="count-features-in-samples.html#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kernel density plot</span></span>
-<span id="cb86-2"><a href="count-features-in-samples.html#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(oca.set<span class="sc">$</span>num_proteins, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb86-3"><a href="count-features-in-samples.html#cb86-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim =</span> <span class="fu">range</span>(oca.set<span class="sc">$</span>num_proteins, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb86-4"><a href="count-features-in-samples.html#cb86-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Density Plot&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;Number of Proteins Detected&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="count-features-in-samples.html#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Kernel density plot</span></span>
+<span id="cb94-2"><a href="count-features-in-samples.html#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(oca.set<span class="sc">$</span>num_proteins, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb94-3"><a href="count-features-in-samples.html#cb94-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlim =</span> <span class="fu">range</span>(oca.set<span class="sc">$</span>num_proteins, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb94-4"><a href="count-features-in-samples.html#cb94-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Density Plot&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;Number of Proteins Detected&quot;</span>)</span></code></pre></div>
 <p><img src="EDA_files/figure-html/num-prot-density-1.png" width="75%" style="display: block; margin: auto;" /></p>
 <p>It looks like there are peaks around 6900-7000 and 7300-7500 proteins.</p>
 </div>
@@ -356,7 +357,6 @@ div.csl-indent {
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -396,6 +396,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

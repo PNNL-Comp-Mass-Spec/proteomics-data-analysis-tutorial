@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>7.3 One-Way ANOVA | Proteomics Data Analysis in R/Bioconductor</title>
   <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content="7.3 One-Way ANOVA | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-02-11" />
+<meta name="date" content="2022-05-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +32,8 @@
   
 <link rel="prev" href="t-tests.html"/>
 <link rel="next" href="p-value-histograms.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,9 +49,9 @@
 
 
 
-
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -217,6 +216,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="4.1" data-path="conversion-with-biomart.html"><a href="conversion-with-biomart.html"><i class="fa fa-check"></i><b>4.1</b> Conversion with <code>biomaRt</code></a></li>
 <li class="chapter" data-level="4.2" data-path="conversion-with-annotationhub.html"><a href="conversion-with-annotationhub.html"><i class="fa fa-check"></i><b>4.2</b> Conversion with <code>AnnotationHub</code></a></li>
+<li class="chapter" data-level="4.3" data-path="conversion-using-fasta-headers.html"><a href="conversion-using-fasta-headers.html"><i class="fa fa-check"></i><b>4.3</b> Conversion Using FASTA Headers</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory Data Analysis</a>
 <ul>
@@ -278,26 +278,27 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="8.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>8.1.2</b> Reactome</a></li>
 <li class="chapter" data-level="8.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>8.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>8.1.4</b> Pfam</a></li>
+<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#msigdb"><i class="fa fa-check"></i><b>8.1.4</b> MSigDB</a></li>
 </ul></li>
 <li class="chapter" data-level="8.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>8.2</b> Over-Representation Analysis</a>
 <ul>
-<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.1</b> Examples</a>
+<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>8.2.1</b> Overview</a></li>
+<li class="chapter" data-level="8.2.2" data-path="ora.html"><a href="ora.html#ora-math"><i class="fa fa-check"></i><b>8.2.2</b> Mathematical Details</a></li>
+<li class="chapter" data-level="8.2.3" data-path="ora.html"><a href="ora.html#ora-drawbacks"><i class="fa fa-check"></i><b>8.2.3</b> Drawbacks</a></li>
+<li class="chapter" data-level="8.2.4" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.4</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>8.2.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>8.2.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>8.2.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>8.2.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.2.4.1" data-path="ora.html"><a href="ora.html#fgsea-ora"><i class="fa fa-check"></i><b>8.2.4.1</b> ORA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.2.4.2" data-path="ora.html"><a href="ora.html#ora-clustprof"><i class="fa fa-check"></i><b>8.2.4.2</b> ORA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
+<li class="chapter" data-level="8.2.4.3" data-path="ora.html"><a href="ora.html#ora-with-gostats"><i class="fa fa-check"></i><b>8.2.4.3</b> ORA with <code>GOstats</code></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>8.3</b> Gene Set Enrichment Analysis</a>
 <ul>
-<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>8.3.1</b> Examples</a>
+<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>8.3.1</b> Overview</a></li>
+<li class="chapter" data-level="8.3.2" data-path="gsea.html"><a href="gsea.html#gsea-examples"><i class="fa fa-check"></i><b>8.3.2</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>8.3.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>8.3.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>8.3.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.3.1.4" data-path="gsea.html"><a href="gsea.html#gsea-other"><i class="fa fa-check"></i><b>8.3.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.3.2.1" data-path="gsea.html"><a href="gsea.html#gsea-with-fgsea"><i class="fa fa-check"></i><b>8.3.2.1</b> GSEA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.3.2.2" data-path="gsea.html"><a href="gsea.html#gsea-with-clusterprofilerreactomepa"><i class="fa fa-check"></i><b>8.3.2.2</b> GSEA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -319,8 +320,8 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="anova" class="section level2" number="7.3">
-<h2><span class="header-section-number">7.3</span> One-Way ANOVA</h2>
+<div id="anova" class="section level2 hasAnchor" number="7.3">
+<h2><span class="header-section-number">7.3</span> One-Way ANOVA<a href="anova.html#anova" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>A one-way ANOVA is a generalized version of the two-sample t-test that is used to determine whether there is a significant difference between the means of three or more groups. The null hypothesis is that all group means are equal, and the alternative is that at least one of the means is different from the rest. Written another way, the null hypothesis is that the difference between any two means is zero, and the alternative is that the difference between at least two means is not zero.</p>
 <!---
 **Hypotheses:**
@@ -330,10 +331,10 @@ $H_0: \mu_1 = \mu_2 = \mu_3 = ... = \mu_k \quad \text{or} \quad \mu_i - \mu_j = 
 $H_A: \mu_i \neq \mu_j \quad \text{or} \quad \mu_i - \mu_j \neq 0, \quad \text{for some } i, j \in 1,2,3,...,k$
 --->
 <p><strong>Note:</strong> A one-way ANOVA does not tell us which means are different—only that a difference exists.</p>
-<p><code>MSnSet.utils::limma_gen</code> is a wrapper around functions from the limma package that performs one-way ANOVA. We will use it to test if there is a significant difference between any two levels of SUBTYPE: “Immunoreactive,” “Proliferative,” “Mesenchymal,” and “Differentiated.” Since SUBTYPE is a factor, the first level (“Immunoreactive”) will be used as the reference. That is, we will be testing whether the means of the “Proliferative,” “Mesenchymal,” or “Differentiated” groups are different from the mean of the “Immunoreactive” group for each feature in the MSnSet <code>m</code>.</p>
-<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="anova.html#cb129-1" aria-hidden="true" tabindex="-1"></a>anova_res <span class="ot">&lt;-</span> <span class="fu">limma_gen</span>(<span class="at">eset =</span> m, <span class="at">model.str =</span> <span class="st">&quot;~ SUBTYPE&quot;</span>, </span>
-<span id="cb129-2"><a href="anova.html#cb129-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">coef.str =</span> <span class="st">&quot;SUBTYPE&quot;</span>)</span>
-<span id="cb129-3"><a href="anova.html#cb129-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">arrange</span>(anova_res, adj.P.Val)) <span class="co"># top 6 rows arranged by adjusted p-value</span></span></code></pre></div>
+<p><code>MSnSet.utils::limma_gen</code> is a wrapper around functions from the limma package that performs one-way ANOVA. We will use it to test if there is a significant difference between any two levels of SUBTYPE: “Immunoreactive”, “Proliferative”, “Mesenchymal”, and “Differentiated”. Since SUBTYPE is a factor, the first level (“Immunoreactive”) will be used as the reference. That is, we will be testing whether the means of the “Proliferative”, “Mesenchymal”, or “Differentiated” groups are different from the mean of the “Immunoreactive” group for each feature in the MSnSet <code>m</code>.</p>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="anova.html#cb137-1" aria-hidden="true" tabindex="-1"></a>anova_res <span class="ot">&lt;-</span> <span class="fu">limma_gen</span>(<span class="at">eset =</span> m, <span class="at">model.str =</span> <span class="st">&quot;~ SUBTYPE&quot;</span>, </span>
+<span id="cb137-2"><a href="anova.html#cb137-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">coef.str =</span> <span class="st">&quot;SUBTYPE&quot;</span>)</span>
+<span id="cb137-3"><a href="anova.html#cb137-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">arrange</span>(anova_res, adj.P.Val)) <span class="co"># top 6 rows arranged by adjusted p-value</span></span></code></pre></div>
 <pre><code>##             SUBTYPEProliferative SUBTYPEMesenchymal SUBTYPEDifferentiated
 ## NP_055140.1           -0.4979740         0.24131186            -0.3342889
 ## NP_000388.2           -1.2232098        -0.21980158            -0.7849428
@@ -348,7 +349,7 @@ $H_A: \mu_i \neq \mu_j \quad \text{or} \quad \mu_i - \mu_j \neq 0, \quad \text{f
 ## NP_000878.2 -1.710960e-18 18.89587 3.521123e-09 5.195885e-06
 ## NP_001944.1 -5.322987e-18 19.03216 3.144239e-09 5.195885e-06
 ## NP_115584.1  1.172771e-18 18.76318 4.488608e-09 5.195885e-06</code></pre>
-<p>The row names are the features that were tested, and the first three columns are the average log2 fold-changes for each contrast: “Proliferative - Immunoreactive,” “Mesenchymal - Immunoreactive,” and “Differentiated - Immunoreactive.” That is, a positive value indicates that the mean of the “Immunoreactive” group is lower than the mean of the other group, and a negative value indicates that the mean of the “Immunoreactive” group is higher than the mean of the other group. To find the logFC between the “Proliferative” and “Mesenchymal” groups for protein NP_055140.1, for example, we would take the difference between “SUBTYPEProliferative” and “SUBTYPEMesenchymal”: -0.498 - 0.241 = -0.739. The other columns are</p>
+<p>The row names are the features that were tested, and the first three columns are the average log2 fold-changes for each contrast: “Proliferative - Immunoreactive”, “Mesenchymal - Immunoreactive”, and “Differentiated - Immunoreactive”. That is, a positive value indicates that the mean of the “Immunoreactive” group is lower than the mean of the other group, and a negative value indicates that the mean of the “Immunoreactive” group is higher than the mean of the other group. To find the logFC between the “Proliferative” and “Mesenchymal” groups for protein NP_055140.1, for example, we would take the difference between “SUBTYPEProliferative” and “SUBTYPEMesenchymal”: -0.498 - 0.241 = -0.739. The other columns are</p>
 <ul>
 <li><code>AveExpr</code> overall mean (same as <code>rowMeans(exprs(m), na.rm = TRUE)</code>)</li>
 <li><code>F</code> moderated F-statistic</li>
@@ -361,7 +362,7 @@ $H_A: \mu_i \neq \mu_j \quad \text{or} \quad \mu_i - \mu_j \neq 0, \quad \text{f
 The next step would be to check the p-value histograms. If those look fine, we can tally the number of adjusted p-values that pass the threshold for statistical significance. We will use $\alpha = 0.05$ for the significance cutoff. Since we use the BH adjustment, we say that the FDR of the features that pass the significance threshold after adjustment is at most $alpha$. For example, if 100 features are considered significant at the 0.05 level after adjustment, we expect at most 5 of them to be false positives.
 --->
 <p>The next step would be to check the p-value histograms. If those look fine, we can tally the number of significant features.</p>
-<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="anova.html#cb131-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(anova_res<span class="sc">$</span>adj.P.Val <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="anova.html#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(anova_res<span class="sc">$</span>adj.P.Val <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span></code></pre></div>
 <pre><code>## 
 ## FALSE  TRUE 
 ##  7049  1054</code></pre>
@@ -377,7 +378,6 @@ The next step would be to check the p-value histograms. If those look fine, we c
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -417,6 +417,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>6.4 Modifications | Proteomics Data Analysis in R/Bioconductor</title>
   <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content="6.4 Modifications | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-02-11" />
+<meta name="date" content="2022-05-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +32,8 @@
   
 <link rel="prev" href="heatmap-annotation.html"/>
 <link rel="next" href="DEA.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,9 +49,9 @@
 
 
 
-
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -217,6 +216,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="4.1" data-path="conversion-with-biomart.html"><a href="conversion-with-biomart.html"><i class="fa fa-check"></i><b>4.1</b> Conversion with <code>biomaRt</code></a></li>
 <li class="chapter" data-level="4.2" data-path="conversion-with-annotationhub.html"><a href="conversion-with-annotationhub.html"><i class="fa fa-check"></i><b>4.2</b> Conversion with <code>AnnotationHub</code></a></li>
+<li class="chapter" data-level="4.3" data-path="conversion-using-fasta-headers.html"><a href="conversion-using-fasta-headers.html"><i class="fa fa-check"></i><b>4.3</b> Conversion Using FASTA Headers</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory Data Analysis</a>
 <ul>
@@ -278,26 +278,27 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="8.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>8.1.2</b> Reactome</a></li>
 <li class="chapter" data-level="8.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>8.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>8.1.4</b> Pfam</a></li>
+<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#msigdb"><i class="fa fa-check"></i><b>8.1.4</b> MSigDB</a></li>
 </ul></li>
 <li class="chapter" data-level="8.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>8.2</b> Over-Representation Analysis</a>
 <ul>
-<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.1</b> Examples</a>
+<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>8.2.1</b> Overview</a></li>
+<li class="chapter" data-level="8.2.2" data-path="ora.html"><a href="ora.html#ora-math"><i class="fa fa-check"></i><b>8.2.2</b> Mathematical Details</a></li>
+<li class="chapter" data-level="8.2.3" data-path="ora.html"><a href="ora.html#ora-drawbacks"><i class="fa fa-check"></i><b>8.2.3</b> Drawbacks</a></li>
+<li class="chapter" data-level="8.2.4" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.4</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>8.2.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>8.2.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>8.2.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>8.2.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.2.4.1" data-path="ora.html"><a href="ora.html#fgsea-ora"><i class="fa fa-check"></i><b>8.2.4.1</b> ORA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.2.4.2" data-path="ora.html"><a href="ora.html#ora-clustprof"><i class="fa fa-check"></i><b>8.2.4.2</b> ORA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
+<li class="chapter" data-level="8.2.4.3" data-path="ora.html"><a href="ora.html#ora-with-gostats"><i class="fa fa-check"></i><b>8.2.4.3</b> ORA with <code>GOstats</code></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>8.3</b> Gene Set Enrichment Analysis</a>
 <ul>
-<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>8.3.1</b> Examples</a>
+<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>8.3.1</b> Overview</a></li>
+<li class="chapter" data-level="8.3.2" data-path="gsea.html"><a href="gsea.html#gsea-examples"><i class="fa fa-check"></i><b>8.3.2</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>8.3.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>8.3.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>8.3.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.3.1.4" data-path="gsea.html"><a href="gsea.html#gsea-other"><i class="fa fa-check"></i><b>8.3.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.3.2.1" data-path="gsea.html"><a href="gsea.html#gsea-with-fgsea"><i class="fa fa-check"></i><b>8.3.2.1</b> GSEA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.3.2.2" data-path="gsea.html"><a href="gsea.html#gsea-with-clusterprofilerreactomepa"><i class="fa fa-check"></i><b>8.3.2.2</b> GSEA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -319,62 +320,62 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="modifications" class="section level2" number="6.4">
-<h2><span class="header-section-number">6.4</span> Modifications</h2>
+<div id="modifications" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> Modifications<a href="modifications.html#modifications" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p><code>heatmap_args</code> and <code>anno_args</code> are used to modify the heatmaps: changing the row and column labels, labeling specific features, changing the colors of labels, changing font size, adding different types of annotations, splitting rows or columns into groups, etc. The <a href="https://jokergoo.github.io/ComplexHeatmap-reference/book/">ComplexHeatmap Complete Reference</a> goes more into detail about each of these modifications, but we will cover a few of them in this section.</p>
 <p>We will use a random subset of the MSnSet to explore some of these modifications. This is just so we can see the row and column names more easily.</p>
-<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="modifications.html#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">99</span>)</span>
-<span id="cb102-2"><a href="modifications.html#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="co"># subset to 25 features and 40 samples</span></span>
-<span id="cb102-3"><a href="modifications.html#cb102-3" aria-hidden="true" tabindex="-1"></a>m_sub <span class="ot">&lt;-</span> m[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(m), <span class="at">size =</span> <span class="dv">25</span>), </span>
-<span id="cb102-4"><a href="modifications.html#cb102-4" aria-hidden="true" tabindex="-1"></a>           <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(m), <span class="at">size =</span> <span class="dv">40</span>)]</span></code></pre></div>
-<div id="row-and-column-labels" class="section level3" number="6.4.1">
-<h3><span class="header-section-number">6.4.1</span> Row and column labels</h3>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="modifications.html#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">99</span>)</span>
+<span id="cb110-2"><a href="modifications.html#cb110-2" aria-hidden="true" tabindex="-1"></a><span class="co"># subset to 25 features and 40 samples</span></span>
+<span id="cb110-3"><a href="modifications.html#cb110-3" aria-hidden="true" tabindex="-1"></a>m_sub <span class="ot">&lt;-</span> m[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(m), <span class="at">size =</span> <span class="dv">25</span>), </span>
+<span id="cb110-4"><a href="modifications.html#cb110-4" aria-hidden="true" tabindex="-1"></a>           <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">ncol</span>(m), <span class="at">size =</span> <span class="dv">40</span>)]</span></code></pre></div>
+<div id="row-and-column-labels" class="section level3 hasAnchor" number="6.4.1">
+<h3><span class="header-section-number">6.4.1</span> Row and column labels<a href="modifications.html#row-and-column-labels" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>By default, the row and column labels are the row and column names of the matrix passed to <code>Heatmap</code>. In the case of the default expression heatmap, the row names are the <code>featureNames</code> of the MSnSet and the column names are the <code>sampleNames</code>. We can instead use any column in <code>fData</code> and any column in <code>pData</code> to label the rows and columns, respectively. Duplicate labels are also allowed, which is especially useful if there are multiple peptides that map to the same protein, multiple proteins that map to the same gene, etc.</p>
-<div class="sourceCode" id="cb103"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb103-1"><a href="modifications.html#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Default row labels - peptides</span></span>
-<span id="cb103-2"><a href="modifications.html#cb103-2" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m_sub, <span class="at">show_row_names =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb103-3"><a href="modifications.html#cb103-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">heatmap_title =</span> <span class="st">&quot;Default Row Labels&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="modifications.html#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Default row labels - peptides</span></span>
+<span id="cb111-2"><a href="modifications.html#cb111-2" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m_sub, <span class="at">show_row_names =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb111-3"><a href="modifications.html#cb111-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">heatmap_title =</span> <span class="st">&quot;Default Row Labels&quot;</span>)</span></code></pre></div>
 <p><img src="heatmaps_files/figure-html/unnamed-chunk-9-1.png" width="75%" style="display: block; margin: auto;" /></p>
 <p>Suppose, for example, we want to label the rows by the Protein column of <code>fData(m_sub)</code>. We can do this by modifying the <code>row_labels</code> argument of <code>ComplexHeatmap::Heatmap</code> with the <code>heatmap_args</code> list. We will also reduce the font size of the labels so that they do not overlap.</p>
-<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="modifications.html#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Label rows with proteins and change font size</span></span>
-<span id="cb104-2"><a href="modifications.html#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m_sub, <span class="at">show_row_names =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb104-3"><a href="modifications.html#cb104-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">heatmap_title =</span> <span class="st">&quot;New Row Labels&quot;</span>,</span>
-<span id="cb104-4"><a href="modifications.html#cb104-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">heatmap_args =</span> <span class="fu">list</span>(<span class="at">row_labels =</span> <span class="fu">fData</span>(m_sub)[[<span class="st">&quot;Protein&quot;</span>]],</span>
-<span id="cb104-5"><a href="modifications.html#cb104-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="co"># Change font size of row labels</span></span>
-<span id="cb104-6"><a href="modifications.html#cb104-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">row_names_gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">10</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="modifications.html#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Label rows with proteins and change font size</span></span>
+<span id="cb112-2"><a href="modifications.html#cb112-2" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m_sub, <span class="at">show_row_names =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb112-3"><a href="modifications.html#cb112-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">heatmap_title =</span> <span class="st">&quot;New Row Labels&quot;</span>,</span>
+<span id="cb112-4"><a href="modifications.html#cb112-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">heatmap_args =</span> <span class="fu">list</span>(<span class="at">row_labels =</span> <span class="fu">fData</span>(m_sub)[[<span class="st">&quot;Protein&quot;</span>]],</span>
+<span id="cb112-5"><a href="modifications.html#cb112-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="co"># Change font size of row labels</span></span>
+<span id="cb112-6"><a href="modifications.html#cb112-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">row_names_gp =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">10</span>)))</span></code></pre></div>
 <p><img src="heatmaps_files/figure-html/unnamed-chunk-10-1.png" width="75%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="label-colors" class="section level3" number="6.4.2">
-<h3><span class="header-section-number">6.4.2</span> Label colors</h3>
-<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="modifications.html#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="co"># One color</span></span>
-<span id="cb105-2"><a href="modifications.html#cb105-2" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m_sub, <span class="at">show_row_names =</span> <span class="cn">TRUE</span>, </span>
-<span id="cb105-3"><a href="modifications.html#cb105-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">heatmap_args =</span> <span class="fu">list</span>(<span class="at">row_names_gp =</span> <span class="fu">gpar</span>(<span class="at">col =</span> <span class="st">&quot;orange&quot;</span>)))</span></code></pre></div>
+<div id="label-colors" class="section level3 hasAnchor" number="6.4.2">
+<h3><span class="header-section-number">6.4.2</span> Label colors<a href="modifications.html#label-colors" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="modifications.html#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="co"># One color</span></span>
+<span id="cb113-2"><a href="modifications.html#cb113-2" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m_sub, <span class="at">show_row_names =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb113-3"><a href="modifications.html#cb113-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">heatmap_args =</span> <span class="fu">list</span>(<span class="at">row_names_gp =</span> <span class="fu">gpar</span>(<span class="at">col =</span> <span class="st">&quot;orange&quot;</span>)))</span></code></pre></div>
 <p><img src="heatmaps_files/figure-html/unnamed-chunk-11-1.png" width="75%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="modifications.html#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Multiple colors</span></span>
-<span id="cb106-2"><a href="modifications.html#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If peptide begins with &quot;A&quot;, color it red</span></span>
-<span id="cb106-3"><a href="modifications.html#cb106-3" aria-hidden="true" tabindex="-1"></a><span class="co"># If peptide begins with &quot;G&quot;, color it blue</span></span>
-<span id="cb106-4"><a href="modifications.html#cb106-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Otherwise, color it black</span></span>
-<span id="cb106-5"><a href="modifications.html#cb106-5" aria-hidden="true" tabindex="-1"></a>row_colors <span class="ot">&lt;-</span> <span class="fu">featureNames</span>(m_sub) <span class="sc">%&gt;%</span> </span>
-<span id="cb106-6"><a href="modifications.html#cb106-6" aria-hidden="true" tabindex="-1"></a>  {<span class="fu">case_when</span>(<span class="fu">grepl</span>(<span class="st">&quot;^A&quot;</span>, .) <span class="sc">~</span> <span class="st">&quot;red&quot;</span>,</span>
-<span id="cb106-7"><a href="modifications.html#cb106-7" aria-hidden="true" tabindex="-1"></a>             <span class="fu">grepl</span>(<span class="st">&quot;^G&quot;</span>, .) <span class="sc">~</span> <span class="st">&quot;blue&quot;</span>,</span>
-<span id="cb106-8"><a href="modifications.html#cb106-8" aria-hidden="true" tabindex="-1"></a>             <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">&quot;black&quot;</span>)}</span>
-<span id="cb106-9"><a href="modifications.html#cb106-9" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m_sub, <span class="at">show_row_names =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb106-10"><a href="modifications.html#cb106-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">heatmap_args =</span> <span class="fu">list</span>(</span>
-<span id="cb106-11"><a href="modifications.html#cb106-11" aria-hidden="true" tabindex="-1"></a>                  <span class="at">row_names_gp =</span> <span class="fu">gpar</span>(<span class="at">col =</span> row_colors)))</span></code></pre></div>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="modifications.html#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Multiple colors</span></span>
+<span id="cb114-2"><a href="modifications.html#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If peptide begins with &quot;A&quot;, color it red</span></span>
+<span id="cb114-3"><a href="modifications.html#cb114-3" aria-hidden="true" tabindex="-1"></a><span class="co"># If peptide begins with &quot;G&quot;, color it blue</span></span>
+<span id="cb114-4"><a href="modifications.html#cb114-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Otherwise, color it black</span></span>
+<span id="cb114-5"><a href="modifications.html#cb114-5" aria-hidden="true" tabindex="-1"></a>row_colors <span class="ot">&lt;-</span> <span class="fu">featureNames</span>(m_sub) <span class="sc">%&gt;%</span> </span>
+<span id="cb114-6"><a href="modifications.html#cb114-6" aria-hidden="true" tabindex="-1"></a>  {<span class="fu">case_when</span>(<span class="fu">grepl</span>(<span class="st">&quot;^A&quot;</span>, .) <span class="sc">~</span> <span class="st">&quot;red&quot;</span>,</span>
+<span id="cb114-7"><a href="modifications.html#cb114-7" aria-hidden="true" tabindex="-1"></a>             <span class="fu">grepl</span>(<span class="st">&quot;^G&quot;</span>, .) <span class="sc">~</span> <span class="st">&quot;blue&quot;</span>,</span>
+<span id="cb114-8"><a href="modifications.html#cb114-8" aria-hidden="true" tabindex="-1"></a>             <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">&quot;black&quot;</span>)}</span>
+<span id="cb114-9"><a href="modifications.html#cb114-9" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m_sub, <span class="at">show_row_names =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb114-10"><a href="modifications.html#cb114-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">heatmap_args =</span> <span class="fu">list</span>(</span>
+<span id="cb114-11"><a href="modifications.html#cb114-11" aria-hidden="true" tabindex="-1"></a>                  <span class="at">row_names_gp =</span> <span class="fu">gpar</span>(<span class="at">col =</span> row_colors)))</span></code></pre></div>
 <p><img src="heatmaps_files/figure-html/unnamed-chunk-12-1.png" width="75%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="label-specific-features" class="section level3" number="6.4.3">
-<h3><span class="header-section-number">6.4.3</span> Label specific features</h3>
+<div id="label-specific-features" class="section level3 hasAnchor" number="6.4.3">
+<h3><span class="header-section-number">6.4.3</span> Label specific features<a href="modifications.html#label-specific-features" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>We can use mark annotation to label specific features or samples. For this example, we will label all non-human proteins. We need the indices of the proteins to label and the column in <code>fData</code> used to select these labels.</p>
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="modifications.html#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Indices of non-human proteins</span></span>
-<span id="cb107-2"><a href="modifications.html#cb107-2" aria-hidden="true" tabindex="-1"></a>idx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">&quot;HUMAN&quot;</span>, <span class="fu">fData</span>(m)[[<span class="st">&quot;Protein&quot;</span>]]))</span>
-<span id="cb107-3"><a href="modifications.html#cb107-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb107-4"><a href="modifications.html#cb107-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Row annotation object. The name can be anything, so we just use anno</span></span>
-<span id="cb107-5"><a href="modifications.html#cb107-5" aria-hidden="true" tabindex="-1"></a>ra <span class="ot">&lt;-</span> <span class="fu">rowAnnotation</span>(<span class="at">anno =</span> <span class="fu">anno_mark</span>(<span class="at">at =</span> idx, </span>
-<span id="cb107-6"><a href="modifications.html#cb107-6" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">labels =</span> <span class="fu">fData</span>(m)[[<span class="st">&quot;Protein&quot;</span>]][idx]))</span>
-<span id="cb107-7"><a href="modifications.html#cb107-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb107-8"><a href="modifications.html#cb107-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Heatmap with labels for select features</span></span>
-<span id="cb107-9"><a href="modifications.html#cb107-9" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m, <span class="at">heatmap_args =</span> <span class="fu">list</span>(<span class="at">row_labels =</span> <span class="fu">fData</span>(m)[[<span class="st">&quot;Protein&quot;</span>]],</span>
-<span id="cb107-10"><a href="modifications.html#cb107-10" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">right_annotation =</span> ra))</span></code></pre></div>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="modifications.html#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Indices of non-human proteins</span></span>
+<span id="cb115-2"><a href="modifications.html#cb115-2" aria-hidden="true" tabindex="-1"></a>idx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="sc">!</span><span class="fu">grepl</span>(<span class="st">&quot;HUMAN&quot;</span>, <span class="fu">fData</span>(m)[[<span class="st">&quot;Protein&quot;</span>]]))</span>
+<span id="cb115-3"><a href="modifications.html#cb115-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-4"><a href="modifications.html#cb115-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Row annotation object. The name can be anything, so we just use anno</span></span>
+<span id="cb115-5"><a href="modifications.html#cb115-5" aria-hidden="true" tabindex="-1"></a>ra <span class="ot">&lt;-</span> <span class="fu">rowAnnotation</span>(<span class="at">anno =</span> <span class="fu">anno_mark</span>(<span class="at">at =</span> idx, </span>
+<span id="cb115-6"><a href="modifications.html#cb115-6" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">labels =</span> <span class="fu">fData</span>(m)[[<span class="st">&quot;Protein&quot;</span>]][idx]))</span>
+<span id="cb115-7"><a href="modifications.html#cb115-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb115-8"><a href="modifications.html#cb115-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Heatmap with labels for select features</span></span>
+<span id="cb115-9"><a href="modifications.html#cb115-9" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m, <span class="at">heatmap_args =</span> <span class="fu">list</span>(<span class="at">row_labels =</span> <span class="fu">fData</span>(m)[[<span class="st">&quot;Protein&quot;</span>]],</span>
+<span id="cb115-10"><a href="modifications.html#cb115-10" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">right_annotation =</span> ra))</span></code></pre></div>
 <p><img src="heatmaps_files/figure-html/unnamed-chunk-13-1.png" width="75%" style="display: block; margin: auto;" />
 <!---
 ### Split rows or columns
@@ -402,31 +403,31 @@ row_title = NULL, column_title = NULL))
 
 ---></p>
 </div>
-<div id="heatmap-body-color" class="section level3" number="6.4.4">
-<h3><span class="header-section-number">6.4.4</span> Heatmap body color</h3>
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="modifications.html#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m, <span class="at">heatmap_args =</span> <span class="fu">list</span>(<span class="at">col =</span> circlize<span class="sc">::</span><span class="fu">colorRamp2</span>(</span>
-<span id="cb108-2"><a href="modifications.html#cb108-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> <span class="fu">c</span>(<span class="fu">min</span>(<span class="fu">exprs</span>(m), <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">0</span>, </span>
-<span id="cb108-3"><a href="modifications.html#cb108-3" aria-hidden="true" tabindex="-1"></a>             <span class="fu">max</span>(<span class="fu">exprs</span>(m), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)), </span>
-<span id="cb108-4"><a href="modifications.html#cb108-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">&quot;purple&quot;</span>, <span class="st">&quot;white&quot;</span>, <span class="st">&quot;orange&quot;</span>)</span>
-<span id="cb108-5"><a href="modifications.html#cb108-5" aria-hidden="true" tabindex="-1"></a>))</span>
-<span id="cb108-6"><a href="modifications.html#cb108-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div id="heatmap-body-color" class="section level3 hasAnchor" number="6.4.4">
+<h3><span class="header-section-number">6.4.4</span> Heatmap body color<a href="modifications.html#heatmap-body-color" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="modifications.html#cb116-1" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m, <span class="at">heatmap_args =</span> <span class="fu">list</span>(<span class="at">col =</span> circlize<span class="sc">::</span><span class="fu">colorRamp2</span>(</span>
+<span id="cb116-2"><a href="modifications.html#cb116-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> <span class="fu">c</span>(<span class="fu">min</span>(<span class="fu">exprs</span>(m), <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">0</span>, </span>
+<span id="cb116-3"><a href="modifications.html#cb116-3" aria-hidden="true" tabindex="-1"></a>             <span class="fu">max</span>(<span class="fu">exprs</span>(m), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)), </span>
+<span id="cb116-4"><a href="modifications.html#cb116-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">&quot;purple&quot;</span>, <span class="st">&quot;white&quot;</span>, <span class="st">&quot;orange&quot;</span>)</span>
+<span id="cb116-5"><a href="modifications.html#cb116-5" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb116-6"><a href="modifications.html#cb116-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="heatmaps_files/figure-html/unnamed-chunk-16-1.png" width="75%" style="display: block; margin: auto;" /></p>
 <p>If changing the colors of the heatmap body, <code>color_range</code> will not work. Instead, the breaks and colors need to be modified so that the minimum value and the lower limit are the same color and the maximum value and the upper limit are the same color.</p>
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="modifications.html#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m, <span class="at">heatmap_args =</span> <span class="fu">list</span>(<span class="at">col =</span> circlize<span class="sc">::</span><span class="fu">colorRamp2</span>(</span>
-<span id="cb109-2"><a href="modifications.html#cb109-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> <span class="fu">c</span>(<span class="fu">min</span>(<span class="fu">exprs</span>(m), <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb109-3"><a href="modifications.html#cb109-3" aria-hidden="true" tabindex="-1"></a>             <span class="sc">-</span><span class="fl">1.5</span>, <span class="dv">0</span>, <span class="fl">1.5</span>, <span class="co"># add color limits</span></span>
-<span id="cb109-4"><a href="modifications.html#cb109-4" aria-hidden="true" tabindex="-1"></a>             <span class="fu">max</span>(<span class="fu">exprs</span>(m), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)), </span>
-<span id="cb109-5"><a href="modifications.html#cb109-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">&quot;purple&quot;</span>, <span class="st">&quot;purple&quot;</span>, <span class="st">&quot;white&quot;</span>, <span class="st">&quot;orange&quot;</span>, <span class="st">&quot;orange&quot;</span>)</span>
-<span id="cb109-6"><a href="modifications.html#cb109-6" aria-hidden="true" tabindex="-1"></a>))</span>
-<span id="cb109-7"><a href="modifications.html#cb109-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="modifications.html#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m, <span class="at">heatmap_args =</span> <span class="fu">list</span>(<span class="at">col =</span> circlize<span class="sc">::</span><span class="fu">colorRamp2</span>(</span>
+<span id="cb117-2"><a href="modifications.html#cb117-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> <span class="fu">c</span>(<span class="fu">min</span>(<span class="fu">exprs</span>(m), <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb117-3"><a href="modifications.html#cb117-3" aria-hidden="true" tabindex="-1"></a>             <span class="sc">-</span><span class="fl">1.5</span>, <span class="dv">0</span>, <span class="fl">1.5</span>, <span class="co"># add color limits</span></span>
+<span id="cb117-4"><a href="modifications.html#cb117-4" aria-hidden="true" tabindex="-1"></a>             <span class="fu">max</span>(<span class="fu">exprs</span>(m), <span class="at">na.rm =</span> <span class="cn">TRUE</span>)), </span>
+<span id="cb117-5"><a href="modifications.html#cb117-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">colors =</span> <span class="fu">c</span>(<span class="st">&quot;purple&quot;</span>, <span class="st">&quot;purple&quot;</span>, <span class="st">&quot;white&quot;</span>, <span class="st">&quot;orange&quot;</span>, <span class="st">&quot;orange&quot;</span>)</span>
+<span id="cb117-6"><a href="modifications.html#cb117-6" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb117-7"><a href="modifications.html#cb117-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="heatmaps_files/figure-html/unnamed-chunk-17-1.png" width="75%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="horizontal-heatmaps" class="section level3" number="6.4.5">
-<h3><span class="header-section-number">6.4.5</span> Horizontal heatmaps</h3>
+<div id="horizontal-heatmaps" class="section level3 hasAnchor" number="6.4.5">
+<h3><span class="header-section-number">6.4.5</span> Horizontal heatmaps<a href="modifications.html#horizontal-heatmaps" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>To create a horizontal heatmap, we need to take the transpose of the MSnSet. <em>This will switch the phenoData and featureData</em>. We will also reverse the order of the rows prior to the transpose so that the heatmap would appear to be rotated 90 degrees if samples were not clustered.</p>
-<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="modifications.html#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rotate MSnSet</span></span>
-<span id="cb110-2"><a href="modifications.html#cb110-2" aria-hidden="true" tabindex="-1"></a>m_rot <span class="ot">&lt;-</span> <span class="fu">t</span>(m[, <span class="fu">ncol</span>(m)<span class="sc">:</span><span class="dv">1</span>])</span>
-<span id="cb110-3"><a href="modifications.html#cb110-3" aria-hidden="true" tabindex="-1"></a>m_rot</span></code></pre></div>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="modifications.html#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rotate MSnSet</span></span>
+<span id="cb118-2"><a href="modifications.html#cb118-2" aria-hidden="true" tabindex="-1"></a>m_rot <span class="ot">&lt;-</span> <span class="fu">t</span>(m[, <span class="fu">ncol</span>(m)<span class="sc">:</span><span class="dv">1</span>])</span>
+<span id="cb118-3"><a href="modifications.html#cb118-3" aria-hidden="true" tabindex="-1"></a>m_rot</span></code></pre></div>
 <pre><code>## MSnSet (storageMode: lockedEnvironment)
 ## assayData: 236 features, 300 samples 
 ##   element names: exprs 
@@ -443,36 +444,36 @@ row_title = NULL, column_title = NULL))
 ## Annotation:  
 ## - - - Processing information - - -
 ## Subset [308,236][300,236] Fri Nov  9 15:22:49 2018 
-## Subset [300,236][300,236] Fri Feb 11 23:08:12 2022 
-## MSnSet transposed [Fri Feb 11 23:08:12 2022] 
+## Subset [300,236][300,236] Fri May 27 21:19:56 2022 
+## MSnSet transposed [Fri May 27 21:19:56 2022] 
 ##  MSnbase version: 2.7.11</code></pre>
 <p>We will annotate rows to show that it worked.</p>
-<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="modifications.html#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Horizontal heatmap with row annotations</span></span>
-<span id="cb112-2"><a href="modifications.html#cb112-2" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m_rot, <span class="at">anno_row =</span> <span class="st">&quot;Age&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="modifications.html#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Horizontal heatmap with row annotations</span></span>
+<span id="cb120-2"><a href="modifications.html#cb120-2" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m_rot, <span class="at">anno_row =</span> <span class="st">&quot;Age&quot;</span>)</span></code></pre></div>
 <p><img src="heatmaps_files/figure-html/unnamed-chunk-19-1.png" width="75%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="legends" class="section level3" number="6.4.6">
-<h3><span class="header-section-number">6.4.6</span> Legends</h3>
+<div id="legends" class="section level3 hasAnchor" number="6.4.6">
+<h3><span class="header-section-number">6.4.6</span> Legends<a href="modifications.html#legends" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Modifying legends with <code>draw_args</code>, <code>heatmap_args</code>, and <code>anno_args</code>. Below, we change the direction of the heatmap legend and continuous annotation legends to horizontal, change position of annotation titles to top left, and set the number of rows for discrete annotation legends to 1. We also change the width of the “Age” legend to 28 mm, move the legends to the bottom of the heatmap, and set the space between the legends to 10 mm.</p>
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="modifications.html#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Horizontal legends at the bottom</span></span>
-<span id="cb113-2"><a href="modifications.html#cb113-2" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m, <span class="at">anno_column =</span> <span class="fu">c</span>(<span class="st">&quot;Type&quot;</span>, <span class="st">&quot;Age&quot;</span>), </span>
-<span id="cb113-3"><a href="modifications.html#cb113-3" aria-hidden="true" tabindex="-1"></a>                <span class="co"># horizontal heatmap legend</span></span>
-<span id="cb113-4"><a href="modifications.html#cb113-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">heatmap_args =</span> <span class="fu">list</span>(</span>
-<span id="cb113-5"><a href="modifications.html#cb113-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">heatmap_legend_param =</span> <span class="fu">list</span>(<span class="at">direction =</span> <span class="st">&quot;horizontal&quot;</span>)</span>
-<span id="cb113-6"><a href="modifications.html#cb113-6" aria-hidden="true" tabindex="-1"></a>                ),</span>
-<span id="cb113-7"><a href="modifications.html#cb113-7" aria-hidden="true" tabindex="-1"></a>                <span class="co"># horizontal annotation legend</span></span>
-<span id="cb113-8"><a href="modifications.html#cb113-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">anno_args =</span> <span class="fu">list</span>(</span>
-<span id="cb113-9"><a href="modifications.html#cb113-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">annotation_legend_param =</span> <span class="fu">list</span>(</span>
-<span id="cb113-10"><a href="modifications.html#cb113-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">title_position =</span> <span class="st">&quot;lefttop&quot;</span>,</span>
-<span id="cb113-11"><a href="modifications.html#cb113-11" aria-hidden="true" tabindex="-1"></a>                    <span class="at">legend_width =</span> <span class="fu">unit</span>(<span class="dv">28</span>, <span class="st">&quot;mm&quot;</span>),</span>
-<span id="cb113-12"><a href="modifications.html#cb113-12" aria-hidden="true" tabindex="-1"></a>                    <span class="at">direction =</span> <span class="st">&quot;horizontal&quot;</span>, <span class="co"># for continuous legends</span></span>
-<span id="cb113-13"><a href="modifications.html#cb113-13" aria-hidden="true" tabindex="-1"></a>                    <span class="at">nrow =</span> <span class="dv">1</span> <span class="co"># for discrete legends</span></span>
-<span id="cb113-14"><a href="modifications.html#cb113-14" aria-hidden="true" tabindex="-1"></a>                  )</span>
-<span id="cb113-15"><a href="modifications.html#cb113-15" aria-hidden="true" tabindex="-1"></a>                ),</span>
-<span id="cb113-16"><a href="modifications.html#cb113-16" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Place legends at bottom of heatmap</span></span>
-<span id="cb113-17"><a href="modifications.html#cb113-17" aria-hidden="true" tabindex="-1"></a>                <span class="at">draw_args =</span> <span class="fu">list</span>(<span class="at">heatmap_legend_side =</span> <span class="st">&quot;bottom&quot;</span>,</span>
-<span id="cb113-18"><a href="modifications.html#cb113-18" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">legend_gap =</span> <span class="fu">unit</span>(<span class="dv">10</span>, <span class="st">&quot;mm&quot;</span>))</span>
-<span id="cb113-19"><a href="modifications.html#cb113-19" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="modifications.html#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Horizontal legends at the bottom</span></span>
+<span id="cb121-2"><a href="modifications.html#cb121-2" aria-hidden="true" tabindex="-1"></a><span class="fu">complex_heatmap</span>(m, <span class="at">anno_column =</span> <span class="fu">c</span>(<span class="st">&quot;Type&quot;</span>, <span class="st">&quot;Age&quot;</span>), </span>
+<span id="cb121-3"><a href="modifications.html#cb121-3" aria-hidden="true" tabindex="-1"></a>                <span class="co"># horizontal heatmap legend</span></span>
+<span id="cb121-4"><a href="modifications.html#cb121-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">heatmap_args =</span> <span class="fu">list</span>(</span>
+<span id="cb121-5"><a href="modifications.html#cb121-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">heatmap_legend_param =</span> <span class="fu">list</span>(<span class="at">direction =</span> <span class="st">&quot;horizontal&quot;</span>)</span>
+<span id="cb121-6"><a href="modifications.html#cb121-6" aria-hidden="true" tabindex="-1"></a>                ),</span>
+<span id="cb121-7"><a href="modifications.html#cb121-7" aria-hidden="true" tabindex="-1"></a>                <span class="co"># horizontal annotation legend</span></span>
+<span id="cb121-8"><a href="modifications.html#cb121-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">anno_args =</span> <span class="fu">list</span>(</span>
+<span id="cb121-9"><a href="modifications.html#cb121-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">annotation_legend_param =</span> <span class="fu">list</span>(</span>
+<span id="cb121-10"><a href="modifications.html#cb121-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">title_position =</span> <span class="st">&quot;lefttop&quot;</span>,</span>
+<span id="cb121-11"><a href="modifications.html#cb121-11" aria-hidden="true" tabindex="-1"></a>                    <span class="at">legend_width =</span> <span class="fu">unit</span>(<span class="dv">28</span>, <span class="st">&quot;mm&quot;</span>),</span>
+<span id="cb121-12"><a href="modifications.html#cb121-12" aria-hidden="true" tabindex="-1"></a>                    <span class="at">direction =</span> <span class="st">&quot;horizontal&quot;</span>, <span class="co"># for continuous legends</span></span>
+<span id="cb121-13"><a href="modifications.html#cb121-13" aria-hidden="true" tabindex="-1"></a>                    <span class="at">nrow =</span> <span class="dv">1</span> <span class="co"># for discrete legends</span></span>
+<span id="cb121-14"><a href="modifications.html#cb121-14" aria-hidden="true" tabindex="-1"></a>                  )</span>
+<span id="cb121-15"><a href="modifications.html#cb121-15" aria-hidden="true" tabindex="-1"></a>                ),</span>
+<span id="cb121-16"><a href="modifications.html#cb121-16" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Place legends at bottom of heatmap</span></span>
+<span id="cb121-17"><a href="modifications.html#cb121-17" aria-hidden="true" tabindex="-1"></a>                <span class="at">draw_args =</span> <span class="fu">list</span>(<span class="at">heatmap_legend_side =</span> <span class="st">&quot;bottom&quot;</span>,</span>
+<span id="cb121-18"><a href="modifications.html#cb121-18" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">legend_gap =</span> <span class="fu">unit</span>(<span class="dv">10</span>, <span class="st">&quot;mm&quot;</span>))</span>
+<span id="cb121-19"><a href="modifications.html#cb121-19" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p><img src="heatmaps_files/figure-html/unnamed-chunk-20-1.png" width="75%" style="display: block; margin: auto;" /></p>
 
 </div>
@@ -488,7 +489,6 @@ row_title = NULL, column_title = NULL))
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -528,6 +528,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

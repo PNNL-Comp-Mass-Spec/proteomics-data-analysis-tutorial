@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>4.1 Conversion with biomaRt | Proteomics Data Analysis in R/Bioconductor</title>
   <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content="4.1 Conversion with biomaRt | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-02-11" />
+<meta name="date" content="2022-05-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +32,8 @@
   
 <link rel="prev" href="id-conversion.html"/>
 <link rel="next" href="conversion-with-annotationhub.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,9 +49,9 @@
 
 
 
-
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -217,6 +216,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="4.1" data-path="conversion-with-biomart.html"><a href="conversion-with-biomart.html"><i class="fa fa-check"></i><b>4.1</b> Conversion with <code>biomaRt</code></a></li>
 <li class="chapter" data-level="4.2" data-path="conversion-with-annotationhub.html"><a href="conversion-with-annotationhub.html"><i class="fa fa-check"></i><b>4.2</b> Conversion with <code>AnnotationHub</code></a></li>
+<li class="chapter" data-level="4.3" data-path="conversion-using-fasta-headers.html"><a href="conversion-using-fasta-headers.html"><i class="fa fa-check"></i><b>4.3</b> Conversion Using FASTA Headers</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory Data Analysis</a>
 <ul>
@@ -278,26 +278,27 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="8.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>8.1.2</b> Reactome</a></li>
 <li class="chapter" data-level="8.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>8.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>8.1.4</b> Pfam</a></li>
+<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#msigdb"><i class="fa fa-check"></i><b>8.1.4</b> MSigDB</a></li>
 </ul></li>
 <li class="chapter" data-level="8.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>8.2</b> Over-Representation Analysis</a>
 <ul>
-<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.1</b> Examples</a>
+<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>8.2.1</b> Overview</a></li>
+<li class="chapter" data-level="8.2.2" data-path="ora.html"><a href="ora.html#ora-math"><i class="fa fa-check"></i><b>8.2.2</b> Mathematical Details</a></li>
+<li class="chapter" data-level="8.2.3" data-path="ora.html"><a href="ora.html#ora-drawbacks"><i class="fa fa-check"></i><b>8.2.3</b> Drawbacks</a></li>
+<li class="chapter" data-level="8.2.4" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.4</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>8.2.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>8.2.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>8.2.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>8.2.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.2.4.1" data-path="ora.html"><a href="ora.html#fgsea-ora"><i class="fa fa-check"></i><b>8.2.4.1</b> ORA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.2.4.2" data-path="ora.html"><a href="ora.html#ora-clustprof"><i class="fa fa-check"></i><b>8.2.4.2</b> ORA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
+<li class="chapter" data-level="8.2.4.3" data-path="ora.html"><a href="ora.html#ora-with-gostats"><i class="fa fa-check"></i><b>8.2.4.3</b> ORA with <code>GOstats</code></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>8.3</b> Gene Set Enrichment Analysis</a>
 <ul>
-<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>8.3.1</b> Examples</a>
+<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>8.3.1</b> Overview</a></li>
+<li class="chapter" data-level="8.3.2" data-path="gsea.html"><a href="gsea.html#gsea-examples"><i class="fa fa-check"></i><b>8.3.2</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>8.3.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>8.3.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>8.3.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.3.1.4" data-path="gsea.html"><a href="gsea.html#gsea-other"><i class="fa fa-check"></i><b>8.3.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.3.2.1" data-path="gsea.html"><a href="gsea.html#gsea-with-fgsea"><i class="fa fa-check"></i><b>8.3.2.1</b> GSEA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.3.2.2" data-path="gsea.html"><a href="gsea.html#gsea-with-clusterprofilerreactomepa"><i class="fa fa-check"></i><b>8.3.2.2</b> GSEA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -319,25 +320,74 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="conversion-with-biomart" class="section level2" number="4.1">
-<h2><span class="header-section-number">4.1</span> Conversion with <code>biomaRt</code></h2>
-<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="conversion-with-biomart.html#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Install missing packages</span></span>
-<span id="cb75-2"><a href="conversion-with-biomart.html#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;BiocManager&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb75-3"><a href="conversion-with-biomart.html#cb75-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">&quot;BiocManager&quot;</span>)</span>
-<span id="cb75-4"><a href="conversion-with-biomart.html#cb75-4" aria-hidden="true" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">&quot;biomaRt&quot;</span>)</span>
-<span id="cb75-5"><a href="conversion-with-biomart.html#cb75-5" aria-hidden="true" tabindex="-1"></a><span class="do">## ------------------------</span></span>
-<span id="cb75-6"><a href="conversion-with-biomart.html#cb75-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biomaRt)</span></code></pre></div>
-<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="conversion-with-biomart.html#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create mart</span></span>
-<span id="cb76-2"><a href="conversion-with-biomart.html#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">listMarts</span>() <span class="co"># determine biomart for useMart</span></span>
-<span id="cb76-3"><a href="conversion-with-biomart.html#cb76-3" aria-hidden="true" tabindex="-1"></a>mart <span class="ot">&lt;-</span> <span class="fu">useMart</span>(<span class="at">biomart =</span> <span class="st">&quot;ENSEMBL_MART_ENSEMBL&quot;</span>)</span>
-<span id="cb76-4"><a href="conversion-with-biomart.html#cb76-4" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(<span class="fu">listDatasets</span>(mart)) <span class="co"># determine dataset for useMart</span></span>
-<span id="cb76-5"><a href="conversion-with-biomart.html#cb76-5" aria-hidden="true" tabindex="-1"></a>mart <span class="ot">&lt;-</span> <span class="fu">useMart</span>(<span class="at">biomart =</span> <span class="st">&quot;ENSEMBL_MART_ENSEMBL&quot;</span>, </span>
-<span id="cb76-6"><a href="conversion-with-biomart.html#cb76-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">dataset =</span> <span class="st">&quot;rnorvegicus_gene_ensembl&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="conversion-with-biomart.html#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create conversion table</span></span>
-<span id="cb77-2"><a href="conversion-with-biomart.html#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(<span class="fu">listAttributes</span>(mart)) <span class="co"># determine attributes for getBM</span></span>
-<span id="cb77-3"><a href="conversion-with-biomart.html#cb77-3" aria-hidden="true" tabindex="-1"></a>conv_tbl1 <span class="ot">&lt;-</span> <span class="fu">getBM</span>(<span class="at">attributes =</span> <span class="fu">c</span>(<span class="st">&quot;refseq_peptide&quot;</span>, <span class="st">&quot;external_gene_name&quot;</span>),</span>
-<span id="cb77-4"><a href="conversion-with-biomart.html#cb77-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">mart =</span> mart)</span>
-<span id="cb77-5"><a href="conversion-with-biomart.html#cb77-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(conv_tbl1, <span class="dv">10</span>)</span></code></pre></div>
+<div id="conversion-with-biomart" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Conversion with <code>biomaRt</code><a href="conversion-with-biomart.html#conversion-with-biomart" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="conversion-with-biomart.html#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Install missing packages</span></span>
+<span id="cb73-2"><a href="conversion-with-biomart.html#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;BiocManager&quot;</span>, <span class="at">quietly =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb73-3"><a href="conversion-with-biomart.html#cb73-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">install.packages</span>(<span class="st">&quot;BiocManager&quot;</span>)</span>
+<span id="cb73-4"><a href="conversion-with-biomart.html#cb73-4" aria-hidden="true" tabindex="-1"></a>bio_pkgs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;biomaRt&quot;</span>, <span class="st">&quot;Biostrings&quot;</span>)</span>
+<span id="cb73-5"><a href="conversion-with-biomart.html#cb73-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pkg_i <span class="cf">in</span> bio_pkgs) {</span>
+<span id="cb73-6"><a href="conversion-with-biomart.html#cb73-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(pkg_i, <span class="at">quietly =</span> T, <span class="at">character.only =</span> T))</span>
+<span id="cb73-7"><a href="conversion-with-biomart.html#cb73-7" aria-hidden="true" tabindex="-1"></a>    BiocManager<span class="sc">::</span><span class="fu">install</span>(pkg_i)</span>
+<span id="cb73-8"><a href="conversion-with-biomart.html#cb73-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb73-9"><a href="conversion-with-biomart.html#cb73-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;remotes&quot;</span>, <span class="at">quietly =</span> T)) <span class="fu">install.packages</span>(<span class="st">&quot;remotes&quot;</span>)</span>
+<span id="cb73-10"><a href="conversion-with-biomart.html#cb73-10" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;MSnID&quot;</span>, <span class="at">quietly =</span> T, <span class="at">character.only =</span> T))</span>
+<span id="cb73-11"><a href="conversion-with-biomart.html#cb73-11" aria-hidden="true" tabindex="-1"></a>  remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;PNNL-Comp-Mass-Spec/MSnID@pnnl-master&quot;</span>)</span>
+<span id="cb73-12"><a href="conversion-with-biomart.html#cb73-12" aria-hidden="true" tabindex="-1"></a><span class="do">## ------------------------</span></span>
+<span id="cb73-13"><a href="conversion-with-biomart.html#cb73-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(biomaRt) <span class="co"># ID conversion</span></span>
+<span id="cb73-14"><a href="conversion-with-biomart.html#cb73-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Biostrings) <span class="co"># read FASTA files</span></span>
+<span id="cb73-15"><a href="conversion-with-biomart.html#cb73-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MSnID) <span class="co"># parse_FASTA_names</span></span></code></pre></div>
+<p>The first steps are to determine which mart and dataset to use. <code>listMarts</code> will show the available marts. The first 6 rows of the available datasets (provided by <code>listDatasets(mart)</code>) are also shown. (Use <code>View</code>, rather than <code>head</code>, to search for the desired database.)</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="conversion-with-biomart.html#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create mart</span></span>
+<span id="cb74-2"><a href="conversion-with-biomart.html#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="fu">listMarts</span>() <span class="co"># determine biomart for useMart</span></span></code></pre></div>
+<pre><code>##                biomart                version
+## 1 ENSEMBL_MART_ENSEMBL      Ensembl Genes 106
+## 2   ENSEMBL_MART_MOUSE      Mouse strains 106
+## 3     ENSEMBL_MART_SNP  Ensembl Variation 106
+## 4 ENSEMBL_MART_FUNCGEN Ensembl Regulation 106</code></pre>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="conversion-with-biomart.html#cb76-1" aria-hidden="true" tabindex="-1"></a>mart <span class="ot">&lt;-</span> <span class="fu">useMart</span>(<span class="at">biomart =</span> <span class="st">&quot;ENSEMBL_MART_ENSEMBL&quot;</span>)</span>
+<span id="cb76-2"><a href="conversion-with-biomart.html#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">listDatasets</span>(mart)) <span class="co"># determine dataset for useMart</span></span></code></pre></div>
+<pre><code>##                        dataset                           description
+## 1 abrachyrhynchus_gene_ensembl Pink-footed goose genes (ASM259213v1)
+## 2     acalliptera_gene_ensembl      Eastern happy genes (fAstCal1.2)
+## 3   acarolinensis_gene_ensembl       Green anole genes (AnoCar2.0v2)
+## 4    acchrysaetos_gene_ensembl       Golden eagle genes (bAquChr1.2)
+## 5    acitrinellus_gene_ensembl        Midas cichlid genes (Midas_v5)
+## 6    amelanoleuca_gene_ensembl       Giant panda genes (ASM200744v2)
+##       version
+## 1 ASM259213v1
+## 2  fAstCal1.2
+## 3 AnoCar2.0v2
+## 4  bAquChr1.2
+## 5    Midas_v5
+## 6 ASM200744v2</code></pre>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="conversion-with-biomart.html#cb78-1" aria-hidden="true" tabindex="-1"></a>mart <span class="ot">&lt;-</span> <span class="fu">useMart</span>(<span class="at">biomart =</span> <span class="st">&quot;ENSEMBL_MART_ENSEMBL&quot;</span>, </span>
+<span id="cb78-2"><a href="conversion-with-biomart.html#cb78-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">dataset =</span> <span class="st">&quot;rnorvegicus_gene_ensembl&quot;</span>)</span></code></pre></div>
+<p>Next, we determine which attributes to select for the conversion table with <code>listAttributes(mart)</code>. From that table, we select “refseq_peptide” and “external_gene_name”.</p>
+<div class="sourceCode" id="cb79"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb79-1"><a href="conversion-with-biomart.html#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create conversion table</span></span>
+<span id="cb79-2"><a href="conversion-with-biomart.html#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">listAttributes</span>(mart)) <span class="co"># determine attributes for getBM</span></span></code></pre></div>
+<pre><code>##                            name                  description         page
+## 1               ensembl_gene_id               Gene stable ID feature_page
+## 2       ensembl_gene_id_version       Gene stable ID version feature_page
+## 3         ensembl_transcript_id         Transcript stable ID feature_page
+## 4 ensembl_transcript_id_version Transcript stable ID version feature_page
+## 5            ensembl_peptide_id            Protein stable ID feature_page
+## 6    ensembl_peptide_id_version    Protein stable ID version feature_page</code></pre>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="conversion-with-biomart.html#cb81-1" aria-hidden="true" tabindex="-1"></a>conv_tbl1 <span class="ot">&lt;-</span> <span class="fu">getBM</span>(<span class="at">attributes =</span> <span class="fu">c</span>(<span class="st">&quot;refseq_peptide&quot;</span>, <span class="st">&quot;external_gene_name&quot;</span>),</span>
+<span id="cb81-2"><a href="conversion-with-biomart.html#cb81-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">mart =</span> mart)</span>
+<span id="cb81-3"><a href="conversion-with-biomart.html#cb81-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(conv_tbl1, <span class="dv">10</span>)</span></code></pre></div>
+<pre><code>##    refseq_peptide external_gene_name
+## 1                                   
+## 2                         AC118165.1
+## 3    NP_001000130              Olr56
+## 4    NP_001000302             Olr473
+## 5                         AC099294.1
+## 6                     AABR07054368.1
+## 7                             Olr760
+## 8    NP_001014048              Clrn3
+## 9                     AABR07000137.1
+## 10   NP_001011937              Doc2g</code></pre>
+<p>This table has a lot of blank entries that need to be removed.</p>
 </div>
             </section>
 
@@ -349,7 +399,6 @@ div.csl-indent {
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -389,6 +438,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

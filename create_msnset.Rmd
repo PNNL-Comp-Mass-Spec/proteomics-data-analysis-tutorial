@@ -1,3 +1,12 @@
-# MSnSets
+# MSnSet Objects {#msnset-objects}
+
+(See ?MSnbase::\`MSnSet-class\` for more details, as well as useful functions for modifying MSnSets and creating plots.)
+
+An MSnSet is a convenient way to store MS proteomics expression and meta data in one object. It can be constructed with the `MSnbase::MSnSet` function, which accepts three arguments: 
+
+1) `exprs` - a `matrix` of expression data with features as row names and samples as column names.
+2) `fData` - a `data.frame` with features as row names (in the same order as the rows of `exprs`) and columns that describe each feature. This is not always necessary to include, but it is useful to store different feature IDs such as gene symbols.
+3) `pData` - a `data.frame` with samples as row names (in the same order as the columns of `exprs`) and columns that describe each sample. This is almost always created from existing sample meta-data.
+
 
 

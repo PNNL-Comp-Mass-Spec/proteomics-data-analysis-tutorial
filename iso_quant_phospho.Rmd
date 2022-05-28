@@ -101,36 +101,21 @@ show(msnid)
 
 ### MS/MS ID Filter: Protein Level
 
-```{r}
-# Get path to FASTA file
-path_to_FASTA <- path_to_FASTA_used_by_DMS(data_package_num)
-
-# Compute number of peptides per 1000 amino acids
-msnid <- compute_num_peptides_per_1000aa(msnid, path_to_FASTA)
-
-# 1% FDR filter at the protein level
-msnid <- filter_msgf_data(msnid, level = "accession", fdr.max = 0.01)
-show(msnid)
-```
+This step is unnecessary for PTM data, since the cross-tab is not created at the protein level, so it is skipped.
 
 ### Inference of Parsimonious Protein Set
 
-If a protein was detected in the global proteomics results, we may be more confident that it will appear in the PTM results. We can perform prioritized inference of the protein set to ensure that, if a protein is reported in the global cross-tab, and it is present in the PTM MSnID after filtering, it will be included in the final PTM MSnID. We set the proteins from the global cross-tab as the prior.
+If a protein was detected in the global proteomics results, we may be more confident that it will appear in the PTM results. We can perform prioritized inference of the protein set to ensure that, if a protein is reported in the global cross-tab, and it is present in the PTM MSnID after filtering, it will be included in the final PTM MSnID. We set the proteins from the global cross-tab as the prior. By default, peptides are allowed to match multiple proteins in the prior. If duplicates are not allowed, we can set the `refine_prior` argument to `TRUE`.
 
 ```{r}
 # Proteins from global proteomics cross-tab
-load("data/3442_global_proteins.RData")
+load("./data/3442_global_proteins.RData")
 
 # Prioritized inference of parsimonious protein set
 msnid <- infer_parsimonious_accessions(msnid, unique_only = FALSE,
-                                       prior = global_proteins)
+                                       prior = global_proteins, 
+                                       refine_prior = FALSE)
 show(msnid)
-```
-
-Figure \@ref(fig:prior-inference) shows the steps used to perform prioritized inference. If `unique_only = TRUE`, any prior will be ignored. See Figure \@ref(fig:parsimony) for parsimonious inference without a prior.
-
-```{r prior-inference, echo=FALSE, fig.cap="Visual explanation of prioritized inference."}
-include_graphics("images/prioritized-inference.PNG")
 ```
 
 </br>
@@ -141,6 +126,7 @@ include_graphics("images/prioritized-inference.PNG")
 
 ```{r}
 # Create AAStringSet
+path_to_FASTA <- path_to_FASTA_used_by_DMS(data_package_num)
 fst <- readAAStringSet(path_to_FASTA)
 # Remove contaminants
 fst <- fst[!grepl("Contaminant", names(fst)), ]
@@ -151,7 +137,7 @@ head(names(fst))
 ```{r}
 # Modify names to match accessions(msnid)
 # Remove any space followed by any number of characters
-names(fst) <- sub(" .*$", "", names(fst))
+names(fst) <- sub(" .*", "", names(fst))
 # First 6 names
 head(names(fst))
 ```

@@ -3,7 +3,7 @@
 This section shows how to convert from one feature ID (UniProt accessions, gene symbols, etc.) to another using different packages.
 
 ```{r include=FALSE}
-knitr::opts_chunk$set(eval=FALSE)
+knitr::opts_chunk$set(message=FALSE, warning=FALSE)
 ```
 
 
@@ -13,27 +13,43 @@ knitr::opts_chunk$set(eval=FALSE)
 ## Install missing packages
 if (!require("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
-BiocManager::install("biomaRt")
+bio_pkgs <- c("biomaRt", "Biostrings")
+for (pkg_i in bio_pkgs) {
+  if (!require(pkg_i, quietly = T, character.only = T))
+    BiocManager::install(pkg_i)
+}
+if (!require("remotes", quietly = T)) install.packages("remotes")
+if (!require("MSnID", quietly = T, character.only = T))
+  remotes::install_github("PNNL-Comp-Mass-Spec/MSnID@pnnl-master")
 ## ------------------------
-library(biomaRt)
+library(biomaRt) # ID conversion
+library(Biostrings) # read FASTA files
+library(MSnID) # parse_FASTA_names
 ```
+
+The first steps are to determine which mart and dataset to use. `listMarts` will show the available marts. The first 6 rows of the available datasets (provided by `listDatasets(mart)`) are also shown. (Use `View`, rather than `head`, to search for the desired database.)
 
 ```{r}
 # Create mart
 listMarts() # determine biomart for useMart
 mart <- useMart(biomart = "ENSEMBL_MART_ENSEMBL")
-View(listDatasets(mart)) # determine dataset for useMart
+head(listDatasets(mart)) # determine dataset for useMart
 mart <- useMart(biomart = "ENSEMBL_MART_ENSEMBL", 
                 dataset = "rnorvegicus_gene_ensembl")
 ```
 
+Next, we determine which attributes to select for the conversion table with `listAttributes(mart)`. From that table, we select "refseq_peptide" and "external_gene_name".
+
 ```{r}
 # Create conversion table
-View(listAttributes(mart)) # determine attributes for getBM
+head(listAttributes(mart)) # determine attributes for getBM
 conv_tbl1 <- getBM(attributes = c("refseq_peptide", "external_gene_name"),
                    mart = mart)
 head(conv_tbl1, 10)
 ```
+
+This table has a lot of blank entries that need to be removed.
+
 
 ## Conversion with `AnnotationHub`
 
@@ -44,6 +60,7 @@ if (!require("MSnID", quietly = T))
   remotes::install_github("PNNL-Comp-Mass-Spec/MSnID@pnnl-master")
 ```
 
+`MSnID` has a function called `fetch_conversion_table` that leverages `AnnotationHub` to create a conversion table.
 
 ```{r}
 # Create conversion table with MSnID::fetch_conversion_table
@@ -51,5 +68,18 @@ conv_tbl2 <- fetch_conversion_table(
   organism_name = "Rattus norvegicus", from = "REFSEQ", to = "SYMBOL"
 )
 head(conv_tbl2, 10)
+```
+
+
+## Conversion Using FASTA Headers
+
+If specifically converting to gene symbols, it is recommended to use the information in the headers of the FASTA file that was used for the database search. The gene symbol is always given by `GN=...`, so we can use a regular expression to extract it. For UniProt FASTA files, there is a function in `MSnID` called `parse_FASTA_names` that will extract the components of the FASTA headers and create a `data.frame`.
+
+```{r}
+## Read FASTA file
+fst_path <- system.file("extdata/uniprot_rat_small.fasta.gz",
+                        package = "MSnID")
+conv_tbl3 <- parse_FASTA_names(path_to_FASTA = fst_path)
+head(conv_tbl3)
 ```
 

@@ -17,7 +17,6 @@ library(MSnSet.utils)
 data(cptac_oca)
 ```
 
-
 ## Count Features in Samples
 
 To count the number of features identified in each sample, we use `colSums` to tally the number of entries that are not `NA` in each column of `exprs(oca.set)`.
@@ -61,7 +60,7 @@ plot(oca.set$num_proteins, pch = 19, xlab = "Sample Index",
 
 <img src="EDA_files/figure-html/num-prot-scatterplot-1.png" width="75%" style="display: block; margin: auto;" />
 
-While harder to interpret at a glance than a boxplot, scatterplots are useful for identifying potential outliers and possible trends in the data. In the plot above, it doesn't appear than there are any samples with significantly fewer identifications. 
+While harder to interpret at a glance than a boxplot, scatterplots are useful for identifying potential outliers and possible trends in the data. In the plot above, it doesn't appear than there are any samples with significantly fewer identifications.
 
 The other plot type we could use balances the summary of the boxplot with the finer detail of the scatterplot: kernel density plots. We can use a combination of `stats::density` and `base::plot` to quickly create a density plot.
 
@@ -77,7 +76,6 @@ plot(density(oca.set$num_proteins, na.rm = TRUE),
 
 It looks like there are peaks around 6900-7000 and 7300-7500 proteins.
 
-
 ## Sample Boxplots
 
 
@@ -87,26 +85,31 @@ boxplot(exprs(oca.set))
 
 <img src="EDA_files/figure-html/unnamed-chunk-1-1.png" width="75%" style="display: block; margin: auto;" />
 
-
 ## Estimate Blood Contamination
 
 Strong contamination of samples with blood may lead to the inability to identify low-abundant proteins, so it is important to estimate the level of blood contamination. We can search for major blood proteins with the `grepl` function and summarize their abundances within each sample to obtain reasonable estimates.
 
 We will need to search for the blood protein identifiers that match the protein identifiers in the MSnSet. Since we are using the `cptac_oca` data for these examples, we will need to know the NCBI RefSeq protein IDs for the following blood proteins: hemoglobin, fibrinogen, albumin, and spectrin. Unfortunately, this means manually searching for these identifiers, which are provided in the list below.
 
-* hemoglobin 
-+  subunit alpha 1: NP_000549.1
-+  subunit alpha 2: NP_000508.1
-+  subunit beta: NP_000509.1
-+  subunit gamma-1: NP_000550.2
-+  subunit gamma-2: NP_000175.1
-* albumin: NP_000468.1
-* fibrinogen
-+  alpha chain isoform alpha precursor: NP_068657.1
-+  alpha chain isoform alpha-E preprotein: NP_000499.1
-* spectrin
-+  alpha chain, erythrocytic 1: NP_003117.2
-+  beta chain, erythrocytic 1: NP_001342365.1
+-   hemoglobin
+    -   subunit alpha 1: NP_000549.1
+
+    -   subunit alpha 2: NP_000508.1
+
+    -   subunit beta: NP_000509.1
+
+    -   subunit gamma-1: NP_000550.2
+
+    -   subunit gamma-2: NP_000175.1
+-   albumin: NP_000468.1
+-   fibrinogen
+    -   alpha chain isoform alpha precursor: NP_068657.1
+
+    -   alpha chain isoform alpha-E preprotein: NP_000499.1
+-   spectrin
+    -   alpha chain, erythrocytic 1: NP_003117.2
+
+    -   beta chain, erythrocytic 1: NP_001342365.1
 
 We need to create a vector of these blood protein IDs. We will use this to check if each feature is a blood protein. Doing so will create a logical vector that we can use to subset the data to the abundance values of those matches. With the subset data, we can then calculate the column (sample) averages with `colMeans` to get a single vector that estimates the average blood contamination of each sample.
 
@@ -134,16 +137,15 @@ plot(density(blood_contam, na.rm = TRUE),
 
 <img src="EDA_files/figure-html/unnamed-chunk-3-1.png" width="75%" style="display: block; margin: auto;" />
 
-
 ## PCA
 
-Principal Component Analysis (PCA) is an unsupervised dimensionality reduction technique. It is useful for visualizing high-dimensional data in a lower-dimensional (usually 2D) space while retaining as much information from the original data as possible. It does this by creating linear combinations of features called principal components in such a way that that the first principal component (PC1) explains the most variation in the original data, PC2 explains the second most, and so on. Typically, we create scatterplots of PC1 vs PC2 to visualize relationships between samples with the `plot_pca` function from the MSnSet.utils package.
+Principal Component Analysis (PCA) is an unsupervised dimensionality reduction technique. It is useful for visualizing high-dimensional data in a lower-dimensional (usually 2D) space while retaining as much information from the original data as possible. It does this by creating linear combinations of features called principal components in such a way that that the first principal component (PC1) explains the most variation in the original data, PC2 explains the second most, and so on. Typically, we create scatterplots of PC1 vs PC2 to visualize relationships between samples with the `plot_pca` function from the `MSnSet.utils` package.
 
 PCA plots are used to check for batch effects and sample differences due to variables of interest. If samples appear to separate by group or according to a continuous variable and the first two principal components explain a decent percentage of the variance in the original data, then we are fairly confident that the predictor affected the data in some way or is at least correlated to something that did.
 
 Note that while there are PCA methods that allow some degree of missing data (see `pcaMethods::pca` for details), `plot_pca` makes use of the `prcomp` function, which does not. We do not need to filter data prior to running `plot_pca`, as it handles that and prints a message to tell us how many complete rows remained. If there are very few complete features, PCA will still work, but the results may not be very meaningful. In this case, it may be a good idea to impute missing values.
 
-We will begin with the base plot. The axis titles show how much variance in the original data is explained by each component. This is built with the ggplot2 package, so it can be customized with other functions in the package.
+We will begin with the base plot. The axis titles show how much variance in the original data is explained by each component. This is built with the `ggplot2` package, so it can be customized with other functions in the package.
 
 
 ```r
@@ -189,7 +191,6 @@ plot_pca(oca.set, phenotype = "SUBTYPE", biplot = TRUE,
 
 From the biplot, we can see that proteins that begin with "NP_9976" are major drivers in the separation of the Mesenchymal and Proliferative samples. Similarly, we can see that there are a few blood proteins (hemoglobin subunits: NP000549.1 and NP_000550.2) that are major drivers of separation along PC2, though PC2 only explains about 6% of the variance in the original data. See `?plot_pca` for more customization options.
 
-
 <!-- ## UMAP -->
 
 <!-- ### Overview -->
@@ -211,59 +212,89 @@ From the biplot, we can see that proteins that begin with "NP_9976" are major dr
 <!-- We will use `cptac_oca` for this example. First, we will take a look at the base UMAP plot of the samples. In this plot, points are not colored by a column in `pData(oca.set)`. Since there is a degree of randomness in the UMAP algorithm, it is a good idea to set the seed. There is an argument called `random_state` that allows us to do this. -->
 
 <!-- ```{r umap_base} -->
+
 <!-- library(MSnSet.utils) -->
 
 <!-- # Load the MSnSet -->
+
 <!-- data(cptac_oca) -->
 
 <!-- # Base UMAP scatterplot of samples -->
-<!-- plot_umap(oca.set, random_state = 99) -->
-<!-- ``` -->
 
+<!-- plot_umap(oca.set, random_state = 99) -->
+
+<!-- ``` -->
 
 <!-- ```{r umap_color} -->
-<!-- plot_umap(oca.set, phenotype = "SUBTYPE", random_state = 99) -->
-<!-- ``` -->
 
+<!-- plot_umap(oca.set, phenotype = "SUBTYPE", random_state = 99) -->
+
+<!-- ``` -->
 
 <!-- We can also look at plots for other values of `n_neighbors`. We will make plots for 6, 9, 15, and 30 nearest neighbors. -->
 
 <!-- ```{r umap_mult_k} -->
+
 <!-- # Different number of nearest neighbors to try -->
+
 <!-- k <- c(6, 9, 15, 30) -->
 
 <!-- # UMAP plot for each value of k -->
+
 <!-- plot_umap(oca.set, phenotype = "SUBTYPE",  -->
+
 <!--           n_neighbors = k, random_state = 99) -->
+
 <!-- ``` -->
 
 <!-- Below is the same figure with some improvements to the appearance. -->
 
 <!-- ```{r umap_mult_k_pretty, fig.height=4, fig.asp=1.1} -->
+
 <!-- # Customize facet labels -->
+
 <!-- facet_labs <- paste("k =", k) -->
+
 <!-- names(facet_labs) <- k -->
 
 <!-- plot_umap(oca.set, phenotype = "SUBTYPE",  -->
+
 <!--           n_neighbors = k, random_state = 99, -->
+
 <!--           # argument passed to facet_wrap: -->
+
 <!--           labeller = labeller(n_neighbors = facet_labs)) + -->
+
 <!--   ggtitle("UMAP Plots for Different Nearest Neighbors") + -->
+
 <!--   # Change legend titles for the point color and ellipse fill. -->
+
 <!--   guides(color = guide_legend(title = "Subtype"), -->
+
 <!--          fill = guide_legend(title = "Subtype")) + -->
+
 <!--   # Customize the facets and legend layout -->
+
 <!--   theme( -->
+
 <!--     # Move the legend to the bottom and  -->
+
 <!--     # arrange labels horizontally -->
+
 <!--     legend.position = "bottom",  -->
+
 <!--     legend.direction = "horizontal",  -->
+
 <!--     # Remove the facet label background and  -->
+
 <!--     # increase label size relative to the -->
+
 <!--     # base text size of the theme. -->
+
 <!--     strip.background = element_blank(), -->
+
 <!--     strip.text = element_text(size = rel(1.1)) -->
+
 <!--   ) -->
+
 <!-- ``` -->
-
-
