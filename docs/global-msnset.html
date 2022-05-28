@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>1.5 Create MSnSet | Proteomics Data Analysis in R/Bioconductor</title>
   <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content="1.5 Create MSnSet | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-02-11" />
+<meta name="date" content="2022-05-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +32,8 @@
   
 <link rel="prev" href="global-quant-crosstab.html"/>
 <link rel="next" href="iso-phospho.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,9 +49,9 @@
 
 
 
-
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -217,6 +216,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="4.1" data-path="conversion-with-biomart.html"><a href="conversion-with-biomart.html"><i class="fa fa-check"></i><b>4.1</b> Conversion with <code>biomaRt</code></a></li>
 <li class="chapter" data-level="4.2" data-path="conversion-with-annotationhub.html"><a href="conversion-with-annotationhub.html"><i class="fa fa-check"></i><b>4.2</b> Conversion with <code>AnnotationHub</code></a></li>
+<li class="chapter" data-level="4.3" data-path="conversion-using-fasta-headers.html"><a href="conversion-using-fasta-headers.html"><i class="fa fa-check"></i><b>4.3</b> Conversion Using FASTA Headers</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory Data Analysis</a>
 <ul>
@@ -278,26 +278,27 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="8.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>8.1.2</b> Reactome</a></li>
 <li class="chapter" data-level="8.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>8.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>8.1.4</b> Pfam</a></li>
+<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#msigdb"><i class="fa fa-check"></i><b>8.1.4</b> MSigDB</a></li>
 </ul></li>
 <li class="chapter" data-level="8.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>8.2</b> Over-Representation Analysis</a>
 <ul>
-<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.1</b> Examples</a>
+<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>8.2.1</b> Overview</a></li>
+<li class="chapter" data-level="8.2.2" data-path="ora.html"><a href="ora.html#ora-math"><i class="fa fa-check"></i><b>8.2.2</b> Mathematical Details</a></li>
+<li class="chapter" data-level="8.2.3" data-path="ora.html"><a href="ora.html#ora-drawbacks"><i class="fa fa-check"></i><b>8.2.3</b> Drawbacks</a></li>
+<li class="chapter" data-level="8.2.4" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.4</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>8.2.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>8.2.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>8.2.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>8.2.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.2.4.1" data-path="ora.html"><a href="ora.html#fgsea-ora"><i class="fa fa-check"></i><b>8.2.4.1</b> ORA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.2.4.2" data-path="ora.html"><a href="ora.html#ora-clustprof"><i class="fa fa-check"></i><b>8.2.4.2</b> ORA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
+<li class="chapter" data-level="8.2.4.3" data-path="ora.html"><a href="ora.html#ora-with-gostats"><i class="fa fa-check"></i><b>8.2.4.3</b> ORA with <code>GOstats</code></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>8.3</b> Gene Set Enrichment Analysis</a>
 <ul>
-<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>8.3.1</b> Examples</a>
+<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>8.3.1</b> Overview</a></li>
+<li class="chapter" data-level="8.3.2" data-path="gsea.html"><a href="gsea.html#gsea-examples"><i class="fa fa-check"></i><b>8.3.2</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>8.3.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>8.3.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>8.3.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.3.1.4" data-path="gsea.html"><a href="gsea.html#gsea-other"><i class="fa fa-check"></i><b>8.3.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.3.2.1" data-path="gsea.html"><a href="gsea.html#gsea-with-fgsea"><i class="fa fa-check"></i><b>8.3.2.1</b> GSEA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.3.2.2" data-path="gsea.html"><a href="gsea.html#gsea-with-clusterprofilerreactomepa"><i class="fa fa-check"></i><b>8.3.2.2</b> GSEA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -319,12 +320,12 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="global-msnset" class="section level2" number="1.5">
-<h2><span class="header-section-number">1.5</span> Create MSnSet</h2>
+<div id="global-msnset" class="section level2 hasAnchor" number="1.5">
+<h2><span class="header-section-number">1.5</span> Create MSnSet<a href="global-msnset.html#global-msnset" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>The <code>create_msnset</code> function can be used to easily create an MSnSet from the cross-tab and samples tables. More details about MSnSets will be added in a separate section at a later date. For now, read the documentation with <code>help("MSnSet")</code> or <code>?MSnSet</code>.</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="global-msnset.html#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create MSnSet</span></span>
-<span id="cb33-2"><a href="global-msnset.html#cb33-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">create_msnset</span>(<span class="at">crosstab =</span> crosstab, <span class="at">samples =</span> samples)</span>
-<span id="cb33-3"><a href="global-msnset.html#cb33-3" aria-hidden="true" tabindex="-1"></a>m</span></code></pre></div>
+<span id="cb33-2"><a href="global-msnset.html#cb33-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">create_msnset</span>(<span class="at">crosstab =</span> crosstab, <span class="at">samples =</span> samples)</span>
+<span id="cb33-3"><a href="global-msnset.html#cb33-3" aria-hidden="true" tabindex="-1"></a>m1</span></code></pre></div>
 <pre><code>## MSnSet (storageMode: lockedEnvironment)
 ## assayData: 5173 features, 18 samples 
 ##   element names: exprs 
@@ -337,9 +338,9 @@ div.csl-indent {
 ## experimentData: use &#39;experimentData(object)&#39;
 ## Annotation:  
 ## - - - Processing information - - -
-##  MSnbase version: 2.18.0</code></pre>
+##  MSnbase version: 2.22.0</code></pre>
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="global-msnset.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save global MSnSet</span></span>
-<span id="cb35-2"><a href="global-msnset.html#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(m, <span class="at">file =</span> <span class="st">&quot;data/global_msnset.RData&quot;</span>, <span class="at">compress =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<span id="cb35-2"><a href="global-msnset.html#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(m1, <span class="at">file =</span> <span class="st">&quot;data/global_msnset.RData&quot;</span>, <span class="at">compress =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
 
 </div>
 <!-- </div> -->
@@ -353,7 +354,6 @@ div.csl-indent {
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -393,6 +393,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

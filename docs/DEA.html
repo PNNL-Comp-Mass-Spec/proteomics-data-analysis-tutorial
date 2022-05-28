@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Section 7 Differential Analysis | Proteomics Data Analysis in R/Bioconductor</title>
   <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Section 7 Differential Analysis | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-02-11" />
+<meta name="date" content="2022-05-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +32,8 @@
   
 <link rel="prev" href="modifications.html"/>
 <link rel="next" href="linear-reg.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,9 +49,9 @@
 
 
 
-
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -217,6 +216,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="4.1" data-path="conversion-with-biomart.html"><a href="conversion-with-biomart.html"><i class="fa fa-check"></i><b>4.1</b> Conversion with <code>biomaRt</code></a></li>
 <li class="chapter" data-level="4.2" data-path="conversion-with-annotationhub.html"><a href="conversion-with-annotationhub.html"><i class="fa fa-check"></i><b>4.2</b> Conversion with <code>AnnotationHub</code></a></li>
+<li class="chapter" data-level="4.3" data-path="conversion-using-fasta-headers.html"><a href="conversion-using-fasta-headers.html"><i class="fa fa-check"></i><b>4.3</b> Conversion Using FASTA Headers</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory Data Analysis</a>
 <ul>
@@ -278,26 +278,27 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="8.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>8.1.2</b> Reactome</a></li>
 <li class="chapter" data-level="8.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>8.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>8.1.4</b> Pfam</a></li>
+<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#msigdb"><i class="fa fa-check"></i><b>8.1.4</b> MSigDB</a></li>
 </ul></li>
 <li class="chapter" data-level="8.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>8.2</b> Over-Representation Analysis</a>
 <ul>
-<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.1</b> Examples</a>
+<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>8.2.1</b> Overview</a></li>
+<li class="chapter" data-level="8.2.2" data-path="ora.html"><a href="ora.html#ora-math"><i class="fa fa-check"></i><b>8.2.2</b> Mathematical Details</a></li>
+<li class="chapter" data-level="8.2.3" data-path="ora.html"><a href="ora.html#ora-drawbacks"><i class="fa fa-check"></i><b>8.2.3</b> Drawbacks</a></li>
+<li class="chapter" data-level="8.2.4" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.4</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>8.2.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>8.2.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>8.2.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>8.2.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.2.4.1" data-path="ora.html"><a href="ora.html#fgsea-ora"><i class="fa fa-check"></i><b>8.2.4.1</b> ORA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.2.4.2" data-path="ora.html"><a href="ora.html#ora-clustprof"><i class="fa fa-check"></i><b>8.2.4.2</b> ORA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
+<li class="chapter" data-level="8.2.4.3" data-path="ora.html"><a href="ora.html#ora-with-gostats"><i class="fa fa-check"></i><b>8.2.4.3</b> ORA with <code>GOstats</code></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>8.3</b> Gene Set Enrichment Analysis</a>
 <ul>
-<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>8.3.1</b> Examples</a>
+<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>8.3.1</b> Overview</a></li>
+<li class="chapter" data-level="8.3.2" data-path="gsea.html"><a href="gsea.html#gsea-examples"><i class="fa fa-check"></i><b>8.3.2</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>8.3.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>8.3.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>8.3.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.3.1.4" data-path="gsea.html"><a href="gsea.html#gsea-other"><i class="fa fa-check"></i><b>8.3.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.3.2.1" data-path="gsea.html"><a href="gsea.html#gsea-with-fgsea"><i class="fa fa-check"></i><b>8.3.2.1</b> GSEA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.3.2.2" data-path="gsea.html"><a href="gsea.html#gsea-with-clusterprofilerreactomepa"><i class="fa fa-check"></i><b>8.3.2.2</b> GSEA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -319,29 +320,29 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="DEA" class="section level1" number="7">
-<h1><span class="header-section-number">Section 7</span> Differential Analysis</h1>
+<div id="DEA" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Section 7</span> Differential Analysis<a href="DEA.html#DEA" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <p>In this section, we will use wrappers around functions from the <a href="https://bioconductor.org/packages/release/bioc/html/limma.html">limma</a> package to fit linear models (linear regression, t-test, and ANOVA) to proteomics data. While LIMMA was originally intended for use with microarray data, it is useful for other data types. When working with LIMMA, the <a href="https://www.bioconductor.org/packages/devel/bioc/vignettes/limma/inst/doc/usersguide.pdf">LIMMA User’s Guide</a> is an invaluable resource.</p>
 <p>LIMMA makes use of empirical Bayes techniques to borrow information across all features being tested to increase the degrees of freedom available for the test statistics. This results in so-called moderated test statistics and improved power to detect differential expression <span class="citation">(<a href="#ref-smyth_linear_2004" role="doc-biblioref">Gordon K. Smyth, 2004</a>)</span>.</p>
 <p>We will use the CPTAC ovarian cancer proteomics dataset for this section. The required packages are MSnSet.utils for the LIMMA wrappers and volcano plots, dplyr for data frame manipulation, and ggplot2 for p-value histograms and to further customize the volcano plots. We load the <code>cptac_oca</code> data and assign <code>oca.set</code> to <code>m</code>, which will be used in the examples.</p>
-<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="DEA.html#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Install missing packages</span></span>
-<span id="cb114-2"><a href="DEA.html#cb114-2" aria-hidden="true" tabindex="-1"></a>cran_packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;remotes&quot;</span>, <span class="st">&quot;dplyr&quot;</span>, <span class="st">&quot;ggplot2&quot;</span>)</span>
-<span id="cb114-3"><a href="DEA.html#cb114-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pkg_i <span class="cf">in</span> cran_packages) {</span>
-<span id="cb114-4"><a href="DEA.html#cb114-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(pkg_i, <span class="at">quietly =</span> T, <span class="at">character.only =</span> T))</span>
-<span id="cb114-5"><a href="DEA.html#cb114-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(pkg_i)</span>
-<span id="cb114-6"><a href="DEA.html#cb114-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb114-7"><a href="DEA.html#cb114-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;MSnSet.utils&quot;</span>, <span class="at">quietly =</span> T))</span>
-<span id="cb114-8"><a href="DEA.html#cb114-8" aria-hidden="true" tabindex="-1"></a>  remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;PNNL-Comp-Mass-Spec/MSnSet.utils&quot;</span>)</span>
-<span id="cb114-9"><a href="DEA.html#cb114-9" aria-hidden="true" tabindex="-1"></a><span class="do">## ------------------------</span></span>
-<span id="cb114-10"><a href="DEA.html#cb114-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MSnSet.utils)</span>
-<span id="cb114-11"><a href="DEA.html#cb114-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb114-12"><a href="DEA.html#cb114-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb114-13"><a href="DEA.html#cb114-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb114-14"><a href="DEA.html#cb114-14" aria-hidden="true" tabindex="-1"></a><span class="co"># MSnSet for testing</span></span>
-<span id="cb114-15"><a href="DEA.html#cb114-15" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;cptac_oca&quot;</span>)</span>
-<span id="cb114-16"><a href="DEA.html#cb114-16" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> oca.set</span></code></pre></div>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="DEA.html#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Install missing packages</span></span>
+<span id="cb122-2"><a href="DEA.html#cb122-2" aria-hidden="true" tabindex="-1"></a>cran_packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;remotes&quot;</span>, <span class="st">&quot;dplyr&quot;</span>, <span class="st">&quot;ggplot2&quot;</span>)</span>
+<span id="cb122-3"><a href="DEA.html#cb122-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pkg_i <span class="cf">in</span> cran_packages) {</span>
+<span id="cb122-4"><a href="DEA.html#cb122-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(pkg_i, <span class="at">quietly =</span> T, <span class="at">character.only =</span> T))</span>
+<span id="cb122-5"><a href="DEA.html#cb122-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(pkg_i)</span>
+<span id="cb122-6"><a href="DEA.html#cb122-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb122-7"><a href="DEA.html#cb122-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;MSnSet.utils&quot;</span>, <span class="at">quietly =</span> T))</span>
+<span id="cb122-8"><a href="DEA.html#cb122-8" aria-hidden="true" tabindex="-1"></a>  remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;PNNL-Comp-Mass-Spec/MSnSet.utils&quot;</span>)</span>
+<span id="cb122-9"><a href="DEA.html#cb122-9" aria-hidden="true" tabindex="-1"></a><span class="do">## ------------------------</span></span>
+<span id="cb122-10"><a href="DEA.html#cb122-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MSnSet.utils)</span>
+<span id="cb122-11"><a href="DEA.html#cb122-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb122-12"><a href="DEA.html#cb122-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb122-13"><a href="DEA.html#cb122-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb122-14"><a href="DEA.html#cb122-14" aria-hidden="true" tabindex="-1"></a><span class="co"># MSnSet for testing</span></span>
+<span id="cb122-15"><a href="DEA.html#cb122-15" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;cptac_oca&quot;</span>)</span>
+<span id="cb122-16"><a href="DEA.html#cb122-16" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> oca.set</span></code></pre></div>
 </div>
-<h3>References</h3>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-smyth_linear_2004" class="csl-entry">
 Smyth, G. K., Linear Models and Empirical Bayes Methods for Assessing Differential Expression in Microarray Experiments, <em>Statistical Applications in Genetics and Molecular Biology</em>, vol. <strong>3</strong>, p. Article3, 2004. DOI: <a href="https://doi.org/10.2202/1544-6115.1027">10.2202/1544-6115.1027</a>
@@ -357,7 +358,6 @@ Smyth, G. K., Linear Models and Empirical Bayes Methods for Assessing Differenti
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -397,6 +397,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

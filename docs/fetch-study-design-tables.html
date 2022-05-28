@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>1.3 Create Study Design Tables | Proteomics Data Analysis in R/Bioconductor</title>
   <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content="1.3 Create Study Design Tables | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-02-11" />
+<meta name="date" content="2022-05-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +32,8 @@
   
 <link rel="prev" href="prepare-reporter-ion-intensities.html"/>
 <link rel="next" href="global-quant-crosstab.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,9 +49,9 @@
 
 
 
-
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -217,6 +216,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="4.1" data-path="conversion-with-biomart.html"><a href="conversion-with-biomart.html"><i class="fa fa-check"></i><b>4.1</b> Conversion with <code>biomaRt</code></a></li>
 <li class="chapter" data-level="4.2" data-path="conversion-with-annotationhub.html"><a href="conversion-with-annotationhub.html"><i class="fa fa-check"></i><b>4.2</b> Conversion with <code>AnnotationHub</code></a></li>
+<li class="chapter" data-level="4.3" data-path="conversion-using-fasta-headers.html"><a href="conversion-using-fasta-headers.html"><i class="fa fa-check"></i><b>4.3</b> Conversion Using FASTA Headers</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory Data Analysis</a>
 <ul>
@@ -278,26 +278,27 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="8.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>8.1.2</b> Reactome</a></li>
 <li class="chapter" data-level="8.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>8.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>8.1.4</b> Pfam</a></li>
+<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#msigdb"><i class="fa fa-check"></i><b>8.1.4</b> MSigDB</a></li>
 </ul></li>
 <li class="chapter" data-level="8.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>8.2</b> Over-Representation Analysis</a>
 <ul>
-<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.1</b> Examples</a>
+<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>8.2.1</b> Overview</a></li>
+<li class="chapter" data-level="8.2.2" data-path="ora.html"><a href="ora.html#ora-math"><i class="fa fa-check"></i><b>8.2.2</b> Mathematical Details</a></li>
+<li class="chapter" data-level="8.2.3" data-path="ora.html"><a href="ora.html#ora-drawbacks"><i class="fa fa-check"></i><b>8.2.3</b> Drawbacks</a></li>
+<li class="chapter" data-level="8.2.4" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.4</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>8.2.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>8.2.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>8.2.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>8.2.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.2.4.1" data-path="ora.html"><a href="ora.html#fgsea-ora"><i class="fa fa-check"></i><b>8.2.4.1</b> ORA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.2.4.2" data-path="ora.html"><a href="ora.html#ora-clustprof"><i class="fa fa-check"></i><b>8.2.4.2</b> ORA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
+<li class="chapter" data-level="8.2.4.3" data-path="ora.html"><a href="ora.html#ora-with-gostats"><i class="fa fa-check"></i><b>8.2.4.3</b> ORA with <code>GOstats</code></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>8.3</b> Gene Set Enrichment Analysis</a>
 <ul>
-<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>8.3.1</b> Examples</a>
+<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>8.3.1</b> Overview</a></li>
+<li class="chapter" data-level="8.3.2" data-path="gsea.html"><a href="gsea.html#gsea-examples"><i class="fa fa-check"></i><b>8.3.2</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>8.3.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>8.3.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>8.3.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.3.1.4" data-path="gsea.html"><a href="gsea.html#gsea-other"><i class="fa fa-check"></i><b>8.3.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.3.2.1" data-path="gsea.html"><a href="gsea.html#gsea-with-fgsea"><i class="fa fa-check"></i><b>8.3.2.1</b> GSEA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.3.2.2" data-path="gsea.html"><a href="gsea.html#gsea-with-clusterprofilerreactomepa"><i class="fa fa-check"></i><b>8.3.2.2</b> GSEA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -319,13 +320,13 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="fetch-study-design-tables" class="section level2" number="1.3">
-<h2><span class="header-section-number">1.3</span> Create Study Design Tables</h2>
-<p>To convert from PSMs and reporter ion intensities to meaningful quantitative data, it is necessary to specify the study design. The entire study design is captured by three tables - fractions, samples, references. With newly processed data, these typically do not exist, and must be created. The next sections show how to create these tables in R.</p>
+<div id="fetch-study-design-tables" class="section level2 hasAnchor" number="1.3">
+<h2><span class="header-section-number">1.3</span> Create Study Design Tables<a href="fetch-study-design-tables.html#fetch-study-design-tables" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>To convert from PSMs and reporter ion intensities to meaningful quantitative data, it is necessary to specify the study design. The entire study design is captured by three tables: fractions, samples, and references. With newly processed data, these typically do not exist, and must be created. The next sections show how to create these tables in R.</p>
 <p><strong>NOTE:</strong> simple study designs can be created in Excel and read in with <code>readxl::read_excel</code>, though R is the better choice when dealing with many samples.</p>
-<div id="fractions" class="section level3" number="1.3.1">
-<h3><span class="header-section-number">1.3.1</span> Fractions</h3>
-<p>The fractions table consists of two columns: <code>Dataset</code> and <code>PlexID</code>. The <code>Dataset</code> column contains all of the unique datasets that are common to <code>msnid</code> and <code>masic_data</code>. Sometimes, entire datasets may be removed during the FDR filtering steps, so that is why we use the unique intersection of datasets. The <code>PlexID</code> column contains the plex ID associated with each dataset, and is typically a letter followed by a number (“S1,” “S2,” etc.). A plex is a set of samples that are processed together (under the same conditions). We can extract the plex ID from the datasets. In this case, the plex ID always comes after “<em>W</em>,” so we can use a regular expression (use <code>help(topic = regex, package = base)</code> to learn more). The regular expression below says to capture an “S” followed by a single digit that appears after “_W_” and before an underscore. The plex ID is always included in the dataset names, but the format of the names will be different.</p>
+<div id="fractions" class="section level3 hasAnchor" number="1.3.1">
+<h3><span class="header-section-number">1.3.1</span> Fractions<a href="fetch-study-design-tables.html#fractions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The fractions table consists of two columns: <code>Dataset</code> and <code>PlexID</code>. The <code>Dataset</code> column contains all of the unique datasets that are common to <code>msnid</code> and <code>masic_data</code>. Sometimes, entire datasets may be removed during the FDR filtering steps, so that is why we use the unique intersection of datasets. The <code>PlexID</code> column contains the plex ID associated with each dataset, and is typically a letter followed by a number (“S1”, “S2”, etc.). A plex is a set of samples that are processed together (under the same conditions). Usually, we can extract the plex ID from the datasets. In this case, the plex ID always comes after “_W_”, so we can use a regular expression (use <code>help(topic = regex, package = base)</code> to learn more). The regular expression below says to capture an “S” followed by a single digit that appears after “_W_” and before an underscore. The plex ID is always included in the dataset names, but the format of the names will be different.</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="fetch-study-design-tables.html#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create fractions table</span></span>
 <span id="cb24-2"><a href="fetch-study-design-tables.html#cb24-2" aria-hidden="true" tabindex="-1"></a>datasets <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">intersect</span>(msnid<span class="sc">$</span>Dataset, masic_data<span class="sc">$</span>Dataset))</span>
 <span id="cb24-3"><a href="fetch-study-design-tables.html#cb24-3" aria-hidden="true" tabindex="-1"></a>fractions <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Dataset =</span> datasets) <span class="sc">%&gt;%</span> </span>
@@ -734,15 +735,15 @@ S2
 </table>
 </div>
 </div>
-<div id="samples" class="section level3" number="1.3.2">
-<h3><span class="header-section-number">1.3.2</span> Samples</h3>
+<div id="samples" class="section level3 hasAnchor" number="1.3.2">
+<h3><span class="header-section-number">1.3.2</span> Samples<a href="fetch-study-design-tables.html#samples" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>The samples table contains columns <code>PlexID</code>, <code>QuantBlock</code>, <code>ReporterName</code>, <code>ReporterAlias</code>, and <code>MeasurementName</code>.</p>
 <ul>
 <li><code>PlexID</code> must be the same as the <code>PlexID</code> in the fractions table.</li>
-<li><code>ReporterName</code> is the reporter ion name (“126,” “127N,” “127C,” etc.).</li>
+<li><code>ReporterName</code> is the reporter ion name (“126”, “127N”, “127C”, etc.).</li>
 <li><code>ReporterAlias</code> is used for defining the reference channel(s).</li>
-<li><code>MeasurementName</code> determines the column names for the final cross-tab, and must be unique and begin with a letter. If any values of <code>ReporterAlias</code> are “ref,” the corresponding <code>MeasurementName</code> should be <code>NA</code>. <code>NA</code> measurement names will not appear as columns in the final cross-tab.</li>
-<li><code>QuantBlock</code> defines the sub-plex. In a typical TMT experiment, <code>QuantBlock</code> is always 1. In case of 5 pairwise comparisons within TMT10, there will be 5 QuantBlocks (1-5) with a reference for each <code>QuantBlock</code>.</li>
+<li><code>MeasurementName</code> determines the column names for the final cross-tab, and must be unique and begin with a letter. If any values of <code>ReporterAlias</code> are “ref”, the corresponding <code>MeasurementName</code> should be <code>NA</code>. <code>NA</code> measurement names will not appear as columns in the final cross-tab.</li>
+<li><code>QuantBlock</code> defines the sub-plex. In a typical TMT experiment, <code>QuantBlock</code> is always 1. In case of 5 pairwise comparisons within TMT10, there will be 5 QuantBlocks (1-5) potentially with a reference for each <code>QuantBlock</code>.</li>
 </ul>
 <p>For this experiment, TMT10 was used as the basis for two plexes, and channel 131 is the reference, so we set <code>ReporterAlias</code> to “ref” and <code>MeasurementName</code> to <code>NA</code> when <code>ReporterName</code> is <code>"131"</code>. This will divide the intensities of each channel by their associated reference and make the reference channel absent from the quantitative cross-tab. In cases where reporter ion intensities are not normalized by a reference channel (reference = 1) or they are normalized by the average of select channels, do not set any <code>ReporterAlias</code> to “ref” or <code>MeasurementName</code> to <code>NA</code>.</p>
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="fetch-study-design-tables.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create samples table</span></span>
@@ -759,9 +760,8 @@ S2
 <span id="cb25-12"><a href="fetch-study-design-tables.html#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># and MeasurementName is NA so it is not included in the cross-tab.</span></span>
 <span id="cb25-13"><a href="fetch-study-design-tables.html#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ReporterAlias =</span> <span class="fu">paste</span>(PlexID, <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>(), <span class="at">sep =</span> <span class="st">&quot;_&quot;</span>),</span>
 <span id="cb25-14"><a href="fetch-study-design-tables.html#cb25-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">ReporterAlias =</span> <span class="fu">ifelse</span>(ReporterName <span class="sc">==</span> <span class="st">&quot;131&quot;</span>, <span class="st">&quot;ref&quot;</span>, ReporterAlias),</span>
-<span id="cb25-15"><a href="fetch-study-design-tables.html#cb25-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">MeasurementName =</span> <span class="fu">ifelse</span>(ReporterAlias <span class="sc">==</span> <span class="st">&quot;ref&quot;</span>, </span>
-<span id="cb25-16"><a href="fetch-study-design-tables.html#cb25-16" aria-hidden="true" tabindex="-1"></a>                                  <span class="cn">NA</span>, ReporterAlias)) <span class="sc">%&gt;%</span> </span>
-<span id="cb25-17"><a href="fetch-study-design-tables.html#cb25-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="co"># stop grouping by PlexID</span></span></code></pre></div>
+<span id="cb25-15"><a href="fetch-study-design-tables.html#cb25-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">MeasurementName =</span> <span class="fu">ifelse</span>(ReporterName <span class="sc">==</span> <span class="st">&quot;131&quot;</span>, <span class="cn">NA</span>, ReporterAlias)) <span class="sc">%&gt;%</span> </span>
+<span id="cb25-16"><a href="fetch-study-design-tables.html#cb25-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="co"># stop grouping by PlexID</span></span></code></pre></div>
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; ">
 <table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <caption style="font-size: initial !important;">
@@ -1133,9 +1133,9 @@ NA
 <p></br></p>
 <p>Table <a href="fetch-study-design-tables.html#tab:samples-table">1.5</a> shows the <code>samples</code> table.</p>
 </div>
-<div id="global-references" class="section level3" number="1.3.3">
-<h3><span class="header-section-number">1.3.3</span> References</h3>
-<p>The reference can be a certain channel, average of multiple channels, or 1 (no reference). The general form is an expression with <code>ReporterAlias</code> names as variables. It is evaluated for each <code>PlexID</code>/<code>QuantBlock</code> combination and applied to divide reporter ion intensities within corresponding <code>PlexID</code>/<code>QuantBlock</code>. A reference is used to convert raw intensities to relative intensities.</p>
+<div id="global-references" class="section level3 hasAnchor" number="1.3.3">
+<h3><span class="header-section-number">1.3.3</span> References<a href="fetch-study-design-tables.html#global-references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The reference can be a certain channel, the geometric average of channels, 1 (no reference), or an R expression that evaluates to a vector. The general form is an expression with <code>ReporterAlias</code> names as variables. It is evaluated for each <code>PlexID</code>/<code>QuantBlock</code> combination and applied to divide reporter ion intensities within corresponding <code>PlexID</code>/<code>QuantBlock</code>. A reference is used to convert raw intensities to relative intensities.</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="fetch-study-design-tables.html#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create references table</span></span>
 <span id="cb26-2"><a href="fetch-study-design-tables.html#cb26-2" aria-hidden="true" tabindex="-1"></a>references <span class="ot">&lt;-</span> samples <span class="sc">%&gt;%</span> </span>
 <span id="cb26-3"><a href="fetch-study-design-tables.html#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ReporterAlias <span class="sc">==</span> <span class="st">&quot;ref&quot;</span>) <span class="sc">%&gt;%</span> </span>
@@ -1185,7 +1185,7 @@ ref
 </table>
 <p></br></p>
 <p>Table <a href="fetch-study-design-tables.html#tab:references-table">1.6</a> shows the <code>references</code> table. The code to use the geometric average instead of a single channel as the reference is shown below. The geometric average is the product of the reporter ion channels to the power of (1/number of channels). For each <code>PlexID</code> group, collapse the vector of reporter ion names with <code>*</code>, surround them in parentheses, and raise to the power of (1/number of channels).</p>
-<p><strong>Note:</strong> if using the geometric average or no reference, make sure the samples table is correct. There should not be any <code>ReporterAlias</code> that are “ref” or <code>MeasurementName</code> that are <code>NA</code>.</p>
+<p><strong>Note:</strong> If the reference is not a particular channel that will be excluded from the final results, there should not be any <code>ReporterAlias</code> that are “ref” or <code>MeasurementName</code> that are <code>NA</code>.</p>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="fetch-study-design-tables.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Example of how to use the geometric average as reference - not run</span></span>
 <span id="cb27-2"><a href="fetch-study-design-tables.html#cb27-2" aria-hidden="true" tabindex="-1"></a>references <span class="ot">&lt;-</span> samples <span class="sc">%&gt;%</span></span>
 <span id="cb27-3"><a href="fetch-study-design-tables.html#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(PlexID, QuantBlock) <span class="sc">%&gt;%</span></span>
@@ -1205,11 +1205,11 @@ ref
 <span id="cb29-5"><a href="fetch-study-design-tables.html#cb29-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb29-6"><a href="fetch-study-design-tables.html#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write.table</span>(references, <span class="at">file =</span> <span class="st">&quot;data/3442_references.txt&quot;</span>,</span>
 <span id="cb29-7"><a href="fetch-study-design-tables.html#cb29-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">sep =</span> <span class="st">&quot;</span><span class="sc">\t</span><span class="st">&quot;</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
-<p>Once the study design tables have been saved to text files, it is good practice to make them available to others. To do so, navigate to the Share Path provided in the DMS Data Package Detail Report (shown in Figure <a href="fetch-study-design-tables.html#fig:DMS-share-path">1.8</a>), and copy the three study design files to this location. This allows them to be accessed by others with the <code>get_study_design_by_dataset_package</code> function in the future.</p>
-<div class="figure" style="text-align: center"><span id="fig:DMS-share-path"></span>
+<p>Once the study design tables have been saved to text files, it is good practice to make them available to others. To do so, navigate to the Share Path provided in the DMS Data Package Detail Report (shown in Figure <a href="fetch-study-design-tables.html#fig:DMS-share-path">1.7</a>), and copy the three study design files to this location. This allows them to be accessed by others with the <code>get_study_design_by_dataset_package</code> function in the future.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:DMS-share-path"></span>
 <img src="images/data_package_share_path.PNG" alt="Location of the Share Path used to add the study design tables." width="75%" />
 <p class="caption">
-Figure 1.8: Location of the Share Path used to add the study design tables.
+Figure 1.7: Location of the Share Path used to add the study design tables.
 </p>
 </div>
 </div>
@@ -1224,7 +1224,6 @@ Figure 1.8: Location of the Share Path used to add the study design tables.
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -1264,6 +1263,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

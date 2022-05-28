@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>8.3 Gene Set Enrichment Analysis | Proteomics Data Analysis in R/Bioconductor</title>
   <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content="8.3 Gene Set Enrichment Analysis | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-02-11" />
+<meta name="date" content="2022-05-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +32,8 @@
   
 <link rel="prev" href="ora.html"/>
 <link rel="next" href="references.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,9 +49,9 @@
 
 
 
-
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -217,6 +216,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="4.1" data-path="conversion-with-biomart.html"><a href="conversion-with-biomart.html"><i class="fa fa-check"></i><b>4.1</b> Conversion with <code>biomaRt</code></a></li>
 <li class="chapter" data-level="4.2" data-path="conversion-with-annotationhub.html"><a href="conversion-with-annotationhub.html"><i class="fa fa-check"></i><b>4.2</b> Conversion with <code>AnnotationHub</code></a></li>
+<li class="chapter" data-level="4.3" data-path="conversion-using-fasta-headers.html"><a href="conversion-using-fasta-headers.html"><i class="fa fa-check"></i><b>4.3</b> Conversion Using FASTA Headers</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory Data Analysis</a>
 <ul>
@@ -278,26 +278,27 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="8.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>8.1.2</b> Reactome</a></li>
 <li class="chapter" data-level="8.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>8.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>8.1.4</b> Pfam</a></li>
+<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#msigdb"><i class="fa fa-check"></i><b>8.1.4</b> MSigDB</a></li>
 </ul></li>
 <li class="chapter" data-level="8.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>8.2</b> Over-Representation Analysis</a>
 <ul>
-<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.1</b> Examples</a>
+<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>8.2.1</b> Overview</a></li>
+<li class="chapter" data-level="8.2.2" data-path="ora.html"><a href="ora.html#ora-math"><i class="fa fa-check"></i><b>8.2.2</b> Mathematical Details</a></li>
+<li class="chapter" data-level="8.2.3" data-path="ora.html"><a href="ora.html#ora-drawbacks"><i class="fa fa-check"></i><b>8.2.3</b> Drawbacks</a></li>
+<li class="chapter" data-level="8.2.4" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.4</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>8.2.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>8.2.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>8.2.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>8.2.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.2.4.1" data-path="ora.html"><a href="ora.html#fgsea-ora"><i class="fa fa-check"></i><b>8.2.4.1</b> ORA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.2.4.2" data-path="ora.html"><a href="ora.html#ora-clustprof"><i class="fa fa-check"></i><b>8.2.4.2</b> ORA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
+<li class="chapter" data-level="8.2.4.3" data-path="ora.html"><a href="ora.html#ora-with-gostats"><i class="fa fa-check"></i><b>8.2.4.3</b> ORA with <code>GOstats</code></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>8.3</b> Gene Set Enrichment Analysis</a>
 <ul>
-<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>8.3.1</b> Examples</a>
+<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>8.3.1</b> Overview</a></li>
+<li class="chapter" data-level="8.3.2" data-path="gsea.html"><a href="gsea.html#gsea-examples"><i class="fa fa-check"></i><b>8.3.2</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>8.3.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>8.3.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>8.3.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.3.1.4" data-path="gsea.html"><a href="gsea.html#gsea-other"><i class="fa fa-check"></i><b>8.3.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.3.2.1" data-path="gsea.html"><a href="gsea.html#gsea-with-fgsea"><i class="fa fa-check"></i><b>8.3.2.1</b> GSEA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.3.2.2" data-path="gsea.html"><a href="gsea.html#gsea-with-clusterprofilerreactomepa"><i class="fa fa-check"></i><b>8.3.2.2</b> GSEA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -319,569 +320,136 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="gsea" class="section level2" number="8.3">
-<h2><span class="header-section-number">8.3</span> Gene Set Enrichment Analysis</h2>
-<p>Gene Set Enrichment Analysis (GSEA) employs a “no-cutoff” strategy that utilizes some experimental value (such as fold change, the moderated t-statistic, or Z-Score) to rank a list of <span class="math inline">\(N\)</span> genes in descending order. Using this ranked list <span class="math inline">\(L\)</span>, the values of the ranking metric, and an <em>a priori</em> defined gene set <span class="math inline">\(S\)</span>, we can calculate an enrichment score. This is done by “walking down the list <span class="math inline">\(L\)</span>, increasing a running-sum statistic when we encounter a gene in <span class="math inline">\(S\)</span> and decreasing it when we encounter genes not in <span class="math inline">\(S\)</span>.” The maximum deviation from zero of this running-sum statistic is the enrichment score for <span class="math inline">\(S\)</span>, denoted by <span class="math inline">\(ES(S)\)</span>. If the genes in <span class="math inline">\(S\)</span> are randomly distributed throughout <span class="math inline">\(L\)</span>, <span class="math inline">\(ES(S)\)</span> will be relatively small; however, if they are not randomly distributed (i.e. primarily located near either end of <span class="math inline">\(L\)</span>), then <span class="math inline">\(ES(S)\)</span> will be relatively large <span class="citation">(<a href="#ref-mootha_pgc-1-responsive_2003" role="doc-biblioref">Mootha et al., 2003</a>; <a href="#ref-subramanian_gene_2005" role="doc-biblioref">Subramanian et al., 2005</a>)</span>.</p>
-<p>To assess the statistical significance of each <span class="math inline">\(ES(S)\)</span>, we permute the phenotype labels in the expression data and recalculate the ranking metric and subsequent enrichment score <span class="math inline">\(ES_{\text{NULL}}\)</span>. Alternatively, we could permute the genes: for a given <span class="math inline">\(S\)</span> of size <span class="math inline">\(k\)</span>, we randomly select <span class="math inline">\(k\)</span> genes from the list <span class="math inline">\(L\)</span> and calculate an enrichment score <span class="math inline">\(ES_{\text{NULL}}\)</span>. This is the method implemented by <a href="https://doi.org/doi:10.18129/B9.bioc.fgsea" title = "fgsea: Fast Gene Set Enrichment Analysis">fgsea</a> and, consequently, <a href="https://doi.org/doi:10.18129/B9.bioc.clusterProfiler" title = "clusterProfiler: A universal enrichment tool for interpreting omics data">clusterProfiler</a>, though it is “not strictly accurate” because it does not preserve the correlations between genes <span class="citation">(<a href="#ref-subramanian_gene_2005" role="doc-biblioref">Subramanian et al., 2005</a>)</span>. Regardless of the permutation approach, it is repeated one thousand to tens of thousands of times to produce an empirical null distribution. Then, we define the nominal p-value as the proportion of <span class="math inline">\(ES_{\text{NULL}}\)</span> that are more extreme than <span class="math inline">\(ES(S)\)</span>. Once a p-value has been obtained for every gene set, we apply an appropriate adjustment for multiple hypothesis testing. The phenotype randomization approach is summarized in <a href="https://www.nature.com/articles/ng1180/figures/1" title = "Figure 1: Schematic overview of GSEA.">Figure 1: Schematic overview of GSEA</a> in the paper by <span class="citation"><a href="#ref-mootha_pgc-1-responsive_2003" role="doc-biblioref">Mootha et al.</a> (<a href="#ref-mootha_pgc-1-responsive_2003" role="doc-biblioref">2003</a>)</span>. The mathematical details of GSEA are provided below.</p>
-<p>Let <span class="math inline">\(x = \{x_1, ..., x_N : x_i &gt; x_j \ \forall i &lt; j\}\)</span> be the vector of ranking metric values. Also let <span class="math inline">\(S\)</span> be a particular gene set of size <span class="math inline">\(k\)</span> and <span class="math inline">\(NS = \sum\limits_{i \in S}|x_i|\)</span>. We define the value of the running sum at gene <span class="math inline">\(i\)</span> as</p>
-<div class="math">
-<p><span class="math display">\[
-r_i = \begin{cases}
-0 &amp; \text{if } i = 0, \\
-r_{i-1} + \frac{1}{NS}|x_i| &amp; \text{if } 1 \leq i \leq N \text{ and } i \in S, \\
-r_{i-1} - \frac{1}{N-k} &amp; \text{if } 1 \leq i \leq N \text{ and } i \not\in S
-\end{cases}
-\]</span></p>
+<div id="gsea" class="section level2 hasAnchor" number="8.3">
+<h2><span class="header-section-number">8.3</span> Gene Set Enrichment Analysis<a href="gsea.html#gsea" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="gsea-overview" class="section level3 hasAnchor" number="8.3.1">
+<h3><span class="header-section-number">8.3.1</span> Overview<a href="gsea.html#gsea-overview" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>(More details to be added at a later date.)</strong></p>
+<p><span style="color:#3366ff">Gene set enrichment analysis (GSEA) is a rank-based approach that determines whether predefined groups of genes/proteins/etc. are primarily up or down in one condition relative to another</span> <span class="citation">(<a href="#ref-mootha_pgc-1-responsive_2003" role="doc-biblioref">Vamsi K. Mootha et al., 2003</a>; <a href="#ref-subramanian_gene_2005" role="doc-biblioref">Subramanian et al., 2005</a>)</span>. It is typically performed as a follow-up to differential analysis, and is preferred to ORA (Section <a href="ora.html#ora">8.2</a>).</p>
 </div>
-<p><span class="math inline">\(ES(S)\)</span> is the largest (in terms of absolute value) element of <span class="math inline">\(r_N\)</span>. This notation is a slightly modified version of what is presented in the paper by <span class="citation"><a href="#ref-korotkevich_fast_2016" role="doc-biblioref">Korotkevich et al.</a> (<a href="#ref-korotkevich_fast_2016" role="doc-biblioref">2016</a>)</span>.</p>
-<strong>Important Considerations</strong>
-<ol>
-<li>
-GSEA is not influenced by an arbitrary cutoff for statistical significance. This is especially useful when only a few features pass this threshold after adjustment for multiple testing, and it also means that it does not depend on the choice of p-value adjustment.
-</li>
-<li>
-All genes in an experiment are allowed to “contribute to the enrichment analysis in differing degrees” <span class="citation">(<a href="#ref-huang_bioinformatics_2009" role="doc-biblioref">Huang et al., 2009</a>)</span>. This addresses the point brought up at the beginning of Section <a href="pathway-analysis.html#pathway-analysis">8</a> that biological changes may be the result of small changes in many related genes. GSEA allows for the detection of such changes.
-</li>
-<li>
-The sign of the enrichment score tell us in which category a set of genes is primarily up- or down-regulated. For example, suppose we test the difference between the means of two groups for each gene using the <a href="https://doi.org/doi:10.18129/B9.bioc.limma" title = "limma: Linear Models for Microarray Data">limma</a> package. Since ranking metrics incorporate the direction of change, a positive enrichment score would mean that the majority of genes in that particular set are up-regulated in A relative to B/down-regulated in B relative to A.
-</li>
-<li>
-The choice of ranking metric is important: <code>-log10(p-value) * sign(logFC)</code>, <code>-log10(p-value) * logFC</code>, t-statistics, and Z-Scores are just a few possible choices.
-</li>
-</ol>
-<div id="examples" class="section level3" number="8.3.1">
-<h3><span class="header-section-number">8.3.1</span> Examples</h3>
-<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb159-1"><a href="gsea.html#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Install missing packages</span></span>
-<span id="cb159-2"><a href="gsea.html#cb159-2" aria-hidden="true" tabindex="-1"></a>cran_packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;remotes&quot;</span>, <span class="st">&quot;dplyr&quot;</span>, <span class="st">&quot;BiocManager&quot;</span>)</span>
-<span id="cb159-3"><a href="gsea.html#cb159-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pkg_i <span class="cf">in</span> cran_packages) {</span>
-<span id="cb159-4"><a href="gsea.html#cb159-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(pkg_i, <span class="at">quietly =</span> T, <span class="at">character.only =</span> T))</span>
-<span id="cb159-5"><a href="gsea.html#cb159-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">install.packages</span>(pkg_i)</span>
-<span id="cb159-6"><a href="gsea.html#cb159-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb159-7"><a href="gsea.html#cb159-7" aria-hidden="true" tabindex="-1"></a>bio_packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;org.Hs.eg.db&quot;</span>, <span class="st">&quot;clusterProfiler&quot;</span>, <span class="st">&quot;ReactomePA&quot;</span>)</span>
-<span id="cb159-8"><a href="gsea.html#cb159-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pkg_i <span class="cf">in</span> bio_packages) {</span>
-<span id="cb159-9"><a href="gsea.html#cb159-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(pkg_i, <span class="at">quietly =</span> T, <span class="at">character.only =</span> T))</span>
-<span id="cb159-10"><a href="gsea.html#cb159-10" aria-hidden="true" tabindex="-1"></a>    BiocManager<span class="sc">::</span><span class="fu">install</span>(pkg_i)</span>
-<span id="cb159-11"><a href="gsea.html#cb159-11" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb159-12"><a href="gsea.html#cb159-12" aria-hidden="true" tabindex="-1"></a>git_packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;MSnID@pnnl-master&quot;</span>, <span class="st">&quot;MSnSet.utils&quot;</span>)</span>
-<span id="cb159-13"><a href="gsea.html#cb159-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pkg_i <span class="cf">in</span> git_packages) {</span>
-<span id="cb159-14"><a href="gsea.html#cb159-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="fu">sub</span>(<span class="st">&quot;@.*&quot;</span>, <span class="st">&quot;&quot;</span>, pkg_i), <span class="at">quietly =</span> T, <span class="at">character.only =</span> T))</span>
-<span id="cb159-15"><a href="gsea.html#cb159-15" aria-hidden="true" tabindex="-1"></a>    remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="fu">file.path</span>(<span class="st">&quot;PNNL-Comp-Mass-Spec&quot;</span>, pkg_i))</span>
-<span id="cb159-16"><a href="gsea.html#cb159-16" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb159-17"><a href="gsea.html#cb159-17" aria-hidden="true" tabindex="-1"></a><span class="do">## ------------------------</span></span>
-<span id="cb159-18"><a href="gsea.html#cb159-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MSnID) <span class="co"># fetch_conversion_table</span></span>
-<span id="cb159-19"><a href="gsea.html#cb159-19" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MSnSet.utils) <span class="co"># oca.set data</span></span>
-<span id="cb159-20"><a href="gsea.html#cb159-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(org.Hs.eg.db) <span class="co"># Human database package</span></span>
-<span id="cb159-21"><a href="gsea.html#cb159-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clusterProfiler) <span class="co"># GO and custom GSEA</span></span>
-<span id="cb159-22"><a href="gsea.html#cb159-22" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ReactomePA) <span class="co"># Reactome GSEA</span></span>
-<span id="cb159-23"><a href="gsea.html#cb159-23" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb159-24"><a href="gsea.html#cb159-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb159-25"><a href="gsea.html#cb159-25" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(cptac_oca) <span class="co"># data</span></span>
-<span id="cb159-26"><a href="gsea.html#cb159-26" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> oca.set</span></code></pre></div>
-<p>The input for the GSEA functions is a named vector of ranking metric values (t-statistics, F-statistics, -log10(p-value) * sign(logFC), etc.) where the names are typically unique Entrez gene IDs. We need to go from an MSnSet to differential analysis results to this named vector. First, we will get the Entrez IDs for each RefSeq and add this as a column in <code>fData</code>.</p>
-<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="gsea.html#cb160-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get RefSeq to Entrez ID conversion table</span></span>
-<span id="cb160-2"><a href="gsea.html#cb160-2" aria-hidden="true" tabindex="-1"></a>conv_tbl <span class="ot">&lt;-</span> <span class="fu">fetch_conversion_table</span>(<span class="at">organism_name =</span> <span class="st">&quot;Homo sapiens&quot;</span>, </span>
-<span id="cb160-3"><a href="gsea.html#cb160-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">from =</span> <span class="st">&quot;REFSEQ&quot;</span>, </span>
-<span id="cb160-4"><a href="gsea.html#cb160-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">to =</span> <span class="st">&quot;ENTREZID&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb160-5"><a href="gsea.html#cb160-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">&quot;RefSeq_no_iso&quot;</span>, <span class="st">&quot;entrez_gene&quot;</span>)) <span class="co"># rename columns</span></span>
-<span id="cb160-6"><a href="gsea.html#cb160-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(conv_tbl)</span></code></pre></div>
-<pre><code>##   RefSeq_no_iso entrez_gene
-## 1     NP_570602           1
-## 2     NP_000005           2
-## 3  NP_001334352           2
-## 4  NP_001334353           2
-## 5  NP_001334354           2
-## 6  XP_006719119           2</code></pre>
-<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="gsea.html#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add RefSeq_no_iso and entrez_gene columns to fData(m)</span></span>
-<span id="cb162-2"><a href="gsea.html#cb162-2" aria-hidden="true" tabindex="-1"></a>temp <span class="ot">&lt;-</span> <span class="fu">fData</span>(m) <span class="sc">%&gt;%</span> </span>
-<span id="cb162-3"><a href="gsea.html#cb162-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove isoform number from RefSeq</span></span>
-<span id="cb162-4"><a href="gsea.html#cb162-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">RefSeq_no_iso =</span> <span class="fu">gsub</span>(<span class="st">&quot;</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">d+&quot;</span>, <span class="st">&quot;&quot;</span>, RefSeq)) <span class="sc">%&gt;%</span> </span>
-<span id="cb162-5"><a href="gsea.html#cb162-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add entrez_gene column</span></span>
-<span id="cb162-6"><a href="gsea.html#cb162-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(conv_tbl, <span class="at">by =</span> <span class="st">&quot;RefSeq_no_iso&quot;</span>)</span>
-<span id="cb162-7"><a href="gsea.html#cb162-7" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(temp) <span class="ot">&lt;-</span> temp<span class="sc">$</span>RefSeq <span class="co"># Set rownames to RefSeq column</span></span>
-<span id="cb162-8"><a href="gsea.html#cb162-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb162-9"><a href="gsea.html#cb162-9" aria-hidden="true" tabindex="-1"></a><span class="fu">fData</span>(m) <span class="ot">&lt;-</span> temp <span class="co"># overwrite fData</span></span>
-<span id="cb162-10"><a href="gsea.html#cb162-10" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">fData</span>(m))</span></code></pre></div>
-<pre><code>##                  RefSeq RefSeq_no_iso entrez_gene
-## NP_000005.2 NP_000005.2     NP_000005           2
-## NP_000007.1 NP_000007.1     NP_000007          34
-## NP_000008.1 NP_000008.1     NP_000008          35
-## NP_000009.1 NP_000009.1     NP_000009          37
-## NP_000010.1 NP_000010.1     NP_000010          38
-## NP_000012.1 NP_000012.1     NP_000012        5663</code></pre>
-<p>Not every RefSeq mapped to an Entrez gene. We will not be able to use these features, and the code below shows how many were mapped/not mapped.</p>
-<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="gsea.html#cb164-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="sc">!</span><span class="fu">is.na</span>(<span class="fu">fData</span>(m)<span class="sc">$</span>entrez_gene))</span></code></pre></div>
-<pre><code>## 
-## FALSE  TRUE 
-##   109  7994</code></pre>
-<p>109 proteins (~1.3% in table below) were not mapped to any gene. We will remove those rows.</p>
-<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="gsea.html#cb166-1" aria-hidden="true" tabindex="-1"></a><span class="dv">100</span> <span class="sc">*</span> <span class="fu">prop.table</span>(<span class="fu">table</span>(<span class="sc">!</span><span class="fu">is.na</span>(<span class="fu">fData</span>(m)<span class="sc">$</span>entrez_gene)))</span></code></pre></div>
-<pre><code>## 
-##     FALSE      TRUE 
-##  1.345181 98.654819</code></pre>
-<p>Now that we have an Entrez ID column in the <code>fData</code>, we can move on to the next steps. I have combined all steps below so that the code is easier to copy. First, we need a table of differential analysis results. From there, we subset to rows without any missing values. This removes proteins that did not map to a gene, as well as proteins with no test statistics or p-values. Then, we create a column for the ranking metric. We will use <span class="math inline">\(-log10(\text{p-value}) \cdot sign(\text{log}_2 \text{ fold-change})\)</span>. We could have also used the moderated t-statistic, which is similar (see Figure <a href="gsea.html#fig:rank-metric-comp">8.1</a>). Now, we need to make sure that there is only one value per gene. We do so by calculating the average ranking metric for each gene. The last step is to sort from high to low by ranking metric and convert to a named vector. We can see the first and last 6 entries of this named vector below.</p>
-<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="gsea.html#cb168-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Named vector for GSEA</span></span>
-<span id="cb168-2"><a href="gsea.html#cb168-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Start with differential analysis results</span></span>
-<span id="cb168-3"><a href="gsea.html#cb168-3" aria-hidden="true" tabindex="-1"></a>gsea_input <span class="ot">&lt;-</span> <span class="fu">limma_gen</span>(m, <span class="at">model.str =</span> <span class="st">&quot;~ PLATINUM.STATUS&quot;</span>, </span>
-<span id="cb168-4"><a href="gsea.html#cb168-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">coef.str =</span> <span class="st">&quot;PLATINUM.STATUS&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb168-5"><a href="gsea.html#cb168-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">RefSeq =</span> <span class="fu">rownames</span>(.)) <span class="sc">%&gt;%</span> <span class="co"># Create RefSeq column</span></span>
-<span id="cb168-6"><a href="gsea.html#cb168-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">fData</span>(m), <span class="at">by =</span> <span class="st">&quot;RefSeq&quot;</span>) <span class="sc">%&gt;%</span> <span class="co"># Add entrez_gene column</span></span>
-<span id="cb168-7"><a href="gsea.html#cb168-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Remove rows missing entrez_gene or P.Value</span></span>
-<span id="cb168-8"><a href="gsea.html#cb168-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">if_any</span>(<span class="fu">c</span>(entrez_gene, P.Value), is.na)) <span class="sc">%&gt;%</span></span>
-<span id="cb168-9"><a href="gsea.html#cb168-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Create GSEA ranking metric column: signed -log10 p-value</span></span>
-<span id="cb168-10"><a href="gsea.html#cb168-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ranking_metric =</span> <span class="sc">-</span><span class="fu">log10</span>(P.Value) <span class="sc">*</span> <span class="fu">sign</span>(logFC)) <span class="sc">%&gt;%</span> </span>
-<span id="cb168-11"><a href="gsea.html#cb168-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Average ranking metric for each gene</span></span>
-<span id="cb168-12"><a href="gsea.html#cb168-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(entrez_gene) <span class="sc">%&gt;%</span> </span>
-<span id="cb168-13"><a href="gsea.html#cb168-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ranking_metric =</span> <span class="fu">mean</span>(ranking_metric)) <span class="sc">%&gt;%</span> </span>
-<span id="cb168-14"><a href="gsea.html#cb168-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Sort from high to low by ranking metric</span></span>
-<span id="cb168-15"><a href="gsea.html#cb168-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>ranking_metric) <span class="sc">%&gt;%</span></span>
-<span id="cb168-16"><a href="gsea.html#cb168-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Convert to named vector - first column is names, second is values</span></span>
-<span id="cb168-17"><a href="gsea.html#cb168-17" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">deframe</span>()</span>
-<span id="cb168-18"><a href="gsea.html#cb168-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb168-19"><a href="gsea.html#cb168-19" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gsea_input)</span></code></pre></div>
-<pre><code>##     1729     3696    10313     1738    23277      178 
-## 3.714891 3.327848 3.303450 3.208326 2.908294 2.772761</code></pre>
-<div class="figure" style="text-align: center"><span id="fig:rank-metric-comp"></span>
-<img src="pathway_analysis_files/figure-html/rank-metric-comp-1.png" alt="Comparison of two common GSEA ranking metrics." width="75%" />
-<p class="caption">
-Figure 8.1: Comparison of two common GSEA ranking metrics.
-</p>
+<div id="gsea-examples" class="section level3 hasAnchor" number="8.3.2">
+<h3><span class="header-section-number">8.3.2</span> Examples<a href="gsea.html#gsea-examples" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>These examples will show how to run Fast GSEA (FGSEA) in R, which is based on the gene permutation approach <span class="citation">(<a href="#ref-korotkevich_fast_2016" role="doc-biblioref">Korotkevich et al., 2016</a>)</span>.</p>
+<p>The input of FGSEA is a list of gene sets/pathways to check and a uniquely-named vector of ranking metric values sorted in descending order. The ranking metric that we will use is <span class="math inline">\(-log_{10}(\text{p-value}) * sign(\text{logFC})\)</span>, but we could have easily used t-statistics or some other metric. We will perform differential analysis on the <code>cptac_oca</code> data from the <code>MSnSet.utils</code> package and use the results to create the ranking metric vector. We start off by remapping features from RefSeq to Entrez ID.</p>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="gsea.html#cb162-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Fetch REFSEQ to ENTREZID conversion table</span></span>
+<span id="cb162-2"><a href="gsea.html#cb162-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MSnID)</span>
+<span id="cb162-3"><a href="gsea.html#cb162-3" aria-hidden="true" tabindex="-1"></a>conv_tbl <span class="ot">&lt;-</span> <span class="fu">fetch_conversion_table</span>(<span class="at">organism_name =</span> <span class="st">&quot;Homo sapiens&quot;</span>, </span>
+<span id="cb162-4"><a href="gsea.html#cb162-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">from =</span> <span class="st">&quot;REFSEQ&quot;</span>, <span class="at">to =</span> <span class="st">&quot;ENTREZID&quot;</span>)</span>
+<span id="cb162-5"><a href="gsea.html#cb162-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(conv_tbl)</span></code></pre></div>
+<p>Now, we will create the differential analysis results and add the ENTREZID column.</p>
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="gsea.html#cb163-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MSnSet.utils)</span>
+<span id="cb163-2"><a href="gsea.html#cb163-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;cptac_oca&quot;</span>)</span>
+<span id="cb163-3"><a href="gsea.html#cb163-3" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> oca.set</span>
+<span id="cb163-4"><a href="gsea.html#cb163-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb163-5"><a href="gsea.html#cb163-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Differential analysis</span></span>
+<span id="cb163-6"><a href="gsea.html#cb163-6" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">limma_a_b</span>(<span class="at">eset =</span> m1, </span>
+<span id="cb163-7"><a href="gsea.html#cb163-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">model.str =</span> <span class="st">&quot;~ PLATINUM.STATUS&quot;</span>,</span>
+<span id="cb163-8"><a href="gsea.html#cb163-8" aria-hidden="true" tabindex="-1"></a>                 <span class="at">coef.str =</span> <span class="st">&quot;PLATINUM.STATUS&quot;</span>)</span>
+<span id="cb163-9"><a href="gsea.html#cb163-9" aria-hidden="true" tabindex="-1"></a><span class="co"># table(res$adj.P.Val &lt; 0.05) # 0</span></span>
+<span id="cb163-10"><a href="gsea.html#cb163-10" aria-hidden="true" tabindex="-1"></a><span class="co"># hist(res$P.Value, breaks = seq(0, 1, 0.05)) # looks uniform</span></span>
+<span id="cb163-11"><a href="gsea.html#cb163-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res)</span></code></pre></div>
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb164-1"><a href="gsea.html#cb164-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb164-2"><a href="gsea.html#cb164-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Add ENTREZID column</span></span>
+<span id="cb164-3"><a href="gsea.html#cb164-3" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> res <span class="sc">%&gt;%</span> </span>
+<span id="cb164-4"><a href="gsea.html#cb164-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">REFSEQ =</span> <span class="fu">sub</span>(<span class="st">&quot;</span><span class="sc">\\</span><span class="st">.</span><span class="sc">\\</span><span class="st">d+&quot;</span>, <span class="st">&quot;&quot;</span>, <span class="fu">rownames</span>(.))) <span class="sc">%&gt;%</span> </span>
+<span id="cb164-5"><a href="gsea.html#cb164-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(conv_tbl, <span class="at">by =</span> <span class="st">&quot;REFSEQ&quot;</span>)</span>
+<span id="cb164-6"><a href="gsea.html#cb164-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(res)</span></code></pre></div>
+<p>We need one ranking metric value per Entrez ID, so we will calculate the ranking metric and then take the gene-wise average. Then, we sort the genes in descending order by their ranking metric values and convert to a named vector called <code>geneList</code>.</p>
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="gsea.html#cb165-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Ranking metric vector for GSEA</span></span>
+<span id="cb165-2"><a href="gsea.html#cb165-2" aria-hidden="true" tabindex="-1"></a>geneList <span class="ot">&lt;-</span> res <span class="sc">%&gt;%</span></span>
+<span id="cb165-3"><a href="gsea.html#cb165-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ENTREZID), <span class="sc">!</span><span class="fu">is.na</span>(logFC)) <span class="sc">%&gt;%</span> </span>
+<span id="cb165-4"><a href="gsea.html#cb165-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ranking_metric =</span> <span class="sc">-</span><span class="fu">log10</span>(P.Value)<span class="sc">*</span><span class="fu">sign</span>(logFC)) <span class="sc">%&gt;%</span> </span>
+<span id="cb165-5"><a href="gsea.html#cb165-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(ENTREZID) <span class="sc">%&gt;%</span> </span>
+<span id="cb165-6"><a href="gsea.html#cb165-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ranking_metric =</span> <span class="fu">mean</span>(ranking_metric, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb165-7"><a href="gsea.html#cb165-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="sc">-</span>ranking_metric) <span class="sc">%&gt;%</span> <span class="co"># sort descending (important!)</span></span>
+<span id="cb165-8"><a href="gsea.html#cb165-8" aria-hidden="true" tabindex="-1"></a>  tibble<span class="sc">::</span><span class="fu">deframe</span>() <span class="co"># convert to named vector</span></span>
+<span id="cb165-9"><a href="gsea.html#cb165-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(geneList)</span>
+<span id="cb165-10"><a href="gsea.html#cb165-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span>(geneList)</span></code></pre></div>
+<p>Now that we have the uniquely-named ranking metric vector, we can proceed with FGSEA. For these examples, we will show how to perform FGSEA with the <code>fgsea</code>, <code>clusterProfiler</code>, and <code>ReactomePA</code> packages. The databases that we will cover are Gene Ontology Biological Processes and Reactome, and we will only consider gene sets/pathways with at least 15 and no more than 500 genes. The maximum gene set size, as well as the number of permutations, affect the normalized enrichment scores and p-values. For details on these different annotation databases, please see Section <a href="annotation-databases.html#annotation-databases">8.1</a> (Annotation Databases).</p>
+<div id="gsea-with-fgsea" class="section level4 hasAnchor" number="8.3.2.1">
+<h4><span class="header-section-number">8.3.2.1</span> GSEA with <code>fgsea</code><a href="gsea.html#gsea-with-fgsea" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>To perform FGSEA with the <code>fgsea</code> package, we need a list of gene sets/pathways and the ranking metric vector. Below is one way to get the gene set list.</p>
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="gsea.html#cb166-1" aria-hidden="true" tabindex="-1"></a><span class="co"># MSigDB R package</span></span>
+<span id="cb166-2"><a href="gsea.html#cb166-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(msigdbr)</span>
+<span id="cb166-3"><a href="gsea.html#cb166-3" aria-hidden="true" tabindex="-1"></a>msigdbr<span class="sc">::</span><span class="fu">msigdbr_collections</span>() <span class="co"># available collections</span></span>
+<span id="cb166-4"><a href="gsea.html#cb166-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset to Human GO-BP sets</span></span>
+<span id="cb166-5"><a href="gsea.html#cb166-5" aria-hidden="true" tabindex="-1"></a>BP_db <span class="ot">&lt;-</span> <span class="fu">msigdbr</span>(<span class="at">species =</span> <span class="st">&quot;Homo sapiens&quot;</span>, </span>
+<span id="cb166-6"><a href="gsea.html#cb166-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">category =</span> <span class="st">&quot;C5&quot;</span>, <span class="at">subcategory =</span> <span class="st">&quot;GO:BP&quot;</span>)</span>
+<span id="cb166-7"><a href="gsea.html#cb166-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(BP_db)</span></code></pre></div>
+<div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb167-1"><a href="gsea.html#cb167-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to a list of gene sets</span></span>
+<span id="cb167-2"><a href="gsea.html#cb167-2" aria-hidden="true" tabindex="-1"></a>BP_conv <span class="ot">&lt;-</span> <span class="fu">unique</span>(BP_db[, <span class="fu">c</span>(<span class="st">&quot;entrez_gene&quot;</span>, <span class="st">&quot;gs_exact_source&quot;</span>)])</span>
+<span id="cb167-3"><a href="gsea.html#cb167-3" aria-hidden="true" tabindex="-1"></a>BP_list <span class="ot">&lt;-</span> <span class="fu">split</span>(<span class="at">x =</span> BP_conv<span class="sc">$</span>entrez_gene, <span class="at">f =</span> BP_conv<span class="sc">$</span>gs_exact_source)</span>
+<span id="cb167-4"><a href="gsea.html#cb167-4" aria-hidden="true" tabindex="-1"></a><span class="co"># First ~6 IDs of first 3 terms</span></span>
+<span id="cb167-5"><a href="gsea.html#cb167-5" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(<span class="fu">head</span>(BP_list, <span class="dv">3</span>), head)</span></code></pre></div>
+<p>The <code>fgseaMultilevel</code> function uses the adaptive multilevel split Monte Carlo approach described in the original FGSEA paper <span class="citation">(<a href="#ref-korotkevich_fast_2016" role="doc-biblioref">Korotkevich et al., 2016</a>)</span>.</p>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="gsea.html#cb168-1" aria-hidden="true" tabindex="-1"></a><span class="do">## GO-BP FGSEA with fgsea package</span></span>
+<span id="cb168-2"><a href="gsea.html#cb168-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fgsea)</span>
+<span id="cb168-3"><a href="gsea.html#cb168-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">99</span>)</span>
+<span id="cb168-4"><a href="gsea.html#cb168-4" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>( <span class="co"># keep track of elapsed time</span></span>
+<span id="cb168-5"><a href="gsea.html#cb168-5" aria-hidden="true" tabindex="-1"></a>  fgsea_res <span class="ot">&lt;-</span> <span class="fu">fgseaMultilevel</span>(<span class="at">pathways =</span> BP_list,</span>
+<span id="cb168-6"><a href="gsea.html#cb168-6" aria-hidden="true" tabindex="-1"></a>                               <span class="at">stats =</span> geneList, </span>
+<span id="cb168-7"><a href="gsea.html#cb168-7" aria-hidden="true" tabindex="-1"></a>                               <span class="at">minSize =</span> <span class="dv">15</span>, </span>
+<span id="cb168-8"><a href="gsea.html#cb168-8" aria-hidden="true" tabindex="-1"></a>                               <span class="at">maxSize =</span> <span class="dv">500</span>, </span>
+<span id="cb168-9"><a href="gsea.html#cb168-9" aria-hidden="true" tabindex="-1"></a>                               <span class="at">eps =</span> <span class="dv">0</span>, </span>
+<span id="cb168-10"><a href="gsea.html#cb168-10" aria-hidden="true" tabindex="-1"></a>                               <span class="at">nPermSimple =</span> <span class="dv">10000</span>)</span>
+<span id="cb168-11"><a href="gsea.html#cb168-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb168-12"><a href="gsea.html#cb168-12" aria-hidden="true" tabindex="-1"></a><span class="co"># First 6 rows with lowest enrichment p-values</span></span>
+<span id="cb168-13"><a href="gsea.html#cb168-13" aria-hidden="true" tabindex="-1"></a>fgsea_res <span class="sc">%&gt;%</span> </span>
+<span id="cb168-14"><a href="gsea.html#cb168-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add additional columns from BP_db</span></span>
+<span id="cb168-15"><a href="gsea.html#cb168-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(<span class="fu">distinct</span>(BP_db, gs_subcat, gs_exact_source, </span>
+<span id="cb168-16"><a href="gsea.html#cb168-16" aria-hidden="true" tabindex="-1"></a>                     gs_name, gs_description),</span>
+<span id="cb168-17"><a href="gsea.html#cb168-17" aria-hidden="true" tabindex="-1"></a>            <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;pathway&quot;</span> <span class="ot">=</span> <span class="st">&quot;gs_exact_source&quot;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb168-18"><a href="gsea.html#cb168-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Reformat descriptions</span></span>
+<span id="cb168-19"><a href="gsea.html#cb168-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">gs_name =</span> <span class="fu">sub</span>(<span class="st">&quot;^GOBP_&quot;</span>, <span class="st">&quot;&quot;</span>, gs_name),</span>
+<span id="cb168-20"><a href="gsea.html#cb168-20" aria-hidden="true" tabindex="-1"></a>         <span class="at">gs_name =</span> <span class="fu">gsub</span>(<span class="st">&quot;_&quot;</span>, <span class="st">&quot; &quot;</span>, gs_name)) <span class="sc">%&gt;%</span> </span>
+<span id="cb168-21"><a href="gsea.html#cb168-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(padj) <span class="sc">%&gt;%</span> </span>
+<span id="cb168-22"><a href="gsea.html#cb168-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">8</span>)</span></code></pre></div>
+<p>See <code>?fgseaMultilevel</code> for a description of the output. The output does not include term descriptions, so we had to add those ourselves.</p>
 </div>
-<p>Now that we have the input vector, we can move on to the examples.</p>
-<div id="gene-ontology-1" class="section level4" number="8.3.1.1">
-<h4><span class="header-section-number">8.3.1.1</span> Gene Ontology</h4>
-<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="gsea.html#cb170-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Biological Process GSEA</span></span>
-<span id="cb170-2"><a href="gsea.html#cb170-2" aria-hidden="true" tabindex="-1"></a>go_gsea <span class="ot">&lt;-</span> <span class="fu">gseGO</span>(<span class="at">geneList =</span> gsea_input, </span>
-<span id="cb170-3"><a href="gsea.html#cb170-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">ont =</span> <span class="st">&quot;BP&quot;</span>, </span>
-<span id="cb170-4"><a href="gsea.html#cb170-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">eps =</span> <span class="dv">0</span>,</span>
-<span id="cb170-5"><a href="gsea.html#cb170-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">OrgDb =</span> org.Hs.eg.db, </span>
-<span id="cb170-6"><a href="gsea.html#cb170-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">nPermSimple =</span> <span class="dv">1000</span>) <span class="co"># may need to increase nPermSimple</span></span>
-<span id="cb170-7"><a href="gsea.html#cb170-7" aria-hidden="true" tabindex="-1"></a><span class="co"># View(go_gsea@result) # uncomment to view results</span></span></code></pre></div>
-<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:20em; ">
-<table class="table table-hover table-condensed" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">
-<span id="tab:unnamed-chunk-21">Table 2.2: </span>
-</caption>
-<thead>
-<tr>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-ID
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-Description
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-setSize
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-enrichmentScore
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-NES
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-pvalue
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-p.adjust
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-qvalues
-</th>
-<th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;">
-rank
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-leading_edge
-</th>
-<th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;">
-core_enrichment
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-<a href="https://www.ebi.ac.uk/QuickGO/term/GO:0031424" style="     ">GO:0031424</a>
-</td>
-<td style="text-align:left;">
-keratinization
-</td>
-<td style="text-align:right;">
-54
-</td>
-<td style="text-align:right;">
-0.7794
-</td>
-<td style="text-align:right;">
-2.7248
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-990
-</td>
-<td style="text-align:left;">
-tags=61%, list=13%, signal=54%
-</td>
-<td style="text-align:left;">
-3855/3860/121391…
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<a href="https://www.ebi.ac.uk/QuickGO/term/GO:0070268" style="     ">GO:0070268</a>
-</td>
-<td style="text-align:left;">
-cornification
-</td>
-<td style="text-align:right;">
-50
-</td>
-<td style="text-align:right;">
-0.7820
-</td>
-<td style="text-align:right;">
-2.7073
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-990
-</td>
-<td style="text-align:left;">
-tags=64%, list=13%, signal=56%
-</td>
-<td style="text-align:left;">
-3855/3860/121391…
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<a href="https://www.ebi.ac.uk/QuickGO/term/GO:0046034" style="     ">GO:0046034</a>
-</td>
-<td style="text-align:left;">
-ATP metabolic process
-</td>
-<td style="text-align:right;">
-234
-</td>
-<td style="text-align:right;">
-0.5070
-</td>
-<td style="text-align:right;">
-2.2324
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1753
-</td>
-<td style="text-align:left;">
-tags=41%, list=23%, signal=33%
-</td>
-<td style="text-align:left;">
-1738/64802/11315…
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<a href="https://www.ebi.ac.uk/QuickGO/term/GO:0007005" style="     ">GO:0007005</a>
-</td>
-<td style="text-align:left;">
-mitochondrion organization
-</td>
-<td style="text-align:right;">
-370
-</td>
-<td style="text-align:right;">
-0.4319
-</td>
-<td style="text-align:right;">
-2.0000
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1530
-</td>
-<td style="text-align:left;">
-tags=35%, list=20%, signal=30%
-</td>
-<td style="text-align:left;">
-23277/54927/9141…
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<a href="https://www.ebi.ac.uk/QuickGO/term/GO:0006119" style="     ">GO:0006119</a>
-</td>
-<td style="text-align:left;">
-oxidative phosphorylation
-</td>
-<td style="text-align:right;">
-112
-</td>
-<td style="text-align:right;">
-0.6049
-</td>
-<td style="text-align:right;">
-2.4027
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1916
-</td>
-<td style="text-align:left;">
-tags=54%, list=25%, signal=41%
-</td>
-<td style="text-align:left;">
-1738/11315/1340…
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<a href="https://www.ebi.ac.uk/QuickGO/term/GO:0030198" style="     ">GO:0030198</a>
-</td>
-<td style="text-align:left;">
-extracellular matrix organization
-</td>
-<td style="text-align:right;">
-224
-</td>
-<td style="text-align:right;">
--0.4934
-</td>
-<td style="text-align:right;">
--2.1201
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1624
-</td>
-<td style="text-align:left;">
-tags=46%, list=21%, signal=37%
-</td>
-<td style="text-align:left;">
-780/9510/3687…
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<a href="https://www.ebi.ac.uk/QuickGO/term/GO:0043062" style="     ">GO:0043062</a>
-</td>
-<td style="text-align:left;">
-extracellular structure organization
-</td>
-<td style="text-align:right;">
-224
-</td>
-<td style="text-align:right;">
--0.4934
-</td>
-<td style="text-align:right;">
--2.1201
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1624
-</td>
-<td style="text-align:left;">
-tags=46%, list=21%, signal=37%
-</td>
-<td style="text-align:left;">
-780/9510/3687…
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<a href="https://www.ebi.ac.uk/QuickGO/term/GO:0045229" style="     ">GO:0045229</a>
-</td>
-<td style="text-align:left;">
-external encapsulating structure organization
-</td>
-<td style="text-align:right;">
-225
-</td>
-<td style="text-align:right;">
--0.4920
-</td>
-<td style="text-align:right;">
--2.1150
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1624
-</td>
-<td style="text-align:left;">
-tags=46%, list=21%, signal=37%
-</td>
-<td style="text-align:left;">
-780/9510/3687…
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<a href="https://www.ebi.ac.uk/QuickGO/term/GO:0007007" style="     ">GO:0007007</a>
-</td>
-<td style="text-align:left;">
-inner mitochondrial membrane organization
-</td>
-<td style="text-align:right;">
-47
-</td>
-<td style="text-align:right;">
-0.7458
-</td>
-<td style="text-align:right;">
-2.5741
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1450
-</td>
-<td style="text-align:left;">
-tags=72%, list=19%, signal=59%
-</td>
-<td style="text-align:left;">
-54927/10989/55735…
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<a href="https://www.ebi.ac.uk/QuickGO/term/GO:0015980" style="     ">GO:0015980</a>
-</td>
-<td style="text-align:left;">
-energy derivation by oxidation of organic compounds
-</td>
-<td style="text-align:right;">
-190
-</td>
-<td style="text-align:right;">
-0.5048
-</td>
-<td style="text-align:right;">
-2.1713
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-918
-</td>
-<td style="text-align:left;">
-tags=28%, list=12%, signal=25%
-</td>
-<td style="text-align:left;">
-1738/178/1743…
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<div id="reactome-1" class="section level4" number="8.3.1.2">
-<h4><span class="header-section-number">8.3.1.2</span> Reactome</h4>
-<div class="sourceCode" id="cb171"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb171-1"><a href="gsea.html#cb171-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Reactome GSEA</span></span>
-<span id="cb171-2"><a href="gsea.html#cb171-2" aria-hidden="true" tabindex="-1"></a>react_gsea <span class="ot">&lt;-</span> <span class="fu">gsePathway</span>(<span class="at">geneList =</span> gsea_input,</span>
-<span id="cb171-3"><a href="gsea.html#cb171-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">organism =</span> <span class="st">&quot;human&quot;</span>, </span>
-<span id="cb171-4"><a href="gsea.html#cb171-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">eps =</span> <span class="dv">0</span>,</span>
-<span id="cb171-5"><a href="gsea.html#cb171-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">nPermSimple =</span> <span class="dv">1000</span>)</span>
-<span id="cb171-6"><a href="gsea.html#cb171-6" aria-hidden="true" tabindex="-1"></a><span class="co"># View(react_gsea@result) # uncomment to view results</span></span></code></pre></div>
-</div>
-<div id="pfam-1" class="section level4" number="8.3.1.3">
-<h4><span class="header-section-number">8.3.1.3</span> Pfam</h4>
-</div>
-<div id="gsea-other" class="section level4" number="8.3.1.4">
-<h4><span class="header-section-number">8.3.1.4</span> Other Databases</h4>
+<div id="gsea-with-clusterprofilerreactomepa" class="section level4 hasAnchor" number="8.3.2.2">
+<h4><span class="header-section-number">8.3.2.2</span> GSEA with <code>clusterProfiler</code>/<code>ReactomePA</code><a href="gsea.html#gsea-with-clusterprofilerreactomepa" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>See Section <a href="ora.html#ora-clustprof">8.2.4.2</a> to get a better understanding of these packages. <code>clusterProfiler</code> provides the <code>gseGO</code> and <code>gseKEGG</code> functions (among others) for FGSEA of the GO and KEGG databases, respectively. They are essentially more user-friendly wrapper functions that make use of the <code>fgsea</code> and <code>AnnotationDbi</code> package, but they tend to be much slower.</p>
+<div class="sourceCode" id="cb169"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb169-1"><a href="gsea.html#cb169-1" aria-hidden="true" tabindex="-1"></a><span class="do">## GO-BP FGSEA with clusterProfiler package</span></span>
+<span id="cb169-2"><a href="gsea.html#cb169-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(clusterProfiler)</span>
+<span id="cb169-3"><a href="gsea.html#cb169-3" aria-hidden="true" tabindex="-1"></a><span class="fu">system.time</span>( <span class="co"># keep track of elapsed time</span></span>
+<span id="cb169-4"><a href="gsea.html#cb169-4" aria-hidden="true" tabindex="-1"></a>  cgsea_res <span class="ot">&lt;-</span> <span class="fu">gseGO</span>(<span class="at">geneList =</span> geneList, </span>
+<span id="cb169-5"><a href="gsea.html#cb169-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">ont =</span> <span class="st">&quot;BP&quot;</span>, </span>
+<span id="cb169-6"><a href="gsea.html#cb169-6" aria-hidden="true" tabindex="-1"></a>                     <span class="at">OrgDb =</span> <span class="st">&quot;org.Hs.eg.db&quot;</span>, </span>
+<span id="cb169-7"><a href="gsea.html#cb169-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">minGSSize =</span> <span class="dv">15</span>, </span>
+<span id="cb169-8"><a href="gsea.html#cb169-8" aria-hidden="true" tabindex="-1"></a>                     <span class="at">maxGSSize =</span> <span class="dv">500</span>, </span>
+<span id="cb169-9"><a href="gsea.html#cb169-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">eps =</span> <span class="dv">0</span>, </span>
+<span id="cb169-10"><a href="gsea.html#cb169-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">nPermSimple =</span> <span class="dv">10000</span>, </span>
+<span id="cb169-11"><a href="gsea.html#cb169-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">seed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb169-12"><a href="gsea.html#cb169-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb169-13"><a href="gsea.html#cb169-13" aria-hidden="true" tabindex="-1"></a><span class="co"># First 8 rows with lowest enrichment p-values</span></span>
+<span id="cb169-14"><a href="gsea.html#cb169-14" aria-hidden="true" tabindex="-1"></a>cgsea_res<span class="sc">@</span>result <span class="sc">%&gt;%</span> </span>
+<span id="cb169-15"><a href="gsea.html#cb169-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(pvalue) <span class="sc">%&gt;%</span> </span>
+<span id="cb169-16"><a href="gsea.html#cb169-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">8</span>)</span></code></pre></div>
+<p>Notice that the normalized enrichment scores (NES) are not quite the same as what we got when we used <code>fgseaMultiLevel</code>. This has to do with the permutations being different. To increase the precision of the NES and p-values, we can increase <code>nPermSimple</code>, though 10,000 should be more than sufficient.</p>
+<p>Now, here is GSEA with the Reactome database using the <code>gsePathway</code> function from the <code>ReactomePA</code> package.</p>
+<div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="gsea.html#cb170-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Reactome FGSEA with ReactomePA package</span></span>
+<span id="cb170-2"><a href="gsea.html#cb170-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ReactomePA)</span>
+<span id="cb170-3"><a href="gsea.html#cb170-3" aria-hidden="true" tabindex="-1"></a>fgsea_react <span class="ot">&lt;-</span> <span class="fu">gsePathway</span>(<span class="at">geneList =</span> geneList, </span>
+<span id="cb170-4"><a href="gsea.html#cb170-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">organism =</span> <span class="st">&quot;human&quot;</span>,</span>
+<span id="cb170-5"><a href="gsea.html#cb170-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">minGSSize =</span> <span class="dv">15</span>, </span>
+<span id="cb170-6"><a href="gsea.html#cb170-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">maxGSSize =</span> <span class="dv">500</span>, </span>
+<span id="cb170-7"><a href="gsea.html#cb170-7" aria-hidden="true" tabindex="-1"></a>                          <span class="at">eps =</span> <span class="dv">0</span>, </span>
+<span id="cb170-8"><a href="gsea.html#cb170-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">nPermSimple =</span> <span class="dv">10000</span>, </span>
+<span id="cb170-9"><a href="gsea.html#cb170-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">seed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb170-10"><a href="gsea.html#cb170-10" aria-hidden="true" tabindex="-1"></a><span class="co"># First 6 rows</span></span>
+<span id="cb170-11"><a href="gsea.html#cb170-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(fgsea_react<span class="sc">@</span>result)</span></code></pre></div>
 
 </div>
 </div>
 </div>
 <!-- </div> -->
-<h3>References</h3>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-huang_bioinformatics_2009" class="csl-entry">
-Huang, D. W., Sherman, B. T. and Lempicki, R. A., Bioinformatics Enrichment Tools: Paths Toward the Comprehensive Functional Analysis of Large Gene Lists, <em>Nucleic Acids Research</em>, vol. <strong>37</strong>, no. 1, pp. 1–13, accessed September 7, 2021, from <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2615629/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2615629/</a>, January 2009. DOI: <a href="https://doi.org/10.1093/nar/gkn923">10.1093/nar/gkn923</a>
-</div>
 <div id="ref-korotkevich_fast_2016" class="csl-entry">
-Korotkevich, G., Sukhov, V., Budin, N., Shpak, B., Artyomov, M. N., and Sergushichev, A., Fast Gene Set Enrichment Analysis, Bioinformatics, Jun. 2016.
+Korotkevich, G., Sukhov, V., Budin, N., Shpak, B., Artyomov, M. N., and Sergushichev, A., <a href="https://doi.org/10.1101/060012">Fast Gene Set Enrichment Analysis</a>, Bioinformatics, Jun. 2016.
 </div>
 <div id="ref-mootha_pgc-1-responsive_2003" class="csl-entry">
-Mootha, V. K., Lindgren, C. M., Eriksson, K.-F., Subramanian, A., Sihag, S., Lehar, J., Puigserver, P., et al., <span>PGC</span>-1α-Responsive Genes Involved in Oxidative Phosphorylation Are Coordinately Downregulated in Human Diabetes, <em>Nature Genetics</em>, vol. <strong>34</strong>, no. 3, pp. 267–73, accessed September 19, 2021, from <a href="https://www.nature.com/articles/ng1180">https://www.nature.com/articles/ng1180</a>, July 2003. DOI: <a href="https://doi.org/10.1038/ng1180">10.1038/ng1180</a>
+Mootha, Vamsi K., Lindgren, C. M., Eriksson, K.-F., Subramanian, A., Sihag, S., Lehar, J., Puigserver, P., et al., <span>PGC</span>-1α-Responsive Genes Involved in Oxidative Phosphorylation Are Coordinately Downregulated in Human Diabetes, <em>Nature Genetics</em>, vol. <strong>34</strong>, no. 3, pp. 267–73, accessed September 19, 2021, from <a href="https://www.nature.com/articles/ng1180">https://www.nature.com/articles/ng1180</a>, July 2003. DOI: <a href="https://doi.org/10.1038/ng1180">10.1038/ng1180</a>
 </div>
 <div id="ref-subramanian_gene_2005" class="csl-entry">
 Subramanian, A., Tamayo, P., Mootha, V. K., Mukherjee, S., Ebert, B. L., Gillette, M. A., Paulovich, A., et al., Gene Set Enrichment Analysis: <span>A</span> Knowledge-Based Approach for Interpreting Genome-Wide Expression Profiles, <em>Proceedings of the National Academy of Sciences of the United States of America</em>, vol. <strong>102</strong>, no. 43, pp. 15545–50, accessed September 7, 2021, from <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1239896/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1239896/</a>, October 2005. DOI: <a href="https://doi.org/10.1073/pnas.0506580102">10.1073/pnas.0506580102</a>
@@ -897,7 +465,6 @@ Subramanian, A., Tamayo, P., Mootha, V. K., Mukherjee, S., Ebert, B. L., Gillett
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -937,6 +504,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

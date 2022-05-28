@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>7.2 Two-Sample t-tests | Proteomics Data Analysis in R/Bioconductor</title>
   <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content="7.2 Two-Sample t-tests | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-02-11" />
+<meta name="date" content="2022-05-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +32,8 @@
   
 <link rel="prev" href="linear-reg.html"/>
 <link rel="next" href="anova.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,9 +49,9 @@
 
 
 
-
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -217,6 +216,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="4.1" data-path="conversion-with-biomart.html"><a href="conversion-with-biomart.html"><i class="fa fa-check"></i><b>4.1</b> Conversion with <code>biomaRt</code></a></li>
 <li class="chapter" data-level="4.2" data-path="conversion-with-annotationhub.html"><a href="conversion-with-annotationhub.html"><i class="fa fa-check"></i><b>4.2</b> Conversion with <code>AnnotationHub</code></a></li>
+<li class="chapter" data-level="4.3" data-path="conversion-using-fasta-headers.html"><a href="conversion-using-fasta-headers.html"><i class="fa fa-check"></i><b>4.3</b> Conversion Using FASTA Headers</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory Data Analysis</a>
 <ul>
@@ -278,26 +278,27 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="8.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>8.1.2</b> Reactome</a></li>
 <li class="chapter" data-level="8.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>8.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>8.1.4</b> Pfam</a></li>
+<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#msigdb"><i class="fa fa-check"></i><b>8.1.4</b> MSigDB</a></li>
 </ul></li>
 <li class="chapter" data-level="8.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>8.2</b> Over-Representation Analysis</a>
 <ul>
-<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.1</b> Examples</a>
+<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>8.2.1</b> Overview</a></li>
+<li class="chapter" data-level="8.2.2" data-path="ora.html"><a href="ora.html#ora-math"><i class="fa fa-check"></i><b>8.2.2</b> Mathematical Details</a></li>
+<li class="chapter" data-level="8.2.3" data-path="ora.html"><a href="ora.html#ora-drawbacks"><i class="fa fa-check"></i><b>8.2.3</b> Drawbacks</a></li>
+<li class="chapter" data-level="8.2.4" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.4</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>8.2.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>8.2.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>8.2.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>8.2.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.2.4.1" data-path="ora.html"><a href="ora.html#fgsea-ora"><i class="fa fa-check"></i><b>8.2.4.1</b> ORA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.2.4.2" data-path="ora.html"><a href="ora.html#ora-clustprof"><i class="fa fa-check"></i><b>8.2.4.2</b> ORA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
+<li class="chapter" data-level="8.2.4.3" data-path="ora.html"><a href="ora.html#ora-with-gostats"><i class="fa fa-check"></i><b>8.2.4.3</b> ORA with <code>GOstats</code></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>8.3</b> Gene Set Enrichment Analysis</a>
 <ul>
-<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>8.3.1</b> Examples</a>
+<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>8.3.1</b> Overview</a></li>
+<li class="chapter" data-level="8.3.2" data-path="gsea.html"><a href="gsea.html#gsea-examples"><i class="fa fa-check"></i><b>8.3.2</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>8.3.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>8.3.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>8.3.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.3.1.4" data-path="gsea.html"><a href="gsea.html#gsea-other"><i class="fa fa-check"></i><b>8.3.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.3.2.1" data-path="gsea.html"><a href="gsea.html#gsea-with-fgsea"><i class="fa fa-check"></i><b>8.3.2.1</b> GSEA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.3.2.2" data-path="gsea.html"><a href="gsea.html#gsea-with-clusterprofilerreactomepa"><i class="fa fa-check"></i><b>8.3.2.2</b> GSEA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -319,21 +320,21 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="t-tests" class="section level2" number="7.2">
-<h2><span class="header-section-number">7.2</span> Two-Sample t-tests</h2>
+<div id="t-tests" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> Two-Sample t-tests<a href="t-tests.html#t-tests" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Two-sample t-tests are used to determine whether there is a significant difference between the means of two groups. The null hypothesis is that the group means are equal, and the alternative is that they are not equal. Written another way, the null hypothesis is that the difference in means is zero, and the alternative is that the difference is not zero.</p>
 <!---
 MSnSet.utils has two functions that perform two-sample t-tests. The first function, `limma_a_b`, is used when there are exactly two groups. For example, the PLATINUM.STATUS column of `pData(m)` has exactly two categories: "SENSITIVE" and "RESISTANT". The second function, `limma_contrasts`, is used when there are more than two categories (for example, the SUBTYPE column) and we wish to test specific contrasts (usually when making comparisons against a reference). This results in separate t-statistics and p-values for each contrast, unlike `limma_gen`, which results in a single F statistic for all contrasts. We will begin with an example of how to use `limma_a_b`.
 
 --->
 <p><code>limma_a_b</code> and <code>limma_contrasts</code> can perform moderated two-sample t-tests.</p>
-<div id="t-single" class="section level3" number="7.2.1">
-<h3><span class="header-section-number">7.2.1</span> One comparison</h3>
+<div id="t-single" class="section level3 hasAnchor" number="7.2.1">
+<h3><span class="header-section-number">7.2.1</span> One comparison<a href="t-tests.html#t-single" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>If a factor only has two groups, we can use <code>limma_a_b</code>. We will test for differences between the “RESISTANT” and “TREATMENT” groups without accounting for any covariates.</p>
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="t-tests.html#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test RESISTANT - SENSITIVE = 0</span></span>
-<span id="cb119-2"><a href="t-tests.html#cb119-2" aria-hidden="true" tabindex="-1"></a>t_res1 <span class="ot">&lt;-</span> <span class="fu">limma_a_b</span>(<span class="at">eset =</span> m, <span class="at">model.str =</span> <span class="st">&quot;~ PLATINUM.STATUS&quot;</span>, </span>
-<span id="cb119-3"><a href="t-tests.html#cb119-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">coef.str =</span> <span class="st">&quot;PLATINUM.STATUS&quot;</span>)</span>
-<span id="cb119-4"><a href="t-tests.html#cb119-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">arrange</span>(t_res1, adj.P.Val)) <span class="co"># top 6 rows sorted by adjusted p-value</span></span></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="t-tests.html#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test RESISTANT - SENSITIVE = 0</span></span>
+<span id="cb127-2"><a href="t-tests.html#cb127-2" aria-hidden="true" tabindex="-1"></a>t_res1 <span class="ot">&lt;-</span> <span class="fu">limma_a_b</span>(<span class="at">eset =</span> m, <span class="at">model.str =</span> <span class="st">&quot;~ PLATINUM.STATUS&quot;</span>, </span>
+<span id="cb127-3"><a href="t-tests.html#cb127-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">coef.str =</span> <span class="st">&quot;PLATINUM.STATUS&quot;</span>)</span>
+<span id="cb127-4"><a href="t-tests.html#cb127-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">arrange</span>(t_res1, adj.P.Val)) <span class="co"># top 6 rows sorted by adjusted p-value</span></span></code></pre></div>
 <pre><code>##                  logFC      AveExpr         t     P.Value adj.P.Val         B
 ## NP_000007.1  0.4924636  0.050292811  2.746579 0.008196829 0.9569777 -3.618784
 ## NP_000013.2 -0.2221522  0.062925069 -1.373152 0.175457942 0.9569777 -4.484676
@@ -352,31 +353,31 @@ MSnSet.utils has two functions that perform two-sample t-tests. The first functi
 <p>Below is a graphical representation of the results for a specific feature. This is not a required step. It is just to visually explain the results.</p>
 <p><img src="DEA_files/figure-html/t-lm-plot-1-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>The next step would be to check the p-value histograms. If those look fine, we can tally the number of significant features.</p>
-<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="t-tests.html#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="co"># TRUE - significant, FALSE - not significant</span></span>
-<span id="cb121-2"><a href="t-tests.html#cb121-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(t_res1<span class="sc">$</span>adj.P.Val <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb129-1"><a href="t-tests.html#cb129-1" aria-hidden="true" tabindex="-1"></a><span class="co"># TRUE - significant, FALSE - not significant</span></span>
+<span id="cb129-2"><a href="t-tests.html#cb129-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(t_res1<span class="sc">$</span>adj.P.Val <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span></code></pre></div>
 <pre><code>## 
 ## FALSE 
 ##  8101</code></pre>
 <p>None of the features are significantly different between the two PLATINUM.STATUS groups at the 0.05 FDR level.</p>
 </div>
-<div id="t-mult" class="section level3" number="7.2.2">
-<h3><span class="header-section-number">7.2.2</span> Multiple comparisons</h3>
+<div id="t-mult" class="section level3 hasAnchor" number="7.2.2">
+<h3><span class="header-section-number">7.2.2</span> Multiple comparisons<a href="t-tests.html#t-mult" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Now, we will move on to an example of how to use <code>limma_contrasts</code>, which is suited for <strong>comparing groups against a reference</strong>. We will treat “Immunoreactive” as the reference group for this example, though this does not really make sense in the context of this data. It would make more sense to do a one-way ANOVA with <code>limma_gen</code> (Section <a href="anova.html#anova">7.3</a>). This is just for example purposes.</p>
 <p>We will test the following contrasts. Each level must begin with the variable name, or <code>limma_contrasts</code> will not work.</p>
-<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="t-tests.html#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Contrasts to test</span></span>
-<span id="cb123-2"><a href="t-tests.html#cb123-2" aria-hidden="true" tabindex="-1"></a>contrasts <span class="ot">&lt;-</span> <span class="fu">paircomp</span>(<span class="at">x =</span> m<span class="sc">$</span>SUBTYPE, <span class="at">name =</span> <span class="st">&quot;SUBTYPE&quot;</span>, </span>
-<span id="cb123-3"><a href="t-tests.html#cb123-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">ref =</span> <span class="st">&quot;Immunoreactive&quot;</span>)</span>
-<span id="cb123-4"><a href="t-tests.html#cb123-4" aria-hidden="true" tabindex="-1"></a>contrasts</span></code></pre></div>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb131-1"><a href="t-tests.html#cb131-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Contrasts to test</span></span>
+<span id="cb131-2"><a href="t-tests.html#cb131-2" aria-hidden="true" tabindex="-1"></a>contrasts <span class="ot">&lt;-</span> <span class="fu">paircomp</span>(<span class="at">x =</span> m<span class="sc">$</span>SUBTYPE, <span class="at">name =</span> <span class="st">&quot;SUBTYPE&quot;</span>, </span>
+<span id="cb131-3"><a href="t-tests.html#cb131-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">ref =</span> <span class="st">&quot;Immunoreactive&quot;</span>)</span>
+<span id="cb131-4"><a href="t-tests.html#cb131-4" aria-hidden="true" tabindex="-1"></a>contrasts</span></code></pre></div>
 <pre><code>## [1] &quot;SUBTYPEProliferative-SUBTYPEImmunoreactive&quot; 
 ## [2] &quot;SUBTYPEMesenchymal-SUBTYPEImmunoreactive&quot;   
 ## [3] &quot;SUBTYPEDifferentiated-SUBTYPEImmunoreactive&quot;</code></pre>
 <p>By default, <code>limma_contrasts</code> generates diagnostic plots. For now, we will not make these plots. We also need to specify a no-intercept model by including 0 in <code>model.str</code>.</p>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="t-tests.html#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test contrasts</span></span>
-<span id="cb125-2"><a href="t-tests.html#cb125-2" aria-hidden="true" tabindex="-1"></a>t_res2 <span class="ot">&lt;-</span> <span class="fu">limma_contrasts</span>(<span class="at">eset =</span> m, <span class="at">model.str =</span> <span class="st">&quot;~ 0 + SUBTYPE&quot;</span>, </span>
-<span id="cb125-3"><a href="t-tests.html#cb125-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">coef.str =</span> <span class="st">&quot;SUBTYPE&quot;</span>, <span class="at">contrasts =</span> contrasts,</span>
-<span id="cb125-4"><a href="t-tests.html#cb125-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">trend =</span> <span class="cn">TRUE</span>, <span class="at">robust =</span> <span class="cn">TRUE</span>, <span class="co"># passed to eBayes</span></span>
-<span id="cb125-5"><a href="t-tests.html#cb125-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb125-6"><a href="t-tests.html#cb125-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">arrange</span>(t_res2, adj.P.Val)) <span class="co"># top 6 rows sorted by adjusted p-value</span></span></code></pre></div>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="t-tests.html#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test contrasts</span></span>
+<span id="cb133-2"><a href="t-tests.html#cb133-2" aria-hidden="true" tabindex="-1"></a>t_res2 <span class="ot">&lt;-</span> <span class="fu">limma_contrasts</span>(<span class="at">eset =</span> m, <span class="at">model.str =</span> <span class="st">&quot;~ 0 + SUBTYPE&quot;</span>, </span>
+<span id="cb133-3"><a href="t-tests.html#cb133-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">coef.str =</span> <span class="st">&quot;SUBTYPE&quot;</span>, <span class="at">contrasts =</span> contrasts,</span>
+<span id="cb133-4"><a href="t-tests.html#cb133-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">trend =</span> <span class="cn">TRUE</span>, <span class="at">robust =</span> <span class="cn">TRUE</span>, <span class="co"># passed to eBayes</span></span>
+<span id="cb133-5"><a href="t-tests.html#cb133-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb133-6"><a href="t-tests.html#cb133-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">arrange</span>(t_res2, adj.P.Val)) <span class="co"># top 6 rows sorted by adjusted p-value</span></span></code></pre></div>
 <pre><code>##            RefSeq      logFC       AveExpr         t      P.Value    adj.P.Val
 ## 1:    NP_000388.2 -1.2232098 -3.421920e-18 -7.703025 4.549213e-11 1.105868e-06
 ## 2:    NP_001944.1 -1.3465807 -5.322987e-18 -6.637345 4.520647e-09 3.191542e-05
@@ -395,14 +396,14 @@ MSnSet.utils has two functions that perform two-sample t-tests. The first functi
 <p>Below is a graphical representation of the results for a specific feature.</p>
 <p><img src="DEA_files/figure-html/unnamed-chunk-9-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>The next step would be to check the p-value histograms. If those look fine, we can tally the number of significant features.</p>
-<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb127-1"><a href="t-tests.html#cb127-1" aria-hidden="true" tabindex="-1"></a><span class="co"># TRUE - significant, FALSE - not significant</span></span>
-<span id="cb127-2"><a href="t-tests.html#cb127-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(t_res2<span class="sc">$</span>contrast, t_res2<span class="sc">$</span>adj.P.Val <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="t-tests.html#cb135-1" aria-hidden="true" tabindex="-1"></a><span class="co"># TRUE - significant, FALSE - not significant</span></span>
+<span id="cb135-2"><a href="t-tests.html#cb135-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(t_res2<span class="sc">$</span>contrast, t_res2<span class="sc">$</span>adj.P.Val <span class="sc">&lt;</span> <span class="fl">0.05</span>)</span></code></pre></div>
 <pre><code>##                                
 ##                                 FALSE TRUE
 ##   Differentiated-Immunoreactive  8052   51
 ##   Mesenchymal-Immunoreactive     7908  195
 ##   Proliferative-Immunoreactive   7848  255</code></pre>
-<p>If we take the 51, 195, and 255 features with the lowest adjusted p-values from the “Differentiated-Immunoreactive,” “Mesenchymal-Immunoreactive,” and “Proliferative-Immunoreactive” comparisons, respectively, the overall estimated FDR is at most 0.05. That is, we expect ~25 out of those 501 to be false positives.</p>
+<p>If we take the 51, 195, and 255 features with the lowest adjusted p-values from the “Differentiated-Immunoreactive”, “Mesenchymal-Immunoreactive”, and “Proliferative-Immunoreactive” comparisons, respectively, the overall estimated FDR is at most 0.05. That is, we expect ~25 out of those 501 to be false positives.</p>
 <p>More features are significantly different between the “Proliferative” and “Immunoreactive” groups than in the other comparisons.</p>
 </div>
 </div>
@@ -416,7 +417,6 @@ MSnSet.utils has two functions that perform two-sample t-tests. The first functi
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -456,6 +456,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

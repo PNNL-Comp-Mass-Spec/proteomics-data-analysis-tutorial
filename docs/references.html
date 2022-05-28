@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>References | Proteomics Data Analysis in R/Bioconductor</title>
   <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content="References | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-02-11" />
+<meta name="date" content="2022-05-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +32,8 @@
   
 <link rel="prev" href="gsea.html"/>
 
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,9 +49,9 @@
 
 
 
-
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -217,6 +216,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="4.1" data-path="conversion-with-biomart.html"><a href="conversion-with-biomart.html"><i class="fa fa-check"></i><b>4.1</b> Conversion with <code>biomaRt</code></a></li>
 <li class="chapter" data-level="4.2" data-path="conversion-with-annotationhub.html"><a href="conversion-with-annotationhub.html"><i class="fa fa-check"></i><b>4.2</b> Conversion with <code>AnnotationHub</code></a></li>
+<li class="chapter" data-level="4.3" data-path="conversion-using-fasta-headers.html"><a href="conversion-using-fasta-headers.html"><i class="fa fa-check"></i><b>4.3</b> Conversion Using FASTA Headers</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory Data Analysis</a>
 <ul>
@@ -278,26 +278,27 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="8.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>8.1.2</b> Reactome</a></li>
 <li class="chapter" data-level="8.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>8.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>8.1.4</b> Pfam</a></li>
+<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#msigdb"><i class="fa fa-check"></i><b>8.1.4</b> MSigDB</a></li>
 </ul></li>
 <li class="chapter" data-level="8.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>8.2</b> Over-Representation Analysis</a>
 <ul>
-<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.1</b> Examples</a>
+<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>8.2.1</b> Overview</a></li>
+<li class="chapter" data-level="8.2.2" data-path="ora.html"><a href="ora.html#ora-math"><i class="fa fa-check"></i><b>8.2.2</b> Mathematical Details</a></li>
+<li class="chapter" data-level="8.2.3" data-path="ora.html"><a href="ora.html#ora-drawbacks"><i class="fa fa-check"></i><b>8.2.3</b> Drawbacks</a></li>
+<li class="chapter" data-level="8.2.4" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.4</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>8.2.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>8.2.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>8.2.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>8.2.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.2.4.1" data-path="ora.html"><a href="ora.html#fgsea-ora"><i class="fa fa-check"></i><b>8.2.4.1</b> ORA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.2.4.2" data-path="ora.html"><a href="ora.html#ora-clustprof"><i class="fa fa-check"></i><b>8.2.4.2</b> ORA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
+<li class="chapter" data-level="8.2.4.3" data-path="ora.html"><a href="ora.html#ora-with-gostats"><i class="fa fa-check"></i><b>8.2.4.3</b> ORA with <code>GOstats</code></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>8.3</b> Gene Set Enrichment Analysis</a>
 <ul>
-<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>8.3.1</b> Examples</a>
+<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>8.3.1</b> Overview</a></li>
+<li class="chapter" data-level="8.3.2" data-path="gsea.html"><a href="gsea.html#gsea-examples"><i class="fa fa-check"></i><b>8.3.2</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>8.3.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>8.3.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>8.3.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.3.1.4" data-path="gsea.html"><a href="gsea.html#gsea-other"><i class="fa fa-check"></i><b>8.3.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.3.2.1" data-path="gsea.html"><a href="gsea.html#gsea-with-fgsea"><i class="fa fa-check"></i><b>8.3.2.1</b> GSEA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.3.2.2" data-path="gsea.html"><a href="gsea.html#gsea-with-clusterprofilerreactomepa"><i class="fa fa-check"></i><b>8.3.2.2</b> GSEA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -319,12 +320,12 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1 unnumbered">
-<h1>References</h1>
+<div id="references" class="section level1 unnumbered hasAnchor">
+<h1>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div class="csl-entry">
-Allaire, J., Xie, Y., McPherson, J., Luraschi, J., Ushey, K., Atkins, A., Wickham, H., Cheng, J., Chang, W. and Iannone, R., <em>Rmarkdown: Dynamic Documents for r</em>, from <a href="https://CRAN.R-project.org/package=rmarkdown">https://CRAN.R-project.org/package=rmarkdown</a>, 2021.
+Allaire, J., Xie, Y., McPherson, J., Luraschi, J., Ushey, K., Atkins, A., Wickham, H., Cheng, J., Chang, W. and Iannone, R., <em>Rmarkdown: Dynamic Documents for r</em>, from <a href="https://CRAN.R-project.org/package=rmarkdown">https://CRAN.R-project.org/package=rmarkdown</a>, 2022.
 </div>
 <div class="csl-entry">
 Beausoleil, S. A., Villén, J., Gerber, S. A., Rush, J. and Gygi, S. P., A Probability-Based Approach for High-Throughput Protein Phosphorylation Analysis and Site Localization, <em>Nature Biotechnology</em>, vol. <strong>24</strong>, no. 10, pp. 1285–92, accessed February 12, 2022, from <a href="https://www.nature.com/articles/nbt1240">https://www.nature.com/articles/nbt1240</a>, October 2006. DOI: <a href="https://doi.org/10.1038/nbt1240">10.1038/nbt1240</a>
@@ -333,13 +334,10 @@ Beausoleil, S. A., Villén, J., Gerber, S. A., Rush, J. and Gygi, S. P., A Proba
 Berglund, M. and Wieser, M. E., Isotopic Compositions of the Elements 2009 (<span>IUPAC</span> <span>Technical</span> <span>Report</span>), <em>Pure and Applied Chemistry</em>, vol. <strong>83</strong>, no. 2, pp. 397–410, accessed February 12, 2022, from <a href="https://www.degruyter.com/document/doi/10.1351/PAC-REP-10-06-02/html">https://www.degruyter.com/document/doi/10.1351/PAC-REP-10-06-02/html</a>, January 2011. DOI: <a href="https://doi.org/10.1351/PAC-REP-10-06-02">10.1351/PAC-REP-10-06-02</a>
 </div>
 <div class="csl-entry">
-Carlson, M., <em>Org.hs.eg.db: Genome Wide Annotation for Human</em>, 2021.
+Carlson, M., <em>Org.hs.eg.db: Genome Wide Annotation for Human</em>, 2022.
 </div>
 <div class="csl-entry">
-Carlson, M., Liu, T.-Y., Lin, C., Falcon, S., Zhang, J. and MacDonald, J. W., <em>PFAM.db: A Set of Protein ID Mappings for PFAM</em>, 2021.
-</div>
-<div class="csl-entry">
-Durinck, S. and Huber, W., <em>biomaRt: Interface to BioMart Databases (i.e. Ensembl)</em>, 2021.
+Durinck, S. and Huber, W., <em>biomaRt: Interface to BioMart Databases (i.e. Ensembl)</em>, 2022.
 </div>
 <div class="csl-entry">
 Durinck, S., Moreau, Y., Kasprzyk, A., Davis, S., De Moor, B., Brazma, A. and Huber, W., BioMart and Bioconductor: A Powerful Link Between Biological Databases and Microarray Data Analysis, <em>Bioinformatics</em>, vol. <strong>21</strong>, pp. 3439–40, 2005.
@@ -348,22 +346,25 @@ Durinck, S., Moreau, Y., Kasprzyk, A., Davis, S., De Moor, B., Brazma, A. and Hu
 Durinck, S., Spellman, P. T., Birney, E. and Huber, W., Mapping Identifiers for the Integration of Genomic Datasets with the r/Bioconductor Package biomaRt, <em>Nature Protocols</em>, vol. <strong>4</strong>, pp. 1184–91, 2009.
 </div>
 <div class="csl-entry">
-Falcon, S. and Gentleman, R., How <span>To</span> <span>Use</span> <span>GOstats</span> <span>Testing</span> <span>Gene</span> <span>Lists</span> for <span>GO</span> <span>Term</span> <span>Association</span>, p. 10, accessed October 11, 2021, from <a href="https://bioconductor.org/packages/release/bioc/vignettes/GOstats/inst/doc/GOstatsHyperG.pdf">https://bioconductor.org/packages/release/bioc/vignettes/GOstats/inst/doc/GOstatsHyperG.pdf</a>, May 2021. DOI: <a href="https://doi.org/10.18129/B9.bioc.GOstats">10.18129/B9.bioc.GOstats</a>
+Falcon, S. and Gentleman, R., Using <span>GOstats</span> to Test Gene Lists for <span>GO</span> Term Association, <em>Bioinformatics</em>, vol. <strong>23</strong>, no. 2, pp. 257–58, accessed May 5, 2022, from <a href="https://academic.oup.com/bioinformatics/article-lookup/doi/10.1093/bioinformatics/btl567">https://academic.oup.com/bioinformatics/article-lookup/doi/10.1093/bioinformatics/btl567</a>, January 2007. DOI: <a href="https://doi.org/10.1093/bioinformatics/btl567">10.1093/bioinformatics/btl567</a>
 </div>
 <div class="csl-entry">
 Falcon, S. and Gentleman, R., Using <span>G</span><span>O</span>stats to Test Gene Lists for <span>G</span><span>O</span> Term Association., <em>Bioinformatics</em>, vol. <strong>23</strong>, no. 2, pp. 257–58, 2007.
 </div>
 <div class="csl-entry">
-Gentleman, R., <em>GOstats: Tools for Manipulating GO and Microarrays</em>, 2021.
+Gentleman, R., <em>GOstats: Tools for Manipulating GO and Microarrays</em>, 2022.
+</div>
+<div class="csl-entry">
+Gillespie, M., Jassal, B., Stephan, R., Milacic, M., Rothfels, K., Senff-Ribeiro, A., Griss, J., et al., The Reactome Pathway Knowledgebase 2022, <em>Nucleic Acids Research</em>, vol. <strong>50</strong>, no. D1, pp. D687–92, accessed May 2, 2022, from <a href="https://academic.oup.com/nar/article/50/D1/D687/6426058">https://academic.oup.com/nar/article/50/D1/D687/6426058</a>, January 2022. DOI: <a href="https://doi.org/10.1093/nar/gkab1028">10.1093/nar/gkab1028</a>
 </div>
 <div class="csl-entry">
 Goeman, J. J. and Mansmann, U., Multiple Testing on the Directed Acyclic Graph of Gene Ontology, <em>Bioinformatics</em>, vol. <strong>24</strong>, no. 4, pp. 537–44, accessed October 11, 2021, from <a href="https://doi.org/10.1093/bioinformatics/btm628">https://doi.org/10.1093/bioinformatics/btm628</a>, February 2008. DOI: <a href="https://doi.org/10.1093/bioinformatics/btm628">10.1093/bioinformatics/btm628</a>
 </div>
 <div class="csl-entry">
-Gu, Z., <em>Circlize: Circular Visualization</em>, from <a href="https://CRAN.R-project.org/package=circlize">https://CRAN.R-project.org/package=circlize</a>, 2021a.
+Gu, Z., <em>Circlize: Circular Visualization</em>, from <a href="https://CRAN.R-project.org/package=circlize">https://CRAN.R-project.org/package=circlize</a>, 2022a.
 </div>
 <div class="csl-entry">
-Gu, Z., <em>ComplexHeatmap: Make Complex Heatmaps</em>, 2021b.
+Gu, Z., <em>ComplexHeatmap: Make Complex Heatmaps</em>, 2022b.
 </div>
 <div class="csl-entry">
 Gu, Z., Eils, R. and Schlesner, M., Complex Heatmaps Reveal Patterns and Correlations in Multidimensional Genomic Data, <em>Bioinformatics</em>, 2016.
@@ -375,13 +376,19 @@ Gu, Z., Gu, L., Eils, R., Schlesner, M. and Brors, B., Circlize Implements and E
 Huang, D. W., Sherman, B. T. and Lempicki, R. A., Bioinformatics Enrichment Tools: Paths Toward the Comprehensive Functional Analysis of Large Gene Lists, <em>Nucleic Acids Research</em>, vol. <strong>37</strong>, no. 1, pp. 1–13, accessed September 7, 2021, from <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2615629/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2615629/</a>, January 2009. DOI: <a href="https://doi.org/10.1093/nar/gkn923">10.1093/nar/gkn923</a>
 </div>
 <div class="csl-entry">
-Korotkevich, G., Sukhov, V., Budin, N., Shpak, B., Artyomov, M. N., and Sergushichev, A., Fast Gene Set Enrichment Analysis, Bioinformatics, Jun. 2016.
+Korotkevich, G., Sukhov, V., Budin, N., Shpak, B., Artyomov, M. N., and Sergushichev, A., <a href="https://doi.org/10.1101/060012">Fast Gene Set Enrichment Analysis</a>, Bioinformatics, Jun. 2016.
+</div>
+<div class="csl-entry">
+Liberzon, A., Birger, C., Thorvaldsdóttir, H., Ghandi, M., Mesirov, J. P. and Tamayo, P., The <span>Molecular</span> <span>Signatures</span> <span>Database</span> <span>Hallmark</span> <span>Gene</span> <span>Set</span> <span>Collection</span>, <em>Cell Systems</em>, vol. <strong>1</strong>, no. 6, pp. 417–25, accessed May 6, 2022, from <a href="https://linkinghub.elsevier.com/retrieve/pii/S2405471215002185">https://linkinghub.elsevier.com/retrieve/pii/S2405471215002185</a>, December 2015. DOI: <a href="https://doi.org/10.1016/j.cels.2015.12.004">10.1016/j.cels.2015.12.004</a>
 </div>
 <div class="csl-entry">
 Maleki, F., Ovens, K., Hogan, D. J. and Kusalik, A. J., Gene <span>Set</span> <span>Analysis</span>: <span>Challenges</span>, <span>Opportunities</span>, and <span>Future</span> <span>Research</span>, <em>Frontiers in Genetics</em>, vol. <strong>11</strong>, p. 654, accessed September 7, 2021, from <a href="https://www.frontiersin.org/article/10.3389/fgene.2020.00654">https://www.frontiersin.org/article/10.3389/fgene.2020.00654</a>, 2020. DOI: <a href="https://doi.org/10.3389/fgene.2020.00654">10.3389/fgene.2020.00654</a>
 </div>
 <div class="csl-entry">
-Mootha, V. K., Lindgren, C. M., Eriksson, K.-F., Subramanian, A., Sihag, S., Lehar, J., Puigserver, P., et al., <span>PGC</span>-1α-Responsive Genes Involved in Oxidative Phosphorylation Are Coordinately Downregulated in Human Diabetes, <em>Nature Genetics</em>, vol. <strong>34</strong>, no. 3, pp. 267–73, accessed September 19, 2021, from <a href="https://www.nature.com/articles/ng1180">https://www.nature.com/articles/ng1180</a>, July 2003. DOI: <a href="https://doi.org/10.1038/ng1180">10.1038/ng1180</a>
+Mootha, Vamsi K., Daly, M. J., Patterson, N., Hirschhorn, J. N., Groop, L. C. and Altshuler, D., Reply to "<span>Statistical</span> Concerns about the <span>GSEA</span> Procedure", <em>Nature Genetics</em>, vol. <strong>36</strong>, no. 7, pp. 663–63, accessed April 4, 2022, from <a href="http://www.nature.com/articles/ng0704-663b">http://www.nature.com/articles/ng0704-663b</a>, July 2004. DOI: <a href="https://doi.org/10.1038/ng0704-663b">10.1038/ng0704-663b</a>
+</div>
+<div class="csl-entry">
+Mootha, Vamsi K., Lindgren, C. M., Eriksson, K.-F., Subramanian, A., Sihag, S., Lehar, J., Puigserver, P., et al., <span>PGC</span>-1α-Responsive Genes Involved in Oxidative Phosphorylation Are Coordinately Downregulated in Human Diabetes, <em>Nature Genetics</em>, vol. <strong>34</strong>, no. 3, pp. 267–73, accessed September 19, 2021, from <a href="https://www.nature.com/articles/ng1180">https://www.nature.com/articles/ng1180</a>, July 2003. DOI: <a href="https://doi.org/10.1038/ng1180">10.1038/ng1180</a>
 </div>
 <div class="csl-entry">
 Müller, K. and Wickham, H., <em>Tibble: Simple Data Frames</em>, from <a href="https://CRAN.R-project.org/package=tibble">https://CRAN.R-project.org/package=tibble</a>, 2021.
@@ -390,25 +397,28 @@ Müller, K. and Wickham, H., <em>Tibble: Simple Data Frames</em>, from <a href="
 Ooms, J., <em>Writexl: Export Data Frames to Excel Xlsx Format</em>, from <a href="https://CRAN.R-project.org/package=writexl">https://CRAN.R-project.org/package=writexl</a>, 2021.
 </div>
 <div class="csl-entry">
-Pagès, H., Aboyoun, P., Gentleman, R. and DebRoy, S., <em>Biostrings: Efficient Manipulation of Biological Strings</em>, from <a href="https://bioconductor.org/packages/Biostrings">https://bioconductor.org/packages/Biostrings</a>, 2021.
+Pagès, H., Aboyoun, P., Gentleman, R. and DebRoy, S., <em>Biostrings: Efficient Manipulation of Biological Strings</em>, from <a href="https://bioconductor.org/packages/Biostrings">https://bioconductor.org/packages/Biostrings</a>, 2022.
 </div>
 <div class="csl-entry">
 Pesquita, C., Semantic <span>Similarity</span> in the <span>Gene</span> <span>Ontology</span>, in <em>The <span>Gene</span> <span>Ontology</span> <span>Handbook</span></em>, C. Dessimoz and N. Škunca, Eds., New York, NY: Springer, accessed October 7, 2021, from <a href="https://doi.org/10.1007/978-1-4939-3743-1_12">https://doi.org/10.1007/978-1-4939-3743-1_12</a>, pp. 161–73, 2017.
 </div>
 <div class="csl-entry">
-Petyuk, V., <em>MSnID: Utilities for Exploration and Assessment of Confidence of LC-MSn Proteomics Identifications</em>, 2021a.
+Petyuk, V., <em>MSnID: Utilities for Exploration and Assessment of Confidence of LC-MSn Proteomics Identifications</em>, 2022a.
 </div>
 <div class="csl-entry">
-Petyuk, V., <em>MSnSet.utils: Miscellaneous Functions for Proteomics Data Analysis</em>, 2021b.
+Petyuk, V., <em>MSnSet.utils: Miscellaneous Functions for Proteomics Data Analysis</em>, 2021.
 </div>
 <div class="csl-entry">
-Petyuk, V., <em>PlexedPiperTestData: Example of MASIC and MS-GF+ Ouput</em>, 2021c.
+Petyuk, V., <em>PlexedPiperTestData: Example of MASIC and MS-GF+ Ouput</em>, 2022b.
 </div>
 <div class="csl-entry">
 Petyuk, V., Nestor, M. and Moon, J., <em>PNNL.DMS.utils: Tools for Accessing PNNL’s Data Management System</em>, 2022.
 </div>
 <div class="csl-entry">
-Relations in the <span>Gene</span> <span>Ontology</span>, <em>Gene Ontology Resource</em>, October 2021.
+Phipson, B. and Smyth, G. K., Permutation <span>P</span>-Values <span>Should</span> <span>Never</span> <span>Be</span> <span>Zero</span>: <span>Calculating</span> <span>Exact</span> <span>P</span>-Values <span>When</span> <span>Permutations</span> <span>Are</span> <span>Randomly</span> <span>Drawn</span>, <em>Statistical Applications in Genetics and Molecular Biology</em>, vol. <strong>9</strong>, no. 1, accessed April 4, 2022, from <a href="https://www.degruyter.com/document/doi/10.2202/1544-6115.1585/html">https://www.degruyter.com/document/doi/10.2202/1544-6115.1585/html</a>, January 2010. DOI: <a href="https://doi.org/10.2202/1544-6115.1585">10.2202/1544-6115.1585</a>
+</div>
+<div class="csl-entry">
+<a href="http://geneontology.org/docs/ontology-relations/">Relations in the <span>Gene</span> <span>Ontology</span></a>, <em>Gene Ontology Resource</em>, October 2021.
 </div>
 <div class="csl-entry">
 Ritchie, M. E., Phipson, B., Wu, D., Hu, Y., Law, C. W., Shi, W. and Smyth, G. K., <span class="nocase">limma</span> Powers Differential Expression Analyses for <span>RNA</span>-Sequencing and Microarray Studies, <em>Nucleic Acids Research</em>, vol. <strong>43</strong>, no. 7, p. e47, 2015. DOI: <a href="https://doi.org/10.1093/nar/gkv007">10.1093/nar/gkv007</a>
@@ -417,34 +427,43 @@ Ritchie, M. E., Phipson, B., Wu, D., Hu, Y., Law, C. W., Shi, W. and Smyth, G. K
 Smyth, G. K., Linear Models and Empirical Bayes Methods for Assessing Differential Expression in Microarray Experiments, <em>Statistical Applications in Genetics and Molecular Biology</em>, vol. <strong>3</strong>, p. Article3, 2004. DOI: <a href="https://doi.org/10.2202/1544-6115.1027">10.2202/1544-6115.1027</a>
 </div>
 <div class="csl-entry">
-Smyth, G., Hu, Y., Ritchie, M., Silver, J., Wettenhall, J., McCarthy, D., Wu, D., et al., <em>Limma: Linear Models for Microarray Data</em>, from <a href="http://bioinf.wehi.edu.au/limma">http://bioinf.wehi.edu.au/limma</a>, 2021.
+Smyth, G., Hu, Y., Ritchie, M., Silver, J., Wettenhall, J., McCarthy, D., Wu, D., et al., <em>Limma: Linear Models for Microarray Data</em>, from <a href="http://bioinf.wehi.edu.au/limma">http://bioinf.wehi.edu.au/limma</a>, 2022.
 </div>
 <div class="csl-entry">
 Subramanian, A., Tamayo, P., Mootha, V. K., Mukherjee, S., Ebert, B. L., Gillette, M. A., Paulovich, A., et al., Gene Set Enrichment Analysis: <span>A</span> Knowledge-Based Approach for Interpreting Genome-Wide Expression Profiles, <em>Proceedings of the National Academy of Sciences of the United States of America</em>, vol. <strong>102</strong>, no. 43, pp. 15545–50, accessed September 7, 2021, from <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1239896/">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1239896/</a>, October 2005. DOI: <a href="https://doi.org/10.1073/pnas.0506580102">10.1073/pnas.0506580102</a>
 </div>
 <div class="csl-entry">
-vladislav.petyuk@pnnl.gov, V. P., <em>PlexedPiper: Pipeline for Isobaric Quantification</em>, 2021.
+Väremo, L., Nielsen, J. and Nookaew, I., Enriching the Gene Set Analysis of Genome-Wide Data by Incorporating Directionality of Gene Expression and Combining Statistical Hypotheses and Methods, <em>Nucleic Acids Research</em>, vol. <strong>41</strong>, no. 8, pp. 4378–91, accessed April 4, 2022, from <a href="https://academic.oup.com/nar/article/41/8/4378/2408999">https://academic.oup.com/nar/article/41/8/4378/2408999</a>, April 2013. DOI: <a href="https://doi.org/10.1093/nar/gkt111">10.1093/nar/gkt111</a>
 </div>
 <div class="csl-entry">
-Wickham, H., <em>Downlit: Syntax Highlighting and Automatic Linking</em>, from <a href="https://CRAN.R-project.org/package=downlit">https://CRAN.R-project.org/package=downlit</a>, 2020.
+vladislav.petyuk@pnnl.gov, V. P., <em>PlexedPiper: Pipeline for Isobaric Quantification</em>, 2022.
+</div>
+<div class="csl-entry">
+Wickham, H., <em>Downlit: Syntax Highlighting and Automatic Linking</em>, from <a href="https://CRAN.R-project.org/package=downlit">https://CRAN.R-project.org/package=downlit</a>, 2021.
 </div>
 <div class="csl-entry">
 Wickham, H., <em>Ggplot2: Elegant Graphics for Data Analysis</em>, Springer-Verlag New York, from <a href="https://ggplot2.tidyverse.org">https://ggplot2.tidyverse.org</a>, 2016.
 </div>
 <div class="csl-entry">
-Wickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K., Wilke, C., Woo, K., Yutani, H. and Dunnington, D., <em>Ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics</em>, from <a href="https://CRAN.R-project.org/package=ggplot2">https://CRAN.R-project.org/package=ggplot2</a>, 2021.
+Wickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K., Wilke, C., Woo, K., Yutani, H. and Dunnington, D., <em>Ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics</em>, from <a href="https://CRAN.R-project.org/package=ggplot2">https://CRAN.R-project.org/package=ggplot2</a>, 2022.
 </div>
 <div class="csl-entry">
-Wickham, H., François, R., Henry, L. and Müller, K., <em>Dplyr: A Grammar of Data Manipulation</em>, from <a href="https://CRAN.R-project.org/package=dplyr">https://CRAN.R-project.org/package=dplyr</a>, 2021.
+Wickham, H., François, R., Henry, L. and Müller, K., <em>Dplyr: A Grammar of Data Manipulation</em>, from <a href="https://CRAN.R-project.org/package=dplyr">https://CRAN.R-project.org/package=dplyr</a>, 2022.
 </div>
 <div class="csl-entry">
-Wickham, H. and Seidel, D., <em>Scales: Scale Functions for Visualization</em>, from <a href="https://CRAN.R-project.org/package=scales">https://CRAN.R-project.org/package=scales</a>, 2020.
+Wickham, H. and Seidel, D., <em>Scales: Scale Functions for Visualization</em>, from <a href="https://CRAN.R-project.org/package=scales">https://CRAN.R-project.org/package=scales</a>, 2022.
 </div>
 <div class="csl-entry">
-Xie, Y., <em>Bookdown: Authoring Books and Technical Documents with r Markdown</em>, from <a href="https://CRAN.R-project.org/package=bookdown">https://CRAN.R-project.org/package=bookdown</a>, 2021a.
+Wu, T., Hu, E., Xu, S., Chen, M., Guo, P., Dai, Z., Feng, T., et al., clusterProfiler 4.0: A Universal Enrichment Tool for Interpreting Omics Data, <em>The Innovation</em>, vol. <strong>2</strong>, no. 3, p. 100141, 2021. DOI: <a href="https://doi.org/10.1016/j.xinn.2021.100141">10.1016/j.xinn.2021.100141</a>
+</div>
+<div class="csl-entry">
+Xiao, Y., Hsiao, T.-H., Suresh, U., Chen, H.-I. H., Wu, X., Wolf, S. E. and Chen, Y., A Novel Significance Score for Gene Selection and Ranking, <em>Bioinformatics (Oxford, England)</em>, vol. <strong>30</strong>, no. 6, pp. 801–7, March 2014. DOI: <a href="https://doi.org/10.1093/bioinformatics/btr671">10.1093/bioinformatics/btr671</a>
 </div>
 <div class="csl-entry">
 Xie, Y., <em>Bookdown: Authoring Books and Technical Documents with <span>R</span> Markdown</em>, Boca Raton, Florida: Chapman; Hall/CRC, from <a href="https://bookdown.org/yihui/bookdown">https://bookdown.org/yihui/bookdown</a>, 2016.
+</div>
+<div class="csl-entry">
+Xie, Y., <em>Bookdown: Authoring Books and Technical Documents with r Markdown</em>, from <a href="https://CRAN.R-project.org/package=bookdown">https://CRAN.R-project.org/package=bookdown</a>, 2022a.
 </div>
 <div class="csl-entry">
 Xie, Y., <em>Dynamic Documents with <span>R</span> and Knitr</em>, Boca Raton, Florida: Chapman; Hall/CRC, from <a href="https://yihui.org/knitr/">https://yihui.org/knitr/</a>, 2015.
@@ -453,7 +472,7 @@ Xie, Y., <em>Dynamic Documents with <span>R</span> and Knitr</em>, Boca Raton, F
 Xie, Y., Knitr: A Comprehensive Tool for Reproducible Research in <span>R</span>, in <em>Implementing Reproducible Computational Research</em>, V. Stodden F. Leisch and R. D. Peng, Eds., Chapman; Hall/CRC, from <a href="http://www.crcpress.com/product/isbn/9781466561595">http://www.crcpress.com/product/isbn/9781466561595</a>, 2014.
 </div>
 <div class="csl-entry">
-Xie, Y., <em>Knitr: A General-Purpose Package for Dynamic Report Generation in r</em>, from <a href="https://yihui.org/knitr/">https://yihui.org/knitr/</a>, 2021b.
+Xie, Y., <em>Knitr: A General-Purpose Package for Dynamic Report Generation in r</em>, from <a href="https://yihui.org/knitr/">https://yihui.org/knitr/</a>, 2022b.
 </div>
 <div class="csl-entry">
 Xie, Y., Allaire, J. J. and Grolemund, G., <em>R Markdown: The Definitive Guide</em>, Boca Raton, Florida: Chapman; Hall/CRC, from <a href="https://bookdown.org/yihui/rmarkdown">https://bookdown.org/yihui/rmarkdown</a>, 2018.
@@ -462,16 +481,16 @@ Xie, Y., Allaire, J. J. and Grolemund, G., <em>R Markdown: The Definitive Guide<
 Xie, Y., Dervieux, C. and Riederer, E., <em>R Markdown Cookbook</em>, Boca Raton, Florida: Chapman; Hall/CRC, from <a href="https://bookdown.org/yihui/rmarkdown-cookbook">https://bookdown.org/yihui/rmarkdown-cookbook</a>, 2020.
 </div>
 <div class="csl-entry">
-Yu, G., <em>clusterProfiler: Statistical Analysis and Visualization of Functional Profiles for Genes and Gene Clusters</em>, from <a href="https://yulab-smu.top/biomedical-knowledge-mining-book/">https://yulab-smu.top/biomedical-knowledge-mining-book/</a>, 2021a.
+Yu, G., <em>clusterProfiler: A Universal Enrichment Tool for Interpreting Omics Data</em>, 2022a.
 </div>
 <div class="csl-entry">
 Yu, G., Gene Ontology Semantic Similarity Analysis Using GOSemSim, <em>Methods in Molecular Biology</em>, vol. <strong>2117</strong>, pp. 207–15, 2020. DOI: <a href="https://doi.org/10.1007/978-1-0716-0301-7_11">10.1007/978-1-0716-0301-7_11</a>
 </div>
 <div class="csl-entry">
-Yu, G., <em>GOSemSim: GO-Terms Semantic Similarity Measures</em>, from <a href="https://yulab-smu.top/biomedical-knowledge-mining-book/">https://yulab-smu.top/biomedical-knowledge-mining-book/</a>, 2021b.
+Yu, G., <em>GOSemSim: GO-Terms Semantic Similarity Measures</em>, from <a href="https://yulab-smu.top/biomedical-knowledge-mining-book/">https://yulab-smu.top/biomedical-knowledge-mining-book/</a>, 2022b.
 </div>
 <div class="csl-entry">
-Yu, G., <em>ReactomePA: Reactome Pathway Analysis</em>, from <a href="https://yulab-smu.top/biomedical-knowledge-mining-book/">https://yulab-smu.top/biomedical-knowledge-mining-book/</a>, 2021c.
+Yu, G., <em>ReactomePA: Reactome Pathway Analysis</em>, from <a href="https://yulab-smu.top/biomedical-knowledge-mining-book/">https://yulab-smu.top/biomedical-knowledge-mining-book/</a>, 2022c.
 </div>
 <div class="csl-entry">
 Yu, G. and He, Q.-Y., ReactomePA: An r/Bioconductor Package for Reactome Pathway Analysis and Visualization, <em>Molecular BioSystems</em>, vol. <strong>12</strong>, no. 12, pp. 477–79, from <a href="http://pubs.rsc.org/en/Content/ArticleLanding/2015/MB/C5MB00663E">http://pubs.rsc.org/en/Content/ArticleLanding/2015/MB/C5MB00663E</a>, 2016. DOI: <a href="https://doi.org/10.1039/C5MB00663E">10.1039/C5MB00663E</a>
@@ -500,7 +519,6 @@ Zyla, J., Marczyk, M., Weiner, J. and Polanska, J., Ranking Metrics in Gene Set 
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -540,6 +558,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

@@ -6,11 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>7.5 Volcano Plots | Proteomics Data Analysis in R/Bioconductor</title>
   <meta name="description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.26 and GitBook 2.6.7" />
 
   <meta property="og:title" content="7.5 Volcano Plots | Proteomics Data Analysis in R/Bioconductor" />
   <meta property="og:type" content="book" />
-  
   
   <meta property="og:description" content="This is a tutorial for proteomics data analysis in R that utilizes packages developed by researchers at PNNL and from Bioconductor." />
   
@@ -24,7 +23,7 @@
 <meta name="author" content="Tyler Sagendorf" />
 
 
-<meta name="date" content="2022-02-11" />
+<meta name="date" content="2022-05-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +32,8 @@
   
 <link rel="prev" href="p-value-histograms.html"/>
 <link rel="next" href="upset-plots.html"/>
-<script src="libs/header-attrs-2.11/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,9 +49,9 @@
 
 
 
-
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
 <script src="libs/kePrint-0.0.1/kePrint.js"></script>
 <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
@@ -217,6 +216,7 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="4.1" data-path="conversion-with-biomart.html"><a href="conversion-with-biomart.html"><i class="fa fa-check"></i><b>4.1</b> Conversion with <code>biomaRt</code></a></li>
 <li class="chapter" data-level="4.2" data-path="conversion-with-annotationhub.html"><a href="conversion-with-annotationhub.html"><i class="fa fa-check"></i><b>4.2</b> Conversion with <code>AnnotationHub</code></a></li>
+<li class="chapter" data-level="4.3" data-path="conversion-using-fasta-headers.html"><a href="conversion-using-fasta-headers.html"><i class="fa fa-check"></i><b>4.3</b> Conversion Using FASTA Headers</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="exploratory-data-analysis.html"><a href="exploratory-data-analysis.html"><i class="fa fa-check"></i><b>5</b> Exploratory Data Analysis</a>
 <ul>
@@ -278,26 +278,27 @@ div.csl-indent {
 </ul></li>
 <li class="chapter" data-level="8.1.2" data-path="annotation-databases.html"><a href="annotation-databases.html#reactome"><i class="fa fa-check"></i><b>8.1.2</b> Reactome</a></li>
 <li class="chapter" data-level="8.1.3" data-path="annotation-databases.html"><a href="annotation-databases.html#kegg"><i class="fa fa-check"></i><b>8.1.3</b> KEGG</a></li>
-<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#pfam"><i class="fa fa-check"></i><b>8.1.4</b> Pfam</a></li>
+<li class="chapter" data-level="8.1.4" data-path="annotation-databases.html"><a href="annotation-databases.html#msigdb"><i class="fa fa-check"></i><b>8.1.4</b> MSigDB</a></li>
 </ul></li>
 <li class="chapter" data-level="8.2" data-path="ora.html"><a href="ora.html"><i class="fa fa-check"></i><b>8.2</b> Over-Representation Analysis</a>
 <ul>
-<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.1</b> Examples</a>
+<li class="chapter" data-level="8.2.1" data-path="ora.html"><a href="ora.html#ora-overview"><i class="fa fa-check"></i><b>8.2.1</b> Overview</a></li>
+<li class="chapter" data-level="8.2.2" data-path="ora.html"><a href="ora.html#ora-math"><i class="fa fa-check"></i><b>8.2.2</b> Mathematical Details</a></li>
+<li class="chapter" data-level="8.2.3" data-path="ora.html"><a href="ora.html#ora-drawbacks"><i class="fa fa-check"></i><b>8.2.3</b> Drawbacks</a></li>
+<li class="chapter" data-level="8.2.4" data-path="ora.html"><a href="ora.html#ora-examples"><i class="fa fa-check"></i><b>8.2.4</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.2.1.1" data-path="ora.html"><a href="ora.html#ora-go"><i class="fa fa-check"></i><b>8.2.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.2.1.2" data-path="ora.html"><a href="ora.html#ora-reactome"><i class="fa fa-check"></i><b>8.2.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.2.1.3" data-path="ora.html"><a href="ora.html#ora-pfam"><i class="fa fa-check"></i><b>8.2.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.2.1.4" data-path="ora.html"><a href="ora.html#ora-other"><i class="fa fa-check"></i><b>8.2.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.2.4.1" data-path="ora.html"><a href="ora.html#fgsea-ora"><i class="fa fa-check"></i><b>8.2.4.1</b> ORA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.2.4.2" data-path="ora.html"><a href="ora.html#ora-clustprof"><i class="fa fa-check"></i><b>8.2.4.2</b> ORA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
+<li class="chapter" data-level="8.2.4.3" data-path="ora.html"><a href="ora.html#ora-with-gostats"><i class="fa fa-check"></i><b>8.2.4.3</b> ORA with <code>GOstats</code></a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="gsea.html"><a href="gsea.html"><i class="fa fa-check"></i><b>8.3</b> Gene Set Enrichment Analysis</a>
 <ul>
-<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#examples"><i class="fa fa-check"></i><b>8.3.1</b> Examples</a>
+<li class="chapter" data-level="8.3.1" data-path="gsea.html"><a href="gsea.html#gsea-overview"><i class="fa fa-check"></i><b>8.3.1</b> Overview</a></li>
+<li class="chapter" data-level="8.3.2" data-path="gsea.html"><a href="gsea.html#gsea-examples"><i class="fa fa-check"></i><b>8.3.2</b> Examples</a>
 <ul>
-<li class="chapter" data-level="8.3.1.1" data-path="gsea.html"><a href="gsea.html#gene-ontology-1"><i class="fa fa-check"></i><b>8.3.1.1</b> Gene Ontology</a></li>
-<li class="chapter" data-level="8.3.1.2" data-path="gsea.html"><a href="gsea.html#reactome-1"><i class="fa fa-check"></i><b>8.3.1.2</b> Reactome</a></li>
-<li class="chapter" data-level="8.3.1.3" data-path="gsea.html"><a href="gsea.html#pfam-1"><i class="fa fa-check"></i><b>8.3.1.3</b> Pfam</a></li>
-<li class="chapter" data-level="8.3.1.4" data-path="gsea.html"><a href="gsea.html#gsea-other"><i class="fa fa-check"></i><b>8.3.1.4</b> Other Databases</a></li>
+<li class="chapter" data-level="8.3.2.1" data-path="gsea.html"><a href="gsea.html#gsea-with-fgsea"><i class="fa fa-check"></i><b>8.3.2.1</b> GSEA with <code>fgsea</code></a></li>
+<li class="chapter" data-level="8.3.2.2" data-path="gsea.html"><a href="gsea.html#gsea-with-clusterprofilerreactomepa"><i class="fa fa-check"></i><b>8.3.2.2</b> GSEA with <code>clusterProfiler</code>/<code>ReactomePA</code></a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -319,78 +320,78 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="volcano-plots" class="section level2" number="7.5">
-<h2><span class="header-section-number">7.5</span> Volcano Plots</h2>
+<div id="volcano-plots" class="section level2 hasAnchor" number="7.5">
+<h2><span class="header-section-number">7.5</span> Volcano Plots<a href="volcano-plots.html#volcano-plots" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Volcano plots are used to summarize the results of differential analysis. They are scatter plots that show log<span class="math inline">\(_2\)</span> fold-change vs statistical significance. The <code>plot_volcano</code> function in the MSnSet.utils package is used to create volcano plots. For ANOVA results, volcano plots will not be useful, since the p-values are based on two or more contrasts; the volcano plots would not display the characteristic “V” shape.</p>
-<div id="base-plot" class="section level3" number="7.5.1">
-<h3><span class="header-section-number">7.5.1</span> Base plot</h3>
+<div id="base-plot" class="section level3 hasAnchor" number="7.5.1">
+<h3><span class="header-section-number">7.5.1</span> Base plot<a href="volcano-plots.html#base-plot" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Unless the differential analysis results are from a one-sample t-test with a single comparison, volcano plots need to be made for each contrast, since there are multiple logFC values for each feature. For this example, we will make a volcano plot using the log<span class="math inline">\(_2\)</span> fold-changes from the <code>t_res1</code> table. We will set <code>sig_threshold</code> to 0.05, which will add a dashed horizontal line indicating the cutoff for statistical significance. Normally, the adjusted p-values would be used, though they are all extremely high in these results, so we will use the unadjusted p-values for the examples.</p>
-<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="volcano-plots.html#cb136-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_volcano</span>(<span class="at">df =</span> t_res1, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, </span>
-<span id="cb136-2"><a href="volcano-plots.html#cb136-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">pvals =</span> <span class="st">&quot;P.Value&quot;</span>, <span class="at">sig_threshold =</span> <span class="fl">0.05</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="volcano-plots.html#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_volcano</span>(<span class="at">df =</span> t_res1, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, </span>
+<span id="cb144-2"><a href="volcano-plots.html#cb144-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">pvals =</span> <span class="st">&quot;P.Value&quot;</span>, <span class="at">sig_threshold =</span> <span class="fl">0.05</span>)</span></code></pre></div>
 <p><img src="DEA_files/figure-html/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="label-top-features" class="section level3" number="7.5.2">
-<h3><span class="header-section-number">7.5.2</span> Label top features</h3>
+<div id="label-top-features" class="section level3 hasAnchor" number="7.5.2">
+<h3><span class="header-section-number">7.5.2</span> Label top features<a href="volcano-plots.html#label-top-features" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p><code>plot_volcano</code> has an argument called <code>label</code> to label the top most significant features. By default, the top 8 features will be labelled. The column used for labeling must be in the data frame supplied to the <code>df</code> argument. In this case, we will need to create it using the row names.</p>
-<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="volcano-plots.html#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create RefSeq column for labeling</span></span>
-<span id="cb137-2"><a href="volcano-plots.html#cb137-2" aria-hidden="true" tabindex="-1"></a>t_res1<span class="sc">$</span>RefSeq <span class="ot">&lt;-</span> <span class="fu">rownames</span>(t_res1)</span>
-<span id="cb137-3"><a href="volcano-plots.html#cb137-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb137-4"><a href="volcano-plots.html#cb137-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Volcano plot with feature labels</span></span>
-<span id="cb137-5"><a href="volcano-plots.html#cb137-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_volcano</span>(<span class="at">df =</span> t_res1, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, </span>
-<span id="cb137-6"><a href="volcano-plots.html#cb137-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">pvals =</span> <span class="st">&quot;P.Value&quot;</span>, <span class="at">sig_threshold =</span> <span class="fl">0.05</span>,</span>
-<span id="cb137-7"><a href="volcano-plots.html#cb137-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">label =</span> <span class="st">&quot;RefSeq&quot;</span>) <span class="co"># label by RefSeq - top 8</span></span></code></pre></div>
+<div class="sourceCode" id="cb145"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb145-1"><a href="volcano-plots.html#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create RefSeq column for labeling</span></span>
+<span id="cb145-2"><a href="volcano-plots.html#cb145-2" aria-hidden="true" tabindex="-1"></a>t_res1<span class="sc">$</span>RefSeq <span class="ot">&lt;-</span> <span class="fu">rownames</span>(t_res1)</span>
+<span id="cb145-3"><a href="volcano-plots.html#cb145-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb145-4"><a href="volcano-plots.html#cb145-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Volcano plot with feature labels</span></span>
+<span id="cb145-5"><a href="volcano-plots.html#cb145-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_volcano</span>(<span class="at">df =</span> t_res1, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, </span>
+<span id="cb145-6"><a href="volcano-plots.html#cb145-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">pvals =</span> <span class="st">&quot;P.Value&quot;</span>, <span class="at">sig_threshold =</span> <span class="fl">0.05</span>,</span>
+<span id="cb145-7"><a href="volcano-plots.html#cb145-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">label =</span> <span class="st">&quot;RefSeq&quot;</span>) <span class="co"># label by RefSeq - top 8</span></span></code></pre></div>
 <p><img src="DEA_files/figure-html/unnamed-chunk-16-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="label-specific-features-1" class="section level3" number="7.5.3">
-<h3><span class="header-section-number">7.5.3</span> Label specific features</h3>
+<div id="label-specific-features-1" class="section level3 hasAnchor" number="7.5.3">
+<h3><span class="header-section-number">7.5.3</span> Label specific features<a href="volcano-plots.html#label-specific-features-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>There may be cases when the features to label are not necessarily the top <span class="math inline">\(n\)</span>. To label specific features, we need a column where everything but the labels are <code>NA</code>, and we need to set <code>num_features</code> to the number of rows in the data so that nothing is discarded. For this example, we will select a random group of 5 features to label.</p>
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="volcano-plots.html#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 5 random RefSeqs to label</span></span>
-<span id="cb138-2"><a href="volcano-plots.html#cb138-2" aria-hidden="true" tabindex="-1"></a>random_features <span class="ot">&lt;-</span> <span class="fu">sample</span>(t_res1<span class="sc">$</span>RefSeq, <span class="at">size =</span> <span class="dv">5</span>)</span>
-<span id="cb138-3"><a href="volcano-plots.html#cb138-3" aria-hidden="true" tabindex="-1"></a><span class="co"># If RefSeq is not in the random group of 5, set it to NA</span></span>
-<span id="cb138-4"><a href="volcano-plots.html#cb138-4" aria-hidden="true" tabindex="-1"></a>t_res1 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(t_res1, </span>
-<span id="cb138-5"><a href="volcano-plots.html#cb138-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">custom_labels =</span> <span class="fu">ifelse</span>(RefSeq <span class="sc">%in%</span> random_features, </span>
-<span id="cb138-6"><a href="volcano-plots.html#cb138-6" aria-hidden="true" tabindex="-1"></a>                                        RefSeq, <span class="cn">NA</span>))</span>
-<span id="cb138-7"><a href="volcano-plots.html#cb138-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Volcano plot with feature labels</span></span>
-<span id="cb138-8"><a href="volcano-plots.html#cb138-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_volcano</span>(<span class="at">df =</span> t_res1, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, </span>
-<span id="cb138-9"><a href="volcano-plots.html#cb138-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">pvals =</span> <span class="st">&quot;P.Value&quot;</span>, <span class="at">sig_threshold =</span> <span class="fl">0.05</span>,</span>
-<span id="cb138-10"><a href="volcano-plots.html#cb138-10" aria-hidden="true" tabindex="-1"></a>             <span class="co"># Custom labels</span></span>
-<span id="cb138-11"><a href="volcano-plots.html#cb138-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">label =</span> <span class="st">&quot;custom_labels&quot;</span>, <span class="at">num_features =</span> <span class="fu">nrow</span>(t_res1))</span></code></pre></div>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="volcano-plots.html#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 5 random RefSeqs to label</span></span>
+<span id="cb146-2"><a href="volcano-plots.html#cb146-2" aria-hidden="true" tabindex="-1"></a>random_features <span class="ot">&lt;-</span> <span class="fu">sample</span>(t_res1<span class="sc">$</span>RefSeq, <span class="at">size =</span> <span class="dv">5</span>)</span>
+<span id="cb146-3"><a href="volcano-plots.html#cb146-3" aria-hidden="true" tabindex="-1"></a><span class="co"># If RefSeq is not in the random group of 5, set it to NA</span></span>
+<span id="cb146-4"><a href="volcano-plots.html#cb146-4" aria-hidden="true" tabindex="-1"></a>t_res1 <span class="ot">&lt;-</span> <span class="fu">mutate</span>(t_res1, </span>
+<span id="cb146-5"><a href="volcano-plots.html#cb146-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">custom_labels =</span> <span class="fu">ifelse</span>(RefSeq <span class="sc">%in%</span> random_features, </span>
+<span id="cb146-6"><a href="volcano-plots.html#cb146-6" aria-hidden="true" tabindex="-1"></a>                                        RefSeq, <span class="cn">NA</span>))</span>
+<span id="cb146-7"><a href="volcano-plots.html#cb146-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Volcano plot with feature labels</span></span>
+<span id="cb146-8"><a href="volcano-plots.html#cb146-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_volcano</span>(<span class="at">df =</span> t_res1, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, </span>
+<span id="cb146-9"><a href="volcano-plots.html#cb146-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">pvals =</span> <span class="st">&quot;P.Value&quot;</span>, <span class="at">sig_threshold =</span> <span class="fl">0.05</span>,</span>
+<span id="cb146-10"><a href="volcano-plots.html#cb146-10" aria-hidden="true" tabindex="-1"></a>             <span class="co"># Custom labels</span></span>
+<span id="cb146-11"><a href="volcano-plots.html#cb146-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">label =</span> <span class="st">&quot;custom_labels&quot;</span>, <span class="at">num_features =</span> <span class="fu">nrow</span>(t_res1))</span></code></pre></div>
 <p><img src="DEA_files/figure-html/unnamed-chunk-17-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="modify-point-colors" class="section level3" number="7.5.4">
-<h3><span class="header-section-number">7.5.4</span> Modify point colors</h3>
-<p>We will change the color of points to reflect their significance and the sign of the log<span class="math inline">\(_2\)</span> fold-change. We start by creating a point_color column with three groups: “down,” “up” and “NS” (not-significant). Then, the <code>point_args</code> argument is modified so that the color of points depends on these groups.</p>
-<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="volcano-plots.html#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine point colors based on significance and sign of the logFC</span></span>
-<span id="cb139-2"><a href="volcano-plots.html#cb139-2" aria-hidden="true" tabindex="-1"></a><span class="co"># We would normally use adj.P.Value instead of P.Value</span></span>
-<span id="cb139-3"><a href="volcano-plots.html#cb139-3" aria-hidden="true" tabindex="-1"></a>t_res1 <span class="ot">&lt;-</span> t_res1 <span class="sc">%&gt;%</span> </span>
-<span id="cb139-4"><a href="volcano-plots.html#cb139-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">point_color =</span> <span class="fu">case_when</span>(</span>
-<span id="cb139-5"><a href="volcano-plots.html#cb139-5" aria-hidden="true" tabindex="-1"></a>    P.Value <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> logFC <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">&quot;down&quot;</span>, <span class="co"># significantly down</span></span>
-<span id="cb139-6"><a href="volcano-plots.html#cb139-6" aria-hidden="true" tabindex="-1"></a>    P.Value <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> logFC <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">&quot;up&quot;</span>, <span class="co"># significantly up</span></span>
-<span id="cb139-7"><a href="volcano-plots.html#cb139-7" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">&quot;NS&quot;</span>) <span class="co"># not significant</span></span>
-<span id="cb139-8"><a href="volcano-plots.html#cb139-8" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb139-9"><a href="volcano-plots.html#cb139-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb139-10"><a href="volcano-plots.html#cb139-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Color points</span></span>
-<span id="cb139-11"><a href="volcano-plots.html#cb139-11" aria-hidden="true" tabindex="-1"></a>v1 <span class="ot">&lt;-</span> <span class="fu">plot_volcano</span>(<span class="at">df =</span> t_res1, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, </span>
-<span id="cb139-12"><a href="volcano-plots.html#cb139-12" aria-hidden="true" tabindex="-1"></a>                   <span class="at">pvals =</span> <span class="st">&quot;P.Value&quot;</span>, <span class="at">sig_threshold =</span> <span class="fl">0.05</span>, </span>
-<span id="cb139-13"><a href="volcano-plots.html#cb139-13" aria-hidden="true" tabindex="-1"></a>                   <span class="co"># Change point color</span></span>
-<span id="cb139-14"><a href="volcano-plots.html#cb139-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">point_args =</span> <span class="fu">list</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">color =</span> point_color)))</span>
-<span id="cb139-15"><a href="volcano-plots.html#cb139-15" aria-hidden="true" tabindex="-1"></a>v1</span></code></pre></div>
+<div id="modify-point-colors" class="section level3 hasAnchor" number="7.5.4">
+<h3><span class="header-section-number">7.5.4</span> Modify point colors<a href="volcano-plots.html#modify-point-colors" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We will change the color of points to reflect their significance and the sign of the log<span class="math inline">\(_2\)</span> fold-change. We start by creating a point_color column with three groups: “down”, “up” and “NS” (not-significant). Then, the <code>point_args</code> argument is modified so that the color of points depends on these groups.</p>
+<div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="volcano-plots.html#cb147-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine point colors based on significance and sign of the logFC</span></span>
+<span id="cb147-2"><a href="volcano-plots.html#cb147-2" aria-hidden="true" tabindex="-1"></a><span class="co"># We would normally use adj.P.Value instead of P.Value</span></span>
+<span id="cb147-3"><a href="volcano-plots.html#cb147-3" aria-hidden="true" tabindex="-1"></a>t_res1 <span class="ot">&lt;-</span> t_res1 <span class="sc">%&gt;%</span> </span>
+<span id="cb147-4"><a href="volcano-plots.html#cb147-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">point_color =</span> <span class="fu">case_when</span>(</span>
+<span id="cb147-5"><a href="volcano-plots.html#cb147-5" aria-hidden="true" tabindex="-1"></a>    P.Value <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> logFC <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">&quot;down&quot;</span>, <span class="co"># significantly down</span></span>
+<span id="cb147-6"><a href="volcano-plots.html#cb147-6" aria-hidden="true" tabindex="-1"></a>    P.Value <span class="sc">&lt;</span> <span class="fl">0.05</span> <span class="sc">&amp;</span> logFC <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">&quot;up&quot;</span>, <span class="co"># significantly up</span></span>
+<span id="cb147-7"><a href="volcano-plots.html#cb147-7" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">&quot;NS&quot;</span>) <span class="co"># not significant</span></span>
+<span id="cb147-8"><a href="volcano-plots.html#cb147-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb147-9"><a href="volcano-plots.html#cb147-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb147-10"><a href="volcano-plots.html#cb147-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Color points</span></span>
+<span id="cb147-11"><a href="volcano-plots.html#cb147-11" aria-hidden="true" tabindex="-1"></a>v1 <span class="ot">&lt;-</span> <span class="fu">plot_volcano</span>(<span class="at">df =</span> t_res1, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, </span>
+<span id="cb147-12"><a href="volcano-plots.html#cb147-12" aria-hidden="true" tabindex="-1"></a>                   <span class="at">pvals =</span> <span class="st">&quot;P.Value&quot;</span>, <span class="at">sig_threshold =</span> <span class="fl">0.05</span>, </span>
+<span id="cb147-13"><a href="volcano-plots.html#cb147-13" aria-hidden="true" tabindex="-1"></a>                   <span class="co"># Change point color</span></span>
+<span id="cb147-14"><a href="volcano-plots.html#cb147-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">point_args =</span> <span class="fu">list</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">color =</span> point_color)))</span>
+<span id="cb147-15"><a href="volcano-plots.html#cb147-15" aria-hidden="true" tabindex="-1"></a>v1</span></code></pre></div>
 <p><img src="DEA_files/figure-html/unnamed-chunk-18-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <p>We will change the default colors to be more informative. Points in the “down” group will be #5555ff (blue), points in the “up” group will be red3, and points in the “NS” group will be lightgrey. We will also remove the legend, since it doesn’t add much information.</p>
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="volcano-plots.html#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Change colors</span></span>
-<span id="cb140-2"><a href="volcano-plots.html#cb140-2" aria-hidden="true" tabindex="-1"></a>v1 <span class="sc">+</span> <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#5555ff&quot;</span>, <span class="st">&quot;red3&quot;</span>, <span class="st">&quot;lightgrey&quot;</span>), </span>
-<span id="cb140-3"><a href="volcano-plots.html#cb140-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">&quot;down&quot;</span>, <span class="st">&quot;up&quot;</span>, <span class="st">&quot;NS&quot;</span>)) <span class="sc">+</span></span>
-<span id="cb140-4"><a href="volcano-plots.html#cb140-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="co"># do not show legend</span></span></code></pre></div>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="volcano-plots.html#cb148-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Change colors</span></span>
+<span id="cb148-2"><a href="volcano-plots.html#cb148-2" aria-hidden="true" tabindex="-1"></a>v1 <span class="sc">+</span> <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#5555ff&quot;</span>, <span class="st">&quot;red3&quot;</span>, <span class="st">&quot;lightgrey&quot;</span>), </span>
+<span id="cb148-3"><a href="volcano-plots.html#cb148-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">breaks =</span> <span class="fu">c</span>(<span class="st">&quot;down&quot;</span>, <span class="st">&quot;up&quot;</span>, <span class="st">&quot;NS&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb148-4"><a href="volcano-plots.html#cb148-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="co"># do not show legend</span></span></code></pre></div>
 <p><img src="DEA_files/figure-html/unnamed-chunk-19-1.png" width="80%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="multiple-volcano-plots" class="section level3" number="7.5.5">
-<h3><span class="header-section-number">7.5.5</span> Multiple volcano plots</h3>
+<div id="multiple-volcano-plots" class="section level3 hasAnchor" number="7.5.5">
+<h3><span class="header-section-number">7.5.5</span> Multiple volcano plots<a href="volcano-plots.html#multiple-volcano-plots" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>For results generated by <code>limma_contrasts</code>, we should make separate plots for each comparison with <code>facet_wrap</code> or <code>facet_grid</code>.</p>
-<div class="sourceCode" id="cb141"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb141-1"><a href="volcano-plots.html#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Basic volcano plot</span></span>
-<span id="cb141-2"><a href="volcano-plots.html#cb141-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_volcano</span>(<span class="at">df =</span> t_res2, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, <span class="at">pvals =</span> <span class="st">&quot;adj.P.Val&quot;</span>, </span>
-<span id="cb141-3"><a href="volcano-plots.html#cb141-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">sig_threshold =</span> <span class="fl">0.05</span>) <span class="sc">+</span> </span>
-<span id="cb141-4"><a href="volcano-plots.html#cb141-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(contrast)) <span class="sc">+</span> <span class="co"># plot for each contrast</span></span>
-<span id="cb141-5"><a href="volcano-plots.html#cb141-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Volcano Plots of limma_contrasts Results&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb149-1"><a href="volcano-plots.html#cb149-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Basic volcano plot</span></span>
+<span id="cb149-2"><a href="volcano-plots.html#cb149-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_volcano</span>(<span class="at">df =</span> t_res2, <span class="at">logFC =</span> <span class="st">&quot;logFC&quot;</span>, <span class="at">pvals =</span> <span class="st">&quot;adj.P.Val&quot;</span>, </span>
+<span id="cb149-3"><a href="volcano-plots.html#cb149-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">sig_threshold =</span> <span class="fl">0.05</span>) <span class="sc">+</span> </span>
+<span id="cb149-4"><a href="volcano-plots.html#cb149-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(contrast)) <span class="sc">+</span> <span class="co"># plot for each contrast</span></span>
+<span id="cb149-5"><a href="volcano-plots.html#cb149-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Volcano Plots of limma_contrasts Results&quot;</span>)</span></code></pre></div>
 <p><img src="DEA_files/figure-html/volcano-plot-contrasts-1.png" width="80%" style="display: block; margin: auto;" /></p>
 <!---
 ## UpSet Plots
@@ -409,7 +410,6 @@ div.csl-indent {
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -449,6 +449,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }

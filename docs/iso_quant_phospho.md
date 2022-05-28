@@ -137,40 +137,21 @@ show(msnid)
 
 ### MS/MS ID Filter: Protein Level
 
-
-```r
-# Get path to FASTA file
-path_to_FASTA <- path_to_FASTA_used_by_DMS(data_package_num)
-
-# Compute number of peptides per 1000 amino acids
-msnid <- compute_num_peptides_per_1000aa(msnid, path_to_FASTA)
-
-# 1% FDR filter at the protein level
-msnid <- filter_msgf_data(msnid, level = "accession", fdr.max = 0.01)
-show(msnid)
-```
-
-```
-## MSnID object
-## Working directory: "."
-## #Spectrum Files:  23 
-## #PSMs: 74590 at 0.13 % FDR
-## #peptides: 21300 at 0.28 % FDR
-## #accessions: 9887 at 0.98 % FDR
-```
+This step is unnecessary for PTM data, since the cross-tab is not created at the protein level, so it is skipped.
 
 ### Inference of Parsimonious Protein Set
 
-If a protein was detected in the global proteomics results, we may be more confident that it will appear in the PTM results. We can perform prioritized inference of the protein set to ensure that, if a protein is reported in the global cross-tab, and it is present in the PTM MSnID after filtering, it will be included in the final PTM MSnID. We set the proteins from the global cross-tab as the prior.
+If a protein was detected in the global proteomics results, we may be more confident that it will appear in the PTM results. We can perform prioritized inference of the protein set to ensure that, if a protein is reported in the global cross-tab, and it is present in the PTM MSnID after filtering, it will be included in the final PTM MSnID. We set the proteins from the global cross-tab as the prior. By default, peptides are allowed to match multiple proteins in the prior. If duplicates are not allowed, we can set the `refine_prior` argument to `TRUE`.
 
 
 ```r
 # Proteins from global proteomics cross-tab
-load("data/3442_global_proteins.RData")
+load("./data/3442_global_proteins.RData")
 
 # Prioritized inference of parsimonious protein set
 msnid <- infer_parsimonious_accessions(msnid, unique_only = FALSE,
-                                       prior = global_proteins)
+                                       prior = global_proteins, 
+                                       refine_prior = FALSE)
 show(msnid)
 ```
 
@@ -178,17 +159,10 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  23 
-## #PSMs: 74590 at 0.13 % FDR
-## #peptides: 21300 at 0.28 % FDR
-## #accessions: 3021 at 1.6 % FDR
+## #PSMs: 77738 at 0.51 % FDR
+## #peptides: 23117 at 0.99 % FDR
+## #accessions: 4419 at 4.8 % FDR
 ```
-
-Figure \@ref(fig:prior-inference) shows the steps used to perform prioritized inference. If `unique_only = TRUE`, any prior will be ignored. See Figure \@ref(fig:parsimony) for parsimonious inference without a prior.
-
-<div class="figure" style="text-align: center">
-<img src="images/prioritized-inference.PNG" alt="Visual explanation of prioritized inference." width="75%" />
-<p class="caption">(\#fig:prior-inference)Visual explanation of prioritized inference.</p>
-</div>
 
 </br>
 
@@ -199,6 +173,7 @@ Figure \@ref(fig:prior-inference) shows the steps used to perform prioritized in
 
 ```r
 # Create AAStringSet
+path_to_FASTA <- path_to_FASTA_used_by_DMS(data_package_num)
 fst <- readAAStringSet(path_to_FASTA)
 # Remove contaminants
 fst <- fst[!grepl("Contaminant", names(fst)), ]
@@ -219,7 +194,7 @@ head(names(fst))
 ```r
 # Modify names to match accessions(msnid)
 # Remove any space followed by any number of characters
-names(fst) <- sub(" .*$", "", names(fst))
+names(fst) <- sub(" .*", "", names(fst))
 # First 6 names
 head(names(fst))
 ```
@@ -282,7 +257,6 @@ Table \@ref(tab:phospho-msnid-table) shows the first 6 rows of the processed MS-
    <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> maxAScore </th>
    <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> msmsScore </th>
    <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> absParentMassErrorPPM </th>
-   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> peptides_per_1000aa </th>
    <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> First_AA </th>
    <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Last_AA </th>
    <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> First_AA_First </th>
@@ -332,7 +306,6 @@ Table \@ref(tab:phospho-msnid-table) shows the first 6 rows of the processed MS-
    <td style="text-align:right;"> 0.000 </td>
    <td style="text-align:right;"> Inf </td>
    <td style="text-align:right;"> 1.057 </td>
-   <td style="text-align:right;"> 7.722 </td>
    <td style="text-align:left;"> 5 </td>
    <td style="text-align:left;"> 28 </td>
    <td style="text-align:right;"> 5 </td>
@@ -380,7 +353,6 @@ Table \@ref(tab:phospho-msnid-table) shows the first 6 rows of the processed MS-
    <td style="text-align:right;"> 52.349 </td>
    <td style="text-align:right;"> Inf </td>
    <td style="text-align:right;"> 1.625 </td>
-   <td style="text-align:right;"> 5.305 </td>
    <td style="text-align:left;"> 238 </td>
    <td style="text-align:left;"> 262 </td>
    <td style="text-align:right;"> 238 </td>
@@ -428,7 +400,6 @@ Table \@ref(tab:phospho-msnid-table) shows the first 6 rows of the processed MS-
    <td style="text-align:right;"> 17.480 </td>
    <td style="text-align:right;"> Inf </td>
    <td style="text-align:right;"> 2.472 </td>
-   <td style="text-align:right;"> 5.305 </td>
    <td style="text-align:left;"> 238 </td>
    <td style="text-align:left;"> 262 </td>
    <td style="text-align:right;"> 238 </td>
@@ -476,7 +447,6 @@ Table \@ref(tab:phospho-msnid-table) shows the first 6 rows of the processed MS-
    <td style="text-align:right;"> 52.349 </td>
    <td style="text-align:right;"> Inf </td>
    <td style="text-align:right;"> 5.277 </td>
-   <td style="text-align:right;"> 5.305 </td>
    <td style="text-align:left;"> 238 </td>
    <td style="text-align:left;"> 262 </td>
    <td style="text-align:right;"> 238 </td>
@@ -524,7 +494,6 @@ Table \@ref(tab:phospho-msnid-table) shows the first 6 rows of the processed MS-
    <td style="text-align:right;"> 26.295 </td>
    <td style="text-align:right;"> Inf </td>
    <td style="text-align:right;"> 0.780 </td>
-   <td style="text-align:right;"> 5.305 </td>
    <td style="text-align:left;"> 238 </td>
    <td style="text-align:left;"> 262 </td>
    <td style="text-align:right;"> 238 </td>
@@ -572,7 +541,6 @@ Table \@ref(tab:phospho-msnid-table) shows the first 6 rows of the processed MS-
    <td style="text-align:right;"> 6.213 </td>
    <td style="text-align:right;"> Inf </td>
    <td style="text-align:right;"> 1.902 </td>
-   <td style="text-align:right;"> 10.526 </td>
    <td style="text-align:left;"> 238 </td>
    <td style="text-align:left;"> 265 </td>
    <td style="text-align:right;"> 238 </td>
@@ -604,9 +572,9 @@ show(msnid)
 ## MSnID object
 ## Working directory: "."
 ## #Spectrum Files:  23 
-## #PSMs: 74490 at 0 % FDR
-## #peptides: 21240 at 0 % FDR
-## #accessions: 2972 at 0 % FDR
+## #PSMs: 77347 at 0 % FDR
+## #peptides: 22890 at 0 % FDR
+## #accessions: 4216 at 0 % FDR
 ```
 
 ## Prepare Reporter Ion Intensities
@@ -669,7 +637,7 @@ crosstab <- create_crosstab(msnid = msnid,
 ```
 
 <div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:90%; "><table class="table table-hover table-condensed" style="font-size: 12px; margin-left: auto; margin-right: auto;">
-<caption style="font-size: initial !important;">(\#tab:unnamed-chunk-21)<left>First 6 rows of the phospho quantitative cross-tab.</left>
+<caption style="font-size: initial !important;">(\#tab:unnamed-chunk-20)<left>First 6 rows of the phospho quantitative cross-tab.</left>
 </caption>
  <thead>
   <tr>
@@ -845,7 +813,7 @@ m
 
 ```
 ## MSnSet (storageMode: lockedEnvironment)
-## assayData: 24412 features, 18 samples 
+## assayData: 26047 features, 18 samples 
 ##   element names: exprs 
 ## protocolData: none
 ## phenoData
@@ -856,7 +824,7 @@ m
 ## experimentData: use 'experimentData(object)'
 ## Annotation:  
 ## - - - Processing information - - -
-##  MSnbase version: 2.18.0
+##  MSnbase version: 2.22.0
 ```
 
 

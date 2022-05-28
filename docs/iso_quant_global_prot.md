@@ -73,7 +73,7 @@ Carbon has two stable isotopes: $^{12}\text{C}$ and $^{13}\text{C}$, with natura
 <p class="caption">(\#fig:MS1-peak)MS1 spectra with peak at non-monoisotopic precursor ion.</p>
 </div>
 
-In Figure \@ref(fig:MS1-peak), the monoisotopic ion (m/z of 1427.29) is not the most abundant, so it is not selected as the precursor. Instead, the ion with a $^{13}\text{C}$ in place of a $^{12}\text{C}$ is selected for fragmentation. We calculate the mass difference between these two ions as the difference between the mass-to-charge ratios multiplied by the ion charge. In this case, the mass difference is 1 Dalton, or about the difference between $^{13}\text{C}$ and $^{12}\text{C}$. (More accurately, the difference between these isotopes is 1.0033548378 Da.) While MS-GF+ is still capable of correctly identifying these peptides, the downstream calculations of mass measurement error need to be fixed because they are used for filtering later on (Section \@ref(global-peptide-filter)). The `correct_peak_selection` function corrects these mass measurement errors, and Figure \@ref(fig:mass-to-charge-diff) shows the distribution of the absolute mass measurement errors (in PPM) before and after correction.
+In Figure \@ref(fig:MS1-peak), the monoisotopic ion (m/z of 1427.29) is not the most abundant, so it is not selected as the precursor. Instead, the ion with a $^{13}\text{C}$ in place of a $^{12}\text{C}$ is selected for fragmentation. We calculate the mass difference between these two ions as the difference between the mass-to-charge ratios multiplied by the ion charge. In this case, the mass difference is 1 Dalton, or about the difference between $^{13}\text{C}$ and $^{12}\text{C}$. (More accurately, the difference between these isotopes is 1.0033548378 Da.) While MS-GF+ is still capable of correctly identifying these peptides, the downstream calculations of mass measurement error need to be fixed because they are used for filtering later on (Section \@ref(global-peptide-filter)). The `correct_peak_selection` function corrects these mass measurement errors, and Figure \@ref(fig:mass-to-charge-diff) shows the distribution of the absolute mass measurement errors (in PPM) before and after correction. This step influences the results of the peptide-level FDR filter.
 
 
 
@@ -91,7 +91,7 @@ msnid <- correct_peak_selection(msnid)
 
 ### Remove Contaminants 
 
-Now, we will remove contaminants such as the trypsin that was used for protein digestion. We can see which contaminants will be removed with `accessions(msnid)[grepl("Contaminant", accessions(msnid))]`. To remove contaminants, we use `apply_filter` with an appropriate string that tells the function what rows to keep. In this case, we keep rows where the accession does not contain "Contaminant". We will use `show` to see how the counts change.
+Now, we will remove contaminants such as the trypsin that was used for protein digestion. We can see which contaminants will be removed with `accessions(msnid)[grepl("Contaminant", accessions(msnid))]`. To remove contaminants, we use `apply_filter` with an appropriate string that tells the function what rows to keep. In this case, we keep rows where the accession does not contain "Contaminant". We will use `show` to see how the counts change. This step is performed toward the beginning so that contaminants are not selected over other proteins in the filtering or parsimonious inference steps—only to be removed later on.
 
 
 ```r
@@ -152,6 +152,8 @@ We can see that filtering drastically reduces the number of PSMs, and the empiri
 
 ### MS/MS ID Filter: Protein Level 
 
+(This step can be skipped if the final cross-tab will be at the peptide level.)
+
 Now, we need to filter proteins so that the FDR is at most 1%. For each protein, we divide the number of associated peptides by its length and multiply this value by 1000. This new `peptides_per_1000aa` column is used as the filter criteria (Figure \@ref(fig:plot-num-pep)).
 
 We will need the lengths of each protein, which can be obtained from the FASTA (pronounced FAST-AYE) file that contains the protein sequences used in the database search. The first three entries of the FASTA file are shown in Figure \@ref(fig:fasta-ex).
@@ -210,18 +212,11 @@ show(msnid)
 
 ### Inference of Parsimonious Protein Set 
 
-The situation when a certain peptide sequence matches multiple proteins adds complication to the downstream quantitative analysis, as it is not clear which protein this peptide is originating from. There are common ways for dealing with this. One is to simply retain uniquely matching peptides and discard shared peptides (`unique_only = TRUE`). Alternatively, assign the shared peptides to the proteins with the larger number of uniquely mapping peptides (`unique_only = FALSE`). If there is a choice between multiple proteins with equal numbers of uniquely mapping peptides, the shared peptides are assigned to the first protein according to alphanumeric order (Figure \@ref(fig:parsimony)). 
+The situation when a certain peptide sequence matches multiple proteins adds complication to the downstream quantitative analysis, as it is not clear which protein this peptide is originating from. There are common ways for dealing with this. One is to simply retain uniquely-matching peptides and discard shared peptides (`unique_only = TRUE`). Alternatively, assign the shared peptides to the proteins with the most peptides (`unique_only = FALSE`). If there is a choice between multiple proteins with equal numbers of peptides, the shared peptides are assigned to the first protein according to alphanumeric order. It is an implementation of the greedy set cover algorithm. See `?MSnID::infer_parsimonious_accessions` for more details.
 
-<!---
-This step could be done prior to filtering at the accession level, but if peptides are assigned to a low-confidence protein, and that protein is removed during filtering, those peptides will be lost. Instead, it is better to filter to the set of confidently-identified proteins and then determine the parsimonious set.
---->
+There is no single best approach for handling duplicate peptides. Some choose to not do anything and allow peptides to map to multiple proteins. With parsimonious inference, we make the assumption that proteins with more mapped peptides are more confidently identified, so we should assign shared peptides to them; however, this penalizes smaller proteins with fewer peptides. Think carefully before deciding which approach to use.
 
-<div class="figure" style="text-align: center">
-<img src="images/parsimonious-protein-set-inference.PNG" alt="Visual explanation of the inference of the parsimonious protein set." width="75%" />
-<p class="caption">(\#fig:parsimony)Visual explanation of the inference of the parsimonious protein set.</p>
-</div>
-
-</br>
+**Note:** This step could be done prior to filtering at the accession level, but if peptides are assigned to a low-confidence protein, and that protein is removed during filtering, those peptides will be lost. Instead, it is better to filter to the set of confidently-identified proteins and then determine the parsimonious set.
 
 
 ```r
@@ -519,7 +514,7 @@ After processing, we are left with 450,928 PSMs, 90,411 peptides, and 5,201 prot
 
 ### Read MASIC Output 
 
-MASIC is a tool for extracting ion intensities. With proper parameter settings, it can be used for extracting TMT (or iTRAQ) reporter ion intensities. In addition, it reports a number of other helpful metrics. Notably, the interference score at the precursor ion level and the signal-to-noise ratio (S/N) at the reporter ion level (computed by Thermo software). The interference score reflects the proportion of the ion population that was isolated for fragmentation that is due to the targeted ion. In other words, `1 - InterferenceScore` is due to co-isolated species that have similar elution time and precursor ion m/z. The first step in the preparation of the reporter ion intensity data is to read the MASIC results. By default, the interference score is not included, so we need to set that argument to `TRUE` in order to filter the results.
+MASIC is a tool for extracting ion intensities. With proper parameter settings, it can be used for extracting TMT (or iTRAQ) reporter ion intensities. In addition, it reports a number of other helpful metrics. Notably, the interference score at the precursor ion level and the signal-to-noise ratio (S/N) at the reporter ion level (computed by Thermo software). The interference score reflects the proportion of the ion population that was isolated for fragmentation that is due to the targeted ion. In other words, `1 - InterferenceScore` is due to co-isolated species that have similar elution time and precursor ion m/z. The first step in the preparation of the reporter ion intensity data is to read the MASIC results. By default, the interference score is not included, so we need to set that argument to `TRUE` in order to filter the results after.
 
 Similar to the MS-GF+ results, we can read the MASIC results from a local folder with `PlexedPiper::read_masic_data` or from PNNL's DMS with `PNNL.DMS.utils::read_masic_data_from_DMS`.
 
@@ -733,7 +728,7 @@ Table \@ref(tab:global-masic-unfiltered) shows the first 6 rows of the unfiltere
 
 ### Filter MASIC Data 
 
-The only other step in reporter ion intensity data preparation is to filter the results. Currently, we recommend keeping entries where at least 50% of the ion population is due to the targeted ion (interference score $\geq$ 0.5) and not filtering by S/N.
+The only other step in reporter ion intensity data preparation is to filter the results. Currently, we recommend keeping entries where at least 50% of the ion population is due to the targeted ion (interference score $\geq$ 0.5) and not filtering by S/N. To only reformat the data and not filter it, set both thresholds to 0.
 
 
 ```r
@@ -864,14 +859,14 @@ save(msnid, masic_data, file = "data/3442_processed_msnid_and_masic.RData",
 
 ## Create Study Design Tables {#fetch-study-design-tables}
 
-To convert from PSMs and reporter ion intensities to meaningful quantitative data, it is necessary to specify the study design. The entire study design is captured by three tables - fractions, samples, references. With newly processed data, these typically do not exist, and must be created. The next sections show how to create these tables in R. 
+To convert from PSMs and reporter ion intensities to meaningful quantitative data, it is necessary to specify the study design. The entire study design is captured by three tables: fractions, samples, and references. With newly processed data, these typically do not exist, and must be created. The next sections show how to create these tables in R.
 
 **NOTE:** simple study designs can be created in Excel and read in with `readxl::read_excel`, though R is the better choice when dealing with many samples.
 
 
 ### Fractions 
 
-The fractions table consists of two columns: `Dataset` and `PlexID`. The `Dataset` column contains all of the unique datasets that are common to `msnid` and `masic_data`. Sometimes, entire datasets may be removed during the FDR filtering steps, so that is why we use the unique intersection of datasets. The `PlexID` column contains the plex ID associated with each dataset, and is typically a letter followed by a number ("S1", "S2", etc.). A plex is a set of samples that are processed together (under the same conditions). We can extract the plex ID from the datasets. In this case, the plex ID always comes after "_W_", so we can use a regular expression (use `help(topic = regex, package = base)` to learn more). The regular expression below says to capture an "S" followed by a single digit that appears after "\_W\_" and before an underscore. The plex ID is always included in the dataset names, but the format of the names will be different.
+The fractions table consists of two columns: `Dataset` and `PlexID`. The `Dataset` column contains all of the unique datasets that are common to `msnid` and `masic_data`. Sometimes, entire datasets may be removed during the FDR filtering steps, so that is why we use the unique intersection of datasets. The `PlexID` column contains the plex ID associated with each dataset, and is typically a letter followed by a number ("S1", "S2", etc.). A plex is a set of samples that are processed together (under the same conditions). Usually, we can extract the plex ID from the datasets. In this case, the plex ID always comes after "\_W\_", so we can use a regular expression (use `help(topic = regex, package = base)` to learn more). The regular expression below says to capture an "S" followed by a single digit that appears after "\_W\_" and before an underscore. The plex ID is always included in the dataset names, but the format of the names will be different.
 
 
 ```r
@@ -1095,7 +1090,7 @@ The samples table contains columns `PlexID`, `QuantBlock`, `ReporterName`, `Repo
 - `ReporterName` is the reporter ion name ("126", "127N", "127C", etc.). 
 - `ReporterAlias` is used for defining the reference channel(s).
 - `MeasurementName` determines the column names for the final cross-tab, and must be unique and begin with a letter. If any values of `ReporterAlias` are "ref", the corresponding `MeasurementName` should be `NA`. `NA` measurement names will not appear as columns in the final cross-tab.
-- `QuantBlock` defines the sub-plex. In a typical TMT experiment, `QuantBlock` is always 1. In case of 5 pairwise comparisons within TMT10, there will be 5 QuantBlocks (1-5) with a reference for each `QuantBlock`.
+- `QuantBlock` defines the sub-plex. In a typical TMT experiment, `QuantBlock` is always 1. In case of 5 pairwise comparisons within TMT10, there will be 5 QuantBlocks (1-5) potentially with a reference for each `QuantBlock`.
 
 For this experiment, TMT10 was used as the basis for two plexes, and channel 131 is the reference, so we set `ReporterAlias` to "ref" and `MeasurementName` to `NA` when `ReporterName` is `"131"`. This will divide the intensities of each channel by their associated reference and make the reference channel absent from the quantitative cross-tab. In cases where reporter ion intensities are not normalized by a reference channel (reference = 1) or they are normalized by the average of select channels, do not set any `ReporterAlias` to "ref" or `MeasurementName` to `NA`.
 
@@ -1115,8 +1110,7 @@ samples <- reporter_converter$tmt10 %>%
   # and MeasurementName is NA so it is not included in the cross-tab.
   mutate(ReporterAlias = paste(PlexID, 1:n(), sep = "_"),
          ReporterAlias = ifelse(ReporterName == "131", "ref", ReporterAlias),
-         MeasurementName = ifelse(ReporterAlias == "ref", 
-                                  NA, ReporterAlias)) %>% 
+         MeasurementName = ifelse(ReporterName == "131", NA, ReporterAlias)) %>% 
   ungroup() # stop grouping by PlexID
 ```
 
@@ -1283,7 +1277,7 @@ Table \@ref(tab:samples-table) shows the `samples` table.
 
 ### References {#global-references}
 
-The reference can be a certain channel, average of multiple channels, or 1 (no reference). The general form is an expression with `ReporterAlias` names as variables. It is evaluated for each `PlexID`/`QuantBlock` combination and applied to divide reporter ion intensities within corresponding `PlexID`/`QuantBlock`. A reference is used to convert raw intensities to relative intensities.
+The reference can be a certain channel, the geometric average of channels, 1 (no reference), or an R expression that evaluates to a vector. The general form is an expression with `ReporterAlias` names as variables. It is evaluated for each `PlexID`/`QuantBlock` combination and applied to divide reporter ion intensities within corresponding `PlexID`/`QuantBlock`. A reference is used to convert raw intensities to relative intensities.
 
 
 ```r
@@ -1322,7 +1316,7 @@ references <- samples %>%
 
 Table \@ref(tab:references-table) shows the `references` table. The code to use the geometric average instead of a single channel as the reference is shown below. The geometric average is the product of the reporter ion channels to the power of (1/number of channels). For each `PlexID` group, collapse the vector of reporter ion names with `*`, surround them in parentheses, and raise to the power of (1/number of channels).
 
-**Note:** if using the geometric average or no reference, make sure the samples table is correct. There should not be any `ReporterAlias` that are "ref" or `MeasurementName` that are `NA`.
+**Note:** If the reference is not a particular channel that will be excluded from the final results, there should not be any `ReporterAlias` that are "ref" or `MeasurementName` that are `NA`.
 
 
 ```r
@@ -1342,6 +1336,8 @@ references <- samples %>%
   distinct(PlexID, QuantBlock) %>% 
   mutate(Reference = 1)
 ```
+
+
 
 Now that we have the three study design tables, we should save them.
 
@@ -1563,8 +1559,8 @@ The `create_msnset` function can be used to easily create an MSnSet from the cro
 
 ```r
 # Create MSnSet
-m <- create_msnset(crosstab = crosstab, samples = samples)
-m
+m1 <- create_msnset(crosstab = crosstab, samples = samples)
+m1
 ```
 
 ```
@@ -1580,14 +1576,14 @@ m
 ## experimentData: use 'experimentData(object)'
 ## Annotation:  
 ## - - - Processing information - - -
-##  MSnbase version: 2.18.0
+##  MSnbase version: 2.22.0
 ```
 
 
 
 ```r
 # Save global MSnSet
-save(m, file = "data/global_msnset.RData", compress = TRUE)
+save(m1, file = "data/global_msnset.RData", compress = TRUE)
 ```
 
 

@@ -1,0 +1,32 @@
+iso_quant_global_prot.Rmd ------
+- Link to the full "Create MSnSet" section, once it is added.
+
+iso_quant_phospho.Rmd ------
+- Give an example of why Ascore jobs are necessary, such as 2 serines
+right next to each other (hard to tell which is phosphorylated).
+- Link to the full "Create MSnSet" section, once it is added.
+
+
+id_conversion.Rmd ------
+- Add more details to all sections.
+
+EDA.Rmd ------
+- Add more details and a source to the blood contamination section.
+- Add details to "Sample Boxplots" section.
+
+DEA.Rmd ------
+- Add more information about LIMMA at the beginning.
+- Add more details to "UpSet Plots" section.
+
+create_msnset.Rmd ------
+- Add details about MSnSet objects and how the different slots are
+related to each other. Draw and embed a picture showing the relationship
+between the three tables.
+- Add section showing how to summarize features and samples with
+MSnbase::combineFeatures.
+
+Misc ------
+- Properly credit MoTrPAC data! Check consortium website.
+- Add data processing section.
+
+
